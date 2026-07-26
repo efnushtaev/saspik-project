@@ -1,0 +1,28 @@
+{
+	"folders": [
+		{
+			"name": "esp32-controller",
+			"path": "esp32-controller"
+		},
+		{
+			"name": "esp32-battery-check",
+			"path": "esp32-battery-check"
+		},
+		{
+			"name": "esp32-node-1",
+			"path": "esp32-node-1"
+		},
+		{
+			"name": "esp32-node-template",
+			"path": "esp32-node-template"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"algorithm": "cpp",
+			"memory": "cpp",
+			"random": "cpp",
+			"optional": "cpp"
+		}
+	}
+}

@@ -1,0 +1,69 @@
+{
+  "rules": [
+    {
+      "id": "rule1",
+      "trigger": {
+        "topic": "sensors/temperature",
+        "qos": 0
+      },
+      "when": {
+        "jsonpath": "$.value > 30"
+      },
+      "then": [
+        {
+          "action": "log",
+          "params": {
+            "level": "warn",
+            "message": "Температура превысила порог: {{value}}°C"
+          }
+        },
+        {
+          "action": "publish",
+          "params": {
+            "topic": "alerts/high-temperature",
+            "payload": "{\"sensor\": \"temperature\", \"value\": {{value}}, \"timestamp\": \"{{timestamp}}\"}",
+            "qos": 1,
+            "retain": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "rule2",
+      "trigger": {
+        "topic": ["sensors/+/status", "device/+/online"]
+      },
+      "when": {
+        "and": [
+          { "topicRegex": "^sensors/.+/status$" },
+          { "payloadEquals": "OK" }
+        ]
+      },
+      "then": [
+        {
+          "action": "log",
+          "params": {
+            "level": "info",
+            "message": "Датчик {{$.device}} в порядке"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rule3",
+      "trigger": {
+        "topic": "control/light"
+      },
+      "when": null,
+      "then": [
+        {
+          "action": "log",
+          "params": {
+            "level": "info",
+            "message": "Получена команда управления светом: {{command}}"
+          }
+        }
+      ]
+    }
+  ]
+}

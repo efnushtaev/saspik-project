@@ -1,0 +1,92 @@
+:root {
+  /* Background Colors */
+  --background-primary-color: #171717;
+
+  /* Text Colors */
+  --font-color-primary: #7e7e7e;
+  --font-title-color-1: #919191;
+  --font-title-color-2: #6a6969;
+  --tab-font-color: #a3a3a3;
+  --tab-font-color--active: #ffffff;
+
+  /* Border Colors */
+  --topbar-border-color: #424242;
+  --border-color-2: #999999;
+  --actions-button-border-color: #636363;
+  --actions-button-border-color--active: #f2f2f2;
+  --tab-border-color--active: #bdbdbd;
+
+  /* Icon Colors */
+  --icon-color: #e4e4e4;
+  --icon-color--active: #ffffff;
+  --tab-icon-color: #a3a3a3;
+
+  /* Component Specific Colors */
+  --unit-picture-color: #9c9c9c;
+  --unit-picture-background: #7e7e7e;
+  --actions-search-background: #252525;
+  --actions-button-background: #171717cc;
+  --topbar-background-color: #171717;
+  --tab-background--hover: #222222;
+  --loader-color: #8f8f8f;
+
+  --object-title-color-1: #adabab;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: var(--background-primary-color);
+  color: white;
+  text-align: center;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Loader Animation */
+.rotate-scale-up {
+  margin: 64px auto 64px auto;
+  border: 1px solid var(--loader-color);
+  height: 16px;
+  width: 16px;
+  -webkit-animation: rotate-scale-up 1s linear infinite;
+  animation: rotate-scale-up 1s linear infinite;
+}
+
+@-webkit-keyframes rotate-scale-up {
+  0% {
+    -webkit-transform: scale(1) rotateZ(0);
+    transform: scale(1) rotateZ(0);
+  }
+  50% {
+    -webkit-transform: scale(2) rotateZ(180deg);
+    transform: scale(2) rotateZ(180deg);
+  }
+  100% {
+    -webkit-transform: scale(1) rotateZ(360deg);
+    transform: scale(1) rotateZ(360deg);
+  }
+}
+
+@keyframes rotate-scale-up {
+  0% {
+    -webkit-transform: scale(1) rotateZ(0);
+    transform: scale(1) rotateZ(0);
+  }
+  50% {
+    -webkit-transform: scale(2) rotateZ(180deg);
+    transform: scale(2) rotateZ(180deg);
+  }
+  100% {
+    -webkit-transform: scale(1) rotateZ(360deg);
+    transform: scale(1) rotateZ(360deg);
+  }
+}

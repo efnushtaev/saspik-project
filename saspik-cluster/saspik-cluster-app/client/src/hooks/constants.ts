@@ -1,0 +1,1 @@
+export const TIMESTAMP_MOCK = '1961-04-12T06:07:00.000Z';

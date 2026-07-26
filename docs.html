@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>САСПИК — документация проекта</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1f2328; --accent: #0969da; --border: #d0d7de; --code-bg: #f6f8fa; --heading: #1f2328; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+  }
+  nav {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 260px;
+    background: #f6f8fa;
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  nav h2 { font-size: 14px; text-transform: uppercase; color: #656d76; margin-bottom: 12px; letter-spacing: 0.5px; }
+  nav a {
+    display: block;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 3px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  nav a:hover { text-decoration: underline; }
+  nav .l2 { padding-left: 16px; font-size: 12px; }
+  nav .l3 { padding-left: 32px; font-size: 11px; }
+  main {
+    margin-left: 260px;
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 960px;
+  }
+  h1, h2, h3, h4, h5, h6 { color: var(--heading); margin-top: 24px; margin-bottom: 16px; font-weight: 600; }
+  h1 { font-size: 2em; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  h3 { font-size: 1.25em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  p { margin-bottom: 16px; }
+  ul, ol { margin-bottom: 16px; padding-left: 24px; }
+  li { margin-bottom: 4px; }
+  code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+  pre code { background: none; padding: 0; font-size: 0.85em; line-height: 1.45; }
+  table { border-collapse: collapse; margin-bottom: 16px; width: 100%; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+  th { background: #f6f8fa; font-weight: 600; }
+  blockquote { border-left: 4px solid var(--accent); padding-left: 16px; color: #656d76; margin-bottom: 16px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  hr.section-sep { margin: 48px 0; border-top: 2px solid var(--accent); opacity: 0.3; }
+  section:target { animation: highlight 2s ease; }
+  @keyframes highlight { 0% { background: rgba(88, 166, 255, 0.08); } 100% { background: transparent; } }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  @media (max-width: 768px) {
+    nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+    main { margin-left: 0; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <h2>📄 САСПИК</h2>
+<a href="#root" class="">Главная</a>
+<a href="#saspik-cluster" class="">saspik-cluster</a>
+<a href="#saspik-greenhouse" class="">saspik-greenhouse</a>
+<a href="#saspik-iot" class="">saspik-iot</a>
+<a href="#saspik-meshrover" class="">saspik-meshrover</a>
+</nav>
+<main>
+<section id="root">
+<h1 id="саспик-проект--обзор">САСПИК Проект — обзор</h1>
+<p><strong>САСПИК</strong> — <em>Сеть Автоматизированных Систем для Производства и Контроля</em>.<br>Программно-аппаратное решение для экономики совместного производства.</p>
+<p>Автор: efnushtaev<br>Платформа знаний: Anytype (77 объектов)<br>Состояние: активная разработка, первый пилот запущен</p>
+<hr>
+<h2 id="структура-системы">Структура системы</h2>
+<h3 id="аппаратная-часть">Аппаратная часть</h3>
+<ul>
+<li><strong>Статичная</strong> — теплицы, магистрали, конструкции</li>
+<li><strong>Крупноузловая</strong> — насосы, приводы, пневматика, двигатели</li>
+<li><strong>Силовая</strong> — питание, генераторы, преобразователи</li>
+<li><strong>Мониторинг</strong> — IoT-датчики (температура, влажность, уровень воды)</li>
+<li><strong>Автоматика</strong> — реле, контроллеры, шлюзы</li>
+<li><strong>Роботы</strong> — мехатронные платформы с ROS2</li>
+</ul>
+<h3 id="программная-часть">Программная часть</h3>
+<ul>
+<li><strong>Кластер</strong> — микросервисное ядро (Node.js, Express, Inversify, PostgreSQL)</li>
+<li><strong>MQTT брокер</strong> — собственный брокер с движком сценариев (RulesEngine)</li>
+<li><strong>UI</strong> — адаптивное SPA для управления юнитами и объектами</li>
+<li><strong>IoT-прошивки</strong> — ESP32 (ESP-NOW, MQTT, deep sleep)</li>
+<li><strong>CV модуль</strong> — компьютерное зрение (планируется)</li>
+<li><strong>Роботы</strong> — ROS2-ноды (планируется)</li>
+</ul>
+<hr>
+<h2 id="репозитории">Репозитории</h2>
+<p>| Репозиторий | Описание |<br>|---|---|---|<br>| <a href="#saspik-meshrover"><code>saspik-meshrover</code></a> | ESP32-S3 роботы (UWB, LoRa mesh, TFLite) |<br>| <a href="#saspik-iot"><code>saspik-iot</code></a> | ESP32 прошивки (шлюз, сенсорный узел) |<br>| <a href="#saspik-cluster"><code>saspik-cluster</code></a> | MQTT брокер, rule-engine, сервер, клиент |<br>| <a href="#saspik-greenhouse"><code>saspik-greenhouse</code></a> | Управление микроклиматом теплицы |</p>
+<hr>
+<h2 id="пилот">Пилот</h2>
+<p><strong>Статус:</strong> Запущен. Теплица установлена, кластер развёрнут.</p>
+<p>Первый пилот — автоматизированная компактная теплица с мониторингом и удалённым контролем микроклимата:</p>
+<ul>
+<li>ESP32 шлюз + ESP-NOW сенсорные узлы</li>
+<li>Управление реле (свет, насос, увлажнитель, вытяжка)</li>
+<li>Кластер на VDS (Portainer, Docker)</li>
+<li>Приложение-кабинет для мониторинга (atsap-social.ru)</li>
+</ul>
+<h3 id="текущие-направления">Текущие направления</h3>
+<ol>
+<li>UI — нормальный интерфейс с любого устройства</li>
+<li>MQTT брокер — собственный, с движком сценариев</li>
+<li>Роботизация — ROS2, мехатроника</li>
+</ol>
+<hr>
+<h2 id="дорожная-карта">Дорожная карта</h2>
+<h3 id="2026--пилот-v2">2026 — Пилот V2</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Свой MQTT брокер с движком сценариев</li>
+<li><input disabled="" type="checkbox"> ROS2: робот по координатам с фото на кластер</li>
+<li><input disabled="" type="checkbox"> Гидропоника</li>
+<li><input disabled="" type="checkbox"> Анализ питательного раствора и дренажа</li>
+<li><input disabled="" type="checkbox"> Кассета на 6 кустов</li>
+</ul>
+<h3 id="2027--пилот-v3">2027 — Пилот V3</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Позиционирование робота через ArUco метки</li>
+<li><input disabled="" type="checkbox"> Добавление устройств через QR</li>
+<li><input disabled="" type="checkbox"> Разработка шлюза</li>
+<li><input disabled="" type="checkbox"> Перенос кластера на Raspberry Pi</li>
+<li><input disabled="" type="checkbox"> UI и конфигурирование устройств</li>
+</ul>
+<hr>
+<h2 id="ключевые-технологии">Ключевые технологии</h2>
+<table>
+<thead>
+<tr>
+<th>Технология</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ESP32 (DOIT, Wemos, C6 XIAO)</td>
+<td>Микроконтроллеры узлов и шлюза</td>
+</tr>
+<tr>
+<td>ESP-NOW</td>
+<td>Беспроводной протокол шлюз-узлы</td>
+</tr>
+<tr>
+<td>MQTT</td>
+<td>Транспорт сообщений</td>
+</tr>
+<tr>
+<td>Node.js / Express / Inversify</td>
+<td>Бэкенд кластера</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Основная БД кластера</td>
+</tr>
+<tr>
+<td>Docker / Portainer</td>
+<td>Развёртывание на VDS</td>
+</tr>
+<tr>
+<td>PlatformIO (Arduino)</td>
+<td>Среда прошивок</td>
+</tr>
+<tr>
+<td>ROS2 (планируется)</td>
+<td>Управление роботами</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="мcp-и-ai-агенты">МCP и AI-агенты</h2>
+<ul>
+<li><strong>Anytype MCP</strong> — доступ к базе знаний</li>
+<li><strong>KiCAD MCP</strong> — генерация схем</li>
+<li><strong>Компас3D MCP</strong> — работа с чертежами</li>
+</ul>
+<p>AI-агенты настроены на работу с каждым инструментом через OpenCode.</p>
+<hr>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── articles/
+├── opencode/
+├── opencode.json
+├── README.md
+├── saspik-cluster/
+├── saspik-greenhouse/
+├── saspik-iot/
+└── saspik-meshrover/
+</code></pre>
+<hr>
+<h2 id="инфраструктура">Инфраструктура</h2>
+<p><strong>VDS:</strong> <code>rust-portainer-jn-spb-01</code> (Санкт-Петербург)</p>
+<ul>
+<li>Ubuntu 24.04 + Docker + Portainer</li>
+<li>Portainer: <code>https://85.235.205.155:9000</code></li>
+</ul>
+<p><strong>Резервный бокс:</strong> <code>pistachio-portainer-spb-03</code></p>
+<ul>
+<li>IP: <code>212.116.115.119</code></li>
+<li>Ubuntu 24.04 + Docker + Portainer</li>
+</ul>
+<hr>
+<h2 id="связанные-проекты">Связанные проекты</h2>
+<ul>
+<li><code>atsap-iot-sketches</code> — шаблоны ESP32 прошивок</li>
+<li><code>express-inversify-framework-app</code> — фреймворк для микросервисов</li>
+<li><code>nodejs-portainer-app-template</code> — шаблон деплоя fullstack приложений</li>
+<li><code>atsap-cluster-app</code> — кластерное приложение (mqtt, rule-engine, server)</li>
+</ul>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-cluster">
+<h1 id="saspik-cluster">SASPIK Cluster</h1>
+<p><a href="#root">↑ SASPIK Project</a></p>
+<p>MQTT брокер, rule-engine и серверная часть на Node.js / Express / Inversify / PostgreSQL.</p>
+<p>Контекст проекта: <code>opencode/agents.md → saspik-cluster</code>.</p>
+<h2 id="состав-проекта">Состав проекта</h2>
+<h3 id="программное-обеспечение">Программное обеспечение</h3>
+<p>Основной код кластера. Монорепозиторий, разворачиваемый через Docker Compose.<br><a href="software/atsap-cluster-app/README.md">atsap-cluster-app →</a></p>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>server/</code></td>
+<td>Express.js бэкенд (микросервисная архитектура на Inversify)</td>
+</tr>
+<tr>
+<td><code>client/</code></td>
+<td>React SPA фронтенд (собирается в nginx multi-stage)</td>
+</tr>
+<tr>
+<td><code>mqtt/</code></td>
+<td>MQTT-брокер (собственная реализация)</td>
+</tr>
+<tr>
+<td><code>mqtt-rule-engine/</code></td>
+<td>Движок сценариев для обработки MQTT-сообщений</td>
+</tr>
+<tr>
+<td><code>nginx/</code></td>
+<td>Конфигурация обратного прокси</td>
+</tr>
+<tr>
+<td><code>docker-compose.yml</code></td>
+<td>Оркестрация всех сервисов</td>
+</tr>
+<tr>
+<td><code>.env</code></td>
+<td>Переменные окружения для продакшна</td>
+</tr>
+<tr>
+<td><code>prompts</code></td>
+<td>Промпты для AI-агентов</td>
+</tr>
+</tbody></table>
+<h3 id="docs">docs/</h3>
+<p>Документация по архитектуре и API кластера, выгруженная из Anytype (коллекция «Кластер»):</p>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>API.md</code></td>
+<td>HTTP API: методы для Units, Objects, Rules, History</td>
+</tr>
+<tr>
+<td><code>UnitsService.md</code></td>
+<td>Конфигурация юнитов (Unit), JSON Schema DTO</td>
+</tr>
+<tr>
+<td><code>ObjectsService.md</code></td>
+<td>Конфигурация объектов (сенсоры/устройства), JSON Schema DTO</td>
+</tr>
+<tr>
+<td><code>RulesService.md</code></td>
+<td>Конфигурация правил и сценариев (Rule Engine)</td>
+</tr>
+<tr>
+<td><code>HistoryService.md</code></td>
+<td>Сервис мониторинга и истории событий</td>
+</tr>
+<tr>
+<td><code>repo.md</code></td>
+<td>Ссылка на GitHub-репозиторий</td>
+</tr>
+</tbody></table>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── docs/
+├── hardware/
+├── README.md
+├── software/
+└── TODO.md
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-greenhouse">
+<h1 id="saspik-greenhouse">SASPIK Greenhouse</h1>
+<p><a href="#root">↑ SASPIK Project</a></p>
+<p>ESP32-управление микроклиматом теплицы: датчики, реле, автополив, MQTT-связь с кластером.</p>
+<p>Контекст проекта: <code>opencode/agents.md → saspik-greenhouse</code>.</p>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── docs/
+│   ├── Frame 73.png                    — схема установки
+│   ├── grow_chamber.md                 — гидропонная камера на 2 куста
+│   ├── sensor-ph-ec.md                 — датчики pH и EC
+│   └── Гидропонная установка.pdf       — PDF-схема
+├── README.md
+└── TODO.md
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-iot">
+<h1 id="saspik-iot">SASPIK IoT</h1>
+<p><a href="#root">↑ SASPIK Project</a></p>
+<p>ESP32 прошивки для IoT-датчиков: шлюз, сенсорные узлы (ESP-NOW, MQTT, deep sleep).</p>
+<p>Контекст проекта: <code>opencode/agents.md → saspik-iot</code>.</p>
+<h2 id="программное-обеспечение">Программное обеспечение</h2>
+<ul>
+<li><a href="software/ag-iot-sketches/README.md"><code>software/ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
+</ul>
+<h2 id="классификация-устройств">Классификация устройств</h2>
+<p>Устройства классифицируются по формату <code>saspik.{роли}.{протокол}.{питание}{nnn}</code>.<br>Подробнее: <a href="docs/classification.md"><code>docs/classification.md</code></a></p>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── docs/
+├── hardware/
+├── README.md
+├── software/
+└── TODO.md
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-meshrover">
+<h1 id="meshrover--distributed-swarm-for-autonomous-precision-weeding">MeshRover — Distributed swarm for autonomous precision weeding</h1>
+<p><a href="#root">↑ SASPIK Project</a></p>
+<h2 id="цель">Цель</h2>
+<p>Создать рой из лёгких автономных ботов, способных без GPS и постоянного интернета совместно обрабатывать поле, передавая на базовую станцию только метаданные детекций.</p>
+<h2 id="ключевые-технологии">Ключевые технологии</h2>
+<p>ESP32-S3, UWB (DWM3000), LoRa mesh, TensorFlow Lite Micro, Raspberry Pi, распределённая локализация.</p>
+<h2 id="текущий-статус">Текущий статус</h2>
+<p>Pre-MVP. Начат этап 1: UWB-дальномер на двух ESP32.</p>
+<h2 id="план-работ">План работ</h2>
+<h3 id="этап-1-uwb-дальномер-текущий">Этап 1: UWB-дальномер (текущий)</h3>
+<ul>
+<li>Настроить PlatformIO проект для ESP32-S3 + DWM3000</li>
+<li>Инициализировать DWM3000 на двух платах</li>
+<li>Реализовать TWR (Two-Way Ranging) на одной паре</li>
+<li>Вывести дальность в UART / Serial Plotter</li>
+<li>Измерить точность на дистанциях 1–50 м</li>
+</ul>
+<h3 id="этап-2-локальная-навигация">Этап 2: Локальная навигация</h3>
+<ul>
+<li>Подключить IMU (MPU6050/ICM-20948)</li>
+<li>Реализовать счисление пути (dead reckoning)</li>
+<li>Связать UWB + IMU + энкодеры в EKF</li>
+<li>Получить стабильные координаты относительно опорной точки</li>
+</ul>
+<h3 id="этап-3-lora-сеть">Этап 3: LoRa-сеть</h3>
+<ul>
+<li>Настроить LoRa-модуль (SX1276/SX1262)</li>
+<li>Реализовать простой flooding mesh</li>
+<li>Пакет: координаты + статус (50–150 байт)</li>
+<li>Тест: 3+ узла в mesh</li>
+</ul>
+<h3 id="этап-4-базовое-зрение">Этап 4: Базовое зрение</h3>
+<ul>
+<li>Подключить камеру OV2640 к ESP32-S3</li>
+<li>Собрать датасет (культура/сорняк)</li>
+<li>Обучить TFLite-модель (2 класса)</li>
+<li>Запустить инференс на ESP32-S3</li>
+</ul>
+<h3 id="этап-5-оркестрация">Этап 5: Оркестрация</h3>
+<ul>
+<li>Базовый веб-интерфейс на RPi</li>
+<li>Приём LoRa-пакетов на RPi</li>
+<li>Построение карты покрытия</li>
+<li>Алгоритм виртуальных сил для перераспределения секторов</li>
+</ul>
+<h3 id="бэклог">Бэклог</h3>
+<ul>
+<li>CLI для отладки UWB</li>
+<li>Симулятор роя (для тестов без железа)</li>
+<li>Документация по протоколу пакетов</li>
+</ul>
+<h2 id="аппаратное-обеспечение">Аппаратное обеспечение</h2>
+<p>Схемотехника и платы в <a href="hardware/"><code>hardware/</code></a>.</p>
+<h2 id="программное-обеспечение">Программное обеспечение</h2>
+<p>Прошивки ESP32-S3 в <a href="software/"><code>software/</code></a>.</p>
+<hr>
+<h2 id="утверждённая-архитектура-конспект">Утверждённая архитектура (конспект)</h2>
+<h3 id="каждый-бот-esp32-s3">Каждый бот (ESP32-S3)</h3>
+<ul>
+<li>Собирает UWB-дальности до соседей, опрашивает IMU и энкодеры.</li>
+<li>Ведёт счисление пути и вычисляет свои координаты (EKF) относительно опорных точек роя.</li>
+<li>Имеет камеру OV2640 и выполняет на борту инференс простой TFLite-модели (2 класса: культура/сорняк).</li>
+<li>Каждое обнаружение упаковывает в короткий пакет (свои координаты, координаты цели, класс, уверенность) и отправляет в общий LoRa-mesh.</li>
+<li>Получает от базы или соседей задания на коррекцию маршрута, но может работать автономно при обрыве связи.</li>
+<li>Реагирует на соседей: избегает столкновений, перераспределяет сектора покрытия по алгоритму виртуальных сил.</li>
+</ul>
+<h3 id="базовая-станция-raspberry-pi--lora-модуль">Базовая станция (Raspberry Pi + LoRa-модуль)</h3>
+<ul>
+<li>Участвует в mesh как привилегированный узел.</li>
+<li>Аккумулирует все пакеты с детекциями.</li>
+<li>Строит единую оперативную карту прополки/посева.</li>
+<li>Выявляет пропущенные участки, оптимизирует глобальное покрытие.</li>
+<li>Отправляет ботам рекомендательные команды («проверить зону», «сместить фокус»).</li>
+<li>Предоставляет веб-интерфейс оператору с картой, статусом, зарядом.</li>
+</ul>
+<h4 id="локальная-версия-для-первых-тестов-docker">Локальная версия для первых тестов (Docker)</h4>
+<p>На этапах 1–3 базовая станция запускается локально в Docker на машине разработчика:</p>
+<ul>
+<li>Принимает UART-логи с ESP32 через проброшенный USB (последовательный порт).</li>
+<li>Логирует и отображает дальномерные данные, позже — координаты и LoRa-пакеты.</li>
+<li>Веб-интерфейс (FastAPI + легковесный фронтенд) для визуализации в реальном времени.</li>
+<li>Контейнерная сборка: одна команда <code>docker compose up</code> для поднятия всего стека.</li>
+<li>Переход на RPi произойдёт на этапе полевых испытаний (Stage 4–5).</li>
+</ul>
+<h3 id="сеть">Сеть</h3>
+<ul>
+<li><strong>UWB</strong> — для точной относительной навигации (без GPS).</li>
+<li><strong>LoRa</strong> (433/868 МГц, mesh) — для обмена координатами, статусом, метаданными детекций и командами.</li>
+<li>Данные, передаваемые по LoRa, компактны (50–150 байт), что укладывается в возможности технологии.</li>
+<li>Никакой сырой видеопоток по LoRa не идёт.</li>
+</ul>
+<h3 id="дополнительно-опция-не-для-mvp">Дополнительно (опция, не для MVP)</h3>
+<p>Позже можно добавить Raspberry Pi на отдельных ботов-лидеров, если понадобится более сложное зрение прямо в поле. Но текущий стек позволяет начать без него.</p>
+<h2 id="что-у-вас-есть-сейчас-для-немедленного-старта">Что у вас есть сейчас для немедленного старта</h2>
+<ul>
+<li>Чёткая архитектура с разделением обязанностей.</li>
+<li>Понимание, что и на чём работает: ESP32-S3 для real-time + простого зрения, RPi для оркестрации.</li>
+<li>Определённый стек протоколов: UWB (TWR), LoRa-mesh (flooding или gossip), бинарные пакеты.</li>
+<li>План первого шага: оживить UWB-дальномер на двух ESP32.</li>
+</ul>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── docs/
+├── hardware/
+├── README.md
+├── software/
+└── TODO.md
+</code></pre>
+
+</section>
+</main>
+</body>
+</html>

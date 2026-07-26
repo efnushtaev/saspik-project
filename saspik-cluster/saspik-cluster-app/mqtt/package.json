@@ -1,0 +1,12 @@
+{
+  "name": "mqtt-client-test",
+  "version": "1.0.0",
+  "description": "Minimal MQTT client for testing",
+  "main": "client.js",
+  "scripts": {
+    "start": "node client.js"
+  },
+  "dependencies": {
+    "mqtt": "^5.0.0"
+  }
+}

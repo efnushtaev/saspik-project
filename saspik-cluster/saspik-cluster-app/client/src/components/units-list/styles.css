@@ -1,0 +1,8 @@
+.listing {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 44px;
+  padding: 44px 28px;
+  box-sizing: border-box;
+}

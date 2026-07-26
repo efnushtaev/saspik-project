@@ -1,0 +1,36 @@
+{
+  "name": "mqtt-rule-engine-worker",
+  "version": "1.0.0",
+  "description": "MQTT Rule Engine Worker - подписывается на топики MQTT, выполняет правила автоматизации",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/src/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "ts-node test/test-runner.ts",
+    "lint": "eslint src --ext .ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "mqtt",
+    "rule-engine",
+    "automation",
+    "iot"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mqtt": "^5.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.6",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
+    "eslint": "^9.17.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

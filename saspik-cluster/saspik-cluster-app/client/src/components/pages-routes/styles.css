@@ -1,0 +1,27 @@
+.page__content {
+  max-width: 1084px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-bottom: 72px;
+}
+
+.pages-routes {
+  height: calc(100vh - 194px);
+  overflow: scroll;
+  transform: translateY(-72px);
+  transition: transform 0.2s ease-out;
+}
+
+.pages-routes_tabs-visible {
+  transform: translateY(0);
+}
+
+@media (max-width: 800px) {
+  .pages-routes {
+    height: calc(100vh - 44px);
+    transform: translateY(0px);
+  }
+  .pages-routes_tabs-visible {
+    height: calc(100vh - 117px);
+  }
+}

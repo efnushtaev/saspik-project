@@ -1,0 +1,241 @@
+version: '3.8'
+
+services:
+  # Backend service
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: server
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=prod
+      - RIGHTECH_API_TOKEN=${RIGHTECH_API_TOKEN}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - CLIMATE_CONTROL_UNIT_ID=${CLIMATE_CONTROL_UNIT_ID}
+      - MQTT_BROKER_URL=mqtt://mosquitto:1883
+      - MQTT_USERNAME=admin
+      - MQTT_PASSWORD=password123
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB_ORG}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET}
+    depends_on:
+      - mysql
+    ports:
+      - "3001:3001"  # Проброс порта на хост для доступа к API
+    networks:
+      - fullstack-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # Оптимизация ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
+
+  # Nginx reverse proxy
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: my-app-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS (если добавите SSL)
+    depends_on:
+      - backend
+    networks:
+      - fullstack-network
+    # volumes:
+      # Монтируем статику из фронтенда в nginx
+      # - frontend-static:/usr/share/nginx/html:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    # Оптимизация ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  mysql:
+    image: mysql:8.0
+    container_name: portainer_mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=users_db
+      - MYSQL_USER=app_user
+      - MYSQL_PASSWORD=secure_password
+      - MYSQL_ROOT_HOST=%
+      # Оптимизация MySQL для низких ресурсов
+      - MYSQLD_OPTS=--innodb-buffer-pool-size=64M --innodb-log-file-size=16M --innodb-log-buffer-size=4M --max-connections=50 --thread-cache-size=5 --tmp-table-size=16M --max-heap-table-size=16M
+    networks:
+      - fullstack-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    # Оптимизация ресурсов
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
+    command:
+      - '--innodb-buffer-pool-size=64M'
+      - '--innodb-log-file-size=16M'
+      - '--innodb-log-buffer-size=4M'
+      - '--max-connections=50'
+      - '--thread-cache-size=5'
+      - '--tmp-table-size=16M'
+      - '--max-heap-table-size=16M'
+
+  mosquitto:
+    build:
+      context: ./mqtt
+      dockerfile: Dockerfile
+    container_name: atsap_mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    networks:
+      - fullstack-network
+    healthcheck:
+      test: ["CMD", "mosquitto_pub", "-h", "localhost", "-t", "healthcheck/ping", "-m", "test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+  mqtt-rule-engine:
+    build:
+      context: ./mqtt-rule-engine
+      dockerfile: Dockerfile
+    container_name: mqtt-rule-engine
+    restart: unless-stopped
+    environment:
+      - MQTT_BROKER_URL=mqtt://mosquitto:1883
+      - MQTT_USERNAME=admin
+      - MQTT_PASSWORD=password123
+      - CONFIG_PATH=./rules.json
+      - MOSCOW_OFFSET_HOUR=${MOSCOW_OFFSET_HOUR}
+      - NIGHT_START_HOUR=${NIGHT_START_HOUR}
+      - NIGHT_END_HOUR=${NIGHT_END_HOUR}
+      - WATER_TIMEOUT_MS=${WATER_TIMEOUT_MS}
+      - CLIMATE_CONTROL_UNIT_ID=${CLIMATE_CONTROL_UNIT_ID}
+      - CLIMATE_T_SET=${CLIMATE_T_SET}
+      - CLIMATE_T_HYST=${CLIMATE_T_HYST}
+      - CLIMATE_T_MAX=${CLIMATE_T_MAX}
+      - CLIMATE_T_MIN=${CLIMATE_T_MIN}
+      - CLIMATE_T_RECOVERY=${CLIMATE_T_RECOVERY}
+      - CLIMATE_RH_SET=${CLIMATE_RH_SET}
+      - CLIMATE_RH_HYST=${CLIMATE_RH_HYST}
+      - CLIMATE_NIGHT_T_SET=${CLIMATE_NIGHT_T_SET}
+      - CLIMATE_NIGHT_T_HYST=${CLIMATE_NIGHT_T_HYST}
+      - CLIMATE_NIGHT_T_MAX=${CLIMATE_NIGHT_T_MAX}
+      - CLIMATE_NIGHT_T_MIN=${CLIMATE_NIGHT_T_MIN}
+      - CLIMATE_NIGHT_T_RECOVERY=${CLIMATE_NIGHT_T_RECOVERY}
+      - CLIMATE_NIGHT_RH_SET=${CLIMATE_NIGHT_RH_SET}
+      - CLIMATE_NIGHT_RH_HYST=${CLIMATE_NIGHT_RH_HYST}
+    depends_on:
+      - mosquitto
+    networks:
+      - fullstack-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+  influxdb:
+    image: influxdb:2
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN}
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    networks:
+      - fullstack-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
+  telegraf:
+    build: ./telegraf
+    container_name: telegraf
+    restart: unless-stopped
+    environment:
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB_ORG}
+      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET}
+    depends_on:
+      - mosquitto
+      - influxdb
+    networks:
+      - fullstack-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+
+volumes:
+  influxdb-data:
+
+networks:
+  fullstack-network:
+    driver: bridge

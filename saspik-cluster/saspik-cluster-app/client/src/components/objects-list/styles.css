@@ -1,0 +1,15 @@
+.listing {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 44px;
+  padding: 44px 28px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 800px) {
+  .listing {
+  gap: 20px;
+  padding: 20px 16px;
+  }
+}

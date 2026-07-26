@@ -1,0 +1,18 @@
+.control-bar__wrapper {
+  transform: translateY(-72px);
+  transition: transform 0.2s ease-out;
+}
+
+.control-bar__wrapper_tabs-visible {
+  transform: translateY(0px);
+}
+
+.control-bar__mobile-wrapper {
+  transform: translateY(-77px);
+}
+
+@media (max-width: 800px) {
+  .action-field {
+    transform: translateY(0px);
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "rules": [
+    {
+      "id": "humidity_high",
+      "trigger": {
+        "topic": "sensors/dht22",
+        "qos": 0
+      },
+      "when": {
+        "jsonpath": "$.humidity >= 70"
+      },
+      "then": [
+        {
+          "action": "publish",
+          "params": {
+            "topic": "led/control",
+            "payload": "ON",
+            "qos": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "humidity_low",
+      "trigger": {
+        "topic": "sensors/dht22",
+        "qos": 0
+      },
+      "when": {
+        "jsonpath": "$.humidity < 70"
+      },
+      "then": [
+        {
+          "action": "publish",
+          "params": {
+            "topic": "led/control",
+            "payload": "OFF",
+            "qos": 1
+          }
+        }
+      ]
+    }
+  ]
+}

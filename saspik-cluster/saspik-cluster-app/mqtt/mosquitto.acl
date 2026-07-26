@@ -1,0 +1,29 @@
+# Access Control List for MQTT broker
+
+# Allow healthcheck to publish to healthcheck topic (must come before deny all)
+pattern readwrite healthcheck/#
+
+# Allow clients to access their own namespace
+# Pattern: clients/<clientid>/#
+# %c expands to client ID
+# Example: client "1" can publish to "clients/1/test1", "clients/1/status", etc.
+pattern readwrite clients/%c/#
+
+# Allow sensors topics for authenticated users
+pattern readwrite sensors/#
+
+# Allow LED control topics for authenticated users
+pattern readwrite led/#
+
+# Default: deny all other topics
+# pattern deny #
+
+# Allow server (clientId "atsap-server") to access all topics
+# Note: This requires the server to connect with clientId "atsap-server"
+# and would need authentication for proper security.
+# For now, we allow all clients to publish to any topic.
+# Uncomment below for production with authentication:
+# pattern readwrite # for clientId "atsap-server"
+
+# Temporary: allow all topics for development
+# pattern readwrite #

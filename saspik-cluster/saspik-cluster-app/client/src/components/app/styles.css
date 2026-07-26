@@ -1,0 +1,11 @@
+.app {
+  height: 100vh;
+  min-width: 400px;
+}
+
+/* Mobile-specific styles are handled in the ControlBar component */
+@media (max-width: 800px) {
+  .app {
+    min-width: 320px;
+  }
+}

@@ -1,3 +1,7 @@
+# .env файлы с кредами
+**/.env
+
+# Remote
 .obsidian
 articles
 manuals
@@ -7,3 +11,17 @@ TODO.md
 opencode.json
 
 **/node_modules
+
+# Build artifacts
+**/dist/
+.pio/
+
+# IDE
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
