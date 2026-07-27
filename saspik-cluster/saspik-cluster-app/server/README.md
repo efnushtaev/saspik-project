@@ -42,12 +42,16 @@
   {
     "units": [
       {
-        "id": "u1",
-        "name": "Main Greenhouse",
-        "description": "Primary greenhouse climate control",
+        "id": "unitId1",
+        "name": "ESP32 Controller",
+        "description": "ESP32 controller with sensors and relays",
         "objects": [
-          { "id": "s6", "name": "DHT22 Temperature", "type": "sensor", "topic": "sensors/dht22", "spec": { "model": "dht22", "unit": "℃" } },
-          { "id": "s7", "name": "DHT22 Humidity", "type": "sensor", "topic": "sensors/dht22", "spec": { "model": "dht22", "unit": "%" } }
+          { "id": "dht22", "name": "DHT22", "type": "sensor", "topic": "sensors/dht22", "spec": [{ "key": "temperature", "model": "dht22", "unit": "℃" }, { "key": "humidity", "model": "dht22", "unit": "%" }] },
+          { "id": "float-1", "name": "Float Sensor", "type": "sensor", "topic": "sensors/float-1", "spec": [{ "key": "floatSensor", "model": "float", "unit": "" }] },
+          { "id": "a_relay1", "name": "Light", "type": "device", "topic": "units/unitId1/commands/a_relay1", "spec": [{ "key": "state", "model": "relay", "unit": "" }], "description": "Свет (реле 1)" },
+          { "id": "a_relay2", "name": "Humidifier", "type": "device", "topic": "units/unitId1/commands/a_relay2", "spec": [{ "key": "state", "model": "relay", "unit": "" }], "description": "Увлажнитель (реле 2)" },
+          { "id": "a_relay3", "name": "Fan", "type": "device", "topic": "units/unitId1/commands/a_relay3", "spec": [{ "key": "state", "model": "relay", "unit": "" }], "description": "Вентилятор (реле 3)" },
+          { "id": "a_relay4", "name": "Water Pump", "type": "device", "topic": "units/unitId1/commands/a_relay4", "spec": [{ "key": "state", "model": "relay", "unit": "" }], "description": "Насос (реле 4)" }
         ],
         "rules": [
           { "id": "r1", "name": "High temp alert", "condition": "temperature > 30", "action": "notify", "enabled": true },
@@ -64,25 +68,36 @@
 - Тело запроса: не требуется
 - `value` загружается из InfluxDB (последнее показание)
 - Форматирование: значение округляется по `spec.minorPart` (если задан), возвращается строкой
-- Ответ:
+- Ответ (sensor):
   ```json
   {
     "objects": [
       {
-        "id": "s6",
-        "name": "DHT22 Temperature",
+        "id": "dht22",
+        "name": "DHT22",
         "type": "sensor",
         "topic": "sensors/dht22",
-        "value": "24.40",
-        "spec": { "model": "dht22", "unit": "℃", "minorPart": 2 }
-      },
+        "spec": [
+          { "key": "temperature", "value": 23.6, "spec": { "key": "temperature", "model": "dht22", "unit": "℃" } },
+          { "key": "humidity", "value": 46.9, "spec": { "key": "humidity", "model": "dht22", "unit": "%" } }
+        ]
+      }
+    ]
+  }
+  ```
+- Ответ (device):
+  ```json
+  {
+    "objects": [
       {
-        "id": "s7",
-        "name": "DHT22 Humidity",
-        "type": "sensor",
-        "topic": "sensors/dht22",
-        "value": "51.70",
-        "spec": { "model": "dht22", "unit": "%", "minorPart": 2 }
+        "id": "a_relay1",
+        "name": "Light",
+        "type": "device",
+        "topic": "units/unitId1/commands/a_relay1",
+        "spec": [
+          { "key": "state", "value": "1", "spec": { "key": "state", "model": "relay", "unit": "" } }
+        ],
+        "description": "Свет (реле 1)"
       }
     ]
   }
@@ -90,19 +105,21 @@
 
 #### 5. Объекты по IDs
 - `POST /api/v1/objects/getByIds`
-- Тело: `{ "id": ["s6", "s7"], "type": "sensor" }`
+- Тело: `{ "id": ["dht22", "a_relay1"], "type": "sensor" }`
 - `type` — опционально, `sensor` или `device` (фильтр по типу)
 - Ответ:
   ```json
   {
     "objects": [
       {
-        "id": "s6",
-        "name": "DHT22 Temperature",
+        "id": "dht22",
+        "name": "DHT22",
         "type": "sensor",
         "topic": "sensors/dht22",
-        "value": "24.40",
-        "spec": { "model": "dht22", "unit": "℃", "minorPart": 2 }
+        "spec": [
+          { "key": "temperature", "value": 23.6, "spec": { "key": "temperature", "model": "dht22", "unit": "℃" } },
+          { "key": "humidity", "value": 46.9, "spec": { "key": "humidity", "model": "dht22", "unit": "%" } }
+        ]
       }
     ]
   }

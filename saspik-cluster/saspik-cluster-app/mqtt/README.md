@@ -31,10 +31,11 @@ The MQTT broker provides real-time messaging between:
 ### Access Control (`mosquitto.acl`)
 
 Current ACL provides:
-1. **Deny all topics by default** (`topic deny #`)
-2. **Client-specific namespaces**: `clients/%c/#` where `%c` expands to client ID
-   - Example: Client "1" can publish to `clients/1/temperature`
-3. **Development override**: `pattern readwrite #` allows all topics (temporary)
+1. **Default deny** — все неразрешённые топики блокируются
+2. **Client namespaces**: `clients/%c/#` — каждый клиент может писать/читать в свой namespace
+3. **Топики датчиков**: `sensors/#` — publish/subscribe для сенсоров
+4. **Топики LED** (dev): `led/#` — publish/subscribe для LED-устройств
+5. **Топики команд юнитов**: `units/#` — publish/subscribe для управления реле (добавлено 2026-07-27)
 
 ### Authentication Details
 
