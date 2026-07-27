@@ -23,6 +23,13 @@ void controlRelay(int relayPin, const char* relayName, const char* state)
   }
 }
 
+void publishRelayState(const char* topic, const char* state)
+{
+  char buf[64];
+  snprintf(buf, sizeof(buf), "{\"state\":\"%s\"}", state);
+  client.publish(topic, buf);
+}
+
 void mqttCallback(char *topic, uint8_t *payload, unsigned int length)
 {
   String message = String((char *)payload, length);
@@ -52,17 +59,21 @@ void mqttCallback(char *topic, uint8_t *payload, unsigned int length)
   if (String(topic) == RELAY_TOPIC_LIGHT)
   {
     controlRelay(RELAY_LIGHT_D_PIN, "light", state);
+    publishRelayState(RELAY_TOPIC_LIGHT, state);
   }
   else if (String(topic) == RELAY_TOPIC_HUMIDIFIER)
   {
     controlRelay(RELAY_HUMIDIFIER_D_PIN, "humidifier", state);
+    publishRelayState(RELAY_TOPIC_HUMIDIFIER, state);
   }
   else if (String(topic) == RELAY_TOPIC_FAN)
   {
     controlRelay(RELAY_FAN_D_PIN, "fan", state);
+    publishRelayState(RELAY_TOPIC_FAN, state);
   }
   else if (String(topic) == RELAY_TOPIC_WATER)
   {
     controlRelay(RELAY_WATER_D_PIN, "water", state);
+    publishRelayState(RELAY_TOPIC_WATER, state);
   }
 }

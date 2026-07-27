@@ -13,7 +13,8 @@ const cn = createCn('listing');
 const toggleDeviceValue = (obj: ObjectItem): string | null => {
   const specEntry = obj.spec?.[0];
   if (!specEntry) return null;
-  const currentValue = String(specEntry.value ?? '');
+  if (specEntry.value == null) return '1';
+  const currentValue = String(specEntry.value);
   if (specEntry.spec?.model === 'led') {
     return currentValue === 'OFF' ? 'ON' : 'OFF';
   }
