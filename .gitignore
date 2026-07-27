@@ -25,3 +25,6 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Разрешаем TODO.md в saspik-cluster
+!saspik-cluster/saspik-cluster-app/TODO.md
