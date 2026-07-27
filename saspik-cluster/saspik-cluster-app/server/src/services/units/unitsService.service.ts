@@ -28,12 +28,12 @@ export class UnitsService implements IUnitsService {
 
     return [
       {
-        id: "u1",
-        name: "Main Greenhouse",
-        description: "Primary greenhouse climate control",
+        id: "unitId1",
+        name: "ESP32 Controller",
+        description: "ESP32 controller with sensors and relays",
         objects: [
           {
-            id: "s6",
+            id: "dht22",
             name: "DHT22",
             type: ObjectsType.SENSOR,
             topic: "sensors/dht22",
@@ -43,14 +43,53 @@ export class UnitsService implements IUnitsService {
             ],
           },
           {
-            id: "d1",
-            name: "LED",
-            type: ObjectsType.DEVICE,
-            topic: "led/control",
+            id: "float-1",
+            name: "Float Sensor",
+            type: ObjectsType.SENSOR,
+            topic: "sensors/float-1",
             spec: [
-              { key: "state", model: "led", unit: "" },
+              { key: "floatSensor", model: "float", unit: "" },
             ],
-            description: "Светодиодный индикатор",
+          },
+          {
+            id: "a_relay1",
+            name: "Light",
+            type: ObjectsType.DEVICE,
+            topic: "units/unitId1/commands/a_relay1",
+            spec: [
+              { key: "state", model: "relay", unit: "" },
+            ],
+            description: "Свет (реле 1)",
+          },
+          {
+            id: "a_relay2",
+            name: "Humidifier",
+            type: ObjectsType.DEVICE,
+            topic: "units/unitId1/commands/a_relay2",
+            spec: [
+              { key: "state", model: "relay", unit: "" },
+            ],
+            description: "Увлажнитель (реле 2)",
+          },
+          {
+            id: "a_relay3",
+            name: "Fan",
+            type: ObjectsType.DEVICE,
+            topic: "units/unitId1/commands/a_relay3",
+            spec: [
+              { key: "state", model: "relay", unit: "" },
+            ],
+            description: "Вентилятор (реле 3)",
+          },
+          {
+            id: "a_relay4",
+            name: "Water Pump",
+            type: ObjectsType.DEVICE,
+            topic: "units/unitId1/commands/a_relay4",
+            spec: [
+              { key: "state", model: "relay", unit: "" },
+            ],
+            description: "Насос (реле 4)",
           },
         ],
         rules: mockRules,
