@@ -4,9 +4,9 @@ import { ILogger } from "../../logger/logger.interface";
 import { IConfigService } from "../../config/config.service.interface";
 import { IUnitsService } from ".";
 import { UnitDto } from "../../dto/units.dto";
-import { ObjectsType } from "../../dto/objects.dto";
 import { TYPES, TEMPORARY_ANY } from "../../types";
 import { IMqttService } from "../mqtt";
+import { unitId1Objects } from "../../data/unitId1.config";
 
 @injectable()
 export class UnitsService implements IUnitsService {
@@ -31,67 +31,7 @@ export class UnitsService implements IUnitsService {
         id: "unitId1",
         name: "ESP32 Controller",
         description: "ESP32 controller with sensors and relays",
-        objects: [
-          {
-            id: "dht22",
-            name: "DHT22",
-            type: ObjectsType.SENSOR,
-            topic: "sensors/dht22",
-            spec: [
-              { key: "temperature", model: "dht22", unit: "℃" },
-              { key: "humidity", model: "dht22", unit: "%" },
-            ],
-          },
-          {
-            id: "float-1",
-            name: "Float Sensor",
-            type: ObjectsType.SENSOR,
-            topic: "sensors/float-1",
-            spec: [
-              { key: "floatSensor", model: "float", unit: "" },
-            ],
-          },
-          {
-            id: "a_relay1",
-            name: "Light",
-            type: ObjectsType.DEVICE,
-            topic: "units/unitId1/commands/a_relay1",
-            spec: [
-              { key: "state", model: "relay", unit: "" },
-            ],
-            description: "Свет (реле 1)",
-          },
-          {
-            id: "a_relay2",
-            name: "Humidifier",
-            type: ObjectsType.DEVICE,
-            topic: "units/unitId1/commands/a_relay2",
-            spec: [
-              { key: "state", model: "relay", unit: "" },
-            ],
-            description: "Увлажнитель (реле 2)",
-          },
-          {
-            id: "a_relay3",
-            name: "Fan",
-            type: ObjectsType.DEVICE,
-            topic: "units/unitId1/commands/a_relay3",
-            spec: [
-              { key: "state", model: "relay", unit: "" },
-            ],
-            description: "Вентилятор (реле 3)",
-          },
-          {
-            id: "a_relay4",
-            name: "Water Pump",
-            type: ObjectsType.DEVICE,
-            topic: "units/unitId1/commands/a_relay4",
-            spec: [
-              { key: "state", model: "relay", unit: "" },
-            ],
-            description: "Насос (реле 4)",
-          },
-        ],
+        objects: unitId1Objects,
         rules: mockRules,
       },
     ];

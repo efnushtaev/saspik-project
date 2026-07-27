@@ -1,5 +1,5 @@
 import { inject, injectable } from "inversify";
-import mqtt, { MqttClient, IClientOptions } from "mqtt";
+import mqtt from "mqtt";
 
 import { TYPES, TEMPORARY_ANY } from "../../types";
 import { ILogger } from "../../logger/logger.interface";
@@ -8,7 +8,7 @@ import { IMqttService } from "./mqtt.interface";
 
 @injectable()
 export class LocalMqttService implements IMqttService {
-  private client: MqttClient | null = null;
+  private client: mqtt.MqttClient | null = null;
   private connected = false;
   private subscriptions: Map<string, (topic: string, message: Buffer) => void> = new Map();
 
@@ -22,7 +22,7 @@ export class LocalMqttService implements IMqttService {
 
   private setupConnection(): void {
     const brokerUrl = this.config.get("MQTT_BROKER_URL") || "mqtt://localhost:1883";
-    const options: IClientOptions = {
+    const options: mqtt.IClientOptions = {
       clientId: `atsap-server-${Date.now()}`,
       clean: true,
       reconnectPeriod: 5000,

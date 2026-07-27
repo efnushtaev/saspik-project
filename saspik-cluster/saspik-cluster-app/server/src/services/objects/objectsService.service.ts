@@ -4,10 +4,10 @@ import { ILogger } from "../../logger/logger.interface";
 import { IObjectsService } from ".";
 import { TYPES } from "../../types";
 import { TEMPORARY_ANY } from "../../types";
-import { mockObjects } from "./mock-objects.data";
 import { IStateStoreService } from "../state-store/stateStore.interface";
 import { IMqttService } from "../mqtt";
 import { ObjectsType } from "../../dto/objects.dto";
+import { unitId1Objects } from "../../data/unitId1.config";
 
 @injectable()
 export class ObjectsService implements IObjectsService {
@@ -24,15 +24,15 @@ export class ObjectsService implements IObjectsService {
       `[ObjectsService] getObjects${typeFilter ? ` filter=${typeFilter}` : ""}`,
     );
 
-    if (!typeFilter) return mockObjects;
+    if (!typeFilter) return unitId1Objects;
 
-    return mockObjects.filter((obj) => obj.type === typeFilter);
+    return unitId1Objects.filter((obj) => obj.type === typeFilter);
   }
 
   async getByIds(ids: string[], typeFilter?: string): Promise<TEMPORARY_ANY[]> {
     this.logger.log(`[ObjectsService] getByIds`);
 
-    let result = mockObjects;
+    let result = unitId1Objects;
 
     if (typeFilter) {
       result = result.filter((obj) => obj.type === typeFilter);
@@ -46,7 +46,7 @@ export class ObjectsService implements IObjectsService {
       `[ObjectsService] callCommand for device ${deviceId}, value ${value}`,
     );
 
-    const device = mockObjects.find(
+    const device = unitId1Objects.find(
       (obj) => obj.id === deviceId && obj.type === ObjectsType.DEVICE,
     );
     if (device) {

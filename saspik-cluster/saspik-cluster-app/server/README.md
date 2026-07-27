@@ -156,6 +156,7 @@ src/
 ├── common/                       # BaseController, route interface
 ├── config/                       # ConfigService
 ├── controllers/                  # Units, Objects, MQTT контроллеры
+├── data/                         # Общие конфиги (unitId1.config.ts — объекты юнита unitId1 для ObjectsService и UnitsService)
 ├── dto/                          # ObjectsDto, UnitDto, RuleDto
 ├── errors/                       # ExceptionFilter
 ├── logger/                       # LoggerService
