@@ -144,22 +144,28 @@
       "id": "humidifier_off",
       "trigger": { "topic": "sensors/dht22", "qos": 0 },
       "when": {
-        "or": [
-          {
+        "or": [{
             "and": [
               { "not": { "timeBetween": { "start": ${NIGHT_START_HOUR}, "end": ${NIGHT_END_HOUR}, "field": "$.timestamp" } } },
-              { "jsonpath": "$.humidity > ${expr:CLIMATE_RH_SET + CLIMATE_RH_HYST / 2}" },
-              { "jsonpath": "$.temperature <= ${CLIMATE_T_RECOVERY}" }
-            ]
+              { "or" : [
+                { "jsonpath": "$.humidity > ${expr:CLIMATE_RH_SET + CLIMATE_RH_HYST / 2}" },
+                { "jsonpath": "$.temperature <= ${CLIMATE_T_RECOVERY}" }
+                  ]
+                }
+              ]
           },
           {
             "and": [
-              { "timeBetween": { "start": ${NIGHT_START_HOUR}, "end": ${NIGHT_END_HOUR}, "field": "$.timestamp" } },
-              { "jsonpath": "$.humidity > ${expr:CLIMATE_NIGHT_RH_SET + CLIMATE_NIGHT_RH_HYST / 2}" },
-              { "jsonpath": "$.temperature <= ${CLIMATE_NIGHT_T_RECOVERY}" }
+              { "timeBetween": { "start": ${NIGHT_START_HOUR}, "end": ${NIGHT_END_HOUR}, "field": "$.timestamp" }},
+              { "or" : [
+                { "jsonpath": "$.humidity > ${expr:CLIMATE_NIGHT_RH_SET + CLIMATE_NIGHT_RH_HYST / 2}" },
+                { "jsonpath": "$.temperature <= ${CLIMATE_NIGHT_T_RECOVERY}" }
+                  ]
+                }
+              ]
+            }
             ]
-          }
-        ]
+          
       },
       "then": [
         { "action": "publish", "params": { "topic": "units/${CLIMATE_CONTROL_UNIT_ID}/commands/a_relay2", "payload": "{\"state\":\"0\"}", "qos": 1 } }
