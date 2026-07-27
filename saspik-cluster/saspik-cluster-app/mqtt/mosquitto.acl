@@ -15,6 +15,9 @@ pattern readwrite sensors/#
 # Allow LED control topics for authenticated users
 pattern readwrite led/#
 
+# Allow unit command topics for authenticated users
+pattern readwrite units/#
+
 # Default: deny all other topics
 # pattern deny #
 
