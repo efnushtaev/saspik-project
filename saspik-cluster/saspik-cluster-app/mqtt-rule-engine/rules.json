@@ -165,7 +165,6 @@
               ]
             }
             ]
-          
       },
       "then": [
         { "action": "publish", "params": { "topic": "units/${CLIMATE_CONTROL_UNIT_ID}/commands/a_relay2", "payload": "{\"state\":\"0\"}", "qos": 1 } }

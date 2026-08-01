@@ -26,5 +26,8 @@ __pycache__/
 # OS
 .DS_Store
 
+# Приватные файлы (свой git-репозиторий)
+saspik-private/
+
 # Разрешаем TODO.md в saspik-cluster
 !saspik-cluster/saspik-cluster-app/TODO.md
