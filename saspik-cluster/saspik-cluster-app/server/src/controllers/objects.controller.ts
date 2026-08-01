@@ -41,7 +41,7 @@ export class ObjectsController
     private objectsService: IObjectsService,
   ) {
     super(loggerService);
-    this.bindRoutes([
+    this.bindRoutes<any>([
       {
         path: ObjectsControllersRoutesURL.OBJECTS_LIST,
         method: RequestMethod.POST,
@@ -66,16 +66,16 @@ export class ObjectsController
   }
 
   async getObjectsLists(
-    { params }: Request<ListParamsReq, never, ListBodyReq>,
+    { params, body }: Request<ListParamsReq, never, ListBodyReq>,
     res: Response,
   ) {
     const typeFilter = params.type;
-    const objects = await this.objectsService.getObjects(typeFilter);
+    const objects = await this.objectsService.getObjects(typeFilter, body.unitId);
     const enriched = await Promise.all(
       objects.map(async (object) => {
         const spec = await Promise.all(
           object.spec.map(async (s) => {
-            const raw = await this.objectsService.getObjectState(object.id, s.key);
+            const raw = await this.objectsService.getObjectState(object.topic, s.key);
             return { key: s.key, value: formatValue(raw, s.minorPart), spec: s };
           }),
         );
@@ -89,12 +89,12 @@ export class ObjectsController
     { body }: Request<never, never, GetByIdsBodyReq>,
     res: Response,
   ) {
-    const objects = await this.objectsService.getByIds(body.id, body.type);
+    const objects = await this.objectsService.getByIds(body.id, body.type, body.unitId);
     const enriched = await Promise.all(
       objects.map(async (object) => {
         const spec = await Promise.all(
           object.spec.map(async (s) => {
-            const raw = await this.objectsService.getObjectState(object.id, s.key);
+            const raw = await this.objectsService.getObjectState(object.topic, s.key);
             return { key: s.key, value: formatValue(raw, s.minorPart), spec: s };
           }),
         );
@@ -109,7 +109,7 @@ export class ObjectsController
     res: Response,
   ) {
     try {
-      await this.objectsService.callCommand(params.deviceId, body.value);
+      await this.objectsService.callCommand(params.deviceId, body.value, body.unitId);
       return this.ok<CommandResponse>(res, { success: true });
     } catch (error) {
       return this.send(res, 500, {

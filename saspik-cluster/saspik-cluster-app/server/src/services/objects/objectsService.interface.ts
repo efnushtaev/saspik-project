@@ -1,13 +1,13 @@
 import { ObjectsDto } from "../../dto/objects.dto";
 
 export interface IObjectsService {
-  getObjects(typeFilter?: string): Promise<ObjectsDto[]>;
+  getObjects(typeFilter?: string, unitId?: string): Promise<ObjectsDto[]>;
 
-  getByIds(ids: string[], typeFilter?: string): Promise<ObjectsDto[]>;
+  getByIds(ids: string[], typeFilter?: string, unitId?: string): Promise<ObjectsDto[]>;
 
-  callCommand(deviceId: string, value: string): Promise<void>;
+  callCommand(deviceId: string, value: string, unitId?: string): Promise<void>;
 
   getLastSensorsData(ids: string[]): Promise<Record<string, unknown>>;
 
-  getObjectState(id: string, field?: string): Promise<number | string | boolean | null>;
+  getObjectState(topic: string, field?: string): Promise<number | string | boolean | null>;
 }

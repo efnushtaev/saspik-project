@@ -6,7 +6,7 @@ import { IUnitsService } from ".";
 import { UnitDto } from "../../dto/units.dto";
 import { TYPES, TEMPORARY_ANY } from "../../types";
 import { IMqttService } from "../mqtt";
-import { unitId1Objects } from "../../data/unitId1.config";
+import { unitsConfig } from "../../data/units.config";
 
 @injectable()
 export class UnitsService implements IUnitsService {
@@ -26,15 +26,13 @@ export class UnitsService implements IUnitsService {
       { id: "r2", name: "Low humidity", condition: "humidity < 30", action: "humidifier_on", enabled: true },
     ];
 
-    return [
-      {
-        id: "unitId1",
-        name: "ESP32 Controller",
-        description: "ESP32 controller with sensors and relays",
-        objects: unitId1Objects,
-        rules: mockRules,
-      },
-    ];
+    return unitsConfig.map((unit) => ({
+      id: unit.id,
+      name: unit.name,
+      description: unit.description,
+      objects: unit.objects,
+      rules: mockRules,
+    }));
   }
 
   async callCommand(

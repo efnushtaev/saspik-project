@@ -5,13 +5,11 @@ import { ILogger } from "../../logger/logger.interface";
 import { IConfigService } from "../../config/config.service.interface";
 import { TYPES } from "../../types";
 import { IStateStoreService, StoredState } from "./stateStore.interface";
-import { ObjectsDto } from "../../dto/objects.dto";
 
 @injectable()
 export class InfluxDbStateStoreService implements IStateStoreService {
   private queryApi: QueryApi;
   private bucket: string;
-  private objectsCache: ObjectsDto[] = [];
 
   constructor(
     @inject(TYPES.Logger) private logger: ILogger,
@@ -30,29 +28,19 @@ export class InfluxDbStateStoreService implements IStateStoreService {
     );
   }
 
-  async init(objects: ObjectsDto[]): Promise<void> {
-    this.objectsCache = objects;
-    this.logger.log(
-      `[InfluxDbStateStoreService] cached ${this.objectsCache.length} objects`,
-    );
-  }
-
   async set(
-    _objectId: string,
+    _topic: string,
     _value: unknown,
     _timestamp?: Date,
   ): Promise<void> {
     // no-op — Telegraf writes all MQTT messages to InfluxDB
   }
 
-  async get(objectId: string, field?: string): Promise<StoredState | null> {
-    const object = this.objectsCache.find((o) => o.id === objectId);
-    if (!object?.topic) return null;
-
+  async get(topic: string, field?: string): Promise<StoredState | null> {
     const flux = `
       from(bucket: "${this.bucket}")
         |> range(start: -24h)
-        |> filter(fn: (r) => r.topic == "${object.topic}")
+        |> filter(fn: (r) => r.topic == "${topic}")
         |> filter(fn: (r) => r._field == "${field || "state"}")
         |> last()
     `;
@@ -68,7 +56,7 @@ export class InfluxDbStateStoreService implements IStateStoreService {
       }
     } catch (err) {
       this.logger.error(
-        `[InfluxDbStateStoreService] query error for ${object.topic}:`,
+        `[InfluxDbStateStoreService] query error for ${topic}:`,
         err,
       );
       return null;
@@ -78,11 +66,11 @@ export class InfluxDbStateStoreService implements IStateStoreService {
   }
 
   async getMany(
-    objectIds: string[],
+    topics: string[],
   ): Promise<Record<string, StoredState | null>> {
     const result: Record<string, StoredState | null> = {};
-    for (const id of objectIds) {
-      result[id] = await this.get(id);
+    for (const topic of topics) {
+      result[topic] = await this.get(topic);
     }
     return result;
   }

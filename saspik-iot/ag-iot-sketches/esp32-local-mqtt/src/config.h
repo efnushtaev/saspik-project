@@ -8,11 +8,11 @@ constexpr uint8_t PIN_DHT       = 4;
 constexpr uint8_t PIN_LED       = 2;
 
 // --- MQTT ---
-constexpr char MQTT_BROKER[]      = "185.72.145.19";
+constexpr char MQTT_BROKER[]      = "192.168.0.101";
 constexpr uint16_t MQTT_PORT      = 1883;
 constexpr char MQTT_USER[]        = "admin";
 constexpr char MQTT_PASS[]        = "password123";
-constexpr char TOPIC_PUBLISH[]    = "sensors/dht22";
+constexpr char TOPIC_PUBLISH[]    = "sensors/unitId2/dht22";
 constexpr char TOPIC_SUBSCRIBE[]  = "led/control";
 
 // --- Интервал чтения датчика (мс) ---

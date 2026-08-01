@@ -4,7 +4,7 @@ export interface StoredState {
 }
 
 export interface IStateStoreService {
-  set(objectId: string, value: unknown, timestamp?: Date): Promise<void>;
-  get(objectId: string, field?: string): Promise<StoredState | null>;
-  getMany(objectIds: string[]): Promise<Record<string, StoredState | null>>;
+  set(topic: string, value: unknown, timestamp?: Date): Promise<void>;
+  get(topic: string, field?: string): Promise<StoredState | null>;
+  getMany(topics: string[]): Promise<Record<string, StoredState | null>>;
 }

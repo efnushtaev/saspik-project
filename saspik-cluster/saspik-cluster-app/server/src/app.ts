@@ -15,7 +15,6 @@ import { MqttController } from "./controllers/mqtt.controller";
 import { type IClimateControlService } from "./services/climate-control/climateControl.interface";
 import { InfluxDbStateStoreService } from "./services/state-store";
 import { IObjectsService } from "./services/objects";
-import { ObjectsDto } from "./dto/objects.dto";
 
 @injectable()
 export class App {
@@ -84,9 +83,6 @@ export class App {
         "[App] CLIMATE_CONTROL_UNIT_ID not set, skipping climate control",
       );
     }
-
-    const objects = await this.objectsService.getObjects();
-    await this.stateStore.init(objects as ObjectsDto[]);
   }
 
   public async init(): Promise<void> {

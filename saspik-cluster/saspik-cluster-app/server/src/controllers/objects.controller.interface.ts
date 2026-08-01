@@ -28,15 +28,19 @@ export type ListParamsReq = {
   type: ObjectsType;
 };
 
-export type ListBodyReq = Record<string, never>;
+export type ListBodyReq = {
+  unitId?: string;
+};
 
 export type GetByIdsBodyReq = {
   id: string[];
   type?: ObjectsType;
+  unitId?: string;
 };
 
 export type CommandBodyReq = {
   value: string;
+  unitId?: string;
 };
 
 export type CommandParamsReq = {

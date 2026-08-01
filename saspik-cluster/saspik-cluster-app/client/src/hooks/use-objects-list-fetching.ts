@@ -30,10 +30,12 @@ export const useObjectsListFetching = (type: PageObjectType = 'sensor'): UseObje
   useEffect(() => {
     const loadingTimer = setTimeout(() => setLoading(false), 10000);
 
+    const searchParams = new URLSearchParams(location.search);
+    const unitId = searchParams.get('id') || undefined;
+
     const fetchObjects = async () => {
       try {
         if (isMockMode()) {
-          const searchParams = new URLSearchParams(location.search);
           const id = searchParams.get('id') || '';
 
           let data;
@@ -49,6 +51,7 @@ export const useObjectsListFetching = (type: PageObjectType = 'sensor'): UseObje
             headers: {
               'Content-Type': 'application/json',
             },
+            body: JSON.stringify({ unitId }),
           });
 
           if (!response.ok) {
@@ -82,10 +85,12 @@ export const useObjectsListFetching = (type: PageObjectType = 'sensor'): UseObje
       if (isMockMode()) {
         await mockApi.callCommand(deviceId, value);
       } else {
+        const searchParams = new URLSearchParams(location.search);
+        const unitId = searchParams.get('id') || undefined;
         const response = await fetch(`/api/v1/objects/command/${deviceId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ value }),
+          body: JSON.stringify({ value, unitId }),
         });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

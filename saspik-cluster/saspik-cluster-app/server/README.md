@@ -57,6 +57,16 @@
           { "id": "r1", "name": "High temp alert", "condition": "temperature > 30", "action": "notify", "enabled": true },
           { "id": "r2", "name": "Low humidity", "condition": "humidity < 30", "action": "humidifier_on", "enabled": true }
         ]
+      },
+      {
+        "id": "unitId2",
+        "name": "ESP32 Local MQTT",
+        "description": "ESP32 local MQTT (DHT22 + LED)",
+        "objects": [
+          { "id": "dht22", "name": "DHT22", "type": "sensor", "topic": "sensors/unitId2/dht22", "spec": [{ "key": "temperature", "model": "dht22", "unit": "℃" }, { "key": "humidity", "model": "dht22", "unit": "%" }] },
+          { "id": "led", "name": "LED", "type": "device", "topic": "led/control", "spec": [{ "key": "state", "model": "led", "unit": "" }], "description": "Светодиодный индикатор" }
+        ],
+        "rules": []
       }
     ]
   }
@@ -65,8 +75,8 @@
 #### 4. Список объектов по типу
 - `POST /api/v1/objects/list/:type`
 - `:type` — `sensor` или `device`
-- Тело запроса: не требуется
-- `value` загружается из InfluxDB (последнее показание)
+- Тело запроса (опционально): `{ "unitId": "unitId2" }` — фильтр по юниту; если не указан, возвращаются объекты всех юнитов
+- `value` загружается из InfluxDB (последнее показание) по топику объекта
 - Форматирование: значение округляется по `spec.minorPart` (если задан), возвращается строкой
 - Ответ (sensor):
   ```json
@@ -107,6 +117,7 @@
 - `POST /api/v1/objects/getByIds`
 - Тело: `{ "id": ["dht22", "a_relay1"], "type": "sensor" }`
 - `type` — опционально, `sensor` или `device` (фильтр по типу)
+- `unitId` — опционально, фильтр по юниту; если не указан, поиск по всем юнитам
 - Ответ:
   ```json
   {
@@ -127,7 +138,7 @@
 
 #### 6. Команда устройству
 - `POST /api/v1/objects/command/:deviceId`
-- Тело: `{ "value": "1" }`
+- Тело: `{ "value": "1" }`; `unitId` — опционально, ищет устройство в рамках юнита (если не указан — по всем юнитам)
 - Ответ: `{ "success": true }`
 
 #### 7. Последние показания сенсоров
@@ -173,7 +184,7 @@ src/
 ├── common/                       # BaseController, route interface
 ├── config/                       # ConfigService
 ├── controllers/                  # Units, Objects, MQTT контроллеры
-├── data/                         # Общие конфиги (unitId1.config.ts — объекты юнита unitId1 для ObjectsService и UnitsService)
+├── data/                         # Конфиги юнитов (unitId1.config.ts, unitId2.config.ts, units.config.ts — реестр юнитов для ObjectsService и UnitsService)
 ├── dto/                          # ObjectsDto, UnitDto, RuleDto
 ├── errors/                       # ExceptionFilter
 ├── logger/                       # LoggerService

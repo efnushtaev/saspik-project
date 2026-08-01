@@ -7,7 +7,7 @@ import { TEMPORARY_ANY } from "../../types";
 import { IStateStoreService } from "../state-store/stateStore.interface";
 import { IMqttService } from "../mqtt";
 import { ObjectsType } from "../../dto/objects.dto";
-import { unitId1Objects } from "../../data/unitId1.config";
+import { getObjectsByUnit } from "../../data/units.config";
 
 @injectable()
 export class ObjectsService implements IObjectsService {
@@ -19,20 +19,24 @@ export class ObjectsService implements IObjectsService {
     this.logger.log("[ObjectsService] initialized");
   }
 
-  async getObjects(typeFilter?: string): Promise<TEMPORARY_ANY[]> {
+  async getObjects(typeFilter?: string, unitId?: string): Promise<TEMPORARY_ANY[]> {
     this.logger.log(
-      `[ObjectsService] getObjects${typeFilter ? ` filter=${typeFilter}` : ""}`,
+      `[ObjectsService] getObjects${typeFilter ? ` filter=${typeFilter}` : ""}${unitId ? ` unit=${unitId}` : ""}`,
     );
 
-    if (!typeFilter) return unitId1Objects;
+    let result = getObjectsByUnit(unitId);
 
-    return unitId1Objects.filter((obj) => obj.type === typeFilter);
+    if (typeFilter) {
+      result = result.filter((obj) => obj.type === typeFilter);
+    }
+
+    return result;
   }
 
-  async getByIds(ids: string[], typeFilter?: string): Promise<TEMPORARY_ANY[]> {
+  async getByIds(ids: string[], typeFilter?: string, unitId?: string): Promise<TEMPORARY_ANY[]> {
     this.logger.log(`[ObjectsService] getByIds`);
 
-    let result = unitId1Objects;
+    let result = getObjectsByUnit(unitId);
 
     if (typeFilter) {
       result = result.filter((obj) => obj.type === typeFilter);
@@ -41,12 +45,12 @@ export class ObjectsService implements IObjectsService {
     return result.filter((obj) => ids.includes(obj.id));
   }
 
-  async callCommand(deviceId: string, value: string): Promise<void> {
+  async callCommand(deviceId: string, value: string, unitId?: string): Promise<void> {
     this.logger.log(
-      `[ObjectsService] callCommand for device ${deviceId}, value ${value}`,
+      `[ObjectsService] callCommand for device ${deviceId}, value ${value}${unitId ? ` unit=${unitId}` : ""}`,
     );
 
-    const device = unitId1Objects.find(
+    const device = getObjectsByUnit(unitId).find(
       (obj) => obj.id === deviceId && obj.type === ObjectsType.DEVICE,
     );
     if (device) {
@@ -62,10 +66,10 @@ export class ObjectsService implements IObjectsService {
     return {};
   }
 
-  async getObjectState(id: string, field?: string): Promise<number | string | boolean | null> {
-    this.logger.log(`[ObjectsService] getObjectState id=${id} field=${field}`);
+  async getObjectState(topic: string, field?: string): Promise<number | string | boolean | null> {
+    this.logger.log(`[ObjectsService] getObjectState topic=${topic} field=${field}`);
 
-    const stored = await this.stateStore.get(id, field);
+    const stored = await this.stateStore.get(topic, field);
     return stored?.value ?? null;
   }
 }
