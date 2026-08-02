@@ -123,7 +123,30 @@
 </ul>
 <hr>
 <h2 id="репозитории">Репозитории</h2>
-<p>| Репозиторий | Описание |<br>|---|---|---|<br>| <a href="#saspik-meshrover"><code>saspik-meshrover</code></a> | ESP32-S3 роботы (UWB, LoRa mesh, TFLite) |<br>| <a href="#saspik-iot"><code>saspik-iot</code></a> | ESP32 прошивки (шлюз, сенсорный узел) |<br>| <a href="#saspik-cluster"><code>saspik-cluster</code></a> | MQTT брокер, rule-engine, сервер, клиент |<br>| <a href="#saspik-greenhouse"><code>saspik-greenhouse</code></a> | Управление микроклиматом теплицы |</p>
+<table>
+<thead>
+<tr>
+<th>Репозиторий</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#saspik-meshrover"><code>saspik-meshrover</code></a></td>
+<td>ESP32-S3 роботы (UWB, LoRa mesh, TFLite)</td>
+</tr>
+<tr>
+<td><a href="#saspik-iot"><code>saspik-iot</code></a></td>
+<td>ESP32 прошивки (шлюз, сенсорный узел)</td>
+</tr>
+<tr>
+<td><a href="#saspik-cluster"><code>saspik-cluster</code></a></td>
+<td>MQTT брокер, rule-engine, сервер, клиент</td>
+</tr>
+<tr>
+<td><a href="#saspik-greenhouse"><code>saspik-greenhouse</code></a></td>
+<td>Управление микроклиматом теплицы</td>
+</tr>
+</tbody></table>
 <hr>
 <h2 id="пилот">Пилот</h2>
 <p><strong>Статус:</strong> Запущен. Теплица установлена, кластер развёрнут.</p>
@@ -325,14 +348,6 @@
 <td>Ссылка на GitHub-репозиторий</td>
 </tr>
 </tbody></table>
-<h2 id="структура-каталога">Структура каталога</h2>
-<pre><code>.
-├── docs/
-├── hardware/
-├── README.md
-├── software/
-└── TODO.md
-</code></pre>
 
 </section>
 <hr class="section-sep">
@@ -361,18 +376,10 @@
 <p>Контекст проекта: <code>opencode/agents.md → saspik-iot</code>.</p>
 <h2 id="программное-обеспечение">Программное обеспечение</h2>
 <ul>
-<li><a href="software/ag-iot-sketches/README.md"><code>software/ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
+<li><a href="saspik-iot/ag-iot-sketches/README.md"><code>ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
 </ul>
 <h2 id="классификация-устройств">Классификация устройств</h2>
 <p>Устройства классифицируются по формату <code>saspik.{роли}.{протокол}.{питание}{nnn}</code>.<br>Подробнее: <a href="docs/classification.md"><code>docs/classification.md</code></a></p>
-<h2 id="структура-каталога">Структура каталога</h2>
-<pre><code>.
-├── docs/
-├── hardware/
-├── README.md
-├── software/
-└── TODO.md
-</code></pre>
 
 </section>
 <hr class="section-sep">
