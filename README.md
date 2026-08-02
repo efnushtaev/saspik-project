@@ -32,7 +32,7 @@
 ## Репозитории
 
 | Репозиторий | Описание |
-|---|---|---|
+|---|---|
 | [`saspik-meshrover`](saspik-meshrover/README.md) | ESP32-S3 роботы (UWB, LoRa mesh, TFLite) |
 | [`saspik-iot`](saspik-iot/README.md) | ESP32 прошивки (шлюз, сенсорный узел) |
 | [`saspik-cluster`](saspik-cluster/README.md) | MQTT брокер, rule-engine, сервер, клиент |

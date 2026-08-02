@@ -15,6 +15,7 @@
 #include <ArduinoJson.h>
 #include "config.h"
 #include "env_config.h"
+#include "WifiConfig.h"
 
 // ======================== ГЛОБАЛЬНЫЕ ОБЪЕКТЫ ========================
 
@@ -22,12 +23,14 @@ WiFiClient   wifiClient;
 PubSubClient mqttClient(wifiClient);
 DHT          dht(PIN_DHT, DHT_TYPE);
 
+// Рабочий конфиг (WiFi + MQTT) — заполняется через captive portal / NVS
+DeviceConfig config;
+
 // Неблокирующий таймер
 uint32_t lastSensorReadMs = 0;
 
 // ======================== ПРОТОТИПЫ ========================
 
-void connectWiFi();
 void connectMQTT();
 void callbackMQTT(char* topic, byte* payload, unsigned int length);
 void publishSensorData();
@@ -38,6 +41,20 @@ void setLed(bool on);
 void setup() {
     Serial.begin(115200);
 
+    // Конфиг по умолчанию: подставляется в форму портала при пустом NVS
+    DeviceConfig defaults = {};
+    strncpy(defaults.wifiSsid, WIFI_SSID, sizeof(defaults.wifiSsid) - 1);
+    strncpy(defaults.wifiPass, WIFI_PASS, sizeof(defaults.wifiPass) - 1);
+    strncpy(defaults.mqttHost, MQTT_BROKER, sizeof(defaults.mqttHost) - 1);
+    defaults.mqttPort = MQTT_PORT;
+    strncpy(defaults.mqttUser, MQTT_USER, sizeof(defaults.mqttUser) - 1);
+    strncpy(defaults.mqttPass, MQTT_PASS, sizeof(defaults.mqttPass) - 1);
+
+    // Старт: если true — подключены к WiFi, false — работает captive portal
+    if (!WifiConfig.begin(config, CONFIG_BUTTON_PIN, &defaults)) {
+        return;
+    }
+
     // Настройка пина светодиода (active low)
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, HIGH);  // HIGH = выключен (active low)
@@ -45,25 +62,25 @@ void setup() {
     // Инициализация DHT
     dht.begin();
 
-    // Генерация уникального clientId на основе MAC-адреса
-    String clientId = "esp32-dht22-";
-    clientId += WiFi.macAddress();
-    clientId.replace(":", "");
-
-    // Настройка MQTT
-    mqttClient.setServer(MQTT_BROKER, MQTT_PORT);
+    // Настройка MQTT из конфига
+    mqttClient.setServer(config.mqttHost, config.mqttPort);
     mqttClient.setCallback(callbackMQTT);
 
-    // Подключение к WiFi
-    connectWiFi();
-
     Serial.print("Client ID: ");
-    Serial.println(clientId);
+    Serial.println("esp32-dht22-" + WiFi.macAddress());
 }
 
 // ======================== LOOP ========================
 
 void loop() {
+    // Обслуживание captive portal (no-op в штатном режиме)
+    WifiConfig.handlePortal();
+
+    // В режиме портала MQTT/сенсор не инициализированы — выходим
+    if (WifiConfig.isPortalMode()) {
+        return;
+    }
+
     // Поддержание MQTT-соединения (каждый вызов loop)
     if (!mqttClient.connected()) {
         connectMQTT();
@@ -78,26 +95,6 @@ void loop() {
     }
 }
 
-// ======================== WiFi ========================
-
-void connectWiFi() {
-    Serial.print("Подключение к WiFi: ");
-    Serial.println(WIFI_SSID);
-
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(WIFI_SSID, WIFI_PASS);
-
-    // Неблокирующее ожидание — проверяем статус в цикле
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);                     // краткая задержка допустима только в setup
-        Serial.print(".");
-    }
-
-    Serial.println();
-    Serial.print("WiFi подключён. IP: ");
-    Serial.println(WiFi.localIP());
-}
-
 // ======================== MQTT ========================
 
 void connectMQTT() {
@@ -107,11 +104,11 @@ void connectMQTT() {
     clientId.replace(":", "");
 
     Serial.print("Подключение к MQTT-брокеру: ");
-    Serial.print(MQTT_BROKER);
+    Serial.print(config.mqttHost);
     Serial.print(":");
-    Serial.println(MQTT_PORT);
+    Serial.println(config.mqttPort);
 
-    if (mqttClient.connect(clientId.c_str(), MQTT_USER, MQTT_PASS)) {
+    if (mqttClient.connect(clientId.c_str(), config.mqttUser, config.mqttPass)) {
         Serial.println("MQTT подключён.");
 
         // Подписка на топик управления светодиодом

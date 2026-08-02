@@ -1,7 +1,12 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// WiFi
+// Кнопка captive portal (внешняя, подтяжка к GND, INPUT_PULLUP, нажатие = LOW)
+// При зажатии при включении открывается портал конфигурации WiFi/MQTT.
+// Пин свободен: реле 12/13/14/27.
+#define CONFIG_BUTTON_PIN 32
+
+// WiFi (дефолт, переопределяется через captive portal / NVS)
 #define WIFI_SSID "TP-Link_B354"
 #define WIFI_PASS "57339016"
 

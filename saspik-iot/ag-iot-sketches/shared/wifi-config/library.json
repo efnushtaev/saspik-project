@@ -1,0 +1,8 @@
+{
+  "name": "wifi-config",
+  "version": "0.1.0",
+  "description": "Captive portal for configuring WiFi + MQTT settings on ESP32 without reflashing",
+  "keywords": "wifi, captive, portal, nvs, mqtt, config",
+  "frameworks": "arduino",
+  "platforms": "espressif32"
+}

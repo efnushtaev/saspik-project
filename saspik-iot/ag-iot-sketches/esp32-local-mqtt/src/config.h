@@ -7,6 +7,11 @@ constexpr char DEVICE_CLASS[] = "saspik.sa.wm.m001";
 constexpr uint8_t PIN_DHT       = 4;
 constexpr uint8_t PIN_LED       = 2;
 
+// --- Кнопка captive portal (внешняя, подтяжка к GND, INPUT_PULLUP, нажатие = LOW) ---
+// При зажатии при включении открывается портал конфигурации WiFi/MQTT
+// (даже если конфиг уже сохранён в NVS). Пин свободен: DHT=4, LED=2.
+constexpr uint8_t CONFIG_BUTTON_PIN = 25;
+
 // --- MQTT ---
 constexpr char MQTT_BROKER[]      = "192.168.0.101";
 constexpr uint16_t MQTT_PORT      = 1883;

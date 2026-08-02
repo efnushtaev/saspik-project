@@ -7,34 +7,46 @@
 #include <ArduinoJson.h>
 #include "mqtt_handler.h"
 #include <time.h>
+#include "WifiConfig.h"
 
 CRC8 crc;
 
 TaskHandle_t espNowTaskHandle;
 TaskHandle_t mqttTaskHandle;
 
+// Рабочий конфиг (WiFi + MQTT) — заполняется через captive portal / NVS
+DeviceConfig config;
+
 // ----------------------------------------------------------------------------
 // WiFi
 // ----------------------------------------------------------------------------
 
-void initWiFi()
+bool initWiFi()
 {
-  WiFi.mode(WIFI_MODE_APSTA);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  // Конфиг по умолчанию: подставляется в форму портала при пустом NVS
+  DeviceConfig defaults = {};
+  strncpy(defaults.wifiSsid, WIFI_SSID, sizeof(defaults.wifiSsid) - 1);
+  strncpy(defaults.wifiPass, WIFI_PASS, sizeof(defaults.wifiPass) - 1);
+  strncpy(defaults.mqttHost, MQTT_HOST, sizeof(defaults.mqttHost) - 1);
+  defaults.mqttPort = MQTT_PORT;
+  strncpy(defaults.mqttUser, MQTT_USER, sizeof(defaults.mqttUser) - 1);
+  strncpy(defaults.mqttPass, MQTT_PASS, sizeof(defaults.mqttPass) - 1);
 
-  Serial.printf("Connecting to %s .", WIFI_SSID);
-  while (WiFi.status() != WL_CONNECTED)
+  // Старт: если true — подключены к WiFi, false — работает captive portal
+  if (!WifiConfig.begin(config, CONFIG_BUTTON_PIN, &defaults))
   {
-    Serial.print(".");
-    delay(200);
+    return false;
   }
-  Serial.println(" ok");
 
-  Serial.printf("SSID: %s\n", WIFI_SSID);
+  WiFi.mode(WIFI_MODE_APSTA);
+
+  Serial.printf("SSID: %s\n", config.wifiSsid);
   Serial.printf("Channel: %u\n", WiFi.channel());
   Serial.printf("IP: %s\n", WiFi.localIP().toString().c_str());
   Serial.print("MAC: ");
   Serial.println(WiFi.macAddress());
+
+  return true;
 }
 
 // ----------------------------------------------------------------------------
@@ -168,7 +180,7 @@ void reconnect()
   while (!client.connected())
   {
     Serial.print("Connecting MQTT...");
-    if (client.connect(CLIENT_ID, MQTT_USER, MQTT_PASS))
+    if (client.connect(CLIENT_ID, config.mqttUser, config.mqttPass))
     {
       Serial.println(" connected");
       client.subscribe(RELAY_TOPIC_LIGHT);
@@ -237,7 +249,7 @@ void mqttTask(void *pvParameters)
 
 void initMqtt()
 {
-  client.setServer(MQTT_HOST, MQTT_PORT);
+  client.setServer(config.mqttHost, config.mqttPort);
   client.setCallback(mqttCallback);
   xTaskCreatePinnedToCore(mqttTask, "MQTT Task", 4096, NULL, 1, &mqttTaskHandle, 1);
 }
@@ -251,7 +263,11 @@ void setup()
   Serial.begin(115200);
   delay(500);
 
-  initWiFi();
+  if (!initWiFi())
+  {
+    return;  // активен captive portal — loop() крутит handlePortal()
+  }
+
   initNTP();
   initEspNow();
   initMqtt();
@@ -269,4 +285,7 @@ void setup()
   digitalWrite(RELAY_HUMIDIFIER_D_PIN, LOW);
 }
 
-void loop() {}
+void loop() {
+  WifiConfig.handlePortal();
+  delay(10);
+}
