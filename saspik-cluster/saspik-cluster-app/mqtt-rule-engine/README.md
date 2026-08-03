@@ -2,7 +2,7 @@
 
 # MQTT Rule Engine Worker
 
-Движок правил для MQTT, позволяющий автоматически выполнять действия при получении сообщений в заданные топики с поддержкой условий и горячей перезагрузки конфигурации.
+Движок правил для MQTT, позволяющий автоматически выполнять действия при получении сообщений в заданные топики с поддержкой условий. Правила загружаются из MongoDB, HTTP API или файла (`rules.json`) и обновляются в рантайме без остановки процесса.
 
 ## Архитектура
 
@@ -12,10 +12,49 @@
 - **`src/mqtt/`** – адаптер MQTT (`MqttAdapter`), абстракция над библиотекой `mqtt`.
 - **`src/conditions/`** – условия (`Condition`): проверка топика по regex, JSONPath, точное совпадение payload, логические композиты (AND, OR, NOT).
 - **`src/actions/`** – действия (`Action`): публикация в топик, логирование в консоль.
-- **`src/config/`** – загрузка и парсинг конфигурации (`RuleBuilder`, `ConfigWatcher`).
+- **`src/config/`** – парсинг конфигурации (`RuleBuilder`) и файловый источник правил (`ConfigWatcher`).
+- **`src/providers/`** – источники правил (`RulesProvider`): `MongoRulesProvider`, `ApiRulesProvider`, фабрика `createRulesProvider`.
 - **`src/context/`** – контекст сообщения (`MessageContext`), предоставляет доступ к payload как JSON и извлечение значений по JSONPath.
 - **`src/utils/`** – утилиты, например сопоставление топиков с wildcards (`topicMatches`).
 - **`test/`** – тестовый клиент, мок-адаптер и примеры правил.
+
+## Источники правил
+
+Источник выбирается переменной окружения `RULES_SOURCE`:
+
+| Значение | Источник | Описание |
+|---|---|---|
+| `mongo` (по умолчанию) | MongoDB | Коллекция `rules`, поле `enabled` отключает правило |
+| `api` | HTTP API сервера | `GET {RULES_API_URL}`, ожидает `{ "rules": [...] }` или `[...]` |
+| `file` | Локальный `rules.json` | Файловый источник с отслеживанием изменений (`ConfigWatcher`) |
+
+Все источники поддерживают env-подстановку в правилах (`${VAR}` и `${expr:...}`) и опрос с интервалом `RULES_POLL_INTERVAL_MS` (по умолчанию 5000 мс). При изменении правил движок перестраивает подписки без перезапуска.
+
+Переменные окружения:
+
+```
+RULES_SOURCE=mongo            # mongo | api | file
+MONGODB_URL=mongodb://mongo:27017/saspik   # для RULES_SOURCE=mongo
+RULES_API_URL=http://backend:3001/api/v1/rules  # для RULES_SOURCE=api
+RULES_POLL_INTERVAL_MS=5000   # интервал опроса
+CONFIG_PATH=./rules.json      # для RULES_SOURCE=file
+```
+
+### Формат правила
+
+Правило в MongoDB/API хранится в формате rule-engine. Поле `enabled: false` — «мягкое» отключение: движок пропускает такое правило и не подписывается на его топики.
+
+```json
+{
+  "id": "temp_emergency_high",
+  "trigger": { "topic": "sensors/dht22", "qos": 0 },
+  "when": { "jsonpath": "$.temperature > 29" },
+  "then": [
+    { "action": "publish", "params": { "topic": "units/unitId1/commands/a_relay3", "payload": "{\"state\":\"1\"}", "qos": 1 } }
+  ],
+  "enabled": true
+}
+```
 
 ## Установка и запуск
 
@@ -23,6 +62,7 @@
 
 - Node.js 18 или выше
 - MQTT-брокер (например, Mosquitto)
+- MongoDB (для `RULES_SOURCE=mongo`, по умолчанию)
 
 ### Установка
 
@@ -39,16 +79,18 @@ npm run build
 
 ### Запуск основного воркера
 
-Перед запуском создайте файл конфигурации `rules.json` в корне проекта (пример ниже) или укажите путь через переменную окружения `CONFIG_PATH`.
+По умолчанию правила загружаются из MongoDB (коллекция `rules`). Для локального запуска укажите брокер и источник:
 
 ```bash
-npm start
+MQTT_BROKER_URL=mqtt://localhost:1883 \
+MONGODB_URL=mongodb://localhost:27017/saspik \
+RULES_SOURCE=mongo npm start
 ```
 
-Или с указанием брокера:
+Для файлового источника создайте `rules.json` в корне проекта (пример ниже) или укажите путь через `CONFIG_PATH`:
 
 ```bash
-MQTT_BROKER_URL=mqtt://localhost:1883 CONFIG_PATH=./rules.json npm start
+MQTT_BROKER_URL=mqtt://localhost:1883 RULES_SOURCE=file CONFIG_PATH=./rules.json npm start
 ```
 
 ### Запуск тестового клиента
@@ -140,9 +182,14 @@ npm run test
 - `qos` – QoS публикации (по умолчанию 0)
 - `retain` – флаг retain (по умолчанию false)
 
-## Горячая перезагрузка конфигурации
+## Обновление правил в рантайме
 
-Воркер следит за изменениями файла конфигурации (по умолчанию `rules.json`). При изменении файла конфигурация перечитывается, правила перестраиваются, подписки обновляются без остановки процесса.
+Воркер опрашивает источник правил каждые `RULES_POLL_INTERVAL_MS` (по умолчанию 5000 мс) и пересобирает правила при изменении:
+
+- **`mongo` / `api`** — опрос по таймеру; при изменении набора правил движок обновляет подписки без остановки процесса.
+- **`file`** — отслеживание изменений файла `rules.json` через `fs.watchFile` (перезагрузка при сохранении).
+
+Правила с `enabled: false` пропускаются и их топики отписываются.
 
 ## Добавление новых типов условий и действий
 
@@ -182,6 +229,13 @@ npm run test
 ├── README.md
 ├── rules.json
 ├── src/
+│   ├── index.ts              # Точка входа: MqttAdapter + RuleEngine + провайдер правил
+│   ├── core/                 # Ядро движка (RuleEngine)
+│   ├── mqtt/                 # MQTT-адаптер
+│   ├── conditions/           # Условия
+│   ├── actions/              # Действия
+│   ├── config/               # Парсинг правил (RuleBuilder), файловый источник (ConfigWatcher)
+│   └── providers/            # Источники правил (Mongo, API, фабрика)
 ├── test/
 └── tsconfig.json
 ```

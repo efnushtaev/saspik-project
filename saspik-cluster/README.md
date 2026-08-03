@@ -2,7 +2,7 @@
 
 [↑ SASPIK Project](../README.md)
 
-MQTT брокер, rule-engine и серверная часть на Node.js / Express / Inversify / PostgreSQL.
+MQTT брокер, rule-engine и серверная часть на Node.js / Express / Inversify / MongoDB.
 
 Контекст проекта: `opencode/agents.md → saspik-cluster`.
 
@@ -10,7 +10,7 @@ MQTT брокер, rule-engine и серверная часть на Node.js / E
 
 ### Программное обеспечение
 Основной код кластера. Монорепозиторий, разворачиваемый через Docker Compose.
-[atsap-cluster-app →](software/atsap-cluster-app/README.md)
+[atsap-cluster-app →](saspik-cluster-app/README.md)
 
 | Компонент | Описание |
 |---|---|

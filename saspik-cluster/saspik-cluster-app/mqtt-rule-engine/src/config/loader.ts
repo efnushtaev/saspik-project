@@ -77,13 +77,14 @@ function resolveExprs(value: string): string {
   });
 }
 
-function resolveConfig(content: string): string {
+export function resolveConfig(content: string): string {
   let result = resolveEnvVars(content);
   result = resolveExprs(result);
   return result;
 }
 
 export class ConfigWatcher {
+  readonly name = 'file';
   private currentContent: string = '';
   private watcher: fs.StatWatcher | null = null;
   private onChangeCallback: (rules: Rule[]) => void = () => {};

@@ -6,7 +6,13 @@ import { IUnitsService } from ".";
 import { UnitDto } from "../../dto/units.dto";
 import { TYPES, TEMPORARY_ANY } from "../../types";
 import { IMqttService } from "../mqtt";
-import { unitsConfig } from "../../data/units.config";
+import {
+  ObjectsRepository,
+  RulesRepository,
+  UnitsRepository,
+  toObjectsDto,
+  toRuleDto,
+} from "../data-store";
 
 @injectable()
 export class UnitsService implements IUnitsService {
@@ -14,6 +20,9 @@ export class UnitsService implements IUnitsService {
     @inject(TYPES.Logger) private logger: ILogger,
     @inject(TYPES.ConfigService) private config: IConfigService,
     @inject(TYPES.MqttService) private mqttService: IMqttService,
+    @inject(TYPES.UnitsRepository) private unitsRepository: UnitsRepository,
+    @inject(TYPES.ObjectsRepository) private objectsRepository: ObjectsRepository,
+    @inject(TYPES.RulesRepository) private rulesRepository: RulesRepository,
   ) {
     this.logger.log("[UnitsService] initialized");
   }
@@ -21,17 +30,21 @@ export class UnitsService implements IUnitsService {
   async getUnits(): Promise<UnitDto[]> {
     this.logger.log("[UnitsService] getUnits called");
 
-    const mockRules = [
-      { id: "r1", name: "High temp alert", condition: "temperature > 30", action: "notify", enabled: true },
-      { id: "r2", name: "Low humidity", condition: "humidity < 30", action: "humidifier_on", enabled: true },
-    ];
+    const [units, objects, rules] = await Promise.all([
+      this.unitsRepository.findAll(),
+      this.objectsRepository.findAll(),
+      this.rulesRepository.findAll(),
+    ]);
+    const ruleDtos = rules.map(toRuleDto);
 
-    return unitsConfig.map((unit) => ({
+    return units.map((unit) => ({
       id: unit.id,
       name: unit.name,
       description: unit.description,
-      objects: unit.objects,
-      rules: mockRules,
+      objects: objects
+        .filter((o) => o.unitId === unit.id)
+        .map(toObjectsDto),
+      rules: ruleDtos,
     }));
   }
 

@@ -12,9 +12,11 @@ import { ObjectsController } from "./controllers/objects.controller";
 import { API_V1_URL_PREFIX, ControllersDomens } from "./const";
 import { UnitsController } from "./controllers/units.controller";
 import { MqttController } from "./controllers/mqtt.controller";
+import { RulesController } from "./controllers/rules.controller";
 import { type IClimateControlService } from "./services/climate-control/climateControl.interface";
 import { InfluxDbStateStoreService } from "./services/state-store";
 import { IObjectsService } from "./services/objects";
+import { SeedService } from "./services/data-store";
 
 @injectable()
 export class App {
@@ -30,6 +32,8 @@ export class App {
     private unitsController: UnitsController,
     @inject(TYPES.MqttController)
     private mqttController: MqttController,
+    @inject(TYPES.RulesController)
+    private rulesController: RulesController,
     @inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
     @inject(TYPES.ConfigService) private configService: IConfigService,
     @inject(TYPES.ClimateControlService)
@@ -38,6 +42,8 @@ export class App {
     private stateStore: InfluxDbStateStoreService,
     @inject(TYPES.ObjectsService)
     private objectsService: IObjectsService,
+    @inject(TYPES.SeedService)
+    private seedService: SeedService,
   ) {
     this.app = express();
     this.port = parseInt(process.env.PORT || "3001", 10);
@@ -65,6 +71,10 @@ export class App {
       `${API_V1_URL_PREFIX}${ControllersDomens.UNITS}`,
       this.unitsController.router,
     );
+    this.app.use(
+      `${API_V1_URL_PREFIX}${ControllersDomens.RULES}`,
+      this.rulesController.router,
+    );
   }
 
   private useExeptionFilters(): void {
@@ -73,6 +83,8 @@ export class App {
 
   protected async afterStart(): Promise<void> {
     this.logger.log("[App] afterStart hook executed");
+
+    await this.seedService.seed();
 
     const unitId = this.configService.get("CLIMATE_CONTROL_UNIT_ID");
     if (unitId) {

@@ -2,12 +2,13 @@
 
 /**
  * Главный входной файл MQTT Rule Engine Worker.
- * Запускает движок с конфигурацией из файла rules.json и включает горячую перезагрузку.
+ * Запускает движок с правилами из источника (MongoDB по умолчанию, HTTP API или файл).
  */
 
 import { MqttAdapter } from './mqtt';
 import { RuleEngine } from './core';
 import { ConfigWatcher } from './config';
+import { createRulesProvider } from './providers';
 
 /**
  * Основная функция запуска воркера.
@@ -17,13 +18,11 @@ async function main() {
 
   // Параметры из переменных окружения
   const brokerUrl = process.env.MQTT_BROKER_URL;
-  const configPath = process.env.CONFIG_PATH;
   const mqttUsername = process.env.MQTT_USERNAME;
   const mqttPassword = process.env.MQTT_PASSWORD;
 
   console.log(`Брокер: ${brokerUrl}`);
-  console.log(`Конфигурация: ${configPath}`);
-  
+
   // Опции подключения с аутентификацией
   const connectOptions = {
     username: mqttUsername,
@@ -40,14 +39,17 @@ async function main() {
   const adapter = new MqttAdapter(brokerUrl, connectOptions);
   const engine = new RuleEngine(adapter);
 
+  // Создаём источник правил
+  const rulesProvider = createRulesProvider();
+  console.log(`Источник правил: ${rulesProvider.name}`);
+
   try {
     // Подключаемся к брокеру
     await adapter.connect();
     console.log('Подключение к брокеру успешно');
 
-    // Запускаем наблюдатель за конфигурацией
-    const watcher = new ConfigWatcher(configPath);
-    watcher.start((rules) => {
+    // Запускаем провайдер правил
+    await rulesProvider.start((rules) => {
       engine.loadRules(rules).catch((err) => {
         console.error('Ошибка загрузки правил:', err);
       });
@@ -56,14 +58,14 @@ async function main() {
     // Обработка сигналов завершения
     process.on('SIGINT', async () => {
       console.log('\nПолучен SIGINT, завершаем работу...');
-      watcher.stop();
+      rulesProvider.stop();
       await adapter.disconnect();
       process.exit(0);
     });
 
     process.on('SIGTERM', async () => {
       console.log('\nПолучен SIGTERM, завершаем работу...');
-      watcher.stop();
+      rulesProvider.stop();
       await adapter.disconnect();
       process.exit(0);
     });

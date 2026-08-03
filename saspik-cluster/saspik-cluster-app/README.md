@@ -5,9 +5,9 @@
 ## Состав
 
 - [**client/**](client/README.md) — React SPA (CRA + TypeScript), панель управления IoT-кластером
-- [**server/**](server/README.md) — Express.js бэкенд с Dependency Injection (InversifyJS), REST API для Units/Objects
+- [**server/**](server/README.md) — Express.js бэкенд с Dependency Injection (InversifyJS), REST API для Units/Objects/Rules, хранение в MongoDB
 - [**mqtt/**](mqtt/README.md) — Eclipse Mosquitto MQTT-брокер с аутентификацией и ACL
-- [**mqtt-rule-engine/**](mqtt-rule-engine/README.md) — Движок правил для MQTT: условия, действия, горячая перезагрузка
+- [**mqtt-rule-engine/**](mqtt-rule-engine/README.md) — Движок правил для MQTT: условия, действия, правила из MongoDB/API/файла
 - [**telegraf/**](telegraf/) — Конфигурация Telegraf: подписка на все MQTT-топики, запись в InfluxDB
 
 ## Описание
@@ -17,12 +17,13 @@ Fullstack-приложение для управления IoT-кластеро�
 ## Архитектура
 
 - **Frontend**: React SPA, обслуживается через Nginx. Отображает список юнитов, сенсоры и устройства, вложенные в каждый юнит.
+- **MongoDB**: Документная БД. Хранит юниты, объекты и правила (коллекции `units`, `objects`, `rules`). При первой инициализации заполняется сидами из `server/src/data/*.config.ts` и `server/data/rules.json`.
 - **InfluxDB**: Time-series база данных. Хранит все MQTT-сообщения от устройств.
 - **Telegraf**: Подписывается на все MQTT-топики (`#`), парсит JSON и пишет в InfluxDB.
-- **Backend**: Express.js сервер. Читает последние значения объектов из InfluxDB и отдаёт их через REST API.
+- **Backend**: Express.js сервер. Читает юниты/объекты/правила из MongoDB, последние значения объектов из InfluxDB и отдаёт их через REST API.
 - **Nginx**: Обратный прокси: статика фронтенда, прокси `/api/*` на backend.
 - **Mosquitto**: MQTT-брокер для обмена данными с устройствами.
-- **MQTT Rule Engine**: Обрабатывает MQTT-сообщения и выполняет правила климат-контроля (температура/влажность).
+- **MQTT Rule Engine**: Получает правила из MongoDB (или HTTP API/файла), обрабатывает MQTT-сообщения и выполняет правила климат-контроля (температура/влажность).
 
 ## Endpoints API
 
@@ -30,11 +31,15 @@ Fullstack-приложение для управления IoT-кластеро�
 |---|---|---|
 | `GET` | `/health` | Health check |
 | `GET` | `/api/getTimestamp` | Текущее время сервера |
-| `GET` | `/api/v1/units/list` | Список юнитов с вложенными объектами (мок) |
+| `GET` | `/api/v1/units/list` | Список юнитов с вложенными объектами и правилами (из MongoDB) |
 | `POST` | `/api/v1/objects/list/:type` | Объекты по типу (`sensor`/`device`). `value` из InfluxDB |
 | `POST` | `/api/v1/objects/getByIds` | Объекты по IDs |
 | `POST` | `/api/v1/objects/command/:deviceId` | Команда устройству |
 | `POST` | `/api/v1/objects/getLastSensorsData` | Последние показания сенсоров |
+| `GET` | `/api/v1/rules` | Список правил (формат rule-engine, из MongoDB) |
+| `POST` | `/api/v1/rules` | Upsert правила (создание/обновление по `id`) |
+| `PATCH` | `/api/v1/rules/:id` | Включить/отключить правило (`{ "enabled": true/false }`) |
+| `DELETE` | `/api/v1/rules/:id` | Удалить правило |
 | `POST` | `/api/v1/mqtt/publish` | Публикация MQTT-сообщения |
 | `POST` | `/api/v1/mqtt/subscribe` | Подписка на MQTT-топик |
 | `POST` | `/api/v1/mqtt/unsubscribe` | Отписка от MQTT-топика |
@@ -52,10 +57,10 @@ Fullstack-приложение для управления IoT-кластеро�
 Сервисы:
 
 | Сервис | Контейнер | Лимиты |
-|---|---|---|---|---|
+|---|---|---|
 | `backend` | Express.js | 0.5 CPU, 512MB RAM |
 | `nginx` | Nginx + React SPA (multi-stage build) | 0.3 CPU, 256MB RAM |
-| `mysql` | MySQL | 0.5 CPU, 512MB RAM |
+| `mongo` | MongoDB 7 | 0.5 CPU, 512MB RAM |
 | `mosquitto` | Mosquitto | 0.2 CPU, 128MB RAM |
 | `mqtt-rule-engine` | Rule engine | 0.3 CPU, 128MB RAM |
 | `influxdb` | InfluxDB 2.x | 0.3 CPU, 256MB RAM |
@@ -72,7 +77,7 @@ npm run start:mock
 
 Переменная `REACT_APP_MOCK_MODE=true` включает мок-данные (4 юнита с вложенными объектами).
 
-В production-режиме (`docker compose up`) фронтенд собирается внутри образа nginx (multi-stage), сервер использует InfluxDB для значений объектов, UnitsService возвращает 2 мок-юнита.
+В production-режиме (`docker compose up`) фронтенд собирается внутри образа nginx (multi-stage), сервер использует InfluxDB для значений объектов. Юниты, объекты и правила хранятся в MongoDB: при первом запуске (пустая БД) они заполняются сидами из `server/src/data/*.config.ts` и `server/data/rules.json` (см. `SeedService`).
 
 ## Структура каталога
 

@@ -20,6 +20,7 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json ./
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/data ./data
 
 # Установка только production зависимостей
 RUN npm ci --only=production && npm cache clean --force

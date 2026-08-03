@@ -11,11 +11,7 @@ services:
     environment:
       - NODE_ENV=prod
       - RIGHTECH_API_TOKEN=${RIGHTECH_API_TOKEN}
-      - MYSQL_PORT=${MYSQL_PORT}
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MONGODB_URL=${MONGODB_URL}
       - CLIMATE_CONTROL_UNIT_ID=${CLIMATE_CONTROL_UNIT_ID}
       - MQTT_BROKER_URL=mqtt://mosquitto:1883
       - MQTT_USERNAME=admin
@@ -24,8 +20,26 @@ services:
       - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
       - INFLUXDB_ORG=${INFLUXDB_ORG}
       - INFLUXDB_BUCKET=${INFLUXDB_BUCKET}
+      - INIT_RULES_SEED_PATH=./data/rules.json
+      - NIGHT_START_HOUR=${NIGHT_START_HOUR}
+      - NIGHT_END_HOUR=${NIGHT_END_HOUR}
+      - WATER_TIMEOUT_MS=${WATER_TIMEOUT_MS}
+      - CLIMATE_T_SET=${CLIMATE_T_SET}
+      - CLIMATE_T_HYST=${CLIMATE_T_HYST}
+      - CLIMATE_T_MAX=${CLIMATE_T_MAX}
+      - CLIMATE_T_MIN=${CLIMATE_T_MIN}
+      - CLIMATE_T_RECOVERY=${CLIMATE_T_RECOVERY}
+      - CLIMATE_RH_SET=${CLIMATE_RH_SET}
+      - CLIMATE_RH_HYST=${CLIMATE_RH_HYST}
+      - CLIMATE_NIGHT_T_SET=${CLIMATE_NIGHT_T_SET}
+      - CLIMATE_NIGHT_T_HYST=${CLIMATE_NIGHT_T_HYST}
+      - CLIMATE_NIGHT_T_MAX=${CLIMATE_NIGHT_T_MAX}
+      - CLIMATE_NIGHT_T_MIN=${CLIMATE_NIGHT_T_MIN}
+      - CLIMATE_NIGHT_T_RECOVERY=${CLIMATE_NIGHT_T_RECOVERY}
+      - CLIMATE_NIGHT_RH_SET=${CLIMATE_NIGHT_RH_SET}
+      - CLIMATE_NIGHT_RH_HYST=${CLIMATE_NIGHT_RH_HYST}
     depends_on:
-      - mysql
+      - mongo
     ports:
       - "3001:3001"  # Проброс порта на хост для доступа к API
     networks:
@@ -78,22 +92,16 @@ services:
           cpus: '0.1'
           memory: 128M
 
-  mysql:
-    image: mysql:8.0
-    container_name: portainer_mysql
+  mongo:
+    image: mongo:7
+    container_name: saspik_mongo
     restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=root_password
-      - MYSQL_DATABASE=users_db
-      - MYSQL_USER=app_user
-      - MYSQL_PASSWORD=secure_password
-      - MYSQL_ROOT_HOST=%
-      # Оптимизация MySQL для низких ресурсов
-      - MYSQLD_OPTS=--innodb-buffer-pool-size=64M --innodb-log-file-size=16M --innodb-log-buffer-size=4M --max-connections=50 --thread-cache-size=5 --tmp-table-size=16M --max-heap-table-size=16M
+    volumes:
+      - mongo-data:/data/db
     networks:
       - fullstack-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 60s
       timeout: 10s
       retries: 3
@@ -107,14 +115,6 @@ services:
         reservations:
           cpus: '0.1'
           memory: 256M
-    command:
-      - '--innodb-buffer-pool-size=64M'
-      - '--innodb-log-file-size=16M'
-      - '--innodb-log-buffer-size=4M'
-      - '--max-connections=50'
-      - '--thread-cache-size=5'
-      - '--tmp-table-size=16M'
-      - '--max-heap-table-size=16M'
 
   mosquitto:
     build:
@@ -152,6 +152,10 @@ services:
       - MQTT_BROKER_URL=mqtt://mosquitto:1883
       - MQTT_USERNAME=admin
       - MQTT_PASSWORD=password123
+      - MONGODB_URL=${MONGODB_URL}
+      - RULES_SOURCE=${RULES_SOURCE:-mongo}
+      - RULES_API_URL=${RULES_API_URL}
+      - RULES_POLL_INTERVAL_MS=${RULES_POLL_INTERVAL_MS:-5000}
       - CONFIG_PATH=./rules.json
       - MOSCOW_OFFSET_HOUR=${MOSCOW_OFFSET_HOUR}
       - NIGHT_START_HOUR=${NIGHT_START_HOUR}
@@ -174,6 +178,7 @@ services:
       - CLIMATE_NIGHT_RH_HYST=${CLIMATE_NIGHT_RH_HYST}
     depends_on:
       - mosquitto
+      - mongo
     networks:
       - fullstack-network
     deploy:
@@ -234,6 +239,7 @@ services:
           memory: 64M
 
 volumes:
+  mongo-data:
   influxdb-data:
 
 networks:
