@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { ControllerResponseMessage } from "../common/controller.types";
-import { ObjectsType } from "../dto/objects.dto";
+import { ObjectsType, ObjectsDto } from "../dto/objects.dto";
 
 export interface ObjectsListItem {
   id: string;
@@ -51,9 +51,14 @@ export type LastSensorsDataBodyReq = {
   id: string[];
 };
 
+export type CreateObjectBodyReq = Omit<ObjectsDto, "topic"> & {
+  unitId: string;
+};
+
 export type GetByIdsResponse = ListResponse;
 export type CommandResponse = { success: boolean };
 export type LastSensorsDataResponse = Record<string, unknown>;
+export type CreateObjectResponse = { object: ObjectsDto };
 
 export interface IObjectsController {
   getObjectsLists: (
@@ -75,4 +80,9 @@ export interface IObjectsController {
     req: Request<never, never, LastSensorsDataBodyReq>,
     res: Response,
   ) => ControllerResponseMessage<LastSensorsDataResponse>;
+
+  createObject: (
+    req: Request<never, never, CreateObjectBodyReq>,
+    res: Response,
+  ) => ControllerResponseMessage<CreateObjectResponse>;
 }

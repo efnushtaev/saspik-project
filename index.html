@@ -425,6 +425,11 @@
 <td>Последние показания сенсоров</td>
 </tr>
 <tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/objects</code></td>
+<td>Создание объекта: <code>{ id, name, type, spec, description?, unitId }</code>, топик формируется сервером по паттерну <code>`${type}/${unitId}/${id}`</code></td>
+</tr>
+<tr>
 <td><code>GET</code></td>
 <td><code>/api/v1/rules</code></td>
 <td>Список правил (формат rule-engine, из MongoDB)</td>
@@ -553,6 +558,7 @@ npm run start:mock
 <li>Список юнитов с карточками</li>
 <li>Мониторинг сенсоров (температура, влажность, давление и т.д.)</li>
 <li>Автоматика — объекты автоматизации</li>
+<li>Создание нового объекта через кнопку «+» на страницах с выбранным юнитом: модальное окно с полями DTO (название, ID, тип, описание, замеры <code>spec</code>) и автогенерацией топика по паттерну <code>`${type}/${unitId}/${id}`</code>. Кнопка скрыта, если юнит не выбран (<code>?id=</code> отсутствует)</li>
 <li>3 таба навигации: Мониторинг, Автоматика, Информация</li>
 <li>«Живые» часы с синхронизацией через <code>/api/getTimestamp</code> и локальным тиком каждую секунду</li>
 <li>Адаптивная вёрстка (mobile &lt; 800px / desktop)</li>
@@ -579,6 +585,7 @@ npm run start:mock
 │   │   ├── units-card/         # Карточка юнита
 │   │   ├── objects-list/       # Сетка карточек сенсоров/автоматики
 │   │   ├── objects-card/       # Карточка сенсора/автоматики
+│   │   ├── create-object-modal/ # Модальное окно создания объекта (рендерится через Portal в document.body)
 │   │   ├── mock-api.ts         # Мок-сервис
 │   │   ├── mock-data.ts        # Мок-данные
 │   │   └── constants.ts        # URL и пути навигации
@@ -1172,6 +1179,13 @@ RULES_SOURCE=mongo npm start
 <li><code>POST /api/v1/objects/getLastSensorsData</code></li>
 <li>Тело: <code>{ &quot;id&quot;: [&quot;s6&quot;, &quot;s7&quot;] }</code></li>
 <li>Ответ: <code>{ &quot;s6&quot;: &quot;24.40&quot;, &quot;s7&quot;: &quot;51.70&quot; }</code> (заглушка, возвращает <code>{}</code>)</li>
+</ul>
+<h4 id="71-создание-объекта">7.1 Создание объекта</h4>
+<ul>
+<li><code>POST /api/v1/objects</code></li>
+<li>Тело: <code>{ &quot;id&quot;, &quot;name&quot;, &quot;type&quot;, &quot;spec&quot;, &quot;description?&quot;, &quot;unitId&quot; }</code> (без <code>topic</code> — топик формируется сервером по паттерну <code>`${type}/${unitId}/${id}`</code>)</li>
+<li><code>spec</code> — массив записей: <code>{ &quot;key&quot;, &quot;model&quot;, &quot;unit&quot;? , &quot;minorPart&quot;? }</code></li>
+<li>Ответ: <code>{ &quot;object&quot;: { ... } }</code>. 400 при невалидных данных или дубликате (<code>id</code> + <code>unitId</code>).</li>
 </ul>
 <h4 id="8-правила">8. Правила</h4>
 <p>Управление правилами автоматизации (формат rule-engine: <code>trigger</code>/<code>when</code>/<code>then</code>/<code>enabled</code>). Хранятся в коллекции <code>rules</code>.</p>

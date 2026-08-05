@@ -74,7 +74,12 @@ export const useObjectsListFetching = (type: PageObjectType = 'sensor'): UseObje
 
     fetchObjects();
     const interval = setInterval(fetchObjects, 5000);
+    const handleObjectsUpdated = () => {
+      fetchObjects();
+    };
+    window.addEventListener('objects-updated', handleObjectsUpdated);
     return () => {
+      window.removeEventListener('objects-updated', handleObjectsUpdated);
       clearInterval(interval);
       clearTimeout(loadingTimer);
     };

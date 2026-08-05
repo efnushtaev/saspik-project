@@ -23,6 +23,7 @@ export enum ObjectsControllersRoutesURL {
   OBJECTS_GET_BY_IDS = "/getByIds",
   OBJECTS_COMMAND = "/command/:deviceId",
   OBJECTS_LAST_SENSORS_DATA = "/getLastSensorsData",
+  OBJECTS_CREATE = "/",
 }
 
 export const MQTT_BROCKER_API_URL = "https://dev.rightech.io/api/v1";

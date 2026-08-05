@@ -25,4 +25,17 @@ export class ObjectsRepository {
   async findByIds(ids: string[]): Promise<ObjectEntity[]> {
     return this.collection.find({ id: { $in: ids } }).toArray();
   }
+
+  async create(entity: ObjectEntity): Promise<ObjectEntity> {
+    const existing = await this.collection.findOne({ id: entity.id, unitId: entity.unitId });
+    if (existing) {
+      throw new Error(`Object "${entity.id}" already exists in unit "${entity.unitId}"`);
+    }
+    await this.collection.insertOne(entity);
+    const saved = await this.collection.findOne({ id: entity.id, unitId: entity.unitId });
+    if (!saved) {
+      throw new Error(`Failed to create object ${entity.id}`);
+    }
+    return saved;
+  }
 }

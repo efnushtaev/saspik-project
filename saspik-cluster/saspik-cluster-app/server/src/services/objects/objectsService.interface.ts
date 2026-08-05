@@ -10,4 +10,6 @@ export interface IObjectsService {
   getLastSensorsData(ids: string[]): Promise<Record<string, unknown>>;
 
   getObjectState(topic: string, field?: string): Promise<number | string | boolean | null>;
+
+  createObject(dto: Omit<ObjectsDto, "topic">, unitId: string): Promise<ObjectsDto>;
 }

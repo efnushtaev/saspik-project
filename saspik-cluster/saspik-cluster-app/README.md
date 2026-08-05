@@ -36,6 +36,7 @@ Fullstack-приложение для управления IoT-кластеро�
 | `POST` | `/api/v1/objects/getByIds` | Объекты по IDs |
 | `POST` | `/api/v1/objects/command/:deviceId` | Команда устройству |
 | `POST` | `/api/v1/objects/getLastSensorsData` | Последние показания сенсоров |
+| `POST` | `/api/v1/objects` | Создание объекта: `{ id, name, type, spec, description?, unitId }`, топик формируется сервером по паттерну `` `${type}/${unitId}/${id}` `` |
 | `GET` | `/api/v1/rules` | Список правил (формат rule-engine, из MongoDB) |
 | `POST` | `/api/v1/rules` | Upsert правила (создание/обновление по `id`) |
 | `PATCH` | `/api/v1/rules/:id` | Включить/отключить правило (`{ "enabled": true/false }`) |

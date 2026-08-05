@@ -10,4 +10,5 @@ export * from './control-bar';
 export * from './top-bar';
 export * from './units-card';
 export * from './units-list';
+export * from './create-object-modal';
 export * from '../hooks';

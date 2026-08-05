@@ -1,5 +1,18 @@
+export type MockObject = {
+  id: string;
+  name: string;
+  type: 'sensor' | 'device';
+  spec: {
+    key: string;
+    value: string | number | boolean | null;
+    spec: { model: string; unit?: string; minorPart?: number };
+  }[];
+  description?: string;
+  topic?: string;
+};
+
 // Mock data for objects
-export const mockObjects = [
+export const mockObjects: MockObject[] = [
   {
     id: 's6',
     name: 'DHT22',

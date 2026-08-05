@@ -1,4 +1,4 @@
-import { mockUnits, mockObjects } from './mock-data';
+import { mockUnits, mockObjects, MockObject } from './mock-data';
 
 // Mock API service
 export const mockApi = {
@@ -31,6 +31,35 @@ export const mockApi = {
   callCommand: async (deviceId: string, value: string): Promise<{ success: boolean }> => {
     await new Promise(resolve => setTimeout(resolve, 200));
     return { success: true };
+  },
+
+  addObject: async (payload: {
+    id: string;
+    name: string;
+    type: 'sensor' | 'device';
+    spec: { key: string; model: string; unit?: string; minorPart?: number }[];
+    description?: string;
+    unitId: string;
+  }): Promise<{ object: MockObject }> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const object: MockObject = {
+      id: payload.id,
+      name: payload.name,
+      type: payload.type,
+      spec: payload.spec.map(s => ({
+        key: s.key,
+        value: null,
+        spec: {
+          model: s.model,
+          ...(s.unit ? { unit: s.unit } : {}),
+          ...(s.minorPart !== undefined ? { minorPart: s.minorPart } : {}),
+        },
+      })),
+      description: payload.description,
+      topic: `${payload.type}/${payload.unitId}/${payload.id}`,
+    };
+    mockObjects.push(object);
+    return { object };
   },
 };
 

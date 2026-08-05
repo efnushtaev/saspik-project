@@ -13,6 +13,8 @@ import {
   CommandResponse,
   LastSensorsDataBodyReq,
   LastSensorsDataResponse,
+  CreateObjectBodyReq,
+  CreateObjectResponse,
 } from "./objects.controller.interface";
 import { BaseController } from "../common/baseController";
 import { ILogger } from "../logger/logger.interface";
@@ -61,6 +63,11 @@ export class ObjectsController
         path: ObjectsControllersRoutesURL.OBJECTS_LAST_SENSORS_DATA,
         method: RequestMethod.POST,
         func: this.getLastSensorsData,
+      },
+      {
+        path: ObjectsControllersRoutesURL.OBJECTS_CREATE,
+        method: RequestMethod.POST,
+        func: this.createObject,
       },
     ]);
   }
@@ -125,5 +132,20 @@ export class ObjectsController
   ) {
     const data = await this.objectsService.getLastSensorsData(body.id);
     return this.ok<LastSensorsDataResponse>(res, data);
+  }
+
+  async createObject(
+    { body }: Request<never, never, CreateObjectBodyReq>,
+    res: Response,
+  ) {
+    try {
+      const { unitId, ...dto } = body;
+      const object = await this.objectsService.createObject(dto, unitId);
+      return this.ok<CreateObjectResponse>(res, { object });
+    } catch (error) {
+      return this.send(res, 400, {
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
   }
 }
