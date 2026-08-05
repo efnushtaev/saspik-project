@@ -1,7 +1,9 @@
 #include <stdint.h>
 
-// --- Класс устройства ---
-constexpr char DEVICE_CLASS[] = "saspik.sa.wm.m001";
+// --- Параметры объекта ---
+constexpr char OBJECT_ID[] = "saspik.sa.wm.m001";
+constexpr char UNIT_ID[] = "unitId2";
+constexpr char OBJECT_TYPE[] = "sensors";
 
 // --- Пины ---
 constexpr uint8_t PIN_DHT       = 4;
@@ -17,7 +19,6 @@ constexpr char MQTT_BROKER[]      = "192.168.0.101";
 constexpr uint16_t MQTT_PORT      = 1883;
 constexpr char MQTT_USER[]        = "admin";
 constexpr char MQTT_PASS[]        = "password123";
-constexpr char TOPIC_PUBLISH[]    = "sensors/unitId2/dht22";
 constexpr char TOPIC_SUBSCRIBE[]  = "led/control";
 
 // --- Интервал чтения датчика (мс) ---

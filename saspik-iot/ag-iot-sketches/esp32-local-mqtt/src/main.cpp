@@ -189,12 +189,15 @@ void publishSensorData() {
     char jsonBuffer[128];
     size_t jsonLen = serializeJson(doc, jsonBuffer);
 
+    // Полный топик: OBJECT_TYPE + UNIT_ID + OBJECT_ID
+    String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT_ID);
+
     // Публикация в MQTT
-    bool published = mqttClient.publish(TOPIC_PUBLISH, jsonBuffer, jsonLen);
+    bool published = mqttClient.publish(topic.c_str(), jsonBuffer, jsonLen);
 
     if (published) {
         Serial.print("Опубликовано в топик \"");
-        Serial.print(TOPIC_PUBLISH);
+        Serial.print(topic);
         Serial.print("\": ");
         Serial.println(jsonBuffer);
     } else {
