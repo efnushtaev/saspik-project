@@ -61,6 +61,58 @@ export const mockApi = {
     mockObjects.push(object);
     return { object };
   },
+
+  getObject: async (id: string): Promise<{ object: MockObject }> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const object = mockObjects.find(o => o.id === id);
+    if (!object) {
+      throw new Error('Object not found');
+    }
+    return { object };
+  },
+
+  updateObject: async (
+    id: string,
+    payload: {
+      name?: string;
+      type?: 'sensor' | 'device';
+      spec?: { key: string; model: string; unit?: string; minorPart?: number }[];
+      description?: string;
+      unitId?: string;
+    },
+  ): Promise<{ object: MockObject }> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const object = mockObjects.find(o => o.id === id);
+    if (!object) {
+      throw new Error('Object not found');
+    }
+    if (payload.name !== undefined) object.name = payload.name;
+    if (payload.type !== undefined) object.type = payload.type;
+    if (payload.description !== undefined) object.description = payload.description;
+    if (payload.spec) {
+      object.spec = payload.spec.map(s => ({
+        key: s.key,
+        value: object.spec.find(prev => prev.key === s.key)?.value ?? null,
+        spec: {
+          model: s.model,
+          ...(s.unit ? { unit: s.unit } : {}),
+          ...(s.minorPart !== undefined ? { minorPart: s.minorPart } : {}),
+        },
+      }));
+    }
+    object.topic = `${payload.type ?? object.type}/${payload.unitId ?? ''}/${id}`;
+    return { object };
+  },
+
+  deleteObject: async (id: string): Promise<{ success: boolean }> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const index = mockObjects.findIndex(o => o.id === id);
+    if (index === -1) {
+      throw new Error('Object not found');
+    }
+    mockObjects.splice(index, 1);
+    return { success: true };
+  },
 };
 
 // Function to check if we're in mock mode

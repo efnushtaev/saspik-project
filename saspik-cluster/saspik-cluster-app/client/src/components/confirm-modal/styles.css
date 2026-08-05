@@ -1,7 +1,7 @@
-.create-object-modal {
+.confirm-modal {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 110;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,11 +10,9 @@
   box-sizing: border-box;
 }
 
-.create-object-modal__dialog {
+.confirm-modal__dialog {
   width: 100%;
-  max-width: 520px;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-width: 420px;
   background: #222222;
   border: 1px solid var(--topbar-border-color);
   border-radius: 12px;
@@ -23,37 +21,27 @@
   text-align: left;
 }
 
-.create-object-modal__title {
-  font-size: 18px;
+.confirm-modal__title {
+  font-size: 17px;
   font-weight: 600;
   color: var(--font-color-primary);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
-.create-object-modal__unit-hint {
-  font-size: 13px;
-  color: var(--font-title-color-2);
+.confirm-modal__message {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--tab-font-color);
   margin-bottom: 20px;
 }
 
-.create-object-modal__error {
-  padding: 10px 12px;
-  margin-bottom: 16px;
-  border: 1px solid #b3261e;
-  border-radius: 8px;
-  background: rgba(179, 38, 30, 0.15);
-  color: #ffb4ab;
-  font-size: 13px;
-}
-
-.create-object-modal__actions {
+.confirm-modal__actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 8px;
 }
 
-.create-object-modal__button {
+.confirm-modal__button {
   padding: 10px 20px;
   border: 1px solid var(--topbar-border-color);
   border-radius: 8px;
@@ -63,19 +51,26 @@
   cursor: pointer;
 }
 
-.create-object-modal__button:hover {
+.confirm-modal__button:hover {
   color: var(--tab-font-color--active);
   border-color: var(--actions-button-border-color--active);
 }
 
-.create-object-modal__button_primary {
+.confirm-modal__button_danger {
+  background: #b3261e;
+  border-color: #b3261e;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.confirm-modal__button_danger:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.confirm-modal__button_primary {
   background: var(--actions-button-border-color--active);
   border-color: var(--actions-button-border-color--active);
   color: #171717;
   font-weight: 600;
-}
-
-.create-object-modal__button_primary:disabled {
-  opacity: 0.5;
-  cursor: default;
 }

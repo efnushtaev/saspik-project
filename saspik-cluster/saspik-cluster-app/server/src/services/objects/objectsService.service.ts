@@ -81,6 +81,49 @@ export class ObjectsService implements IObjectsService {
   async createObject(dto: Omit<ObjectsDto, "topic">, unitId: string): Promise<ObjectsDto> {
     this.logger.log(`[ObjectsService] createObject id=${dto.id} unit=${unitId}`);
 
+    this.validateObjectDto(dto, unitId);
+
+    const topic = `${dto.type}/${unitId}/${dto.id}`;
+    const entity: ObjectEntity = {
+      id: dto.id,
+      name: dto.name,
+      type: dto.type,
+      spec: dto.spec,
+      description: dto.description,
+      topic,
+      unitId,
+    };
+    const saved = await this.objectsRepository.create(entity);
+    return toObjectsDto(saved);
+  }
+
+  async updateObject(
+    id: string,
+    unitId: string,
+    dto: Omit<ObjectsDto, "topic">,
+  ): Promise<ObjectsDto | null> {
+    this.logger.log(`[ObjectsService] updateObject id=${id} unit=${unitId}`);
+
+    this.validateObjectDto(dto, unitId);
+
+    const topic = `${dto.type}/${unitId}/${id}`;
+    const saved = await this.objectsRepository.update(id, unitId, {
+      name: dto.name,
+      type: dto.type,
+      spec: dto.spec,
+      description: dto.description,
+      topic,
+    });
+    return saved ? toObjectsDto(saved) : null;
+  }
+
+  async deleteObject(id: string, unitId: string): Promise<boolean> {
+    this.logger.log(`[ObjectsService] deleteObject id=${id} unit=${unitId}`);
+
+    return this.objectsRepository.delete(id, unitId);
+  }
+
+  private validateObjectDto(dto: Omit<ObjectsDto, "topic">, unitId: string): void {
     if (!unitId) {
       throw new Error("unitId is required");
     }
@@ -95,18 +138,5 @@ export class ObjectsService implements IObjectsService {
         throw new Error("Each spec entry must have key and model");
       }
     }
-
-    const topic = `${dto.type}/${unitId}/${dto.id}`;
-    const entity: ObjectEntity = {
-      id: dto.id,
-      name: dto.name,
-      type: dto.type,
-      spec: dto.spec,
-      description: dto.description,
-      topic,
-      unitId,
-    };
-    const saved = await this.objectsRepository.create(entity);
-    return toObjectsDto(saved);
   }
 }

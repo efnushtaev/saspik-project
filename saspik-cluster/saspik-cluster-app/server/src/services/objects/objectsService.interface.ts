@@ -12,4 +12,8 @@ export interface IObjectsService {
   getObjectState(topic: string, field?: string): Promise<number | string | boolean | null>;
 
   createObject(dto: Omit<ObjectsDto, "topic">, unitId: string): Promise<ObjectsDto>;
+
+  updateObject(id: string, unitId: string, dto: Omit<ObjectsDto, "topic">): Promise<ObjectsDto | null>;
+
+  deleteObject(id: string, unitId: string): Promise<boolean>;
 }

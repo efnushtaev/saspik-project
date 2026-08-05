@@ -25,9 +25,37 @@
   justify-content: space-between;
 }
 
+.objects-card__icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .objects-card__icon {
   font-size: 32px;
   color: #f9ff8d;
+}
+
+.objects-card__open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border-color-2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.objects-card__open:hover {
+  border-color: var(--tab-border-color--active);
+}
+
+.objects-card__open-icon {
+  font-size: 16px;
 }
 
 .objects-card__title {

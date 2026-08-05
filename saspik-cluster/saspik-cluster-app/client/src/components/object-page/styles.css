@@ -1,0 +1,116 @@
+.object-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.object-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.object-page__title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--font-color-primary);
+}
+
+.object-page__actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.object-page__button {
+  padding: 10px 20px;
+  border: 1px solid var(--topbar-border-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--tab-font-color);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.object-page__button:hover {
+  color: var(--tab-font-color--active);
+  border-color: var(--actions-button-border-color--active);
+}
+
+.object-page__button_primary {
+  background: var(--actions-button-border-color--active);
+  border-color: var(--actions-button-border-color--active);
+  color: #171717;
+  font-weight: 600;
+}
+
+.object-page__button_primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.object-page__button_danger {
+  background: #b3261e;
+  border-color: #b3261e;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.object-page__description {
+  padding: 12px 16px;
+  border: 1px solid var(--topbar-border-color);
+  border-radius: 8px;
+  background: var(--actions-search-background);
+  color: var(--tab-font-color);
+  font-size: 14px;
+}
+
+.object-page__error {
+  padding: 10px 12px;
+  border: 1px solid #b3261e;
+  border-radius: 8px;
+  background: rgba(179, 38, 30, 0.15);
+  color: #ffb4ab;
+  font-size: 13px;
+}
+
+.object-page__spec {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--actions-search-background);
+  border: 1px solid var(--topbar-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.object-page__spec th,
+.object-page__spec td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--topbar-border-color);
+  font-size: 14px;
+}
+
+.object-page__spec th {
+  color: var(--tab-font-color);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.object-page__spec td {
+  color: var(--tab-font-color--active);
+}
+
+.object-page__spec tr:last-child td {
+  border-bottom: none;
+}
+
+.object-page__spec-value {
+  font-weight: 600;
+}
+
+.object-page__spec-label {
+  width: 160px;
+  font-weight: 500;
+}

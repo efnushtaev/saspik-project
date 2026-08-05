@@ -1,4 +1,5 @@
 import { createCn } from 'bem-react-classname';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ObjectsCard } from '../objects-card';
 import { useObjectsListFetching } from '../../hooks/use-objects-list-fetching';
@@ -25,6 +26,9 @@ const toggleDeviceValue = (obj: ObjectItem): string | null => {
 
 export const ObjectsList = ({ type = 'sensor' }: ObjectsListProps) => {
   const { objects, loading, error, sendCommand, updateObjectValue } = useObjectsListFetching(type);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const unitId = new URLSearchParams(location.search).get('id') || '';
 
   if (loading) {
     return <div className={'rotate-scale-up'} />;
@@ -52,6 +56,7 @@ export const ObjectsList = ({ type = 'sensor' }: ObjectsListProps) => {
                 updateObjectValue(obj.id, obj.spec[0].key, newValue);
               }
             } : undefined}
+            onOpen={() => navigate(`/object/${obj.id}?id=${unitId}`)}
           />
         );
       })}

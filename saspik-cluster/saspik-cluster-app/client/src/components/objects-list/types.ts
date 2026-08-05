@@ -14,6 +14,7 @@ export interface ObjectItem {
     };
   }[];
   description?: string;
+  topic?: string;
 }
 
 export type PageObjectType = 'sensor' | 'device';

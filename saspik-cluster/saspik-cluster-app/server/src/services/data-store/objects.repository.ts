@@ -38,4 +38,18 @@ export class ObjectsRepository {
     }
     return saved;
   }
+
+  async update(
+    id: string,
+    unitId: string,
+    patch: Partial<ObjectEntity>,
+  ): Promise<ObjectEntity | null> {
+    await this.collection.updateOne({ id, unitId }, { $set: patch });
+    return this.collection.findOne({ id, unitId });
+  }
+
+  async delete(id: string, unitId: string): Promise<boolean> {
+    const res = await this.collection.deleteOne({ id, unitId });
+    return res.deletedCount > 0;
+  }
 }

@@ -24,6 +24,8 @@ export enum ObjectsControllersRoutesURL {
   OBJECTS_COMMAND = "/command/:deviceId",
   OBJECTS_LAST_SENSORS_DATA = "/getLastSensorsData",
   OBJECTS_CREATE = "/",
+  OBJECTS_UPDATE = "/:id",
+  OBJECTS_DELETE = "/:id",
 }
 
 export const MQTT_BROCKER_API_URL = "https://dev.rightech.io/api/v1";

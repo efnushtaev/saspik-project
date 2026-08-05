@@ -15,6 +15,12 @@ import {
   LastSensorsDataResponse,
   CreateObjectBodyReq,
   CreateObjectResponse,
+  UpdateObjectParamsReq,
+  UpdateObjectBodyReq,
+  UpdateObjectResponse,
+  DeleteObjectParamsReq,
+  DeleteObjectBodyReq,
+  DeleteObjectResponse,
 } from "./objects.controller.interface";
 import { BaseController } from "../common/baseController";
 import { ILogger } from "../logger/logger.interface";
@@ -68,6 +74,16 @@ export class ObjectsController
         path: ObjectsControllersRoutesURL.OBJECTS_CREATE,
         method: RequestMethod.POST,
         func: this.createObject,
+      },
+      {
+        path: ObjectsControllersRoutesURL.OBJECTS_UPDATE,
+        method: RequestMethod.PATCH,
+        func: this.updateObject,
+      },
+      {
+        path: ObjectsControllersRoutesURL.OBJECTS_DELETE,
+        method: RequestMethod.DELETE,
+        func: this.deleteObject,
       },
     ]);
   }
@@ -147,5 +163,37 @@ export class ObjectsController
         error: error instanceof Error ? error.message : "Unknown error",
       });
     }
+  }
+
+  async updateObject(
+    { params, body }: Request<UpdateObjectParamsReq, never, UpdateObjectBodyReq>,
+    res: Response,
+  ) {
+    try {
+      const { unitId, ...dto } = body;
+      const object = await this.objectsService.updateObject(params.id, unitId, {
+        ...dto,
+        id: params.id,
+      });
+      if (!object) {
+        return this.send(res, 404, { error: "Object not found" });
+      }
+      return this.ok<UpdateObjectResponse>(res, { object });
+    } catch (error) {
+      return this.send(res, 400, {
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  async deleteObject(
+    { params, body }: Request<DeleteObjectParamsReq, never, DeleteObjectBodyReq>,
+    res: Response,
+  ) {
+    const deleted = await this.objectsService.deleteObject(params.id, body.unitId);
+    if (!deleted) {
+      return this.send(res, 404, { error: "Object not found" });
+    }
+    return this.ok<DeleteObjectResponse>(res, { success: true });
   }
 }

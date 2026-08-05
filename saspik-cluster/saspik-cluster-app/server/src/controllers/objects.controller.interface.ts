@@ -55,10 +55,28 @@ export type CreateObjectBodyReq = Omit<ObjectsDto, "topic"> & {
   unitId: string;
 };
 
+export type UpdateObjectParamsReq = {
+  id: string;
+};
+
+export type UpdateObjectBodyReq = Omit<ObjectsDto, "topic" | "id"> & {
+  unitId: string;
+};
+
+export type DeleteObjectParamsReq = {
+  id: string;
+};
+
+export type DeleteObjectBodyReq = {
+  unitId: string;
+};
+
 export type GetByIdsResponse = ListResponse;
 export type CommandResponse = { success: boolean };
 export type LastSensorsDataResponse = Record<string, unknown>;
 export type CreateObjectResponse = { object: ObjectsDto };
+export type UpdateObjectResponse = { object: ObjectsDto };
+export type DeleteObjectResponse = { success: boolean };
 
 export interface IObjectsController {
   getObjectsLists: (
@@ -85,4 +103,14 @@ export interface IObjectsController {
     req: Request<never, never, CreateObjectBodyReq>,
     res: Response,
   ) => ControllerResponseMessage<CreateObjectResponse>;
+
+  updateObject: (
+    req: Request<UpdateObjectParamsReq, never, UpdateObjectBodyReq>,
+    res: Response,
+  ) => ControllerResponseMessage<UpdateObjectResponse>;
+
+  deleteObject: (
+    req: Request<DeleteObjectParamsReq, never, DeleteObjectBodyReq>,
+    res: Response,
+  ) => ControllerResponseMessage<DeleteObjectResponse>;
 }

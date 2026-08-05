@@ -430,6 +430,16 @@
 <td>Создание объекта: <code>{ id, name, type, spec, description?, unitId }</code>, топик формируется сервером по паттерну <code>`${type}/${unitId}/${id}`</code></td>
 </tr>
 <tr>
+<td><code>PATCH</code></td>
+<td><code>/api/v1/objects/:id</code></td>
+<td>Обновление объекта: <code>{ name, type, spec, description?, unitId }</code> (id и топик пересчитываются сервером)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/objects/:id</code></td>
+<td>Удаление объекта: <code>{ unitId }</code></td>
+</tr>
+<tr>
 <td><code>GET</code></td>
 <td><code>/api/v1/rules</code></td>
 <td>Список правил (формат rule-engine, из MongoDB)</td>
@@ -559,6 +569,8 @@ npm run start:mock
 <li>Мониторинг сенсоров (температура, влажность, давление и т.д.)</li>
 <li>Автоматика — объекты автоматизации</li>
 <li>Создание нового объекта через кнопку «+» на страницах с выбранным юнитом: модальное окно с полями DTO (название, ID, тип, описание, замеры <code>spec</code>) и автогенерацией топика по паттерну <code>`${type}/${unitId}/${id}`</code>. Кнопка скрыта, если юнит не выбран (<code>?id=</code> отсутствует)</li>
+<li>Страница объекта (роут <code>/object/:objectId</code>, <code>unitId</code> из <code>?id=</code>): просмотр данных в виде таблиц (параметры и замеры), редактирование в табличной форме (ID — только чтение) и удаление с подтверждением. Открывается по иконке «⋯» в правом верхнем углу карточки</li>
+<li>Общая форма <code>ObjectFormFields</code> с вариантами отображения: <code>stacked</code> (модалка создания) и <code>table</code> (страница редактирования)</li>
 <li>3 таба навигации: Мониторинг, Автоматика, Информация</li>
 <li>«Живые» часы с синхронизацией через <code>/api/getTimestamp</code> и локальным тиком каждую секунду</li>
 <li>Адаптивная вёрстка (mobile &lt; 800px / desktop)</li>
@@ -584,8 +596,11 @@ npm run start:mock
 │   │   ├── units-list/         # Сетка карточек юнитов
 │   │   ├── units-card/         # Карточка юнита
 │   │   ├── objects-list/       # Сетка карточек сенсоров/автоматики
-│   │   ├── objects-card/       # Карточка сенсора/автоматики
+│   │   ├── objects-card/       # Карточка сенсора/автоматики (иконка «⋯» открывает страницу объекта)
+│   │   ├── object-page/        # Страница объекта: просмотр/редактирование/удаление
+│   │   ├── object-form/        # Общая форма DTO (варианты stacked/table)
 │   │   ├── create-object-modal/ # Модальное окно создания объекта (рендерится через Portal в document.body)
+│   │   ├── confirm-modal/      # Модальное окно подтверждения (Portal в document.body)
 │   │   ├── mock-api.ts         # Мок-сервис
 │   │   ├── mock-data.ts        # Мок-данные
 │   │   └── constants.ts        # URL и пути навигации
@@ -1186,6 +1201,19 @@ RULES_SOURCE=mongo npm start
 <li>Тело: <code>{ &quot;id&quot;, &quot;name&quot;, &quot;type&quot;, &quot;spec&quot;, &quot;description?&quot;, &quot;unitId&quot; }</code> (без <code>topic</code> — топик формируется сервером по паттерну <code>`${type}/${unitId}/${id}`</code>)</li>
 <li><code>spec</code> — массив записей: <code>{ &quot;key&quot;, &quot;model&quot;, &quot;unit&quot;? , &quot;minorPart&quot;? }</code></li>
 <li>Ответ: <code>{ &quot;object&quot;: { ... } }</code>. 400 при невалидных данных или дубликате (<code>id</code> + <code>unitId</code>).</li>
+</ul>
+<h4 id="72-обновление-объекта">7.2 Обновление объекта</h4>
+<ul>
+<li><code>PATCH /api/v1/objects/:id</code></li>
+<li>Тело: <code>{ &quot;name&quot;, &quot;type&quot;, &quot;spec&quot;, &quot;description?&quot;, &quot;unitId&quot; }</code> (без <code>id</code> и <code>topic</code> — <code>id</code> берётся из URL, топик пересчитывается по паттерну <code>`${type}/${unitId}/${id}`</code>)</li>
+<li><code>spec</code> — массив записей: <code>{ &quot;key&quot;, &quot;model&quot;, &quot;unit&quot;? , &quot;minorPart&quot;? }</code></li>
+<li>Ответ: <code>{ &quot;object&quot;: { ... } }</code>. 404, если объект не найден; 400 при невалидных данных.</li>
+</ul>
+<h4 id="73-удаление-объекта">7.3 Удаление объекта</h4>
+<ul>
+<li><code>DELETE /api/v1/objects/:id</code></li>
+<li>Тело: <code>{ &quot;unitId&quot; }</code></li>
+<li>Ответ: <code>{ &quot;success&quot;: true }</code>. 404, если объект не найден.</li>
 </ul>
 <h4 id="8-правила">8. Правила</h4>
 <p>Управление правилами автоматизации (формат rule-engine: <code>trigger</code>/<code>when</code>/<code>then</code>/<code>enabled</code>). Хранятся в коллекции <code>rules</code>.</p>

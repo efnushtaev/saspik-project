@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { createCn } from 'bem-react-classname';
-import { SunOutlined } from '@ant-design/icons';
+import { SunOutlined, EllipsisOutlined } from '@ant-design/icons';
 
 import './styles.css';
 
@@ -11,6 +11,7 @@ type ObjectsCardProps = {
   values: string[];
   navigateTo?: string;
   onAction?: () => void;
+  onOpen?: () => void;
 };
 
 const cn = createCn('objects-card');
@@ -32,7 +33,7 @@ const ValueDisplay = ({ value }: { value: string }) => {
   );
 };
 
-export const ObjectsCard = ({ title, describe, values, navigateTo = '/monitoring', onAction }: ObjectsCardProps) => {
+export const ObjectsCard = ({ title, describe, values, navigateTo = '/monitoring', onAction, onOpen }: ObjectsCardProps) => {
   const hasValues = values.length > 0;
   const navigate = useNavigate();
 
@@ -44,6 +45,11 @@ export const ObjectsCard = ({ title, describe, values, navigateTo = '/monitoring
     }
   };
 
+  const handleOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onOpen?.();
+  };
+
   return (
     <div className={cn({ actionable: !!onAction })} onClick={handleClick}>
       <div className={cn('content')}>
@@ -52,7 +58,14 @@ export const ObjectsCard = ({ title, describe, values, navigateTo = '/monitoring
             <div className={cn('title')}>{title}</div>
             <div className={cn('describe')}>{describe}</div>
           </div>
-          <SunOutlined className={cn('icon')} />
+          <div className={cn('icons')}>
+            <SunOutlined className={cn('icon')} />
+            {onOpen && (
+              <button type="button" className={cn('open')} onClick={handleOpen}>
+                <EllipsisOutlined className={cn('open-icon')} />
+              </button>
+            )}
+          </div>
         </div>
         <div className={cn('values')}>
           {hasValues ? (
