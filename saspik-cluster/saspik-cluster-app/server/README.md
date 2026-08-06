@@ -48,8 +48,8 @@
         "name": "ESP32 Controller",
         "description": "ESP32 controller with sensors and relays",
         "objects": [
-          { "id": "dht22", "name": "DHT22", "type": "sensor", "topic": "sensors/dht22", "spec": [{ "key": "temperature", "model": "dht22", "unit": "℃" }, { "key": "humidity", "model": "dht22", "unit": "%" }] },
-          { "id": "float-1", "name": "Float Sensor", "type": "sensor", "topic": "sensors/float-1", "spec": [{ "key": "floatSensor", "model": "float", "unit": "" }] },
+          { "id": "dht22", "name": "DHT22", "type": "sensor", "topic": "sensor/unitId1/dht22", "spec": [{ "key": "temperature", "model": "dht22", "unit": "℃" }, { "key": "humidity", "model": "dht22", "unit": "%" }] },
+          { "id": "float-1", "name": "Float Sensor", "type": "sensor", "topic": "sensor/unitId1/float-1", "spec": [{ "key": "floatSensor", "model": "float", "unit": "" }] },
           { "id": "a_relay1", "name": "Light", "type": "device", "topic": "units/unitId1/commands/a_relay1", "spec": [{ "key": "state", "model": "relay", "unit": "" }], "description": "Свет (реле 1)" },
           { "id": "a_relay2", "name": "Humidifier", "type": "device", "topic": "units/unitId1/commands/a_relay2", "spec": [{ "key": "state", "model": "relay", "unit": "" }], "description": "Увлажнитель (реле 2)" },
           { "id": "a_relay3", "name": "Fan", "type": "device", "topic": "units/unitId1/commands/a_relay3", "spec": [{ "key": "state", "model": "relay", "unit": "" }], "description": "Вентилятор (реле 3)" },
@@ -58,7 +58,7 @@
         "rules": [
           {
             "id": "temp_emergency_high",
-            "trigger": { "topic": "sensors/dht22", "qos": 0 },
+            "trigger": { "topic": "sensor/unitId1/dht22", "qos": 0 },
             "when": { "jsonpath": "$.temperature > 29" },
             "then": [
               { "action": "publish", "params": { "topic": "units/unitId1/commands/a_relay3", "payload": "{\"state\":\"1\"}", "qos": 1 } },
@@ -73,7 +73,7 @@
         "name": "ESP32 Local MQTT",
         "description": "ESP32 local MQTT (DHT22 + LED)",
         "objects": [
-          { "id": "dht22", "name": "DHT22", "type": "sensor", "topic": "sensors/unitId2/dht22", "spec": [{ "key": "temperature", "model": "dht22", "unit": "℃" }, { "key": "humidity", "model": "dht22", "unit": "%" }] },
+          { "id": "dht22", "name": "DHT22", "type": "sensor", "topic": "sensor/unitId2/dht22", "spec": [{ "key": "temperature", "model": "dht22", "unit": "℃" }, { "key": "humidity", "model": "dht22", "unit": "%" }] },
           { "id": "led", "name": "LED", "type": "device", "topic": "led/control", "spec": [{ "key": "state", "model": "led", "unit": "" }], "description": "Светодиодный индикатор" }
         ],
         "rules": []
@@ -97,7 +97,7 @@
         "id": "dht22",
         "name": "DHT22",
         "type": "sensor",
-        "topic": "sensors/dht22",
+        "topic": "sensor/unitId1/dht22",
         "spec": [
           { "key": "temperature", "value": 23.6, "spec": { "key": "temperature", "model": "dht22", "unit": "℃" } },
           { "key": "humidity", "value": 46.9, "spec": { "key": "humidity", "model": "dht22", "unit": "%" } }
@@ -137,7 +137,7 @@
         "id": "dht22",
         "name": "DHT22",
         "type": "sensor",
-        "topic": "sensors/dht22",
+        "topic": "sensor/unitId1/dht22",
         "spec": [
           { "key": "temperature", "value": 23.6, "spec": { "key": "temperature", "model": "dht22", "unit": "℃" } },
           { "key": "humidity", "value": 46.9, "spec": { "key": "humidity", "model": "dht22", "unit": "%" } }
@@ -182,7 +182,7 @@
   ```json
   {
     "id": "temp_emergency_high",
-    "trigger": { "topic": "sensors/dht22", "qos": 0 },
+    "trigger": { "topic": "sensor/unitId1/dht22", "qos": 0 },
     "when": { "jsonpath": "$.temperature > 29" },
     "then": [ { "action": "publish", "params": { "topic": "units/unitId1/commands/a_relay3", "payload": "{\"state\":\"1\"}", "qos": 1 } } ],
     "enabled": true

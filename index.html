@@ -679,7 +679,7 @@ npm run build          # production-сборка
 <ol>
 <li><strong>Default deny</strong> — все неразрешённые топики блокируются</li>
 <li><strong>Client namespaces</strong>: <code>clients/%c/#</code> — каждый клиент может писать/читать в свой namespace</li>
-<li><strong>Топики датчиков</strong>: <code>sensors/#</code> — publish/subscribe для сенсоров</li>
+<li><strong>Топики датчиков</strong>: <code>sensor/#</code> — publish/subscribe для сенсоров</li>
 <li><strong>Топики LED</strong> (dev): <code>led/#</code> — publish/subscribe для LED-устройств</li>
 <li><strong>Топики команд юнитов</strong>: <code>units/#</code> — publish/subscribe для управления реле (добавлено 2026-07-27)</li>
 </ol>
@@ -851,7 +851,7 @@ CONFIG_PATH=./rules.json      # для RULES_SOURCE=file
 <p>Правило в MongoDB/API хранится в формате rule-engine. Поле <code>enabled: false</code> — «мягкое» отключение: движок пропускает такое правило и не подписывается на его топики.</p>
 <pre><code class="language-json">{
   &quot;id&quot;: &quot;temp_emergency_high&quot;,
-  &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensors/dht22&quot;, &quot;qos&quot;: 0 },
+  &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22&quot;, &quot;qos&quot;: 0 },
   &quot;when&quot;: { &quot;jsonpath&quot;: &quot;$.temperature &gt; 29&quot; },
   &quot;then&quot;: [
     { &quot;action&quot;: &quot;publish&quot;, &quot;params&quot;: { &quot;topic&quot;: &quot;units/unitId1/commands/a_relay3&quot;, &quot;payload&quot;: &quot;{\&quot;state\&quot;:\&quot;1\&quot;}&quot;, &quot;qos&quot;: 1 } }
@@ -893,7 +893,7 @@ RULES_SOURCE=mongo npm start
     {
       &quot;id&quot;: &quot;unique_rule_id&quot;,
       &quot;trigger&quot;: {
-        &quot;topic&quot;: &quot;sensors/temperature&quot;,
+        &quot;topic&quot;: &quot;sensor/temperature&quot;,
         &quot;qos&quot;: 0
       },
       &quot;when&quot;: {
@@ -940,7 +940,7 @@ RULES_SOURCE=mongo npm start
 <tbody><tr>
 <td><code>topicRegex</code></td>
 <td>Регулярное выражение для топика</td>
-<td><code>&quot;^sensors/.+/status$&quot;</code></td>
+<td><code>&quot;^sensor/.+/status$&quot;</code></td>
 </tr>
 <tr>
 <td><code>jsonpath</code></td>
@@ -955,7 +955,7 @@ RULES_SOURCE=mongo npm start
 <tr>
 <td><code>and</code></td>
 <td>Массив условий (логическое И)</td>
-<td><code>[{&quot;topicRegex&quot;: &quot;^sensors/.+&quot;}, {&quot;jsonpath&quot;: &quot;$.value &gt; 0&quot;}]</code></td>
+<td><code>[{&quot;topicRegex&quot;: &quot;^sensor/.+&quot;}, {&quot;jsonpath&quot;: &quot;$.value &gt; 0&quot;}]</code></td>
 </tr>
 <tr>
 <td><code>or</code></td>
@@ -1085,8 +1085,8 @@ RULES_SOURCE=mongo npm start
       &quot;name&quot;: &quot;ESP32 Controller&quot;,
       &quot;description&quot;: &quot;ESP32 controller with sensors and relays&quot;,
       &quot;objects&quot;: [
-        { &quot;id&quot;: &quot;dht22&quot;, &quot;name&quot;: &quot;DHT22&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensors/dht22&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; }, { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; }] },
-        { &quot;id&quot;: &quot;float-1&quot;, &quot;name&quot;: &quot;Float Sensor&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensors/float-1&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;floatSensor&quot;, &quot;model&quot;: &quot;float&quot;, &quot;unit&quot;: &quot;&quot; }] },
+        { &quot;id&quot;: &quot;dht22&quot;, &quot;name&quot;: &quot;DHT22&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; }, { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; }] },
+        { &quot;id&quot;: &quot;float-1&quot;, &quot;name&quot;: &quot;Float Sensor&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensor/unitId1/float-1&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;floatSensor&quot;, &quot;model&quot;: &quot;float&quot;, &quot;unit&quot;: &quot;&quot; }] },
         { &quot;id&quot;: &quot;a_relay1&quot;, &quot;name&quot;: &quot;Light&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;units/unitId1/commands/a_relay1&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;relay&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Свет (реле 1)&quot; },
         { &quot;id&quot;: &quot;a_relay2&quot;, &quot;name&quot;: &quot;Humidifier&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;units/unitId1/commands/a_relay2&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;relay&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Увлажнитель (реле 2)&quot; },
         { &quot;id&quot;: &quot;a_relay3&quot;, &quot;name&quot;: &quot;Fan&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;units/unitId1/commands/a_relay3&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;relay&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Вентилятор (реле 3)&quot; },
@@ -1095,7 +1095,7 @@ RULES_SOURCE=mongo npm start
       &quot;rules&quot;: [
         {
           &quot;id&quot;: &quot;temp_emergency_high&quot;,
-          &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensors/dht22&quot;, &quot;qos&quot;: 0 },
+          &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;, &quot;qos&quot;: 0 },
           &quot;when&quot;: { &quot;jsonpath&quot;: &quot;$.temperature &gt; 29&quot; },
           &quot;then&quot;: [
             { &quot;action&quot;: &quot;publish&quot;, &quot;params&quot;: { &quot;topic&quot;: &quot;units/unitId1/commands/a_relay3&quot;, &quot;payload&quot;: &quot;{\&quot;state\&quot;:\&quot;1\&quot;}&quot;, &quot;qos&quot;: 1 } },
@@ -1110,7 +1110,7 @@ RULES_SOURCE=mongo npm start
       &quot;name&quot;: &quot;ESP32 Local MQTT&quot;,
       &quot;description&quot;: &quot;ESP32 local MQTT (DHT22 + LED)&quot;,
       &quot;objects&quot;: [
-        { &quot;id&quot;: &quot;dht22&quot;, &quot;name&quot;: &quot;DHT22&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensors/unitId2/dht22&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; }, { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; }] },
+        { &quot;id&quot;: &quot;dht22&quot;, &quot;name&quot;: &quot;DHT22&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensor/unitId2/dht22&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; }, { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; }] },
         { &quot;id&quot;: &quot;led&quot;, &quot;name&quot;: &quot;LED&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;led/control&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;led&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Светодиодный индикатор&quot; }
       ],
       &quot;rules&quot;: []
@@ -1133,7 +1133,7 @@ RULES_SOURCE=mongo npm start
       &quot;id&quot;: &quot;dht22&quot;,
       &quot;name&quot;: &quot;DHT22&quot;,
       &quot;type&quot;: &quot;sensor&quot;,
-      &quot;topic&quot;: &quot;sensors/dht22&quot;,
+      &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;,
       &quot;spec&quot;: [
         { &quot;key&quot;: &quot;temperature&quot;, &quot;value&quot;: 23.6, &quot;spec&quot;: { &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; } },
         { &quot;key&quot;: &quot;humidity&quot;, &quot;value&quot;: 46.9, &quot;spec&quot;: { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; } }
@@ -1172,7 +1172,7 @@ RULES_SOURCE=mongo npm start
       &quot;id&quot;: &quot;dht22&quot;,
       &quot;name&quot;: &quot;DHT22&quot;,
       &quot;type&quot;: &quot;sensor&quot;,
-      &quot;topic&quot;: &quot;sensors/dht22&quot;,
+      &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;,
       &quot;spec&quot;: [
         { &quot;key&quot;: &quot;temperature&quot;, &quot;value&quot;: 23.6, &quot;spec&quot;: { &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; } },
         { &quot;key&quot;: &quot;humidity&quot;, &quot;value&quot;: 46.9, &quot;spec&quot;: { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; } }
@@ -1221,7 +1221,7 @@ RULES_SOURCE=mongo npm start
 <li><code>GET /api/v1/rules</code> — список всех правил. Ответ: <code>{ &quot;rules&quot;: [...] }</code></li>
 <li><code>POST /api/v1/rules</code> — создание/обновление правила по <code>id</code> (upsert). Тело — правило в формате rule-engine. Ответ: <code>{ &quot;rule&quot;: { ... } }</code><pre><code class="language-json">{
   &quot;id&quot;: &quot;temp_emergency_high&quot;,
-  &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensors/dht22&quot;, &quot;qos&quot;: 0 },
+  &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;, &quot;qos&quot;: 0 },
   &quot;when&quot;: { &quot;jsonpath&quot;: &quot;$.temperature &gt; 29&quot; },
   &quot;then&quot;: [ { &quot;action&quot;: &quot;publish&quot;, &quot;params&quot;: { &quot;topic&quot;: &quot;units/unitId1/commands/a_relay3&quot;, &quot;payload&quot;: &quot;{\&quot;state\&quot;:\&quot;1\&quot;}&quot;, &quot;qos&quot;: 1 } } ],
   &quot;enabled&quot;: true

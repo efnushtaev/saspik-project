@@ -33,7 +33,7 @@ The MQTT broker provides real-time messaging between:
 Current ACL provides:
 1. **Default deny** — все неразрешённые топики блокируются
 2. **Client namespaces**: `clients/%c/#` — каждый клиент может писать/читать в свой namespace
-3. **Топики датчиков**: `sensors/#` — publish/subscribe для сенсоров
+3. **Топики датчиков**: `sensor/#` — publish/subscribe для сенсоров
 4. **Топики LED** (dev): `led/#` — publish/subscribe для LED-устройств
 5. **Топики команд юнитов**: `units/#` — publish/subscribe для управления реле (добавлено 2026-07-27)
 

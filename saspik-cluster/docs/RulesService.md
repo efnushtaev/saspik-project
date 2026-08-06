@@ -9,7 +9,7 @@
     {
       "id": "unique_rule_id",
       "trigger": {
-        "topic": "sensors/temperature",
+        "topic": "sensor/temperature",
         "qos": 0
       },
       "when": {
@@ -49,7 +49,7 @@
 ### Типы условий (when)   
 |             Тип   <br> |                                    Параметр   <br> |                  Пример   <br> |
 |:-----------------------|:---------------------------------------------------|:-------------------------------|
-|    `topicRegex`   <br> |                           RegExp для топика   <br> | `"^sensors/.+/status$"`   <br> |
+|    `topicRegex`   <br> |                           RegExp для топика   <br> | `"^sensor/.+/status$"`   <br> |
 |      `jsonpath`   <br> |                 `$.field оператор значение`   <br> |  `"$.temperature > 30"`   <br> |
 | `payloadEquals`   <br> |                   Точное совпадение payload   <br> |                  `"OK"`   <br> |
 |           `and`   <br> |                          Массив условий (И)   <br> |        `[{...}, {...}]`   <br> |

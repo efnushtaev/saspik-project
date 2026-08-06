@@ -47,7 +47,7 @@ CONFIG_PATH=./rules.json      # для RULES_SOURCE=file
 ```json
 {
   "id": "temp_emergency_high",
-  "trigger": { "topic": "sensors/dht22", "qos": 0 },
+  "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
   "when": { "jsonpath": "$.temperature > 29" },
   "then": [
     { "action": "publish", "params": { "topic": "units/unitId1/commands/a_relay3", "payload": "{\"state\":\"1\"}", "qos": 1 } }
@@ -111,7 +111,7 @@ npm run test
     {
       "id": "unique_rule_id",
       "trigger": {
-        "topic": "sensors/temperature",
+        "topic": "sensor/temperature",
         "qos": 0
       },
       "when": {
@@ -153,10 +153,10 @@ npm run test
 
 | Тип | Параметр | Пример |
 |-----|----------|--------|
-| `topicRegex` | Регулярное выражение для топика | `"^sensors/.+/status$"` |
+| `topicRegex` | Регулярное выражение для топика | `"^sensor/.+/status$"` |
 | `jsonpath` | Выражение вида `$.field оператор значение` | `"$.temperature > 30"` |
 | `payloadEquals` | Точное совпадение payload как строки | `"OK"` |
-| `and` | Массив условий (логическое И) | `[{"topicRegex": "^sensors/.+"}, {"jsonpath": "$.value > 0"}]` |
+| `and` | Массив условий (логическое И) | `[{"topicRegex": "^sensor/.+"}, {"jsonpath": "$.value > 0"}]` |
 | `or` | Массив условий (логическое ИЛИ) | аналогично `and` |
 | `not` | Одно условие (логическое НЕ) | `{"topicRegex": "^test/.+"}` |
 

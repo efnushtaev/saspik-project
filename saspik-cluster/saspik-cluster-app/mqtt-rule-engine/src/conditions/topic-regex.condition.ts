@@ -9,7 +9,7 @@ export class TopicRegexCondition implements Condition {
 
   /**
    * Создаёт условие.
-   * @param pattern - строка регулярного выражения (например, "^sensors/.+$").
+   * @param pattern - строка регулярного выражения (например, "^sensor/.+$").
    */
   constructor(pattern: string) {
     this.regex = new RegExp(pattern);

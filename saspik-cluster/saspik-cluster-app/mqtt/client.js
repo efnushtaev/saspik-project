@@ -1,7 +1,7 @@
 const mqtt = require('mqtt');
 
 const brokerUrl = 'mqtt://localhost:1883';
-const topic = 'sensors/dht22';
+const topic = 'sensor/unitId1/dht22';
 const clientId = '';
 const username = 'admin';
 const password = 'password123'; // This should match the password in passwordfile

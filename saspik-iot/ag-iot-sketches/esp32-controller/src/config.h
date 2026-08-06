@@ -21,8 +21,8 @@
 #define UNIT_ID "unitId1"
 
 // Топики сенсоров
-#define SENSOR_TOPIC_DHT22 "sensors/dht22"
-#define SENSOR_TOPIC_FLOAT "sensors/float-1"
+#define SENSOR_TOPIC_DHT22 "sensor/" UNIT_ID "/dht22"
+#define SENSOR_TOPIC_FLOAT "sensor/" UNIT_ID "/float-1"
 
 // Топики команд реле
 #define RELAY_TOPIC_LIGHT "units/" UNIT_ID "/commands/a_relay1"

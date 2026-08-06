@@ -5,7 +5,7 @@ export const unitId2Objects: ObjectsDto[] = [
     id: "dht22",
     name: "DHT22",
     type: ObjectsType.SENSOR,
-    topic: "sensors/unitId2/dht22",
+    topic: "sensor/unitId2/dht22",
     spec: [
       { key: "temperature", model: "dht22", unit: "℃" },
       { key: "humidity", model: "dht22", unit: "%" },

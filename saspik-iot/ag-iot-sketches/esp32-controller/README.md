@@ -8,7 +8,7 @@ ESP32-шлюз, который собирает данные от узлов п�
 
 - **ESP-NOW** — приём данных от node-устройств (температура, влажность, поплавковый датчик)
 - **NTP** — синхронизация времени для ISO 8601 меток в публикациях
-- **MQTT** — публикация JSON в топики `sensors/dht22` и `sensors/float-1` каждые 5с
+- **MQTT** — публикация JSON в топики `sensor/{unitId}/dht22` и `sensor/{unitId}/float-1` каждые 5с
 - **Relay control** — подписка на `units/{unitId}/commands/a_relay1-4`, управление GPIO через callback
 - **Два ядра FreeRTOS** — ESP-NOW на core 0, MQTT на core 1
 

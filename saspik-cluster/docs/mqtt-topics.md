@@ -17,7 +17,7 @@
 
 Устройства публикуют показания сенсоров в следующие топики:
 
-### `sensors/dht22`
+### `sensor/{unitId}/dht22`
 
 Температура и влажность воздуха.
 
@@ -35,7 +35,7 @@
 | `humidity` | number | Влажность, % |
 | `timestamp` | string | ISO 8601 |
 
-### `sensors/float-1`
+### `sensor/{unitId}/float-1`
 
 Поплавковый датчик уровня воды (для генератора влажности).
 
@@ -140,13 +140,13 @@ interface ObjectItem {
 ```
 pattern readwrite healthcheck/#
 pattern readwrite clients/%c/#
-pattern readwrite sensors/#
+pattern readwrite sensor/#
 pattern readwrite led/#
 ```
 
 - `healthcheck/#` — healthcheck
 - `clients/%c/#` — пространство имён клиента (по Client ID)
-- `sensors/#` — сенсорные топики
+- `sensor/#` — сенсорные топики (`sensor/{unitId}/{objectId}`)
 - `led/#` — управление LED
 
 ## Полный цикл данных
@@ -156,8 +156,8 @@ ESP-NOW node                ESP32 Controller               Mosquitto            
     │                              │                          │                          │
     │── binary(CRC8) ─────────────>│                          │                          │
     │    [temp, hum, float, ts]    │                          │                          │
-    │                              │── JSON sensors/dht22 ───>│───── all topics (#) ────>│
-    │                              │── JSON sensors/float-1 ─>│                          │
+    │                              │── JSON sensor/{unitId}/dht22 ─>│───── all topics (#) ────>│
+    │                              │── JSON sensor/{unitId}/float-1 ─>│                         │
     │                              │                          │                          │
     │                              │<── "1"/"0" ─────────────│                          │
     │                              │    units/.../a_relay1-4  │                          │
@@ -170,3 +170,4 @@ ESP-NOW node                ESP32 Controller               Mosquitto            
 | Дата | Автор | Изменение |
 |---|---|---|
 | 2026-07-26 | | Начальная версия. Описаны топики сенсоров и команд |
+| 2026-08-05 | | Топики сенсоров переведены на паттерн `sensor/{unitId}/{objectId}` (вместо `sensors/...`) |

@@ -3,7 +3,7 @@
     {
       "id": "rule1",
       "trigger": {
-        "topic": "sensors/temperature",
+        "topic": "sensor/temperature",
         "qos": 0
       },
       "when": {
@@ -31,11 +31,11 @@
     {
       "id": "rule2",
       "trigger": {
-        "topic": ["sensors/+/status", "device/+/online"]
+        "topic": ["sensor/+/status", "device/+/online"]
       },
       "when": {
         "and": [
-          { "topicRegex": "^sensors/.+/status$" },
+          { "topicRegex": "^sensor/.+/status$" },
           { "payloadEquals": "OK" }
         ]
       },

@@ -30,22 +30,22 @@ async function runTest() {
   // console.log('\n--- Симуляция сообщений ---');
 
   // // Сообщение, которое должно сработать по правилу 1 (температура > 30)
-  // console.log('\n1. Отправляем sensors/temperature с value=35:');
+  // console.log('\n1. Отправляем sensor/temperature с value=35:');
   // mockAdapter.simulateMessage(
-  //   'sensors/temperature',
+  //   'sensor/temperature',
   //   JSON.stringify({ value: 35, unit: 'C', timestamp: '2025-01-01T12:00:00Z' })
   // );
 
   // // Сообщение, которое НЕ должно сработать (температура <= 30)
-  // console.log('\n2. Отправляем sensors/temperature с value=25:');
+  // console.log('\n2. Отправляем sensor/temperature с value=25:');
   // mockAdapter.simulateMessage(
-  //   'sensors/temperature',
+  //   'sensor/temperature',
   //   JSON.stringify({ value: 25, unit: 'C' })
   // );
 
-  // // Сообщение по wildcard топику sensors/room1/status с payload "OK"
-  // console.log('\n3. Отправляем sensors/room1/status с payload "OK":');
-  // mockAdapter.simulateMessage('sensors/room1/status', 'OK');
+  // // Сообщение по wildcard топику sensor/room1/status с payload "OK"
+  // console.log('\n3. Отправляем sensor/room1/status с payload "OK":');
+  // mockAdapter.simulateMessage('sensor/room1/status', 'OK');
 
   // // Сообщение по другому wildcard device/server/online
   // console.log('\n4. Отправляем device/server/online с payload "online":');

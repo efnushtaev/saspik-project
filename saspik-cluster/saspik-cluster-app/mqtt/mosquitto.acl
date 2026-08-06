@@ -9,8 +9,8 @@ pattern readwrite healthcheck/#
 # Example: client "1" can publish to "clients/1/test1", "clients/1/status", etc.
 pattern readwrite clients/%c/#
 
-# Allow sensors topics for authenticated users
-pattern readwrite sensors/#
+# Allow sensor topics for authenticated users
+pattern readwrite sensor/#
 
 # Allow LED control topics for authenticated users
 pattern readwrite led/#

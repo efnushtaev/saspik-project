@@ -3,7 +3,7 @@
     {
       "id": "humidity_high",
       "trigger": {
-        "topic": "sensors/dht22",
+        "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22",
         "qos": 0
       },
       "when": {
@@ -23,7 +23,7 @@
     {
       "id": "humidity_low",
       "trigger": {
-        "topic": "sensors/dht22",
+        "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22",
         "qos": 0
       },
       "when": {

@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Правила климат-контроля для MQTT Rule Engine Worker",
     "data_sources": {
-      "sensors/dht22": "{ temperature: number, humidity: number, timestamp: ISO8601 }",
-      "sensors/float-1": "{ floatSensor: number, timestamp: ISO8601 }"
+      "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22": "{ temperature: number, humidity: number, timestamp: ISO8601 }",
+      "sensor/${CLIMATE_CONTROL_UNIT_ID}/float-1": "{ floatSensor: number, timestamp: ISO8601 }"
     },
     "commands": {
       "units/${CLIMATE_CONTROL_UNIT_ID}/commands/a_relay1": "свет (1=ON, 0=OFF)",
@@ -22,7 +22,7 @@
   "rules": [
     {
       "id": "temp_emergency_high",
-      "trigger": { "topic": "sensors/dht22", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
       "when": {
         "or": [
           {
@@ -46,7 +46,7 @@
     },
     {
       "id": "temp_emergency_low",
-      "trigger": { "topic": "sensors/dht22", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
       "when": {
         "or": [
           {
@@ -69,7 +69,7 @@
     },
     {
       "id": "fan_on",
-      "trigger": { "topic": "sensors/dht22", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
       "when": {
         "or": [
           {
@@ -94,7 +94,7 @@
     },
     {
       "id": "fan_off",
-      "trigger": { "topic": "sensors/dht22", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
       "when": {
         "or": [
           {
@@ -119,7 +119,7 @@
     },
     {
       "id": "humidifier_on",
-      "trigger": { "topic": "sensors/dht22", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
       "when": {
         "or": [
           {
@@ -142,7 +142,7 @@
     },
     {
       "id": "humidifier_off",
-      "trigger": { "topic": "sensors/dht22", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
       "when": {
         "or": [{
             "and": [
@@ -172,7 +172,7 @@
     },
     {
       "id": "light_on",
-      "trigger": { "topic": "sensors/dht22", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
       "when": {
         "not": {
           "timeBetween": { "start": ${NIGHT_START_HOUR}, "end": ${NIGHT_END_HOUR}, "field": "$.timestamp" }
@@ -184,7 +184,7 @@
     },
     {
       "id": "light_off",
-      "trigger": { "topic": "sensors/dht22", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22", "qos": 0 },
       "when": {
         "timeBetween": { "start": ${NIGHT_START_HOUR}, "end": ${NIGHT_END_HOUR}, "field": "$.timestamp" }
       },
@@ -194,7 +194,7 @@
     },
     {
       "id": "water_on",
-      "trigger": { "topic": "sensors/float-1", "qos": 0 },
+      "trigger": { "topic": "sensor/${CLIMATE_CONTROL_UNIT_ID}/float-1", "qos": 0 },
       "when": {
         "jsonpath": "$.floatSensor == 0"
       },

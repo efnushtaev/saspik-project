@@ -3,7 +3,7 @@
 // --- Параметры объекта ---
 constexpr char OBJECT_ID[] = "saspik.sa.wm.m001";
 constexpr char UNIT_ID[] = "unitId2";
-constexpr char OBJECT_TYPE[] = "sensors";
+constexpr char OBJECT_TYPE[] = "sensor";
 
 // --- Пины ---
 constexpr uint8_t PIN_DHT       = 4;
