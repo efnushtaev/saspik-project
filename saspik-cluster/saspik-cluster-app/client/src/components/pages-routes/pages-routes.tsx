@@ -4,6 +4,7 @@ import { MonitoringPage } from './monitoring-page';
 import { AutomationPage } from './automation-page';
 import { InfoPage } from './info-page';
 import { ObjectPage } from '../object-page';
+import { UnitPage } from '../unit-page';
 
 import './styles.css';
 import { createCn } from 'bem-react-classname';
@@ -18,6 +19,7 @@ export const PagesRoutes = ({ showTabs = true }: { showTabs?: boolean }) => {
         <Route path="/monitoring" element={<MonitoringPage />} />
         <Route path="/automation" element={<AutomationPage />} />
         <Route path="/info" element={<InfoPage />} />
+        <Route path="/unit/:unitId/info" element={<UnitPage />} />
         <Route path="/object/:objectId" element={<ObjectPage />} />
       </Routes>
     </div>

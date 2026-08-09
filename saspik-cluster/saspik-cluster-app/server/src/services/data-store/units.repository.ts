@@ -20,4 +20,27 @@ export class UnitsRepository {
   async findById(id: string): Promise<UnitEntity | null> {
     return this.collection.findOne({ id });
   }
+
+  async create(entity: UnitEntity): Promise<UnitEntity> {
+    const existing = await this.collection.findOne({ id: entity.id });
+    if (existing) {
+      throw new Error(`Unit "${entity.id}" already exists`);
+    }
+    await this.collection.insertOne(entity);
+    const saved = await this.collection.findOne({ id: entity.id });
+    if (!saved) {
+      throw new Error(`Failed to create unit ${entity.id}`);
+    }
+    return saved;
+  }
+
+  async update(id: string, patch: Partial<UnitEntity>): Promise<UnitEntity | null> {
+    await this.collection.updateOne({ id }, { $set: patch });
+    return this.collection.findOne({ id });
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const res = await this.collection.deleteOne({ id });
+    return res.deletedCount > 0;
+  }
 }

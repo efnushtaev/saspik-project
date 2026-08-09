@@ -1,10 +1,10 @@
-.object-page {
+.unit-page {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.object-page__button {
+.unit-page__button {
   padding: 10px 20px;
   border: 1px solid var(--topbar-border-color);
   border-radius: 8px;
@@ -14,53 +14,53 @@
   cursor: pointer;
 }
 
-.object-page__button:hover {
+.unit-page__button:hover {
   color: var(--tab-font-color--active);
   border-color: var(--actions-button-border-color--active);
 }
 
-.object-page__button_primary {
+.unit-page__button_primary {
   background: var(--actions-button-border-color--active);
   border-color: var(--actions-button-border-color--active);
   color: #171717;
   font-weight: 600;
 }
 
-.object-page__button_primary:disabled {
+.unit-page__button_primary:disabled {
   opacity: 0.5;
   cursor: default;
 }
 
-.object-page__button_danger {
+.unit-page__button_danger {
   background: #b3261e;
   border-color: #b3261e;
   color: #ffffff;
   font-weight: 600;
 }
 
-.object-page__section {
+.unit-page__section {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.object-page__section-title {
+.unit-page__section-title {
   font-size: 14px;
   font-weight: 600;
   color: var(--font-color-primary);
 }
 
-.object-page__header {
+.unit-page__header {
   display: flex;
   justify-content: flex-end;
 }
 
-.object-page__actions {
+.unit-page__actions {
   display: flex;
   gap: 12px;
 }
 
-.object-page__description {
+.unit-page__description {
   padding: 12px 16px;
   border: 1px solid var(--topbar-border-color);
   border-radius: 8px;
@@ -69,7 +69,7 @@
   font-size: 14px;
 }
 
-.object-page__error {
+.unit-page__error {
   padding: 10px 12px;
   border: 1px solid #b3261e;
   border-radius: 8px;
@@ -78,7 +78,7 @@
   font-size: 13px;
 }
 
-.object-page__spec {
+.unit-page__spec {
   width: 100%;
   border-collapse: collapse;
   background: var(--actions-search-background);
@@ -87,33 +87,44 @@
   overflow: hidden;
 }
 
-.object-page__spec th,
-.object-page__spec td {
+.unit-page__spec th,
+.unit-page__spec td {
   padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid var(--topbar-border-color);
   font-size: 14px;
 }
 
-.object-page__spec th {
+.unit-page__spec th {
   color: var(--tab-font-color);
   font-weight: 500;
   background: rgba(255, 255, 255, 0.03);
 }
 
-.object-page__spec td {
+.unit-page__spec td {
   color: var(--tab-font-color--active);
 }
 
-.object-page__spec tr:last-child td {
+.unit-page__spec tr:last-child td {
   border-bottom: none;
 }
 
-.object-page__spec-value {
-  font-weight: 600;
-}
-
-.object-page__spec-label {
+.unit-page__spec-label {
   width: 160px;
   font-weight: 500;
+}
+
+.unit-page__add-object {
+  padding: 12px 20px;
+  border: 1px dashed var(--topbar-border-color);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tab-font-color);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.unit-page__add-object:hover {
+  color: var(--tab-font-color--active);
+  border-color: var(--actions-button-border-color--active);
 }

@@ -6,3 +6,20 @@
   padding: 44px 28px;
   box-sizing: border-box;
 }
+
+.listing__add-unit {
+  width: 100%;
+  padding: 14px 20px;
+  border: 1px dashed var(--topbar-border-color);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tab-font-color);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.listing__add-unit:hover {
+  color: var(--tab-font-color--active);
+  border-color: var(--actions-button-border-color--active);
+}
+

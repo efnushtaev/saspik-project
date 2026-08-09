@@ -24,11 +24,14 @@ const toggleDeviceValue = (obj: ObjectItem): string | null => {
   return currentValue === '0' ? '1' : '0';
 };
 
-export const ObjectsList = ({ type = 'sensor' }: ObjectsListProps) => {
-  const { objects, loading, error, sendCommand, updateObjectValue } = useObjectsListFetching(type);
+export const ObjectsList = ({ type = 'sensor', unitId: unitIdProp }: ObjectsListProps) => {
+  const { objects, loading, error, sendCommand, updateObjectValue } = useObjectsListFetching(
+    type,
+    unitIdProp,
+  );
   const navigate = useNavigate();
   const location = useLocation();
-  const unitId = new URLSearchParams(location.search).get('id') || '';
+  const unitId = unitIdProp || new URLSearchParams(location.search).get('id') || '';
 
   if (loading) {
     return <div className={'rotate-scale-up'} />;

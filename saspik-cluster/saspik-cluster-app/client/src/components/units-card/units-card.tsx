@@ -15,7 +15,7 @@ export const UnitsCard = ({ id, title, describe }: UnitsCardProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/monitoring?id=${id}`);
+    navigate(`/unit/${id}/info`);
   };
 
   return (

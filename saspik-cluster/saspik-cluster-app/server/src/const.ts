@@ -9,6 +9,10 @@ export enum ControllersDomens {
 
 export enum UnitsControllersRoutesURL {
   UNITS_LIST = "/list",
+  UNITS_GET_BY_ID = "/:id",
+  UNITS_CREATE = "/",
+  UNITS_UPDATE = "/:id",
+  UNITS_DELETE = "/:id",
 }
 
 export enum RulesControllersRoutesURL {

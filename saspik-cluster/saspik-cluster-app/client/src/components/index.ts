@@ -11,4 +11,7 @@ export * from './top-bar';
 export * from './units-card';
 export * from './units-list';
 export * from './create-object-modal';
+export * from './create-unit-modal';
+export * from './unit-form';
+export * from './unit-page';
 export * from '../hooks';

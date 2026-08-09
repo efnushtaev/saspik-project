@@ -52,4 +52,9 @@ export class ObjectsRepository {
     const res = await this.collection.deleteOne({ id, unitId });
     return res.deletedCount > 0;
   }
+
+  async deleteByUnitId(unitId: string): Promise<number> {
+    const res = await this.collection.deleteMany({ unitId });
+    return res.deletedCount;
+  }
 }

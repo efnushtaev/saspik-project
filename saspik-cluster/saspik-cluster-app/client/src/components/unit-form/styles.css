@@ -1,0 +1,102 @@
+.unit-form__field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.unit-form__label {
+  display: block;
+  font-size: 13px;
+  color: var(--tab-font-color);
+  margin-bottom: 6px;
+}
+
+.unit-form__input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--topbar-border-color);
+  border-radius: 8px;
+  background: var(--actions-search-background);
+  color: var(--tab-font-color--active);
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.unit-form__input:focus {
+  border-color: var(--actions-button-border-color--active);
+}
+
+.unit-form__input:disabled {
+  opacity: 0.7;
+}
+
+.unit-form__input_readonly {
+  color: var(--tab-font-color);
+  background: #1d1d1d;
+}
+
+.unit-form__table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--actions-search-background);
+  border: 1px solid var(--topbar-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.unit-form__table th,
+.unit-form__table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--topbar-border-color);
+  font-size: 14px;
+}
+
+.unit-form__table th {
+  color: var(--tab-font-color);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.unit-form__table td {
+  color: var(--tab-font-color--active);
+}
+
+.unit-form__table tr:last-child td,
+.unit-form__table tr:last-child th {
+  border-bottom: none;
+}
+
+.unit-form__table-label {
+  width: 160px;
+}
+
+.unit-form__table-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--tab-font-color--active);
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.unit-form__table-input:hover {
+  border-color: var(--topbar-border-color);
+}
+
+.unit-form__table-input:focus {
+  border-color: var(--actions-button-border-color--active);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.unit-form__table-input:disabled {
+  opacity: 0.6;
+}
+
+.unit-form__table-input_readonly {
+  color: var(--tab-font-color);
+}

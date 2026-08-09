@@ -8,3 +8,14 @@ export class UnitDto {
   objects: ObjectsDto[];
   rules: RuleDto[];
 }
+
+export class CreateUnitDto {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export class UpdateUnitDto {
+  name: string;
+  description?: string;
+}

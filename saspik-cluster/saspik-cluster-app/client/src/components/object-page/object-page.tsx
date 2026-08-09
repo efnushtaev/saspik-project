@@ -8,6 +8,7 @@ import { ConfirmModal } from '../confirm-modal';
 import { ObjectItem } from '../objects-list/types';
 import { NAVIGATION_PATHS } from '../constants';
 import { BasePage } from '../pages-routes';
+import { usePageHeader } from '../top-bar/page-header-context';
 
 import './styles.css';
 
@@ -191,6 +192,8 @@ export const ObjectPage = () => {
     }
   };
 
+  usePageHeader(object && !error ? object.name : null);
+
   if (loading) {
     return (
       <BasePage>
@@ -215,11 +218,28 @@ export const ObjectPage = () => {
   return (
     <BasePage>
       <div className={cn()}>
-        <div className={cn('header')}>
-          <div className={cn('title')}>{object.name}</div>
-          <div className={cn('actions')}>
-            {!editing ? (
-              <>
+        <div className={cn('section')}>
+          <div className={cn('section-title')}>Информация</div>
+
+          {editing ? (
+            <div className={cn('header')}>
+              <div className={cn('actions')}>
+                <button type="button" className={cn('button')} onClick={() => setEditing(false)}>
+                  Отмена
+                </button>
+                <button
+                  type="button"
+                  className={cn('button', { primary: true })}
+                  onClick={handleSave}
+                  disabled={saving}
+                >
+                  {saving ? 'Сохранение…' : 'Сохранить'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className={cn('header')}>
+              <div className={cn('actions')}>
                 <button type="button" className={cn('button')} onClick={handleBack}>
                   Назад
                 </button>
@@ -237,86 +257,72 @@ export const ObjectPage = () => {
                 >
                   Удалить
                 </button>
-              </>
-            ) : (
-              <>
-                <button type="button" className={cn('button')} onClick={() => setEditing(false)}>
-                  Отмена
-                </button>
-                <button
-                  type="button"
-                  className={cn('button', { primary: true })}
-                  onClick={handleSave}
-                  disabled={saving}
-                >
-                  {saving ? 'Сохранение…' : 'Сохранить'}
-                </button>
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
+          )}
 
-        {object.description && <div className={cn('description')}>{object.description}</div>}
+          {object.description && <div className={cn('description')}>{object.description}</div>}
 
-        <table className={cn('spec')}>
-          <tbody>
-            <tr>
-              <th className={cn('spec-label')}>Тип</th>
-              <td>{object.type}</td>
-            </tr>
-            <tr>
-              <th className={cn('spec-label')}>ID</th>
-              <td>{object.id}</td>
-            </tr>
-            <tr>
-              <th className={cn('spec-label')}>Юнит</th>
-              <td>{unitId}</td>
-            </tr>
-            <tr>
-              <th className={cn('spec-label')}>Топик</th>
-              <td>{object.topic || `${object.type}/${unitId}/${object.id}`}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        {editing ? (
-          <>
-            <ObjectFormFields
-              values={values}
-              unitId={unitId}
-              idReadonly
-              variant="table"
-              onChange={patch => setValues(prev => ({ ...prev, ...patch }))}
-              onSpecChange={updateSpecRow}
-              onSpecAdd={addSpecRow}
-              onSpecRemove={removeSpecRow}
-            />
-            {saveError && <div className={cn('error')}>{saveError}</div>}
-          </>
-        ) : (
           <table className={cn('spec')}>
-            <thead>
-              <tr>
-                <th>Ключ</th>
-                <th>Значение</th>
-                <th>Модель</th>
-                <th>Ед.</th>
-                <th>Знаков</th>
-              </tr>
-            </thead>
             <tbody>
-              {object.spec.map((s, i) => (
-                <tr key={i}>
-                  <td>{s.key}</td>
-                  <td className={cn('spec-value')}>{s.value ?? '--'}</td>
-                  <td>{s.spec.model}</td>
-                  <td>{s.spec.unit || ''}</td>
-                  <td>{s.spec.minorPart ?? ''}</td>
-                </tr>
-              ))}
+              <tr>
+                <th className={cn('spec-label')}>Тип</th>
+                <td>{object.type}</td>
+              </tr>
+              <tr>
+                <th className={cn('spec-label')}>ID</th>
+                <td>{object.id}</td>
+              </tr>
+              <tr>
+                <th className={cn('spec-label')}>Юнит</th>
+                <td>{unitId}</td>
+              </tr>
+              <tr>
+                <th className={cn('spec-label')}>Топик</th>
+                <td>{object.topic || `${object.type}/${unitId}/${object.id}`}</td>
+              </tr>
             </tbody>
           </table>
-        )}
+
+          {editing ? (
+            <>
+              <ObjectFormFields
+                values={values}
+                unitId={unitId}
+                idReadonly
+                variant="table"
+                onChange={patch => setValues(prev => ({ ...prev, ...patch }))}
+                onSpecChange={updateSpecRow}
+                onSpecAdd={addSpecRow}
+                onSpecRemove={removeSpecRow}
+              />
+              {saveError && <div className={cn('error')}>{saveError}</div>}
+            </>
+          ) : (
+            <table className={cn('spec')}>
+              <thead>
+                <tr>
+                  <th>Ключ</th>
+                  <th>Значение</th>
+                  <th>Модель</th>
+                  <th>Ед.</th>
+                  <th>Знаков</th>
+                </tr>
+              </thead>
+              <tbody>
+                {object.spec.map((s, i) => (
+                  <tr key={i}>
+                    <td>{s.key}</td>
+                    <td className={cn('spec-value')}>{s.value ?? '--'}</td>
+                    <td>{s.spec.model}</td>
+                    <td>{s.spec.unit || ''}</td>
+                    <td>{s.spec.minorPart ?? ''}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
 
         {deleteError && <div className={cn('error')}>{deleteError}</div>}
 

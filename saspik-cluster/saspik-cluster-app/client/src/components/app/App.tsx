@@ -4,6 +4,7 @@ import { createCn } from 'bem-react-classname';
 import { useMobileDetection, useShowTabs } from '../../hooks';
 
 import { TopBar } from '../top-bar';
+import { PageHeaderProvider } from '../top-bar/page-header-context';
 import { ControlBar, ControlBarMobile } from '../control-bar';
 import { PagesRoutes } from '../pages-routes/pages-routes';
 
@@ -65,7 +66,9 @@ const AppContent = () => {
 export const App = () => {
   return (
     <Router>
-      <AppContent />
+      <PageHeaderProvider>
+        <AppContent />
+      </PageHeaderProvider>
     </Router>
   );
 };

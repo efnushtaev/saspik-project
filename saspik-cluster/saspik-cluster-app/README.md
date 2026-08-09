@@ -16,7 +16,7 @@ Fullstack-приложение для управления IoT-кластеро�
 
 ## Архитектура
 
-- **Frontend**: React SPA, обслуживается через Nginx. Отображает список юнитов, сенсоры и устройства, вложенные в каждый юнит.
+- **Frontend**: React SPA, обслуживается через Nginx. Отображает список юнитов, сенсоры и устройства, вложенные в каждый юнит. Поддерживает создание/редактирование/удаление юнитов и объектов.
 - **MongoDB**: Документная БД. Хранит юниты, объекты и правила (коллекции `units`, `objects`, `rules`). При первой инициализации заполняется сидами из `server/src/data/*.config.ts` и `server/data/rules.json`.
 - **InfluxDB**: Time-series база данных. Хранит все MQTT-сообщения от устройств.
 - **Telegraf**: Подписывается на все MQTT-топики (`#`), парсит JSON и пишет в InfluxDB.
@@ -32,6 +32,10 @@ Fullstack-приложение для управления IoT-кластеро�
 | `GET` | `/health` | Health check |
 | `GET` | `/api/getTimestamp` | Текущее время сервера |
 | `GET` | `/api/v1/units/list` | Список юнитов с вложенными объектами и правилами (из MongoDB) |
+| `GET` | `/api/v1/units/:id` | Юнит по ID (с вложенными объектами и правилами) |
+| `POST` | `/api/v1/units` | Создание юнита: `{ id, name, description? }` |
+| `PATCH` | `/api/v1/units/:id` | Обновление юнита: `{ name, description? }` (id не изменяем) |
+| `DELETE` | `/api/v1/units/:id` | Удаление юнита вместе с его объектами (каскадно; правила не затрагиваются) |
 | `POST` | `/api/v1/objects/list/:type` | Объекты по типу (`sensor`/`device`). `value` из InfluxDB |
 | `POST` | `/api/v1/objects/getByIds` | Объекты по IDs |
 | `POST` | `/api/v1/objects/command/:deviceId` | Команда устройству |

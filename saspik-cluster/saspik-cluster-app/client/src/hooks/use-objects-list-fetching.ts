@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { mockApi, isMockMode } from '../components/mock-api';
@@ -21,22 +21,29 @@ export interface UseObjectsListResult {
  * @param type - Type of objects to fetch ('sensor' or 'device')
  * @returns Object containing objects list, loading state, and error state
  */
-export const useObjectsListFetching = (type: PageObjectType = 'sensor'): UseObjectsListResult => {
+export const useObjectsListFetching = (
+  type: PageObjectType = 'sensor',
+  unitIdProp?: string,
+): UseObjectsListResult => {
   const [objects, setObjects] = useState<ObjectItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const location = useLocation();
 
+  const resolveUnitId = useCallback((): string | undefined => {
+    if (unitIdProp) return unitIdProp;
+    return new URLSearchParams(location.search).get('id') || undefined;
+  }, [unitIdProp, location.search]);
+
   useEffect(() => {
     const loadingTimer = setTimeout(() => setLoading(false), 10000);
 
-    const searchParams = new URLSearchParams(location.search);
-    const unitId = searchParams.get('id') || undefined;
+    const unitId = resolveUnitId();
 
     const fetchObjects = async () => {
       try {
         if (isMockMode()) {
-          const id = searchParams.get('id') || '';
+          const id = unitId || '';
 
           let data;
           if (type === 'sensor') {
@@ -83,15 +90,14 @@ export const useObjectsListFetching = (type: PageObjectType = 'sensor'): UseObje
       clearInterval(interval);
       clearTimeout(loadingTimer);
     };
-  }, [location.search, type]);
+  }, [location.search, type, unitIdProp, resolveUnitId]);
 
   const sendCommand = async (deviceId: string, value: string) => {
     try {
       if (isMockMode()) {
         await mockApi.callCommand(deviceId, value);
       } else {
-        const searchParams = new URLSearchParams(location.search);
-        const unitId = searchParams.get('id') || undefined;
+        const unitId = resolveUnitId();
         const response = await fetch(`/api/v1/objects/command/${deviceId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

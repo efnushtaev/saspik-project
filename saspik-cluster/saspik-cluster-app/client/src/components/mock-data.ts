@@ -36,7 +36,15 @@ export const mockObjects: MockObject[] = [
 ];
 
 // Mock data for units
-export const mockUnits = [
+export type MockUnit = {
+  id: string;
+  name: string;
+  description?: string;
+  objects: MockObject[];
+  rules: unknown[];
+};
+
+export const mockUnits: MockUnit[] = [
   {
     id: 'unit-1',
     name: 'Производственный цех',

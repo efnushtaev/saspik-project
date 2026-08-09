@@ -1,13 +1,67 @@
-import { mockUnits, mockObjects, MockObject } from './mock-data';
+import { mockUnits, mockObjects, MockObject, MockUnit } from './mock-data';
 
 // Mock API service
 export const mockApi = {
-  getUnitsList: async (): Promise<{ units: typeof mockUnits }> => {
+  getUnitsList: async (): Promise<{ units: MockUnit[] }> => {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
     // Return mock units data
     return { units: mockUnits };
+  },
+
+  getUnit: async (id: string): Promise<{ unit: MockUnit }> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const unit = mockUnits.find(u => u.id === id);
+    if (!unit) {
+      throw new Error('Unit not found');
+    }
+    return { unit };
+  },
+
+  createUnit: async (payload: {
+    id: string;
+    name: string;
+    description?: string;
+  }): Promise<{ unit: MockUnit }> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const existing = mockUnits.find(u => u.id === payload.id);
+    if (existing) {
+      throw new Error(`Unit "${payload.id}" already exists`);
+    }
+    const unit: MockUnit = {
+      id: payload.id,
+      name: payload.name,
+      description: payload.description,
+      objects: [],
+      rules: [],
+    };
+    mockUnits.push(unit);
+    return { unit };
+  },
+
+  updateUnit: async (
+    id: string,
+    payload: { name?: string; description?: string },
+  ): Promise<{ unit: MockUnit }> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const unit = mockUnits.find(u => u.id === id);
+    if (!unit) {
+      throw new Error('Unit not found');
+    }
+    if (payload.name !== undefined) unit.name = payload.name;
+    if (payload.description !== undefined) unit.description = payload.description;
+    return { unit };
+  },
+
+  deleteUnit: async (id: string): Promise<{ success: boolean }> => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const index = mockUnits.findIndex(u => u.id === id);
+    if (index === -1) {
+      throw new Error('Unit not found');
+    }
+    mockUnits.splice(index, 1);
+    return { success: true };
   },
 
   getSensorsList: async (id: string): Promise<{ objects: typeof mockObjects }> => {

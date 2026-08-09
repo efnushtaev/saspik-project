@@ -21,4 +21,5 @@ export type PageObjectType = 'sensor' | 'device';
 
 export interface ObjectsListProps {
   type?: PageObjectType;
+  unitId?: string;
 }
