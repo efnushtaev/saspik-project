@@ -15,11 +15,11 @@ constexpr uint8_t PIN_LED       = 2;
 constexpr uint8_t CONFIG_BUTTON_PIN = 25;
 
 // --- MQTT ---
-constexpr char MQTT_BROKER[]      = "192.168.0.101";
+constexpr char MQTT_BROKER[]      = "185.72.145.19";
 constexpr uint16_t MQTT_PORT      = 1883;
 constexpr char MQTT_USER[]        = "admin";
 constexpr char MQTT_PASS[]        = "password123";
-constexpr char TOPIC_SUBSCRIBE[]  = "led/control";
+constexpr char TOPIC_SUBSCRIBE[]  = "device/unitId2/saspik.sa.wm.m001";
 
 // --- Интервал чтения датчика (мс) ---
 constexpr uint32_t SENSOR_INTERVAL_MS = 2000;
