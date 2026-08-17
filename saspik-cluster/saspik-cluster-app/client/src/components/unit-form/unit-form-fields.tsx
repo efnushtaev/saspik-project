@@ -59,7 +59,7 @@ export const UnitFormFields = ({
       <table className={cn('table')}>
         <tbody>
           <tr>
-            <th className={cn('table-label')}>ID юнита</th>
+            <th className={cn('table-label')}>ID</th>
             <td>{idInput}</td>
           </tr>
           <tr>
@@ -78,7 +78,7 @@ export const UnitFormFields = ({
   return (
     <>
       <label className={cn('field')}>
-        <span className={cn('label')}>ID юнита</span>
+        <span className={cn('label')}>ID</span>
         {idInput}
       </label>
 

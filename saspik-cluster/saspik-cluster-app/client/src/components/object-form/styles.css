@@ -139,9 +139,11 @@
 .object-form__table th,
 .object-form__table td {
   padding: 12px 16px;
+  height: 24px;
   text-align: left;
   border-bottom: 1px solid var(--topbar-border-color);
   font-size: 14px;
+  vertical-align: middle;
 }
 
 .object-form__table th {

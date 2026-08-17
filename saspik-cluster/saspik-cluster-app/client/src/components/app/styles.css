@@ -1,6 +1,7 @@
 .app {
   height: 100vh;
   min-width: 400px;
+  overflow: hidden;
 }
 
 /* Mobile-specific styles are handled in the ControlBar component */

@@ -50,7 +50,7 @@
   color: var(--font-color-primary);
 }
 
-.unit-page__header {
+.unit-page__footer {
   display: flex;
   justify-content: flex-end;
 }
@@ -58,15 +58,6 @@
 .unit-page__actions {
   display: flex;
   gap: 12px;
-}
-
-.unit-page__description {
-  padding: 12px 16px;
-  border: 1px solid var(--topbar-border-color);
-  border-radius: 8px;
-  background: var(--actions-search-background);
-  color: var(--tab-font-color);
-  font-size: 14px;
 }
 
 .unit-page__error {
@@ -90,9 +81,11 @@
 .unit-page__spec th,
 .unit-page__spec td {
   padding: 12px 16px;
+  height: 24px;
   text-align: left;
   border-bottom: 1px solid var(--topbar-border-color);
   font-size: 14px;
+  vertical-align: middle;
 }
 
 .unit-page__spec th {

@@ -13,15 +13,16 @@
 }
 
 .pages-routes_tabs-visible {
+  height: calc(100vh - 241px);
   transform: translateY(0);
 }
 
 @media (max-width: 800px) {
   .pages-routes {
-    height: calc(100vh - 44px);
+    height: calc(100vh - 128px);
     transform: translateY(0px);
   }
   .pages-routes_tabs-visible {
-    height: calc(100vh - 117px);
+    height: calc(100vh - 201px);
   }
 }

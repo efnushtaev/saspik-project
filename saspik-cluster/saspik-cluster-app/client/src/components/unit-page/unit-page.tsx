@@ -5,8 +5,6 @@ import { createCn } from 'bem-react-classname';
 import { mockApi, isMockMode } from '../mock-api';
 import { UnitFormFields, UnitFormValues, emptyUnitFormValues } from '../unit-form';
 import { ConfirmModal } from '../confirm-modal';
-import { CreateObjectModal } from '../create-object-modal';
-import { ObjectsList } from '../objects-list';
 import { BasePage } from '../pages-routes';
 import { usePageHeader } from '../top-bar/page-header-context';
 
@@ -49,8 +47,6 @@ export const UnitPage = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
-
-  const [isCreateObjectOpen, setIsCreateObjectOpen] = useState(false);
 
   const fetchUnit = useCallback(async () => {
     setLoading(true);
@@ -186,50 +182,6 @@ export const UnitPage = () => {
     <BasePage>
       <div className={cn()}>
         <div className={cn('section')}>
-          <div className={cn('section-title')}>Информация</div>
-
-          {editing ? (
-            <div className={cn('header')}>
-              <div className={cn('actions')}>
-                <button type="button" className={cn('button')} onClick={() => setEditing(false)}>
-                  Отмена
-                </button>
-                <button
-                  type="button"
-                  className={cn('button', { primary: true })}
-                  onClick={handleSave}
-                  disabled={saving}
-                >
-                  {saving ? 'Сохранение…' : 'Сохранить'}
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className={cn('header')}>
-              <div className={cn('actions')}>
-                <button type="button" className={cn('button')} onClick={handleBack}>
-                  Назад
-                </button>
-                <button
-                  type="button"
-                  className={cn('button', { primary: true })}
-                  onClick={startEdit}
-                >
-                  Редактировать
-                </button>
-                <button
-                  type="button"
-                  className={cn('button', { danger: true })}
-                  onClick={() => setConfirmOpen(true)}
-                >
-                  Удалить
-                </button>
-              </div>
-            </div>
-          )}
-
-          {unit.description && <div className={cn('description')}>{unit.description}</div>}
-
           {editing ? (
             <>
               <UnitFormFields
@@ -264,15 +216,45 @@ export const UnitPage = () => {
           )}
         </div>
 
-        <button
-          type="button"
-          className={cn('add-object')}
-          onClick={() => setIsCreateObjectOpen(true)}
-        >
-          ＋ Добавить объект
-        </button>
-
-        <ObjectsList type="sensor" unitId={unit.id} />
+        {editing ? (
+          <div className={cn('footer')}>
+            <div className={cn('actions')}>
+              <button type="button" className={cn('button')} onClick={() => setEditing(false)}>
+                Отмена
+              </button>
+              <button
+                type="button"
+                className={cn('button', { primary: true })}
+                onClick={handleSave}
+                disabled={saving}
+              >
+                {saving ? 'Сохранение…' : 'Сохранить'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className={cn('footer')}>
+            <div className={cn('actions')}>
+              <button type="button" className={cn('button')} onClick={handleBack}>
+                Назад
+              </button>
+              <button
+                type="button"
+                className={cn('button', { primary: true })}
+                onClick={startEdit}
+              >
+                Редактировать
+              </button>
+              <button
+                type="button"
+                className={cn('button', { danger: true })}
+                onClick={() => setConfirmOpen(true)}
+              >
+                Удалить
+              </button>
+            </div>
+          </div>
+        )}
 
         {deleteError && <div className={cn('error')}>{deleteError}</div>}
 
@@ -285,14 +267,6 @@ export const UnitPage = () => {
           submitting={deleting}
           onConfirm={handleDelete}
           onClose={() => setConfirmOpen(false)}
-        />
-
-        <CreateObjectModal
-          open={isCreateObjectOpen}
-          unitId={unit.id}
-          defaultType="sensor"
-          onClose={() => setIsCreateObjectOpen(false)}
-          onCreated={() => window.dispatchEvent(new CustomEvent('objects-updated'))}
         />
       </div>
     </BasePage>

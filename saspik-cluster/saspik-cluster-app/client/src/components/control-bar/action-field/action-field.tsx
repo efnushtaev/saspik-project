@@ -5,6 +5,7 @@ import { createCn } from 'bem-react-classname';
 import { ActionButton } from './action-button/action-button';
 import { SearchBar } from './search-bar';
 import { CreateObjectModal } from '../../create-object-modal';
+import { getUnitIdFromPathname } from '../../constants';
 
 import './styles.css';
 
@@ -19,8 +20,8 @@ export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
   const location = useLocation();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const unitId = new URLSearchParams(location.search).get('id') || '';
-  const defaultType = location.pathname === '/automation' ? 'device' : 'sensor';
+  const unitId = getUnitIdFromPathname(location.pathname);
+  const defaultType = location.pathname.includes('/automation') ? 'device' : 'sensor';
 
   const handleClick = () => {
     navigate('/');

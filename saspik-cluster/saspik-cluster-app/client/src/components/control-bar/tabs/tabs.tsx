@@ -7,6 +7,7 @@ import {
   LineChartOutlined,
 } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import { getUnitIdFromPathname, withUnitPath } from '../../constants';
 
 export const Tabs = ({
   isVisible: visibleProp = true,
@@ -17,21 +18,19 @@ export const Tabs = ({
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(visibleProp);
 
-  const searchParams = new URLSearchParams(location.search);
-  const currentId = searchParams.get('id');
+  const unitId = getUnitIdFromPathname(location.pathname);
 
   const createUrl = (path: string) => {
-    if (currentId) {
-      return `${path}?id=${currentId}`;
-    }
-    return path;
+    return withUnitPath(path, unitId);
   };
 
   const isActive = (path: string) => {
     if (path === '/') {
       return location.pathname === '/';
     }
-    return location.pathname.startsWith(path);
+    return (
+      location.pathname === path || location.pathname === withUnitPath(path, unitId)
+    );
   };
 
   useEffect(() => {

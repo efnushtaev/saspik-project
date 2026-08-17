@@ -90,9 +90,11 @@
 .object-page__spec th,
 .object-page__spec td {
   padding: 12px 16px;
+  height: 24px;
   text-align: left;
   border-bottom: 1px solid var(--topbar-border-color);
   font-size: 14px;
+  vertical-align: middle;
 }
 
 .object-page__spec th {

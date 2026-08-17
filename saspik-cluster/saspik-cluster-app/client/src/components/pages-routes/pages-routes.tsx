@@ -19,8 +19,10 @@ export const PagesRoutes = ({ showTabs = true }: { showTabs?: boolean }) => {
         <Route path="/monitoring" element={<MonitoringPage />} />
         <Route path="/automation" element={<AutomationPage />} />
         <Route path="/info" element={<InfoPage />} />
+        <Route path="/unit/:unitId/monitoring" element={<MonitoringPage />} />
+        <Route path="/unit/:unitId/automation" element={<AutomationPage />} />
         <Route path="/unit/:unitId/info" element={<UnitPage />} />
-        <Route path="/object/:objectId" element={<ObjectPage />} />
+        <Route path="/unit/:unitId/object/:objectId" element={<ObjectPage />} />
       </Routes>
     </div>
   );

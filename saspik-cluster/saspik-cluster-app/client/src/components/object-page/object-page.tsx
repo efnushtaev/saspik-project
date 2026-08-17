@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { createCn } from 'bem-react-classname';
 
 import { mockApi, isMockMode } from '../mock-api';
 import { ObjectFormFields, ObjectFormValues, emptyObjectFormValues, emptySpecRow } from '../object-form';
 import { ConfirmModal } from '../confirm-modal';
 import { ObjectItem } from '../objects-list/types';
-import { NAVIGATION_PATHS } from '../constants';
+import { NAVIGATION_PATHS, withUnitPath } from '../constants';
 import { BasePage } from '../pages-routes';
 import { usePageHeader } from '../top-bar/page-header-context';
 
@@ -28,10 +28,8 @@ const toFormValues = (obj: ObjectItem): ObjectFormValues => ({
 });
 
 export const ObjectPage = () => {
-  const { objectId = '' } = useParams();
+  const { objectId = '', unitId = '' } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const unitId = new URLSearchParams(location.search).get('id') || '';
 
   const [object, setObject] = useState<ObjectItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -176,7 +174,7 @@ export const ObjectPage = () => {
         }
       }
       window.dispatchEvent(new CustomEvent('objects-updated'));
-      navigate(`${NAVIGATION_PATHS[object.type]}?id=${unitId}`);
+      navigate(withUnitPath(NAVIGATION_PATHS[object.type], unitId));
     } catch (err) {
       setDeleteError(err instanceof Error ? err.message : 'Не удалось удалить объект');
     } finally {
@@ -186,7 +184,7 @@ export const ObjectPage = () => {
 
   const handleBack = () => {
     if (object) {
-      navigate(`${NAVIGATION_PATHS[object.type]}?id=${unitId}`);
+      navigate(withUnitPath(NAVIGATION_PATHS[object.type], unitId));
     } else {
       navigate(-1);
     }

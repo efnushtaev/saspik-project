@@ -97,7 +97,7 @@ export const ObjectFormFields = ({
               <td>{typeSelect}</td>
             </tr>
             <tr>
-              <th className={cn('table-label')}>ID объекта</th>
+              <th className={cn('table-label')}>ID</th>
               <td>{idInput}</td>
             </tr>
             <tr>
@@ -202,7 +202,7 @@ export const ObjectFormFields = ({
       </label>
 
       <label className={cn('field')}>
-        <span className={cn('label')}>ID объекта</span>
+        <span className={cn('label')}>ID</span>
         {idInput}
       </label>
 
