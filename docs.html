@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>САСПИК — документация проекта</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1f2328; --accent: #0969da; --border: #d0d7de; --code-bg: #f6f8fa; --heading: #1f2328; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+  }
+  nav {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 260px;
+    background: #f6f8fa;
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  nav h2 { font-size: 14px; text-transform: uppercase; color: #656d76; margin-bottom: 12px; letter-spacing: 0.5px; }
+  nav a {
+    display: block;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 3px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  nav a:hover { text-decoration: underline; }
+  nav .l2 { padding-left: 16px; font-size: 12px; }
+  nav .l3 { padding-left: 32px; font-size: 11px; }
+  main {
+    margin-left: 260px;
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 960px;
+  }
+  h1, h2, h3, h4, h5, h6 { color: var(--heading); margin-top: 24px; margin-bottom: 16px; font-weight: 600; }
+  h1 { font-size: 2em; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  h3 { font-size: 1.25em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  p { margin-bottom: 16px; }
+  ul, ol { margin-bottom: 16px; padding-left: 24px; }
+  li { margin-bottom: 4px; }
+  code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+  pre code { background: none; padding: 0; font-size: 0.85em; line-height: 1.45; }
+  table { border-collapse: collapse; margin-bottom: 16px; width: 100%; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+  th { background: #f6f8fa; font-weight: 600; }
+  blockquote { border-left: 4px solid var(--accent); padding-left: 16px; color: #656d76; margin-bottom: 16px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  hr.section-sep { margin: 48px 0; border-top: 2px solid var(--accent); opacity: 0.3; }
+  section:target { animation: highlight 2s ease; }
+  @keyframes highlight { 0% { background: rgba(88, 166, 255, 0.08); } 100% { background: transparent; } }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  @media (max-width: 768px) {
+    nav { position: static; width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+    main { margin-left: 0; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <h2>📄 САСПИК</h2>
+<a href="#root" class="">Главная</a>
+<a href="#saspik-cluster" class="">saspik-cluster</a>
+<a href="#saspik-cluster-saspik-cluster-app" class="l2">saspik-cluster/saspik-cluster-app</a>
+<a href="#saspik-cluster-saspik-cluster-app-client" class="l3">saspik-cluster/saspik-cluster-app/client</a>
+<a href="#saspik-cluster-saspik-cluster-app-mqtt" class="l3">saspik-cluster/saspik-cluster-app/mqtt</a>
+<a href="#saspik-cluster-saspik-cluster-app-mqtt-rule-engine" class="l3">saspik-cluster/saspik-cluster-app/mqtt-rule-engine</a>
+<a href="#saspik-cluster-saspik-cluster-app-server" class="l3">saspik-cluster/saspik-cluster-app/server</a>
+<a href="#saspik-greenhouse" class="">saspik-greenhouse</a>
+<a href="#saspik-iot" class="">saspik-iot</a>
+<a href="#saspik-meshrover" class="">saspik-meshrover</a>
+</nav>
+<main>
+<section id="root">
+<h1 id="саспик-проект">САСПИК Проект</h1>
+<h5 id="саспик-сеть-автоматизированных-систем-для-производства-и-контроля">САСПИК (Сеть Автоматизированных Систем для Производства и Контроля)</h5>
+<p>Программно-аппаратная платформа для организации совместного производства, построенная на принципах децентрализации и модульности. Система позволяет гибко объединять оборудование, управлять производственными процессами и обмениваться данными между участниками в реальном времени.</p>
+<p><strong><a href="https://efnushtaev.github.io/saspik-project/">Промо-лендинг проекта</a></strong></p>
+<hr>
+<h3 id="иерархия-системы">Иерархия системы</h3>
+<h5 id="кластер">Кластер</h5>
+<p>Базовый автономный элемент распределённой сети САСПИК.</p>
+<p>Может быть развёрнут как в удалённом облаке, так и на локальном сервере предприятия.</p>
+<p>Каждый Кластер независим, но при необходимости может взаимодействовать с другими Кластерами через защищённые каналы.</p>
+<h5 id="юнит">Юнит</h5>
+<p>Составная часть кластера, выделяемая по функциональному назначению (например, «теплица», «цех», «склад», «логистический хаб»).</p>
+<p>В рамках одного Кластера может быть развёрнуто произвольное количество Юнитов разного типа.</p>
+<p>Объединение существующих и добавление новых Юнитов в Кластер и их конфигурация выполняются пользователем через UI управления платформы.</p>
+<h5 id="объект">Объект</h5>
+<p>Элемент Юнита, представляющий собой отдельное физическое или виртуальное устройство (датчик, контроллер, станок, камера, шлюз и т.д.).</p>
+<p>Объекты подключаются к платформе для управления, мониторинга и обмена данными между собой.</p>
+<p>Один и тот же Объект может быть частью любого Юнита (гибкая привязка), что позволяет перенастраивать логику работы без физического переподключения.</p>
+<h3 id="ключевые-особенности">Ключевые особенности</h3>
+<ul>
+<li><p>Децентрализация – отсутствие единой точки отказа; каждый кластер работает автономно.</p>
+</li>
+<li><p>Масштабируемость – добавление новых кластеров, юнитов и объектов не требует остановки системы.</p>
+</li>
+<li><p>Гибкость – пользователь сам определяет структуру и связи между элементами.</p>
+</li>
+<li><p>Безопасность – все обмены данных шифруются, разграничение доступа на уровне юнитов и объектов.</p>
+</li>
+<li><p>Кроссплатформенность – поддержка облачных и локальных развёртываний.</p>
+</li>
+</ul>
+<hr>
+<h3 id="направления-разработки-и-развития">Направления разработки и развития</h3>
+<table>
+<thead>
+<tr>
+<th>Название</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="#saspik-meshrover">saspik-meshrover</a></td>
+<td>Наземные меш-связные роботы (UWB, LoRa mesh, TFLite)</td>
+</tr>
+<tr>
+<td><a href="#saspik-iot">saspik-iot</a></td>
+<td>ESP32 прошивки Объектов (шлюз, сенсорный узел)</td>
+</tr>
+<tr>
+<td><a href="#saspik-cluster">saspik-cluster</a></td>
+<td>Кластер (MQTT-брокер, rule-engine, API, UI)</td>
+</tr>
+<tr>
+<td><a href="#saspik-greenhouse">saspik-greenhouse</a></td>
+<td>Пилот Кластера - автономная теплицы (контроль и управление климатом и питанием растений)</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="связанные-проекты">Связанные проекты</h3>
+<ul>
+<li><code>express-inversify-framework-app</code> — фреймворк для NodeJS микросервисов</li>
+<li><code>nodejs-portainer-app-template</code> — шаблон деплоя fullstack приложений</li>
+</ul>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-cluster">
+<h1 id="saspik-cluster">SASPIK Cluster</h1>
+<p><a href="#root">↑ SASPIK Project</a></p>
+<p>MQTT брокер, rule-engine и серверная часть на Node.js / Express / Inversify / MongoDB.</p>
+<p>Контекст проекта: <code>opencode/agents.md → saspik-cluster</code>.</p>
+<h2 id="состав-проекта">Состав проекта</h2>
+<h3 id="программное-обеспечение">Программное обеспечение</h3>
+<p>Основной код кластера. Монорепозиторий, разворачиваемый через Docker Compose.<br><a href="#saspik-cluster-saspik-cluster-app">atsap-cluster-app →</a></p>
+<table>
+<thead>
+<tr>
+<th>Компонент</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>server/</code></td>
+<td>Express.js бэкенд (микросервисная архитектура на Inversify)</td>
+</tr>
+<tr>
+<td><code>client/</code></td>
+<td>React SPA фронтенд (собирается в nginx multi-stage)</td>
+</tr>
+<tr>
+<td><code>mqtt/</code></td>
+<td>MQTT-брокер (собственная реализация)</td>
+</tr>
+<tr>
+<td><code>mqtt-rule-engine/</code></td>
+<td>Движок сценариев для обработки MQTT-сообщений</td>
+</tr>
+<tr>
+<td><code>nginx/</code></td>
+<td>Конфигурация обратного прокси</td>
+</tr>
+<tr>
+<td><code>docker-compose.yml</code></td>
+<td>Оркестрация всех сервисов</td>
+</tr>
+<tr>
+<td><code>.env</code></td>
+<td>Переменные окружения для продакшна</td>
+</tr>
+<tr>
+<td><code>prompts</code></td>
+<td>Промпты для AI-агентов</td>
+</tr>
+</tbody></table>
+<h3 id="docs">docs/</h3>
+<p>Документация по архитектуре и API кластера, выгруженная из Anytype (коллекция «Кластер»):</p>
+<table>
+<thead>
+<tr>
+<th>Файл</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>API.md</code></td>
+<td>HTTP API: методы для Units, Objects, Rules, History</td>
+</tr>
+<tr>
+<td><code>UnitsService.md</code></td>
+<td>Конфигурация юнитов (Unit), JSON Schema DTO</td>
+</tr>
+<tr>
+<td><code>ObjectsService.md</code></td>
+<td>Конфигурация объектов (сенсоры/устройства), JSON Schema DTO</td>
+</tr>
+<tr>
+<td><code>RulesService.md</code></td>
+<td>Конфигурация правил и сценариев (Rule Engine)</td>
+</tr>
+<tr>
+<td><code>HistoryService.md</code></td>
+<td>Сервис мониторинга и истории событий</td>
+</tr>
+<tr>
+<td><code>repo.md</code></td>
+<td>Ссылка на GitHub-репозиторий</td>
+</tr>
+</tbody></table>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-cluster-saspik-cluster-app">
+<h1 id="atsap-cluster-app">ATSAP Cluster App</h1>
+<p><a href="#saspik-cluster">↑ SASPIK Cluster</a></p>
+<h2 id="состав">Состав</h2>
+<ul>
+<li><a href="#saspik-cluster-saspik-cluster-app-client"><strong>client/</strong></a> — React SPA (CRA + TypeScript), панель управления IoT-кластером</li>
+<li><a href="#saspik-cluster-saspik-cluster-app-server"><strong>server/</strong></a> — Express.js бэкенд с Dependency Injection (InversifyJS), REST API для Units/Objects/Rules, хранение в MongoDB</li>
+<li><a href="#saspik-cluster-saspik-cluster-app-mqtt"><strong>mqtt/</strong></a> — Eclipse Mosquitto MQTT-брокер с аутентификацией и ACL</li>
+<li><a href="#saspik-cluster-saspik-cluster-app-mqtt-rule-engine"><strong>mqtt-rule-engine/</strong></a> — Движок правил для MQTT: условия, действия, правила из MongoDB/API/файла</li>
+<li><a href="telegraf/"><strong>telegraf/</strong></a> — Конфигурация Telegraf: подписка на все MQTT-топики, запись в InfluxDB</li>
+</ul>
+<h2 id="описание">Описание</h2>
+<p>Fullstack-приложение для управления IoT-кластером. Фронтенд на React, бэкенд на Express.js, MQTT-брокер Mosquitto и движок правил для автоматизации климат-контроля. Собирается и разворачивается через Docker Compose, предназначено для деплоя через Portainer на VDS.</p>
+<h2 id="архитектура">Архитектура</h2>
+<ul>
+<li><strong>Frontend</strong>: React SPA, обслуживается через Nginx. Отображает список юнитов, сенсоры и устройства, вложенные в каждый юнит. Поддерживает создание/редактирование/удаление юнитов и объектов.</li>
+<li><strong>MongoDB</strong>: Документная БД. Хранит юниты, объекты и правила (коллекции <code>units</code>, <code>objects</code>, <code>rules</code>). При первой инициализации заполняется сидами из <code>server/src/data/*.config.ts</code> и <code>server/data/rules.json</code>.</li>
+<li><strong>InfluxDB</strong>: Time-series база данных. Хранит все MQTT-сообщения от устройств.</li>
+<li><strong>Telegraf</strong>: Подписывается на все MQTT-топики (<code>#</code>), парсит JSON и пишет в InfluxDB.</li>
+<li><strong>Backend</strong>: Express.js сервер. Читает юниты/объекты/правила из MongoDB, последние значения объектов из InfluxDB и отдаёт их через REST API.</li>
+<li><strong>Nginx</strong>: Обратный прокси: статика фронтенда, прокси <code>/api/*</code> на backend.</li>
+<li><strong>Mosquitto</strong>: MQTT-брокер для обмена данными с устройствами.</li>
+<li><strong>MQTT Rule Engine</strong>: Получает правила из MongoDB (или HTTP API/файла), обрабатывает MQTT-сообщения и выполняет правила климат-контроля (температура/влажность).</li>
+</ul>
+<h2 id="endpoints-api">Endpoints API</h2>
+<table>
+<thead>
+<tr>
+<th>Метод</th>
+<th>Путь</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>GET</code></td>
+<td><code>/health</code></td>
+<td>Health check</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/getTimestamp</code></td>
+<td>Текущее время сервера</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/units/list</code></td>
+<td>Список юнитов с вложенными объектами и правилами (из MongoDB)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/units/:id</code></td>
+<td>Юнит по ID (с вложенными объектами и правилами)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/units</code></td>
+<td>Создание юнита: <code>{ id, name, description? }</code></td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/v1/units/:id</code></td>
+<td>Обновление юнита: <code>{ name, description? }</code> (id не изменяем)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/units/:id</code></td>
+<td>Удаление юнита вместе с его объектами (каскадно; правила не затрагиваются)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/objects/list/:type</code></td>
+<td>Объекты по типу (<code>sensor</code>/<code>device</code>). <code>value</code> из InfluxDB</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/objects/getByIds</code></td>
+<td>Объекты по IDs</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/objects/command/:deviceId</code></td>
+<td>Команда устройству</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/objects/getLastSensorsData</code></td>
+<td>Последние показания сенсоров</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/objects</code></td>
+<td>Создание объекта: <code>{ id, name, type, spec, description?, unitId }</code>, топик формируется сервером по паттерну <code>`${type}/${unitId}/${id}`</code></td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/v1/objects/:id</code></td>
+<td>Обновление объекта: <code>{ name, type, spec, description?, unitId }</code> (id и топик пересчитываются сервером)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/objects/:id</code></td>
+<td>Удаление объекта: <code>{ unitId }</code></td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/v1/rules</code></td>
+<td>Список правил (формат rule-engine, из MongoDB)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/rules</code></td>
+<td>Upsert правила (создание/обновление по <code>id</code>)</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/v1/rules/:id</code></td>
+<td>Включить/отключить правило (<code>{ &quot;enabled&quot;: true/false }</code>)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/v1/rules/:id</code></td>
+<td>Удалить правило</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/mqtt/publish</code></td>
+<td>Публикация MQTT-сообщения</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/mqtt/subscribe</code></td>
+<td>Подписка на MQTT-топик</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/v1/mqtt/unsubscribe</code></td>
+<td>Отписка от MQTT-топика</td>
+</tr>
+</tbody></table>
+<h2 id="конфигурация-nginx">Конфигурация Nginx</h2>
+<p>Файл <a href="nginx/nginx.conf">nginx/nginx.conf</a> настраивает:</p>
+<ul>
+<li>Статические файлы фронтенда из <code>/usr/share/nginx/html</code></li>
+<li>Прокси <code>/api</code> на backend (<code>http://backend:3001</code>)</li>
+<li>SPA-режим (<code>try_files $uri $uri/ /index.html</code>)</li>
+<li>Кэширование статики на 1 год</li>
+</ul>
+<h2 id="docker-compose">Docker Compose</h2>
+<p>Сервисы:</p>
+<table>
+<thead>
+<tr>
+<th>Сервис</th>
+<th>Контейнер</th>
+<th>Лимиты</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>backend</code></td>
+<td>Express.js</td>
+<td>0.5 CPU, 512MB RAM</td>
+</tr>
+<tr>
+<td><code>nginx</code></td>
+<td>Nginx + React SPA (multi-stage build)</td>
+<td>0.3 CPU, 256MB RAM</td>
+</tr>
+<tr>
+<td><code>mongo</code></td>
+<td>MongoDB 7</td>
+<td>0.5 CPU, 512MB RAM</td>
+</tr>
+<tr>
+<td><code>mosquitto</code></td>
+<td>Mosquitto</td>
+<td>0.2 CPU, 128MB RAM</td>
+</tr>
+<tr>
+<td><code>mqtt-rule-engine</code></td>
+<td>Rule engine</td>
+<td>0.3 CPU, 128MB RAM</td>
+</tr>
+<tr>
+<td><code>influxdb</code></td>
+<td>InfluxDB 2.x</td>
+<td>0.3 CPU, 256MB RAM</td>
+</tr>
+<tr>
+<td><code>telegraf</code></td>
+<td>Telegraf</td>
+<td>0.2 CPU, 128MB RAM</td>
+</tr>
+</tbody></table>
+<h2 id="режим-моков">Режим моков</h2>
+<p>Для разработки и тестирования без реального API:</p>
+<pre><code class="language-bash">cd client
+npm run start:mock
+</code></pre>
+<p>Переменная <code>REACT_APP_MOCK_MODE=true</code> включает мок-данные (4 юнита с вложенными объектами).</p>
+<p>В production-режиме (<code>docker compose up</code>) фронтенд собирается внутри образа nginx (multi-stage), сервер использует InfluxDB для значений объектов. Юниты, объекты и правила хранятся в MongoDB: при первом запуске (пустая БД) они заполняются сидами из <code>server/src/data/*.config.ts</code> и <code>server/data/rules.json</code> (см. <code>SeedService</code>).</p>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── client/             # React SPA
+├── server/             # Express.js API
+├── shared/             # Общие TypeScript-типы (client + server)
+├── mqtt/               # Mosquitto broker
+├── mqtt-rule-engine/   # Правила MQTT
+├── nginx/              # Конфигурация Nginx + Dockerfile (multi-stage со фронтендом)
+├── telegraf/           # Конфигурация Telegraf + Dockerfile (MQTT → InfluxDB)
+├── docker-compose.yml
+├── .env / example.env
+├── prompts/
+├── README.md
+└── TODO.md
+</code></pre>
+<h2 id="требования">Требования</h2>
+<ul>
+<li>CPU: 1 ядро, RAM: 1 ГБ, Диск: 5 ГБ (минимум)</li>
+<li>CPU: 2 ядра, RAM: 2 ГБ, Диск: 10 ГБ (рекомендуется)</li>
+</ul>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-cluster-saspik-cluster-app-client">
+<h1 id="atsap-cluster-app--клиент">Atsap Cluster App — Клиент</h1>
+<h2 id="описание">Описание</h2>
+<p>React SPA для панели управления IoT-кластером. Реализована на CRA + TypeScript, React 19, react-router-dom 6, BEM-стилизация (<code>bem-react-classname</code>). Поддерживает мок-режим без бэкенда.</p>
+<h2 id="функциональность">Функциональность</h2>
+<ul>
+<li>Список юнитов с карточками</li>
+<li>Создание юнита через кнопку «＋ Добавить юнит» на главной странице: модальное окно с полями (ID, название, описание). Кнопка создания скрыта в мок-режиме из коробки только по условию — в реальном режиме создание через <code>POST /api/v1/units</code></li>
+<li>Страница юнита (роут <code>/unit/:unitId/info</code>): просмотр параметров (ID, название, описание, количество объектов), редактирование (ID — только чтение) и удаление с подтверждением. Удаление юнита каскадно удаляет его объекты (сервер). Открывается по клику на карточку юнита</li>
+<li>Кнопка «＋ Добавить объект» на странице юнита — открывает модалку создания объекта. Видна всегда, в том числе для юнита без объектов (пустой юнит открывается и позволяет добавить первый объект)</li>
+<li>Мониторинг сенсоров (температура, влажность, давление и т.д.)</li>
+<li>Автоматика — объекты автоматизации</li>
+<li>Создание нового объекта через кнопку «+» на страницах с выбранным юнитом: модальное окно с полями DTO (название, ID, тип, описание, замеры <code>spec</code>) и автогенерацией топика по паттерну <code>`${type}/${unitId}/${id}`</code>. Кнопка скрыта, если юнит не выбран (<code>?id=</code> отсутствует)</li>
+<li>Страница объекта (роут <code>/object/:objectId</code>, <code>unitId</code> из <code>?id=</code>): просмотр данных в виде таблиц (параметры и замеры), редактирование в табличной форме (ID — только чтение) и удаление с подтверждением. Открывается по иконке «⋯» в правом верхнем углу карточки</li>
+<li>Общая форма <code>ObjectFormFields</code> с вариантами отображения: <code>stacked</code> (модалка создания) и <code>table</code> (страница редактирования)</li>
+<li>Общая форма <code>UnitFormFields</code> (аналогично: <code>stacked</code> — модалка создания юнита, <code>table</code> — страница редактирования)</li>
+<li>3 таба навигации: Мониторинг, Автоматика, Информация</li>
+<li>«Живые» часы с синхронизацией через <code>/api/getTimestamp</code> и локальным тиком каждую секунду</li>
+<li>Адаптивная вёрстка (mobile &lt; 800px / desktop)</li>
+<li>Тёмная тема через CSS-переменные</li>
+<li>Mock-режим (<code>REACT_APP_MOCK_MODE=true</code>) — работа без сервера</li>
+</ul>
+<h2 id="внутренняя-структура">Внутренняя структура</h2>
+<pre><code>client/
+├── public/
+│   ├── index.html              # HTML-точка входа
+│   └── manifest.json           # PWA-манифест
+├── src/
+│   ├── index.tsx               # Точка входа React
+│   ├── index.css               # Глобальные стили (тёмная тема)
+│   ├── setupTests.ts           # Настройка Jest
+│   ├── components/
+│   │   ├── app/                # App.tsx, роутинг, переключение mobile/desktop
+│   │   ├── top-bar/            # Верхняя панель: часы, заголовок
+│   │   ├── control-bar/        # Панель управления: табы, action-кнопки, поиск
+│   │   │   ├── tabs/           # 3 таба (Мониторинг, Автоматика, Информация)
+│   │   │   └── action-field/   # Кнопка назад, поиск, доп. кнопки
+│   │   ├── pages-routes/       # Страницы (Main, Monitoring, Automation, Info, Unit, Object)
+│   │   ├── units-list/         # Сетка карточек юнитов + кнопка «＋ Добавить юнит»
+│   │   ├── units-card/         # Карточка юнита (клик открывает страницу юнита)
+│   │   ├── unit-page/          # Страница юнита: просмотр/редактирование/удаление + «Добавить объект»
+│   │   ├── unit-form/          # Общая форма DTO юнита (варианты stacked/table)
+│   │   ├── create-unit-modal/  # Модальное окно создания юнита (Portal в document.body)
+│   │   ├── objects-list/       # Сетка карточек сенсоров/автоматики
+│   │   ├── objects-card/       # Карточка сенсора/автоматики (иконка «⋯» открывает страницу объекта)
+│   │   ├── object-page/        # Страница объекта: просмотр/редактирование/удаление
+│   │   ├── object-form/        # Общая форма DTO (варианты stacked/table)
+│   │   ├── create-object-modal/ # Модальное окно создания объекта (рендерится через Portal в document.body)
+│   │   ├── confirm-modal/      # Модальное окно подтверждения (Portal в document.body)
+│   │   ├── mock-api.ts         # Мок-сервис
+│   │   ├── mock-data.ts        # Мок-данные
+│   │   └── constants.ts        # URL и пути навигации
+│   ├── hooks/
+│   │   ├── use-timestamp.ts    # Опрос /api/getTimestamp
+│   │   ├── use-mobile-detection.ts
+│   │   ├── use-show-tabs.ts
+│   │   └── use-objects-list-fetching.ts
+│   ├── utils/
+│   │   ├── format-date.ts      # Форматирование даты (рус. локаль)
+│   │   └── transform-object-to-card.ts
+├── build/                      # Сборка CRA
+├── ../shared/                  # Общие TypeScript-типы (подключаются через @shared/*)
+├── Dockerfile                  # Многостадийная сборка
+├── package.json
+└── tsconfig.json
+</code></pre>
+<h2 id="запуск">Запуск</h2>
+<pre><code class="language-bash">npm install
+npm start              # dev-режим, бэкенд на :3001
+npm run start:mock     # мок-режим, бэкенд не нужен
+npm run build          # production-сборка
+</code></pre>
+<h2 id="переменные-окружения">Переменные окружения</h2>
+<table>
+<thead>
+<tr>
+<th>Переменная</th>
+<th>Описание</th>
+<th>По умолчанию</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>REACT_APP_MOCK_MODE</code></td>
+<td>Включить мок-данные</td>
+<td><code>false</code></td>
+</tr>
+</tbody></table>
+<h2 id="docker">Docker</h2>
+<p>Многостадийная сборка через <code>Dockerfile</code> (node:18-alpine для сборки → nginx alpine для раздачи статики). Используется в <code>docker-compose.yml</code> корневого проекта.</p>
+<hr>
+<p><em>Корневой README проекта: <a href="#saspik-cluster-saspik-cluster-app"><code>../README.md</code></a></em></p>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-cluster-saspik-cluster-app-mqtt">
+<p><a href="#saspik-cluster-saspik-cluster-app">↑ ATSAP Cluster App</a></p>
+<h1 id="mqtt-broker-configuration">MQTT Broker Configuration</h1>
+<p>This directory contains the Eclipse Mosquitto MQTT broker configuration for the ATSAP cluster application.</p>
+<h2 id="overview">Overview</h2>
+<p>The MQTT broker provides real-time messaging between:</p>
+<ul>
+<li>IoT devices/clients</li>
+<li>Backend server (REST API)</li>
+<li>WebSocket clients</li>
+</ul>
+<h2 id="files">Files</h2>
+<ul>
+<li><code>Dockerfile</code> - Builds Mosquitto 2.0 image with custom config</li>
+<li><code>mosquitto.conf</code> - Main broker configuration</li>
+<li><code>mosquitto.acl</code> - Access Control List (topic permissions)</li>
+<li><code>client.js</code> - Minimal test client</li>
+<li><code>test-*.js</code> - Various test scripts</li>
+</ul>
+<h2 id="configuration-details">Configuration Details</h2>
+<h3 id="broker-settings-mosquittoconf">Broker Settings (<code>mosquitto.conf</code>)</h3>
+<ul>
+<li>Listens on port 1883 (MQTT) and 9001 (WebSockets)</li>
+<li><strong>Authentication enabled</strong> (<code>allow_anonymous false</code>)</li>
+<li>Password file: <code>/mosquitto/config/passwordfile</code></li>
+<li>Debug logging enabled</li>
+<li>ACL file: <code>/mosquitto/config/mosquitto.acl</code></li>
+</ul>
+<h3 id="access-control-mosquittoacl">Access Control (<code>mosquitto.acl</code>)</h3>
+<p>Current ACL provides:</p>
+<ol>
+<li><strong>Default deny</strong> — все неразрешённые топики блокируются</li>
+<li><strong>Client namespaces</strong>: <code>clients/%c/#</code> — каждый клиент может писать/читать в свой namespace</li>
+<li><strong>Топики датчиков</strong>: <code>sensor/#</code> — publish/subscribe для сенсоров</li>
+<li><strong>Топики LED</strong> (dev): <code>led/#</code> — publish/subscribe для LED-устройств</li>
+<li><strong>Топики команд юнитов</strong>: <code>units/#</code> — publish/subscribe для управления реле (добавлено 2026-07-27)</li>
+</ol>
+<h3 id="authentication-details">Authentication Details</h3>
+<p>Authentication has been enabled with the following credentials:</p>
+<ul>
+<li>Username: <code>admin</code></li>
+<li>Password: <code>password123</code></li>
+</ul>
+<p>The password file is generated using <code>mosquitto_passwd</code> and included in the Docker image.</p>
+<p>To add more users or change passwords:</p>
+<pre><code class="language-bash"># Enter the container
+docker exec -it atsap_mosquitto /bin/sh
+
+# Add a new user
+mosquitto_passwd -b /mosquitto/config/passwordfile username password
+
+# Or change password for existing user
+mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword
+</code></pre>
+<p>For production with clientId-based restrictions:</p>
+<ol>
+<li>Remove the <code>pattern readwrite #</code> line (already commented out)</li>
+<li>Authentication is already enabled in <code>mosquitto.conf</code></li>
+<li>Password file is already configured</li>
+<li>Update ACL to use <code>user</code> or <code>client</code> directives if needed</li>
+</ol>
+<h2 id="client-id-based-topic-separation">Client ID Based Topic Separation</h2>
+<p>The user requested: &quot;для clientId=1 будут доступны топики &#39;test1&#39;, для clientId=2 будут доступны топики &#39;test2&#39;&quot;</p>
+<h3 id="implemented-solution">Implemented Solution</h3>
+<p>Due to Mosquitto ACL limitations with anonymous access, we implemented namespace-based separation:</p>
+<ul>
+<li>Client &quot;1&quot; → topics: <code>clients/1/test1</code>, <code>clients/1/#</code></li>
+<li>Client &quot;2&quot; → topics: <code>clients/2/test2</code>, <code>clients/2/#</code></li>
+</ul>
+<h3 id="alternative-approaches">Alternative Approaches</h3>
+<ol>
+<li><strong>With authentication</strong>: Use <code>client</code> directive in ACL for exact topic names</li>
+<li><strong>Application-level validation</strong>: Validate clientId in <code>LocalMqttService</code></li>
+<li><strong>Topic rewriting</strong>: Server rewrites <code>test1</code> → <code>clients/1/test1</code></li>
+</ol>
+<h2 id="testing">Testing</h2>
+<h3 id="quick-test">Quick Test</h3>
+<pre><code class="language-bash">cd mqtt
+node client.js
+</code></pre>
+<p><strong>Note</strong>: The client now uses authentication with username <code>admin</code> and password <code>password123</code>.</p>
+<h3 id="test-authentication">Test Authentication</h3>
+<pre><code class="language-bash"># Test basic authentication
+node test_auth.js
+
+# Test authentication with specific client ID
+node test_auth_clientid2.js
+</code></pre>
+<h3 id="test-client-id-restrictions">Test Client ID Restrictions</h3>
+<pre><code class="language-bash">node test-clientid.js
+</code></pre>
+<h3 id="rest-api-tests">REST API Tests</h3>
+<pre><code class="language-bash"># Publish message
+curl -X POST http://localhost:3001/api/mqtt/publish \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;topic&quot;:&quot;test/topic&quot;,&quot;message&quot;:&quot;Hello&quot;}&#39;
+
+# Subscribe to topic
+curl -X POST http://localhost:3001/api/mqtt/subscribe \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;topic&quot;:&quot;test/topic&quot;}&#39;
+</code></pre>
+<h2 id="docker-deployment">Docker Deployment</h2>
+<p>The broker is included in <code>docker-compose.yml</code> as service <code>mosquitto</code>.</p>
+<h3 id="rebuild-and-restart">Rebuild and restart:</h3>
+<pre><code class="language-bash">docker compose build mosquitto
+docker compose up -d mosquitto
+</code></pre>
+<h3 id="view-logs">View logs:</h3>
+<pre><code class="language-bash">docker compose logs -f mosquitto
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="broker-not-starting">Broker not starting</h3>
+<p>Check ACL syntax:</p>
+<pre><code class="language-bash">docker run --rm -it eclipse-mosquitto:2.0 mosquitto -c /mosquitto/config/mosquitto.conf --test
+</code></pre>
+<h3 id="connection-refused">Connection refused</h3>
+<ul>
+<li>Ensure port 1883 is not blocked</li>
+<li>Check if another Mosquitto instance is running</li>
+<li>Verify Docker container is up: <code>docker ps | grep mosquitto</code></li>
+</ul>
+<h3 id="acl-not-enforcing">ACL not enforcing</h3>
+<ul>
+<li>Mosquitto requires authentication for <code>client</code> directives</li>
+<li>With <code>allow_anonymous true</code>, only <code>pattern</code> directives work</li>
+<li>Check broker logs for ACL parse errors</li>
+</ul>
+<h2 id="next-steps-for-production">Next Steps for Production</h2>
+<ol>
+<li><strong>Authentication</strong>: Already enabled with username/password authentication</li>
+<li><strong>TLS/SSL</strong>: Configure encrypted connections for secure communication</li>
+<li><strong>Persistent storage</strong>: Mount volume for <code>/mosquitto/data</code> to retain messages across restarts</li>
+<li><strong>Monitoring</strong>: Add health checks and metrics for broker performance</li>
+<li><strong>High availability</strong>: Consider cluster setup for multiple brokers</li>
+<li><strong>ACL refinement</strong>: Implement more granular access control using <code>user</code> or <code>client</code> directives in ACL</li>
+</ol>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── Dockerfile
+├── client.js
+├── mosquitto.acl
+├── mosquitto.conf
+├── package.json
+├── passwordfile
+└── README.md
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-cluster-saspik-cluster-app-mqtt-rule-engine">
+<p><a href="#saspik-cluster-saspik-cluster-app">↑ ATSAP Cluster App</a></p>
+<h1 id="mqtt-rule-engine-worker">MQTT Rule Engine Worker</h1>
+<p>Движок правил для MQTT, позволяющий автоматически выполнять действия при получении сообщений в заданные топики с поддержкой условий. Правила загружаются из MongoDB, HTTP API или файла (<code>rules.json</code>) и обновляются в рантайме без остановки процесса.</p>
+<h2 id="архитектура">Архитектура</h2>
+<p>Проект построен по модульному принципу, каждый компонент находится в своей папке:</p>
+<ul>
+<li><strong><code>src/core/</code></strong> – ядро движка (<code>RuleEngine</code>), управляет подписками, оценивает условия, выполняет действия.</li>
+<li><strong><code>src/mqtt/</code></strong> – адаптер MQTT (<code>MqttAdapter</code>), абстракция над библиотекой <code>mqtt</code>.</li>
+<li><strong><code>src/conditions/</code></strong> – условия (<code>Condition</code>): проверка топика по regex, JSONPath, точное совпадение payload, логические композиты (AND, OR, NOT).</li>
+<li><strong><code>src/actions/</code></strong> – действия (<code>Action</code>): публикация в топик, логирование в консоль.</li>
+<li><strong><code>src/config/</code></strong> – парсинг конфигурации (<code>RuleBuilder</code>) и файловый источник правил (<code>ConfigWatcher</code>).</li>
+<li><strong><code>src/providers/</code></strong> – источники правил (<code>RulesProvider</code>): <code>MongoRulesProvider</code>, <code>ApiRulesProvider</code>, фабрика <code>createRulesProvider</code>.</li>
+<li><strong><code>src/context/</code></strong> – контекст сообщения (<code>MessageContext</code>), предоставляет доступ к payload как JSON и извлечение значений по JSONPath.</li>
+<li><strong><code>src/utils/</code></strong> – утилиты, например сопоставление топиков с wildcards (<code>topicMatches</code>).</li>
+<li><strong><code>test/</code></strong> – тестовый клиент, мок-адаптер и примеры правил.</li>
+</ul>
+<h2 id="источники-правил">Источники правил</h2>
+<p>Источник выбирается переменной окружения <code>RULES_SOURCE</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Значение</th>
+<th>Источник</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mongo</code> (по умолчанию)</td>
+<td>MongoDB</td>
+<td>Коллекция <code>rules</code>, поле <code>enabled</code> отключает правило</td>
+</tr>
+<tr>
+<td><code>api</code></td>
+<td>HTTP API сервера</td>
+<td><code>GET {RULES_API_URL}</code>, ожидает <code>{ &quot;rules&quot;: [...] }</code> или <code>[...]</code></td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>Локальный <code>rules.json</code></td>
+<td>Файловый источник с отслеживанием изменений (<code>ConfigWatcher</code>)</td>
+</tr>
+</tbody></table>
+<p>Все источники поддерживают env-подстановку в правилах (<code>${VAR}</code> и <code>${expr:...}</code>) и опрос с интервалом <code>RULES_POLL_INTERVAL_MS</code> (по умолчанию 5000 мс). При изменении правил движок перестраивает подписки без перезапуска.</p>
+<p>Переменные окружения:</p>
+<pre><code>RULES_SOURCE=mongo            # mongo | api | file
+MONGODB_URL=mongodb://mongo:27017/saspik   # для RULES_SOURCE=mongo
+RULES_API_URL=http://backend:3001/api/v1/rules  # для RULES_SOURCE=api
+RULES_POLL_INTERVAL_MS=5000   # интервал опроса
+CONFIG_PATH=./rules.json      # для RULES_SOURCE=file
+</code></pre>
+<h3 id="формат-правила">Формат правила</h3>
+<p>Правило в MongoDB/API хранится в формате rule-engine. Поле <code>enabled: false</code> — «мягкое» отключение: движок пропускает такое правило и не подписывается на его топики.</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;temp_emergency_high&quot;,
+  &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensor/${CLIMATE_CONTROL_UNIT_ID}/dht22&quot;, &quot;qos&quot;: 0 },
+  &quot;when&quot;: { &quot;jsonpath&quot;: &quot;$.temperature &gt; 29&quot; },
+  &quot;then&quot;: [
+    { &quot;action&quot;: &quot;publish&quot;, &quot;params&quot;: { &quot;topic&quot;: &quot;units/unitId1/commands/a_relay3&quot;, &quot;payload&quot;: &quot;{\&quot;state\&quot;:\&quot;1\&quot;}&quot;, &quot;qos&quot;: 1 } }
+  ],
+  &quot;enabled&quot;: true
+}
+</code></pre>
+<h2 id="установка-и-запуск">Установка и запуск</h2>
+<h3 id="предварительные-требования">Предварительные требования</h3>
+<ul>
+<li>Node.js 18 или выше</li>
+<li>MQTT-брокер (например, Mosquitto)</li>
+<li>MongoDB (для <code>RULES_SOURCE=mongo</code>, по умолчанию)</li>
+</ul>
+<h3 id="установка">Установка</h3>
+<pre><code class="language-bash">cd mqtt-rule-engine
+npm install
+</code></pre>
+<h3 id="сборка">Сборка</h3>
+<pre><code class="language-bash">npm run build
+</code></pre>
+<h3 id="запуск-основного-воркера">Запуск основного воркера</h3>
+<p>По умолчанию правила загружаются из MongoDB (коллекция <code>rules</code>). Для локального запуска укажите брокер и источник:</p>
+<pre><code class="language-bash">MQTT_BROKER_URL=mqtt://localhost:1883 \
+MONGODB_URL=mongodb://localhost:27017/saspik \
+RULES_SOURCE=mongo npm start
+</code></pre>
+<p>Для файлового источника создайте <code>rules.json</code> в корне проекта (пример ниже) или укажите путь через <code>CONFIG_PATH</code>:</p>
+<pre><code class="language-bash">MQTT_BROKER_URL=mqtt://localhost:1883 RULES_SOURCE=file CONFIG_PATH=./rules.json npm start
+</code></pre>
+<h3 id="запуск-тестового-клиента">Запуск тестового клиента</h3>
+<p>Тестовый клиент использует мок-адаптер и демонстрирует работу движка без реального MQTT-брокера.</p>
+<pre><code class="language-bash">npm run test
+</code></pre>
+<h2 id="формат-конфигурации-правил">Формат конфигурации правил</h2>
+<p>Конфигурация представляет собой JSON-файл с массивом правил.</p>
+<pre><code class="language-json">{
+  &quot;rules&quot;: [
+    {
+      &quot;id&quot;: &quot;unique_rule_id&quot;,
+      &quot;trigger&quot;: {
+        &quot;topic&quot;: &quot;sensor/temperature&quot;,
+        &quot;qos&quot;: 0
+      },
+      &quot;when&quot;: {
+        &quot;jsonpath&quot;: &quot;$.value &gt; 30&quot;
+      },
+      &quot;then&quot;: [
+        {
+          &quot;action&quot;: &quot;log&quot;,
+          &quot;params&quot;: {
+            &quot;level&quot;: &quot;warn&quot;,
+            &quot;message&quot;: &quot;Температура превысила порог: {{value}}°C&quot;
+          }
+        },
+        {
+          &quot;action&quot;: &quot;publish&quot;,
+          &quot;params&quot;: {
+            &quot;topic&quot;: &quot;alerts/high_temperature&quot;,
+            &quot;payload&quot;: &quot;{\&quot;value\&quot;: {{value}}, \&quot;timestamp\&quot;: \&quot;{{timestamp}}\&quot;}&quot;,
+            &quot;qos&quot;: 1,
+            &quot;retain&quot;: false
+          }
+        }
+      ]
+    }
+  ]
+}
+</code></pre>
+<h3 id="триггер-trigger">Триггер (<code>trigger</code>)</h3>
+<ul>
+<li><code>topic</code> – строка или массив строк. Может содержать MQTT wildcards <code>+</code> (один уровень) и <code>#</code> (много уровней).</li>
+<li><code>qos</code> – уровень качества обслуживания (0, 1, 2). По умолчанию 0.</li>
+</ul>
+<h3 id="условия-when">Условия (<code>when</code>)</h3>
+<p>Условие может быть опущено – тогда правило срабатывает на любое сообщение в топике.</p>
+<p>Поддерживаемые типы условий:</p>
+<table>
+<thead>
+<tr>
+<th>Тип</th>
+<th>Параметр</th>
+<th>Пример</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>topicRegex</code></td>
+<td>Регулярное выражение для топика</td>
+<td><code>&quot;^sensor/.+/status$&quot;</code></td>
+</tr>
+<tr>
+<td><code>jsonpath</code></td>
+<td>Выражение вида <code>$.field оператор значение</code></td>
+<td><code>&quot;$.temperature &gt; 30&quot;</code></td>
+</tr>
+<tr>
+<td><code>payloadEquals</code></td>
+<td>Точное совпадение payload как строки</td>
+<td><code>&quot;OK&quot;</code></td>
+</tr>
+<tr>
+<td><code>and</code></td>
+<td>Массив условий (логическое И)</td>
+<td><code>[{&quot;topicRegex&quot;: &quot;^sensor/.+&quot;}, {&quot;jsonpath&quot;: &quot;$.value &gt; 0&quot;}]</code></td>
+</tr>
+<tr>
+<td><code>or</code></td>
+<td>Массив условий (логическое ИЛИ)</td>
+<td>аналогично <code>and</code></td>
+</tr>
+<tr>
+<td><code>not</code></td>
+<td>Одно условие (логическое НЕ)</td>
+<td><code>{&quot;topicRegex&quot;: &quot;^test/.+&quot;}</code></td>
+</tr>
+</tbody></table>
+<h3 id="действия-then">Действия (<code>then</code>)</h3>
+<p>Массив действий, выполняемых последовательно при срабатывании правила.</p>
+<h4 id="действие-log">Действие <code>log</code></h4>
+<p>Логирует сообщение в консоль с заданным уровнем.</p>
+<p>Параметры:</p>
+<ul>
+<li><code>level</code> – <code>info</code>, <code>warn</code>, <code>error</code> (по умолчанию <code>info</code>)</li>
+<li><code>message</code> – строка, может содержать плейсхолдеры <code>{{fieldName}}</code>, которые заменяются на значения из JSON payload.</li>
+</ul>
+<h4 id="действие-publish">Действие <code>publish</code></h4>
+<p>Публикует сообщение в указанный топик.</p>
+<p>Параметры:</p>
+<ul>
+<li><code>topic</code> – топик для публикации</li>
+<li><code>payload</code> – строка payload, может содержать плейсхолдеры <code>{{fieldName}}</code></li>
+<li><code>qos</code> – QoS публикации (по умолчанию 0)</li>
+<li><code>retain</code> – флаг retain (по умолчанию false)</li>
+</ul>
+<h2 id="обновление-правил-в-рантайме">Обновление правил в рантайме</h2>
+<p>Воркер опрашивает источник правил каждые <code>RULES_POLL_INTERVAL_MS</code> (по умолчанию 5000 мс) и пересобирает правила при изменении:</p>
+<ul>
+<li><strong><code>mongo</code> / <code>api</code></strong> — опрос по таймеру; при изменении набора правил движок обновляет подписки без остановки процесса.</li>
+<li><strong><code>file</code></strong> — отслеживание изменений файла <code>rules.json</code> через <code>fs.watchFile</code> (перезагрузка при сохранении).</li>
+</ul>
+<p>Правила с <code>enabled: false</code> пропускаются и их топики отписываются.</p>
+<h2 id="добавление-новых-типов-условий-и-действий">Добавление новых типов условий и действий</h2>
+<h3 id="новый-тип-условия">Новый тип условия</h3>
+<ol>
+<li>Создайте класс, реализующий интерфейс <code>Condition</code> (метод <code>evaluate</code>).</li>
+<li>Добавьте константу типа в <code>src/conditions/constants.ts</code>.</li>
+<li>Расширьте метод <code>buildCondition</code> в <code>src/config/builder.ts</code>, добавив обработку нового типа.</li>
+</ol>
+<h3 id="новый-тип-действия">Новый тип действия</h3>
+<ol>
+<li>Создайте класс, реализующий интерфейс <code>Action</code> (метод <code>execute</code>).</li>
+<li>Добавьте константу типа в <code>src/actions/constants.ts</code>.</li>
+<li>Расширьте метод <code>buildAction</code> в <code>src/config/builder.ts</code>.</li>
+</ol>
+<h2 id="примеры">Примеры</h2>
+<p>Примеры правил находятся в <code>test/sample-rules.json</code> и <code>rules.json</code>.</p>
+<h2 id="тестирование">Тестирование</h2>
+<p>Для модульного тестирования используется мок-адаптер <code>MockMqttAdapter</code>, который имитирует подключение к брокеру и позволяет симулировать входящие сообщения.</p>
+<p>Запуск тестового клиента:</p>
+<pre><code class="language-bash">npm run test
+</code></pre>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── Dockerfile
+├── example.rules.json
+├── package.json
+├── README.md
+├── rules.json
+├── src/
+│   ├── index.ts              # Точка входа: MqttAdapter + RuleEngine + провайдер правил
+│   ├── core/                 # Ядро движка (RuleEngine)
+│   ├── mqtt/                 # MQTT-адаптер
+│   ├── conditions/           # Условия
+│   ├── actions/              # Действия
+│   ├── config/               # Парсинг правил (RuleBuilder), файловый источник (ConfigWatcher)
+│   └── providers/            # Источники правил (Mongo, API, фабрика)
+├── test/
+└── tsconfig.json
+</code></pre>
+<h2 id="лицензия">Лицензия</h2>
+<p>MIT</p>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-cluster-saspik-cluster-app-server">
+<p><a href="#saspik-cluster-saspik-cluster-app">↑ ATSAP Cluster App</a></p>
+<h1 id="atsap-cluster-server">ATSAP Cluster Server</h1>
+<h2 id="общее-описание">Общее описание</h2>
+<p>Серверное приложение, реализующее REST API для работы с юнитами, объектами и правилами. Юниты, объекты и правила хранятся в MongoDB (коллекции <code>units</code>, <code>objects</code>, <code>rules</code>); последние значения объектов читаются из InfluxDB (данные поступают через Telegraf из MQTT-брокера). Построено на Express.js с Dependency Injection (InversifyJS).</p>
+<h5 id="основные-компоненты">Основные компоненты:</h5>
+<ul>
+<li><strong>Контроллеры</strong> — обработка HTTP запросов</li>
+<li><strong>Сервисы</strong> — бизнес-логика</li>
+<li><strong>Data Store</strong> — слой доступа к MongoDB (<code>MongoService</code>, репозитории <code>UnitsRepository</code>/<code>ObjectsRepository</code>/<code>RulesRepository</code>, <code>SeedService</code>)</li>
+<li><strong>State Store</strong> — хранилище последних значений объектов в InfluxDB (<code>InfluxDbStateStoreService</code>, интерфейс <code>IStateStoreService</code>)</li>
+<li><strong>DTO</strong> — объекты передачи данных</li>
+</ul>
+<h5 id="технические-детали">Технические детали:</h5>
+<ul>
+<li>TypeScript, Express.js, порт 3001</li>
+<li>Dependency Injection (InversifyJS)</li>
+<li>MongoDB (официальный драйвер <code>mongodb</code>), class-validator, tslog</li>
+</ul>
+<hr>
+<h2 id="api">API</h2>
+<h3 id="внешние-api">Внешние API</h3>
+<ol>
+<li><strong>Rightech API</strong> — получение данных об объектах и моделях<ul>
+<li>Базовый URL: <code>https://dev.rightech.io/api/v1</code></li>
+<li>Авторизация: Bearer токен (<code>RIGHTECH_API_TOKEN</code>)</li>
+</ul>
+</li>
+</ol>
+<h3 id="внутренний-api">Внутренний API</h3>
+<h4 id="1-health-check">1. Health check</h4>
+<ul>
+<li><code>GET /health</code> → <code>&quot;OK&quot;</code></li>
+</ul>
+<h4 id="2-timestamp">2. Timestamp</h4>
+<ul>
+<li><code>GET /api/getTimestamp</code> → <code>{ &quot;timestamp&quot;: &quot;2026-06-29T12:00:00.000Z&quot; }</code></li>
+</ul>
+<h4 id="3-список-юнитов">3. Список юнитов</h4>
+<ul>
+<li><code>GET /api/v1/units/list</code></li>
+<li>Данные юнитов и объектов загружаются из MongoDB (коллекции <code>units</code>, <code>objects</code>), правила — из коллекции <code>rules</code> в формате rule-engine. При первой инициализации БД заполняется сидами из <code>server/src/data/*.config.ts</code> и <code>server/data/rules.json</code>.</li>
+<li>Ответ:<pre><code class="language-json">{
+  &quot;units&quot;: [
+    {
+      &quot;id&quot;: &quot;unitId1&quot;,
+      &quot;name&quot;: &quot;ESP32 Controller&quot;,
+      &quot;description&quot;: &quot;ESP32 controller with sensors and relays&quot;,
+      &quot;objects&quot;: [
+        { &quot;id&quot;: &quot;dht22&quot;, &quot;name&quot;: &quot;DHT22&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; }, { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; }] },
+        { &quot;id&quot;: &quot;float-1&quot;, &quot;name&quot;: &quot;Float Sensor&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensor/unitId1/float-1&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;floatSensor&quot;, &quot;model&quot;: &quot;float&quot;, &quot;unit&quot;: &quot;&quot; }] },
+        { &quot;id&quot;: &quot;a_relay1&quot;, &quot;name&quot;: &quot;Light&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;units/unitId1/commands/a_relay1&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;relay&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Свет (реле 1)&quot; },
+        { &quot;id&quot;: &quot;a_relay2&quot;, &quot;name&quot;: &quot;Humidifier&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;units/unitId1/commands/a_relay2&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;relay&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Увлажнитель (реле 2)&quot; },
+        { &quot;id&quot;: &quot;a_relay3&quot;, &quot;name&quot;: &quot;Fan&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;units/unitId1/commands/a_relay3&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;relay&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Вентилятор (реле 3)&quot; },
+        { &quot;id&quot;: &quot;a_relay4&quot;, &quot;name&quot;: &quot;Water Pump&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;units/unitId1/commands/a_relay4&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;relay&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Насос (реле 4)&quot; }
+      ],
+      &quot;rules&quot;: [
+        {
+          &quot;id&quot;: &quot;temp_emergency_high&quot;,
+          &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;, &quot;qos&quot;: 0 },
+          &quot;when&quot;: { &quot;jsonpath&quot;: &quot;$.temperature &gt; 29&quot; },
+          &quot;then&quot;: [
+            { &quot;action&quot;: &quot;publish&quot;, &quot;params&quot;: { &quot;topic&quot;: &quot;units/unitId1/commands/a_relay3&quot;, &quot;payload&quot;: &quot;{\&quot;state\&quot;:\&quot;1\&quot;}&quot;, &quot;qos&quot;: 1 } },
+            { &quot;action&quot;: &quot;publish&quot;, &quot;params&quot;: { &quot;topic&quot;: &quot;units/unitId1/commands/a_relay2&quot;, &quot;payload&quot;: &quot;{\&quot;state\&quot;:\&quot;1\&quot;}&quot;, &quot;qos&quot;: 1 } }
+          ],
+          &quot;enabled&quot;: true
+        }
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;unitId2&quot;,
+      &quot;name&quot;: &quot;ESP32 Local MQTT&quot;,
+      &quot;description&quot;: &quot;ESP32 local MQTT (DHT22 + LED)&quot;,
+      &quot;objects&quot;: [
+        { &quot;id&quot;: &quot;dht22&quot;, &quot;name&quot;: &quot;DHT22&quot;, &quot;type&quot;: &quot;sensor&quot;, &quot;topic&quot;: &quot;sensor/unitId2/dht22&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; }, { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; }] },
+        { &quot;id&quot;: &quot;led&quot;, &quot;name&quot;: &quot;LED&quot;, &quot;type&quot;: &quot;device&quot;, &quot;topic&quot;: &quot;led/control&quot;, &quot;spec&quot;: [{ &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;led&quot;, &quot;unit&quot;: &quot;&quot; }], &quot;description&quot;: &quot;Светодиодный индикатор&quot; }
+      ],
+      &quot;rules&quot;: []
+    }
+  ]
+}
+</code></pre>
+Правила возвращаются в формате rule-engine (<code>trigger</code>/<code>when</code>/<code>then</code>/<code>enabled</code>). В примере показано одно правило; фактически возвращаются все правила из коллекции <code>rules</code>.</li>
+</ul>
+<h4 id="31-юнит-по-id">3.1 Юнит по ID</h4>
+<ul>
+<li><code>GET /api/v1/units/:id</code></li>
+<li>Ответ: <code>{ &quot;unit&quot;: { &quot;id&quot;, &quot;name&quot;, &quot;description?&quot;, &quot;objects&quot;: [...], &quot;rules&quot;: [...] } }</code> — структура как у элемента <code>units</code> в <code>GET /units/list</code>. 404, если юнит не найден.</li>
+</ul>
+<h4 id="32-создание-юнита">3.2 Создание юнита</h4>
+<ul>
+<li><code>POST /api/v1/units</code></li>
+<li>Тело: <code>{ &quot;id&quot;, &quot;name&quot;, &quot;description?&quot; }</code></li>
+<li>Созданный юнит не содержит объектов и правил.</li>
+<li>Ответ: <code>{ &quot;unit&quot;: { ... } }</code>. 400 при невалидных данных (<code>id</code>/<code>name</code> обязательны) или дубликате <code>id</code>.</li>
+</ul>
+<h4 id="33-обновление-юнита">3.3 Обновление юнита</h4>
+<ul>
+<li><code>PATCH /api/v1/units/:id</code></li>
+<li>Тело: <code>{ &quot;name&quot;, &quot;description?&quot; }</code> (без <code>id</code> — <code>id</code> берётся из URL и не изменяем).</li>
+<li>Ответ: <code>{ &quot;unit&quot;: { ... } }</code>. 404, если юнит не найден; 400 при невалидных данных.</li>
+</ul>
+<h4 id="34-удаление-юнита">3.4 Удаление юнита</h4>
+<ul>
+<li><code>DELETE /api/v1/units/:id</code></li>
+<li>Удаляет юнит <strong>вместе с его объектами</strong> (каскадно, коллекция <code>objects</code>). Правила не затрагиваются.</li>
+<li>Ответ: <code>{ &quot;success&quot;: true }</code>. 404, если юнит не найден.</li>
+</ul>
+<h4 id="4-список-объектов-по-типу">4. Список объектов по типу</h4>
+<ul>
+<li><code>POST /api/v1/objects/list/:type</code></li>
+<li><code>:type</code> — <code>sensor</code> или <code>device</code></li>
+<li>Тело запроса (опционально): <code>{ &quot;unitId&quot;: &quot;unitId2&quot; }</code> — фильтр по юниту; если не указан, возвращаются объекты всех юнитов</li>
+<li><code>value</code> загружается из InfluxDB (последнее показание) по топику объекта</li>
+<li>Форматирование: значение округляется по <code>spec.minorPart</code> (если задан), возвращается строкой</li>
+<li>Ответ (sensor):<pre><code class="language-json">{
+  &quot;objects&quot;: [
+    {
+      &quot;id&quot;: &quot;dht22&quot;,
+      &quot;name&quot;: &quot;DHT22&quot;,
+      &quot;type&quot;: &quot;sensor&quot;,
+      &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;,
+      &quot;spec&quot;: [
+        { &quot;key&quot;: &quot;temperature&quot;, &quot;value&quot;: 23.6, &quot;spec&quot;: { &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; } },
+        { &quot;key&quot;: &quot;humidity&quot;, &quot;value&quot;: 46.9, &quot;spec&quot;: { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; } }
+      ]
+    }
+  ]
+}
+</code></pre>
+</li>
+<li>Ответ (device):<pre><code class="language-json">{
+  &quot;objects&quot;: [
+    {
+      &quot;id&quot;: &quot;a_relay1&quot;,
+      &quot;name&quot;: &quot;Light&quot;,
+      &quot;type&quot;: &quot;device&quot;,
+      &quot;topic&quot;: &quot;units/unitId1/commands/a_relay1&quot;,
+      &quot;spec&quot;: [
+        { &quot;key&quot;: &quot;state&quot;, &quot;value&quot;: &quot;1&quot;, &quot;spec&quot;: { &quot;key&quot;: &quot;state&quot;, &quot;model&quot;: &quot;relay&quot;, &quot;unit&quot;: &quot;&quot; } }
+      ],
+      &quot;description&quot;: &quot;Свет (реле 1)&quot;
+    }
+  ]
+}
+</code></pre>
+</li>
+</ul>
+<h4 id="5-объекты-по-ids">5. Объекты по IDs</h4>
+<ul>
+<li><code>POST /api/v1/objects/getByIds</code></li>
+<li>Тело: <code>{ &quot;id&quot;: [&quot;dht22&quot;, &quot;a_relay1&quot;], &quot;type&quot;: &quot;sensor&quot; }</code></li>
+<li><code>type</code> — опционально, <code>sensor</code> или <code>device</code> (фильтр по типу)</li>
+<li><code>unitId</code> — опционально, фильтр по юниту; если не указан, поиск по всем юнитам</li>
+<li>Ответ:<pre><code class="language-json">{
+  &quot;objects&quot;: [
+    {
+      &quot;id&quot;: &quot;dht22&quot;,
+      &quot;name&quot;: &quot;DHT22&quot;,
+      &quot;type&quot;: &quot;sensor&quot;,
+      &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;,
+      &quot;spec&quot;: [
+        { &quot;key&quot;: &quot;temperature&quot;, &quot;value&quot;: 23.6, &quot;spec&quot;: { &quot;key&quot;: &quot;temperature&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;℃&quot; } },
+        { &quot;key&quot;: &quot;humidity&quot;, &quot;value&quot;: 46.9, &quot;spec&quot;: { &quot;key&quot;: &quot;humidity&quot;, &quot;model&quot;: &quot;dht22&quot;, &quot;unit&quot;: &quot;%&quot; } }
+      ]
+    }
+  ]
+}
+</code></pre>
+</li>
+</ul>
+<h4 id="6-команда-устройству">6. Команда устройству</h4>
+<ul>
+<li><code>POST /api/v1/objects/command/:deviceId</code></li>
+<li>Тело: <code>{ &quot;value&quot;: &quot;1&quot; }</code>; <code>unitId</code> — опционально, ищет устройство в рамках юнита (если не указан — по всем юнитам)</li>
+<li>Ответ: <code>{ &quot;success&quot;: true }</code></li>
+</ul>
+<h4 id="7-последние-показания-сенсоров">7. Последние показания сенсоров</h4>
+<ul>
+<li><code>POST /api/v1/objects/getLastSensorsData</code></li>
+<li>Тело: <code>{ &quot;id&quot;: [&quot;s6&quot;, &quot;s7&quot;] }</code></li>
+<li>Ответ: <code>{ &quot;s6&quot;: &quot;24.40&quot;, &quot;s7&quot;: &quot;51.70&quot; }</code> (заглушка, возвращает <code>{}</code>)</li>
+</ul>
+<h4 id="71-создание-объекта">7.1 Создание объекта</h4>
+<ul>
+<li><code>POST /api/v1/objects</code></li>
+<li>Тело: <code>{ &quot;id&quot;, &quot;name&quot;, &quot;type&quot;, &quot;spec&quot;, &quot;description?&quot;, &quot;unitId&quot; }</code> (без <code>topic</code> — топик формируется сервером по паттерну <code>`${type}/${unitId}/${id}`</code>)</li>
+<li><code>spec</code> — массив записей: <code>{ &quot;key&quot;, &quot;model&quot;, &quot;unit&quot;? , &quot;minorPart&quot;? }</code></li>
+<li>Ответ: <code>{ &quot;object&quot;: { ... } }</code>. 400 при невалидных данных или дубликате (<code>id</code> + <code>unitId</code>).</li>
+</ul>
+<h4 id="72-обновление-объекта">7.2 Обновление объекта</h4>
+<ul>
+<li><code>PATCH /api/v1/objects/:id</code></li>
+<li>Тело: <code>{ &quot;name&quot;, &quot;type&quot;, &quot;spec&quot;, &quot;description?&quot;, &quot;unitId&quot; }</code> (без <code>id</code> и <code>topic</code> — <code>id</code> берётся из URL, топик пересчитывается по паттерну <code>`${type}/${unitId}/${id}`</code>)</li>
+<li><code>spec</code> — массив записей: <code>{ &quot;key&quot;, &quot;model&quot;, &quot;unit&quot;? , &quot;minorPart&quot;? }</code></li>
+<li>Ответ: <code>{ &quot;object&quot;: { ... } }</code>. 404, если объект не найден; 400 при невалидных данных.</li>
+</ul>
+<h4 id="73-удаление-объекта">7.3 Удаление объекта</h4>
+<ul>
+<li><code>DELETE /api/v1/objects/:id</code></li>
+<li>Тело: <code>{ &quot;unitId&quot; }</code></li>
+<li>Ответ: <code>{ &quot;success&quot;: true }</code>. 404, если объект не найден.</li>
+</ul>
+<h4 id="8-правила">8. Правила</h4>
+<p>Управление правилами автоматизации (формат rule-engine: <code>trigger</code>/<code>when</code>/<code>then</code>/<code>enabled</code>). Хранятся в коллекции <code>rules</code>.</p>
+<ul>
+<li><code>GET /api/v1/rules</code> — список всех правил. Ответ: <code>{ &quot;rules&quot;: [...] }</code></li>
+<li><code>POST /api/v1/rules</code> — создание/обновление правила по <code>id</code> (upsert). Тело — правило в формате rule-engine. Ответ: <code>{ &quot;rule&quot;: { ... } }</code><pre><code class="language-json">{
+  &quot;id&quot;: &quot;temp_emergency_high&quot;,
+  &quot;trigger&quot;: { &quot;topic&quot;: &quot;sensor/unitId1/dht22&quot;, &quot;qos&quot;: 0 },
+  &quot;when&quot;: { &quot;jsonpath&quot;: &quot;$.temperature &gt; 29&quot; },
+  &quot;then&quot;: [ { &quot;action&quot;: &quot;publish&quot;, &quot;params&quot;: { &quot;topic&quot;: &quot;units/unitId1/commands/a_relay3&quot;, &quot;payload&quot;: &quot;{\&quot;state\&quot;:\&quot;1\&quot;}&quot;, &quot;qos&quot;: 1 } } ],
+  &quot;enabled&quot;: true
+}
+</code></pre>
+</li>
+<li><code>PATCH /api/v1/rules/:id</code> — включить/отключить правило. Тело: <code>{ &quot;enabled&quot;: false }</code>. Ответ: <code>{ &quot;rule&quot;: { ... } }</code>. Отключённые правила (<code>enabled: false</code>) не выполняются движком.</li>
+<li><code>DELETE /api/v1/rules/:id</code> — удалить правило. Ответ: <code>{ &quot;success&quot;: true }</code> (404, если правило не найдено).</li>
+</ul>
+<h4 id="9-mqtt-publish">9. MQTT Publish</h4>
+<ul>
+<li><code>POST /api/v1/mqtt/publish</code></li>
+<li>Тело: <code>{ &quot;topic&quot;: &quot;test&quot;, &quot;message&quot;: &quot;hello&quot;, &quot;qos&quot;: 0, &quot;retain&quot;: false }</code></li>
+</ul>
+<h4 id="10-mqtt-subscribe">10. MQTT Subscribe</h4>
+<ul>
+<li><code>POST /api/v1/mqtt/subscribe</code></li>
+<li>Тело: <code>{ &quot;topic&quot;: &quot;test&quot; }</code></li>
+</ul>
+<h4 id="11-mqtt-unsubscribe">11. MQTT Unsubscribe</h4>
+<ul>
+<li><code>POST /api/v1/mqtt/unsubscribe</code></li>
+<li>Тело: <code>{ &quot;topic&quot;: &quot;test&quot; }</code></li>
+</ul>
+<hr>
+<h2 id="переменные-окружения">Переменные окружения</h2>
+<pre><code>RIGHTECH_API_TOKEN=your_token
+PORT=3001
+
+# MongoDB
+MONGODB_URL=mongodb://mongo:27017/saspik
+
+# InfluxDB
+INFLUXDB_URL=http://localhost:8086
+INFLUXDB_TOKEN=my-super-secret-token
+INFLUXDB_ORG=saspik
+INFLUXDB_BUCKET=mqtt
+
+# Seed правил (путь к файлу-источнику для первичного наполнения коллекции rules)
+INIT_RULES_SEED_PATH=./data/rules.json
+</code></pre>
+<p>При первом запуске (пустая БД) <code>SeedService</code> заполняет коллекции <code>units</code>, <code>objects</code>, <code>rules</code> из <code>src/data/*.config.ts</code> и файла <code>INIT_RULES_SEED_PATH</code> (env-подстановка <code>${VAR}</code> и <code>${expr:...}</code> выполняется до записи в БД). Сид идемпотентен: непустые коллекции не перезаполняются.</p>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>src/
+├── app.ts                        # Точка входа, настройка Express
+├── index.ts                      # IoC контейнер (Inversify)
+├── const.ts                      # Константы маршрутов
+├── types.ts                      # Типы DI
+├── common/                       # BaseController, route interface
+├── config/                       # ConfigService
+├── controllers/                  # Units, Objects, Rules, MQTT контроллеры
+├── data/                         # Конфиги юнитов (unitId1.config.ts, unitId2.config.ts, units.config.ts) и rules.json — источники сидов
+├── dto/                          # ObjectsDto, UnitDto, RuleDto
+├── errors/                       # ExceptionFilter
+├── logger/                       # LoggerService
+├── services/
+│   ├── objects/                  # ObjectsService (бизнес-логика объектов)
+│   ├── units/                    # UnitsService
+│   ├── rules/                    # RulesService (управление правилами через API)
+│   ├── data-store/               # MongoService, Units/Objects/RulesRepository, SeedService
+│   ├── state-store/              # IStateStoreService + InfluxDbStateStoreService + InMemoryStateStoreService
+│   ├── mqtt/                     # LocalMqttService, MqttService
+│   └── climate-control/          # ClimateControlService
+└── dto/                          # RightechObjectDto, RightechModelDto
+
+../shared/                         # Общие TypeScript-типы (подключаются через @shared/*)
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-greenhouse">
+<h1 id="saspik-greenhouse">SASPIK Greenhouse</h1>
+<p><a href="#root">↑ SASPIK Project</a></p>
+<p>ESP32-управление микроклиматом теплицы: датчики, реле, автополив, MQTT-связь с кластером.</p>
+<p>Контекст проекта: <code>opencode/agents.md → saspik-greenhouse</code>.</p>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── docs/
+│   ├── Frame 73.png                    — схема установки
+│   ├── grow_chamber.md                 — гидропонная камера на 2 куста
+│   ├── sensor-ph-ec.md                 — датчики pH и EC
+│   └── Гидропонная установка.pdf       — PDF-схема
+├── README.md
+└── TODO.md
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-iot">
+<h1 id="saspik-iot">SASPIK IoT</h1>
+<p><a href="#root">↑ SASPIK Project</a></p>
+<p>ESP32 прошивки для IoT-датчиков: шлюз, сенсорные узлы (ESP-NOW, MQTT, deep sleep).</p>
+<p>Контекст проекта: <code>opencode/agents.md → saspik-iot</code>.</p>
+<h2 id="программное-обеспечение">Программное обеспечение</h2>
+<ul>
+<li><a href="saspik-iot/ag-iot-sketches/README.md"><code>ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
+</ul>
+<h2 id="классификация-устройств">Классификация устройств</h2>
+<p>Устройства классифицируются по формату <code>saspik.{роли}.{протокол}.{питание}{nnn}</code>.<br>Подробнее: <a href="docs/classification.md"><code>docs/classification.md</code></a></p>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-meshrover">
+<h1 id="meshrover--distributed-swarm-for-autonomous-precision-weeding">MeshRover — Distributed swarm for autonomous precision weeding</h1>
+<p><a href="#root">↑ SASPIK Project</a></p>
+<h2 id="цель">Цель</h2>
+<p>Создать рой из лёгких автономных ботов, способных без GPS и постоянного интернета совместно обрабатывать поле, передавая на базовую станцию только метаданные детекций.</p>
+<h2 id="ключевые-технологии">Ключевые технологии</h2>
+<p>ESP32-S3, UWB (DWM3000), LoRa mesh, TensorFlow Lite Micro, Raspberry Pi, распределённая локализация.</p>
+<h2 id="текущий-статус">Текущий статус</h2>
+<p>Pre-MVP. Начат этап 1: UWB-дальномер на двух ESP32.</p>
+<h2 id="план-работ">План работ</h2>
+<h3 id="этап-1-uwb-дальномер-текущий">Этап 1: UWB-дальномер (текущий)</h3>
+<ul>
+<li>Настроить PlatformIO проект для ESP32-S3 + DWM3000</li>
+<li>Инициализировать DWM3000 на двух платах</li>
+<li>Реализовать TWR (Two-Way Ranging) на одной паре</li>
+<li>Вывести дальность в UART / Serial Plotter</li>
+<li>Измерить точность на дистанциях 1–50 м</li>
+</ul>
+<h3 id="этап-2-локальная-навигация">Этап 2: Локальная навигация</h3>
+<ul>
+<li>Подключить IMU (MPU6050/ICM-20948)</li>
+<li>Реализовать счисление пути (dead reckoning)</li>
+<li>Связать UWB + IMU + энкодеры в EKF</li>
+<li>Получить стабильные координаты относительно опорной точки</li>
+</ul>
+<h3 id="этап-3-lora-сеть">Этап 3: LoRa-сеть</h3>
+<ul>
+<li>Настроить LoRa-модуль (SX1276/SX1262)</li>
+<li>Реализовать простой flooding mesh</li>
+<li>Пакет: координаты + статус (50–150 байт)</li>
+<li>Тест: 3+ узла в mesh</li>
+</ul>
+<h3 id="этап-4-базовое-зрение">Этап 4: Базовое зрение</h3>
+<ul>
+<li>Подключить камеру OV2640 к ESP32-S3</li>
+<li>Собрать датасет (культура/сорняк)</li>
+<li>Обучить TFLite-модель (2 класса)</li>
+<li>Запустить инференс на ESP32-S3</li>
+</ul>
+<h3 id="этап-5-оркестрация">Этап 5: Оркестрация</h3>
+<ul>
+<li>Базовый веб-интерфейс на RPi</li>
+<li>Приём LoRa-пакетов на RPi</li>
+<li>Построение карты покрытия</li>
+<li>Алгоритм виртуальных сил для перераспределения секторов</li>
+</ul>
+<h3 id="бэклог">Бэклог</h3>
+<ul>
+<li>CLI для отладки UWB</li>
+<li>Симулятор роя (для тестов без железа)</li>
+<li>Документация по протоколу пакетов</li>
+</ul>
+<h2 id="аппаратное-обеспечение">Аппаратное обеспечение</h2>
+<p>Схемотехника и платы в <a href="hardware/"><code>hardware/</code></a>.</p>
+<h2 id="программное-обеспечение">Программное обеспечение</h2>
+<p>Прошивки ESP32-S3 в <a href="software/"><code>software/</code></a>.</p>
+<hr>
+<h2 id="утверждённая-архитектура-конспект">Утверждённая архитектура (конспект)</h2>
+<h3 id="каждый-бот-esp32-s3">Каждый бот (ESP32-S3)</h3>
+<ul>
+<li>Собирает UWB-дальности до соседей, опрашивает IMU и энкодеры.</li>
+<li>Ведёт счисление пути и вычисляет свои координаты (EKF) относительно опорных точек роя.</li>
+<li>Имеет камеру OV2640 и выполняет на борту инференс простой TFLite-модели (2 класса: культура/сорняк).</li>
+<li>Каждое обнаружение упаковывает в короткий пакет (свои координаты, координаты цели, класс, уверенность) и отправляет в общий LoRa-mesh.</li>
+<li>Получает от базы или соседей задания на коррекцию маршрута, но может работать автономно при обрыве связи.</li>
+<li>Реагирует на соседей: избегает столкновений, перераспределяет сектора покрытия по алгоритму виртуальных сил.</li>
+</ul>
+<h3 id="базовая-станция-raspberry-pi--lora-модуль">Базовая станция (Raspberry Pi + LoRa-модуль)</h3>
+<ul>
+<li>Участвует в mesh как привилегированный узел.</li>
+<li>Аккумулирует все пакеты с детекциями.</li>
+<li>Строит единую оперативную карту прополки/посева.</li>
+<li>Выявляет пропущенные участки, оптимизирует глобальное покрытие.</li>
+<li>Отправляет ботам рекомендательные команды («проверить зону», «сместить фокус»).</li>
+<li>Предоставляет веб-интерфейс оператору с картой, статусом, зарядом.</li>
+</ul>
+<h4 id="локальная-версия-для-первых-тестов-docker">Локальная версия для первых тестов (Docker)</h4>
+<p>На этапах 1–3 базовая станция запускается локально в Docker на машине разработчика:</p>
+<ul>
+<li>Принимает UART-логи с ESP32 через проброшенный USB (последовательный порт).</li>
+<li>Логирует и отображает дальномерные данные, позже — координаты и LoRa-пакеты.</li>
+<li>Веб-интерфейс (FastAPI + легковесный фронтенд) для визуализации в реальном времени.</li>
+<li>Контейнерная сборка: одна команда <code>docker compose up</code> для поднятия всего стека.</li>
+<li>Переход на RPi произойдёт на этапе полевых испытаний (Stage 4–5).</li>
+</ul>
+<h3 id="сеть">Сеть</h3>
+<ul>
+<li><strong>UWB</strong> — для точной относительной навигации (без GPS).</li>
+<li><strong>LoRa</strong> (433/868 МГц, mesh) — для обмена координатами, статусом, метаданными детекций и командами.</li>
+<li>Данные, передаваемые по LoRa, компактны (50–150 байт), что укладывается в возможности технологии.</li>
+<li>Никакой сырой видеопоток по LoRa не идёт.</li>
+</ul>
+<h3 id="дополнительно-опция-не-для-mvp">Дополнительно (опция, не для MVP)</h3>
+<p>Позже можно добавить Raspberry Pi на отдельных ботов-лидеров, если понадобится более сложное зрение прямо в поле. Но текущий стек позволяет начать без него.</p>
+<h2 id="что-у-вас-есть-сейчас-для-немедленного-старта">Что у вас есть сейчас для немедленного старта</h2>
+<ul>
+<li>Чёткая архитектура с разделением обязанностей.</li>
+<li>Понимание, что и на чём работает: ESP32-S3 для real-time + простого зрения, RPi для оркестрации.</li>
+<li>Определённый стек протоколов: UWB (TWR), LoRa-mesh (flooding или gossip), бинарные пакеты.</li>
+<li>План первого шага: оживить UWB-дальномер на двух ESP32.</li>
+</ul>
+<h2 id="структура-каталога">Структура каталога</h2>
+<pre><code>.
+├── docs/
+├── hardware/
+├── README.md
+├── software/
+└── TODO.md
+</code></pre>
+
+</section>
+</main>
+</body>
+</html>
