@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>САСПИК — Экономика совместного производства</title>
+    <title>САСПИК — Сеть автоматизированных систем для совместного производства</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=JetBrains+Mono:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
-      /* ===== RESET & BASE ===== */
+      /* ===== RESET & BASE (без изменений) ===== */
       * {
         margin: 0;
         padding: 0;
@@ -188,7 +188,7 @@
         display: none !important;
       }
 
-      /* ===== ГЕРОЙ ===== */
+      /* ===== ГЕРОЙ (обновлённый контент) ===== */
       .hero {
         position: relative;
         z-index: 1;
@@ -264,9 +264,13 @@
         max-width: 520px;
       }
 
-      .hero .sub-title strong {
-        color: var(--text-primary);
+      .hero .sub-title p {
         font-weight: 600;
+        margin-bottom: 0px;
+        font-size: 1.5rem;
+        color: var(--accent);
+
+        font-family: var(--font-mono);
       }
 
       .hero p {
@@ -276,6 +280,7 @@
         margin-bottom: 32px;
       }
 
+      /* Статистика в герое */
       .hero-stats {
         display: flex;
         gap: 40px;
@@ -351,7 +356,7 @@
         border-color: rgba(255, 255, 255, 0.2);
       }
 
-      /* ===== ВИЗУАЛИЗАЦИЯ СЕТИ ===== */
+      /* ===== ВИЗУАЛИЗАЦИЯ СЕТИ (без изменений) ===== */
       .hero-visual {
         position: relative;
         display: flex;
@@ -527,7 +532,7 @@
         top: 26%;
       }
 
-      /* ===== ОСОБЕННОСТИ ===== */
+      /* ===== ОСОБЕННОСТИ (обновлённые карточки) ===== */
       .features {
         position: relative;
         z-index: 1;
@@ -632,23 +637,7 @@
         letter-spacing: 0.04em;
       }
 
-      /* Бейдж "В разработке" */
-      .badge-dev {
-        display: inline-block;
-        font-size: 0.6rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        padding: 2px 10px;
-        margin-bottom: 12px;
-        border-radius: 100px;
-        background: rgba(255, 193, 7, 0.15);
-        border: 1px solid rgba(255, 193, 7, 0.25);
-        color: #ffc107;
-        font-family: var(--font-mono);
-      }
-
-      /* ===== СХЕМА ===== */
+      /* ===== СХЕМА / СТРУКТУРА (переработана под иерархию) ===== */
       .schema-section {
         position: relative;
         z-index: 1;
@@ -839,12 +828,8 @@
       }
 
       /* ==========================================================
-       АДАПТИВНАЯ ВЁРСТКА (Mobile First)
+       АДАПТИВНАЯ ВЁРСТКА (без изменений)
        ========================================================== */
-
-      /* --- Базовые стили для всех экранов (по умолчанию) --- */
-
-      /* --- Для экранов ≤ 1024px (планшеты и маленькие ноутбуки) --- */
       @media (max-width: 1024px) {
         .hero-grid {
           grid-template-columns: 1fr;
@@ -878,7 +863,6 @@
         }
       }
 
-      /* --- Для экранов ≤ 768px (крупные смартфоны, планшеты) --- */
       @media (max-width: 768px) {
         .hero h1 {
           font-size: 2.4rem;
@@ -927,9 +911,7 @@
         }
       }
 
-      /* --- Для экранов ≤ 480px (маленькие смартфоны) --- */
       @media (max-width: 480px) {
-        /* Шапка */
         .header {
           padding: 8px 0 !important;
         }
@@ -951,7 +933,6 @@
           font-size: 0.6rem !important;
         }
 
-        /* Герой */
         .hero {
           padding: 100px 0 40px !important;
           min-height: auto !important;
@@ -990,7 +971,6 @@
           font-size: 0.85rem !important;
         }
 
-        /* Визуализация */
         .network-ring {
           width: 160px !important;
           height: 160px !important;
@@ -1021,7 +1001,6 @@
           opacity: 0.4 !important;
           animation-duration: 30s !important;
         }
-        /* корректировка позиций меток */
         .label-scada {
           left: 86% !important;
           top: 70% !important;
@@ -1047,7 +1026,6 @@
           top: 30% !important;
         }
 
-        /* Особенности */
         .features {
           padding: 50px 0 !important;
         }
@@ -1076,7 +1054,6 @@
           margin-top: 8px !important;
         }
 
-        /* Схема */
         .schema-section {
           padding: 40px 0 !important;
         }
@@ -1111,7 +1088,6 @@
           font-size: 0.75rem !important;
         }
 
-        /* CTA */
         .cta {
           padding: 40px 0 60px !important;
         }
@@ -1130,7 +1106,6 @@
           font-size: 0.9rem !important;
         }
 
-        /* Футер */
         .footer {
           flex-direction: column !important;
           text-align: center !important;
@@ -1162,10 +1137,10 @@
           САСПИК <span>|</span>
         </div>
         <nav class="nav">
-          <a href="#features">Возможности</a>
-          <a href="#schema">Как работает</a>
+          <a href="#features">Кластер • Юнит • Объект</a>
+          <a href="#schema">Структура</a>
           <a href="#cta">Контакты</a>
-          <a href="#cta" class="nav-cta">Обсудить</a>
+          <a href="#cta" class="nav-cta">Начать</a>
         </nav>
       </div>
     </header>
@@ -1184,50 +1159,61 @@
               систем <span class="highlight">САСПИК</span>
             </h1>
             <div class="sub-title">
-              <strong>Объединяем оборудование, данные и людей</strong><br />
-              в единую интеллектуальную сеть.
+              Иерархическая платформа для объединения мощностей
+              <p>Кластеры ← Юниты ← Объекты</p>
             </div>
             <p>
-              Программно-аппаратная платформа для эффективного распределения
-              загрузки, прозрачного учёта и кооперации производственных
-              мощностей.
+              Программно-аппаратное решение, которое позволяет гибко
+              группировать оборудование, управлять производственными процессами
+              и прозрачно распределять заказы между участниками сети.
             </p>
+
+            <!-- Статистика -->
+            <!--<div class="hero-stats">-->
+            <!--  <div class="stat-item">-->
+            <!--    <div class="stat-number">∞</div>-->
+            <!--    <div class="stat-label">Кластеров в сети</div>-->
+            <!--  </div>-->
+            <!--  <div class="stat-item">-->
+            <!--    <div class="stat-number">Любое</div>-->
+            <!--    <div class="stat-label">Количество юнитов</div>-->
+            <!--  </div>-->
+            <!--  <div class="stat-item">-->
+            <!--    <div class="stat-number">Датчики → Станки</div>-->
+            <!--    <div class="stat-label">Объекты любого типа</div>-->
+            <!--  </div>-->
+            <!--</div>-->
 
             <div class="hero-actions">
               <a href="#cta" class="btn-primary">
                 Начать внедрение
                 <span>→</span>
               </a>
-              <a href="#features" class="btn-secondary"> Узнать больше </a>
+              <a href="#schema" class="btn-secondary"> Как устроено </a>
             </div>
           </div>
 
           <div class="hero-visual">
             <div class="network-ring">
               <div class="rotating-layer">
-                <!-- 6 узлов шестиугольника -->
                 <span class="node"></span>
                 <span class="node"></span>
                 <span class="node"></span>
                 <span class="node"></span>
                 <span class="node"></span>
                 <span class="node"></span>
-                <!-- Центральный узел -->
                 <span class="node"></span>
-
-                <!-- Пульсирующие кольца -->
                 <span class="pulse-ring"></span>
                 <span class="pulse-ring"></span>
-
-                <!-- Метки -->
+                <!-- Метки (символизируют разные типы объектов) -->
                 <div class="label-wrapper label-scada">
-                  <span class="label-text">SCADA</span>
+                  <span class="label-text">Кластер</span>
                 </div>
                 <div class="label-wrapper label-mes">
-                  <span class="label-text">MES</span>
+                  <span class="label-text">Юнит</span>
                 </div>
                 <div class="label-wrapper label-erp">
-                  <span class="label-text">ERP</span>
+                  <span class="label-text">Объект</span>
                 </div>
                 <div class="label-wrapper label-iiot">
                   <span class="label-text">IIoT</span>
@@ -1245,94 +1231,106 @@
       </div>
     </section>
 
-    <!-- ==================== ОСОБЕННОСТИ ==================== -->
+    <!-- ==================== ОСОБЕННОСТИ (ТРИ УРОВНЯ) ==================== -->
     <section class="features" id="features">
       <div class="container">
         <div class="section-label">Архитектура &amp; Экономика</div>
-        <h2>Драйверы совместного производства</h2>
+        <h2>Три уровня управления</h2>
         <p class="sub">
-          САСПИК сочетает в себе передовые технологии автоматизации и
-          экономические механизмы для выгодного сотрудничества.
+          САСПИК строится как иерархическая сеть, где каждый элемент автономен,
+          но при этом бесшовно интегрируется в общую экосистему.
         </p>
         <div class="features-grid">
           <div class="feature-card">
-            <span class="feature-icon">⚙️</span>
-            <span class="badge-dev">В разработке</span>
-            <h3>Автоматизация и контроль</h3>
+            <span class="feature-icon">🌐</span>
+            <h3>Кластер</h3>
             <p>
-              Сбор данных, мониторинг и управление производственными линиями в
-              реальном времени с единой точки.
+              Независимый автономный сегмент сети – может быть развёрнут как в
+              облаке, так и на локальном сервере. Объединяет юниты по
+              территориальному или логическому принципу.
             </p>
-            <span class="feature-metric">SCADA + MES</span>
+            <span class="feature-metric">Децентрализация</span>
           </div>
           <div class="feature-card">
-            <span class="feature-icon">🔗</span>
-            <h3>Совместное использование мощностей</h3>
+            <span class="feature-icon">🧩</span>
+            <h3>Юнит</h3>
             <p>
-              Платформа для кооперации предприятий: распределение заказов, учёт
-              загрузки, прозрачные расчёты.
+              Функциональный блок внутри кластера: теплица, цех, склад,
+              логистический хаб. Пользователь сам определяет состав юнитов и их
+              взаимосвязи.
             </p>
-            <span class="feature-metric">Collaborative</span>
+            <span class="feature-metric">Гибкость</span>
           </div>
           <div class="feature-card">
-            <span class="feature-icon">📊</span>
-            <h3>Предиктивная аналитика</h3>
+            <span class="feature-icon">🔌</span>
+            <h3>Объект</h3>
             <p>
-              Прогнозирование отказов, оптимизация загрузки и рекомендации по
-              повышению эффективности.
+              Конкретное устройство – датчик, станок, контроллер, камера.
+              Подключается к платформе для управления, мониторинга и обмена
+              данными с другими объектами внутри юнита.
             </p>
-            <span class="feature-metric">AI / ML</span>
+            <span class="feature-metric">Сквозной контроль</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ==================== СХЕМА РАБОТЫ ==================== -->
+    <!-- ==================== СТРУКТУРА (КАК ЭТО РАБОТАЕТ) ==================== -->
     <section class="schema-section" id="schema">
       <div class="container">
-        <div class="section-label">Ключевые возможности</div>
-        <h2>Как САСПИК меняет производство</h2>
+        <div class="section-label">Иерархия</div>
+        <h2>От кластера к объекту</h2>
         <p class="sub">
-          Инструменты для коллаборации, автоматизации и контроля — всё в одной
-          экосистеме.
+          Наглядный пример того, как элементы системы складываются в единую
+          производственную сеть.
         </p>
 
         <div class="schema-grid">
           <div class="schema-item">
-            <span class="emoji">📦</span>
-            <h4>Управление заказами</h4>
+            <span class="emoji">🏭</span>
+            <h4>Кластер «Завод №5»</h4>
             <p>
-              Распределение задач между участниками сети с учётом загрузки и
-              компетенций.
+              Облачный или локальный сегмент, объединяющий все производственные
+              юниты предприятия.
             </p>
             <div class="stat-item">
-              <div class="stat-number">Увеличивает</div>
-              <div class="stat-label">Загрузку мощностей</div>
+              <div class="stat-number">Автономен</div>
+              <div class="stat-label">Работает независимо</div>
             </div>
           </div>
           <div class="schema-item">
-            <span class="emoji">🔐</span>
-            <h4>Прозрачный учёт</h4>
+            <span class="emoji">🌿</span>
+            <h4>Юнит «Теплица-2»</h4>
             <p>
-              Блокчейн-фиксация операций, автоматическое начисление
-              вознаграждений.
+              Внутри кластера – функциональный блок со своими объектами:
+              датчики, полив, освещение.
             </p>
             <div class="stat-item">
-              <div class="stat-number">Уменьшает</div>
-              <div class="stat-label">Количество простоев</div>
+              <div class="stat-number">Настраиваемый</div>
+              <div class="stat-label">Состав меняется под задачу</div>
             </div>
           </div>
           <div class="schema-item">
-            <span class="emoji">📈</span>
-            <h4>Аналитика загрузки</h4>
+            <span class="emoji">📡</span>
+            <h4>Объект «Датчик влажности»</h4>
             <p>
-              Дашборды с прогнозами, рекомендации по оптимизации
-              производственного портфеля.
+              Конкретное устройство, подключённое к платформе и обменивающееся
+              данными с другими объектами юнита.
             </p>
             <div class="stat-item">
-              <div class="stat-number">Обеспечивает</div>
-              <div class="stat-label">Прозрачность учёта</div>
+              <div class="stat-number">Управляемый</div>
+              <div class="stat-label">Через API и интерфейс</div>
             </div>
+          </div>
+
+          <div class="schema-arrow">↓</div>
+
+          <div class="schema-result">
+            ⚡ Единая сеть САСПИК<br />
+            <span
+              >обеспечивает прозрачный учёт, распределение загрузки и
+              кооперацию между всеми уровнями</span
+            >
           </div>
         </div>
       </div>
@@ -1342,10 +1340,11 @@
     <section class="cta" id="cta">
       <div class="container">
         <div class="cta-box">
-          <h2>Готовы к совместной эффективности?</h2>
+          <h2>Готовы собрать свой кластер?</h2>
           <p>
-            Обсудим ваши задачи, подберём конфигурацию и рассчитаем
-            экономический эффект для вашего производства.
+            Мы поможем спроектировать архитектуру, подобрать оборудование и
+            настроить взаимодействие между юнитами и объектами – под ваши
+            бизнес-задачи.
           </p>
           <a href="#" class="btn-primary">
             Связаться с экспертом
