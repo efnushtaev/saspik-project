@@ -9,7 +9,7 @@
       rel="stylesheet"
     />
     <style>
-      /* ===== RESET & BASE (без изменений) ===== */
+      /* ===== RESET & BASE ===== */
       * {
         margin: 0;
         padding: 0;
@@ -20,10 +20,11 @@
         --bg-primary: #070b13;
         --bg-secondary: #0d1422;
         --bg-card: rgba(13, 20, 34, 0.7);
-        --border-glow: rgba(0, 230, 118, 0.15);
-        --accent: #00e676;
-        --accent-dim: #00a84d;
-        --accent-glow: rgba(0, 230, 118, 0.25);
+        --border-glow: rgba(0, 180, 216, 0.15);
+        --accent: #00b4d8;
+        --accent-dim: #0096c7;
+        --accent-light: #48cae4;
+        --accent-glow: rgba(0, 180, 216, 0.25);
         --text-primary: #e8edf5;
         --text-secondary: #8b9bb5;
         --text-muted: #4a5a75;
@@ -61,8 +62,8 @@
         z-index: 0;
         pointer-events: none;
         background-image:
-          linear-gradient(rgba(0, 230, 118, 0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 230, 118, 0.03) 1px, transparent 1px);
+          linear-gradient(rgba(0, 180, 216, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 180, 216, 0.03) 1px, transparent 1px);
         background-size: 60px 60px;
         mask-image: radial-gradient(
           ellipse at center,
@@ -83,12 +84,12 @@
         background:
           radial-gradient(
             ellipse at 30% 20%,
-            rgba(0, 230, 118, 0.04),
+            rgba(0, 180, 216, 0.04),
             transparent 60%
           ),
           radial-gradient(
             ellipse at 70% 80%,
-            rgba(0, 168, 77, 0.03),
+            rgba(0, 150, 200, 0.03),
             transparent 50%
           );
       }
@@ -103,7 +104,7 @@
         padding: 16px 0;
         background: rgba(7, 11, 19, 0.85);
         backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(0, 230, 118, 0.06);
+        border-bottom: 1px solid rgba(0, 180, 216, 0.06);
       }
 
       .header .container {
@@ -132,8 +133,8 @@
         justify-content: center;
         font-size: 1.2rem;
         color: var(--accent);
-        background: rgba(0, 230, 118, 0.06);
-        box-shadow: 0 0 20px rgba(0, 230, 118, 0.08);
+        background: rgba(0, 180, 216, 0.06);
+        box-shadow: 0 0 20px rgba(0, 180, 216, 0.08);
       }
 
       .logo span {
@@ -188,7 +189,7 @@
         display: none !important;
       }
 
-      /* ===== ГЕРОЙ (обновлённый контент) ===== */
+      /* ===== ГЕРОЙ ===== */
       .hero {
         position: relative;
         z-index: 1;
@@ -211,8 +212,8 @@
         gap: 8px;
         padding: 6px 18px 6px 10px;
         border-radius: 100px;
-        border: 1px solid rgba(0, 230, 118, 0.15);
-        background: rgba(0, 230, 118, 0.04);
+        border: 1px solid rgba(0, 180, 216, 0.15);
+        background: rgba(0, 180, 216, 0.04);
         font-size: 0.75rem;
         font-weight: 600;
         letter-spacing: 0.05em;
@@ -250,7 +251,7 @@
       }
 
       .hero h1 .highlight {
-        background: linear-gradient(135deg, var(--accent), #66ffa8);
+        background: linear-gradient(135deg, var(--accent), var(--accent-light));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -269,7 +270,6 @@
         margin-bottom: 0px;
         font-size: 1.5rem;
         color: var(--accent);
-
         font-family: var(--font-mono);
       }
 
@@ -280,7 +280,6 @@
         margin-bottom: 32px;
       }
 
-      /* Статистика в герое */
       .hero-stats {
         display: flex;
         gap: 40px;
@@ -327,13 +326,13 @@
         border: none;
         cursor: pointer;
         transition: all 0.3s;
-        box-shadow: 0 0 40px rgba(0, 230, 118, 0.15);
+        box-shadow: 0 0 40px rgba(0, 180, 216, 0.15);
       }
 
       .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 0 60px rgba(0, 230, 118, 0.3);
-        background: #66ffa8;
+        box-shadow: 0 0 60px rgba(0, 180, 216, 0.3);
+        background: var(--accent-light);
       }
 
       .btn-secondary {
@@ -356,7 +355,7 @@
         border-color: rgba(255, 255, 255, 0.2);
       }
 
-      /* ===== ВИЗУАЛИЗАЦИЯ СЕТИ (без изменений) ===== */
+      /* ===== ВИЗУАЛИЗАЦИЯ СЕТИ ===== */
       .hero-visual {
         position: relative;
         display: flex;
@@ -368,7 +367,7 @@
         width: 280px;
         height: 280px;
         border-radius: 50%;
-        border: 1px solid rgba(0, 230, 118, 0.03);
+        border: 1px solid rgba(0, 180, 216, 0.03);
         position: relative;
         display: flex;
         align-items: center;
@@ -380,7 +379,7 @@
         position: absolute;
         inset: -30px;
         border-radius: 50%;
-        border: 2px dotted rgba(0, 230, 118, 0.03);
+        border: 2px dotted rgba(0, 180, 216, 0.03);
         z-index: 0;
       }
 
@@ -389,7 +388,7 @@
         position: absolute;
         inset: 60px;
         border-radius: 50%;
-        border: 1px dotted rgba(0, 230, 118, 0.04);
+        border: 1px dotted rgba(0, 180, 216, 0.04);
         z-index: 0;
       }
 
@@ -412,7 +411,7 @@
         height: 10px;
         border-radius: 50%;
         background: var(--accent);
-        box-shadow: 0 0 16px rgba(0, 230, 118, 0.4);
+        box-shadow: 0 0 16px rgba(0, 180, 216, 0.4);
         transform: translate(-50%, -50%);
       }
 
@@ -445,15 +444,15 @@
         top: 50%;
         width: 16px;
         height: 16px;
-        background: #66ffa8;
-        box-shadow: 0 0 42px rgba(0, 230, 118, 0.8);
+        background: var(--accent-light);
+        box-shadow: 0 0 42px rgba(0, 180, 216, 0.8);
         transform: translate(-50%, -50%);
       }
 
       .pulse-ring {
         position: absolute;
         border-radius: 50%;
-        border: 1px solid rgba(0, 230, 118, 0.05);
+        border: 1px solid rgba(0, 180, 216, 0.05);
         animation: pulse-expand 4s ease-out infinite;
         top: 50%;
         left: 50%;
@@ -532,7 +531,7 @@
         top: 26%;
       }
 
-      /* ===== ОСОБЕННОСТИ (обновлённые карточки) ===== */
+      /* ===== ОСОБЕННОСТИ ===== */
       .features {
         position: relative;
         z-index: 1;
@@ -599,7 +598,7 @@
 
       .feature-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(0, 230, 118, 0.15);
+        border-color: rgba(0, 180, 216, 0.15);
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
       }
 
@@ -629,15 +628,15 @@
         margin-top: 16px;
         padding: 4px 16px;
         border-radius: 100px;
-        background: rgba(0, 230, 118, 0.06);
-        border: 1px solid rgba(0, 230, 118, 0.08);
+        background: rgba(0, 180, 216, 0.06);
+        border: 1px solid rgba(0, 180, 216, 0.08);
         font-family: var(--font-mono);
         font-size: 0.7rem;
         color: var(--accent);
         letter-spacing: 0.04em;
       }
 
-      /* ===== СХЕМА / СТРУКТУРА (переработана под иерархию) ===== */
+      /* ===== СТРУКТУРА ===== */
       .schema-section {
         position: relative;
         z-index: 1;
@@ -688,7 +687,7 @@
       }
 
       .schema-item:hover {
-        border-color: rgba(0, 230, 118, 0.12);
+        border-color: rgba(0, 180, 216, 0.12);
       }
 
       .schema-item .emoji {
@@ -718,8 +717,8 @@
 
       .schema-result {
         grid-column: span 3;
-        background: rgba(0, 230, 118, 0.04);
-        border: 1px solid rgba(0, 230, 118, 0.1);
+        background: rgba(0, 180, 216, 0.04);
+        border: 1px solid rgba(0, 180, 216, 0.1);
         border-radius: 16px;
         padding: 24px;
         text-align: center;
@@ -749,7 +748,7 @@
         padding: 60px 48px;
         border-radius: 24px;
         background: var(--bg-card);
-        border: 1px solid rgba(0, 230, 118, 0.06);
+        border: 1px solid rgba(0, 180, 216, 0.06);
         position: relative;
         overflow: hidden;
       }
@@ -762,7 +761,7 @@
         padding: 1px;
         background: linear-gradient(
           135deg,
-          rgba(0, 230, 118, 0.1),
+          rgba(0, 180, 216, 0.1),
           transparent 50%
         );
         -webkit-mask:
@@ -828,7 +827,7 @@
       }
 
       /* ==========================================================
-       АДАПТИВНАЯ ВЁРСТКА (без изменений)
+       АДАПТИВНАЯ ВЁРСТКА
        ========================================================== */
       @media (max-width: 1024px) {
         .hero-grid {
@@ -986,12 +985,12 @@
         .node {
           width: 6px !important;
           height: 6px !important;
-          box-shadow: 0 0 10px rgba(0, 230, 118, 0.3) !important;
+          box-shadow: 0 0 10px rgba(0, 180, 216, 0.3) !important;
         }
         .node:nth-child(7) {
           width: 10px !important;
           height: 10px !important;
-          box-shadow: 0 0 20px rgba(0, 230, 118, 0.4) !important;
+          box-shadow: 0 0 20px rgba(0, 180, 216, 0.4) !important;
         }
         .pulse-ring {
           display: none !important;
@@ -1140,7 +1139,6 @@
           <a href="#features">Кластер • Юнит • Объект</a>
           <a href="#schema">Структура</a>
           <a href="#cta">Контакты</a>
-          <a href="/saspik-project/docs">Разработчику</a>
           <a href="#cta" class="nav-cta">Начать</a>
         </nav>
       </div>
@@ -1169,22 +1167,6 @@
               и прозрачно распределять заказы между участниками сети.
             </p>
 
-            <!-- Статистика -->
-            <!--<div class="hero-stats">-->
-            <!--  <div class="stat-item">-->
-            <!--    <div class="stat-number">∞</div>-->
-            <!--    <div class="stat-label">Кластеров в сети</div>-->
-            <!--  </div>-->
-            <!--  <div class="stat-item">-->
-            <!--    <div class="stat-number">Любое</div>-->
-            <!--    <div class="stat-label">Количество юнитов</div>-->
-            <!--  </div>-->
-            <!--  <div class="stat-item">-->
-            <!--    <div class="stat-number">Датчики → Станки</div>-->
-            <!--    <div class="stat-label">Объекты любого типа</div>-->
-            <!--  </div>-->
-            <!--</div>-->
-
             <div class="hero-actions">
               <a href="#cta" class="btn-primary">
                 Начать внедрение
@@ -1206,7 +1188,7 @@
                 <span class="node"></span>
                 <span class="pulse-ring"></span>
                 <span class="pulse-ring"></span>
-                <!-- Метки (символизируют разные типы объектов) -->
+                <!-- Метки -->
                 <div class="label-wrapper label-scada">
                   <span class="label-text">Кластер</span>
                 </div>
@@ -1232,7 +1214,7 @@
       </div>
     </section>
 
-    <!-- ==================== ОСОБЕННОСТИ (ТРИ УРОВНЯ) ==================== -->
+    <!-- ==================== ОСОБЕННОСТИ ==================== -->
     <section class="features" id="features">
       <div class="container">
         <div class="section-label">Архитектура &amp; Экономика</div>
@@ -1276,7 +1258,7 @@
       </div>
     </section>
 
-    <!-- ==================== СТРУКТУРА (КАК ЭТО РАБОТАЕТ) ==================== -->
+    <!-- ==================== СТРУКТУРА ==================== -->
     <section class="schema-section" id="schema">
       <div class="container">
         <div class="section-label">Иерархия</div>
