@@ -17,6 +17,7 @@ export function toRuleDto(r: RuleEntity): RuleDto {
   return {
     id: r.id,
     name: r.name,
+    unitId: r.unitId,
     trigger: r.trigger,
     when: r.when,
     then: (r.then as RuleActionDto[]) ?? [],

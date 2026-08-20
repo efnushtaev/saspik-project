@@ -11,6 +11,7 @@ export interface RuleActionDto {
 export class RuleDto {
   id: string;
   name?: string;
+  unitId?: string;
   trigger: RuleTriggerDto;
   when?: unknown;
   then: RuleActionDto[];

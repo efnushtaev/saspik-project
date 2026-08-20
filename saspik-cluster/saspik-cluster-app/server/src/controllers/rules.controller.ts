@@ -50,8 +50,9 @@ export class RulesController
     ]);
   }
 
-  async getRulesList(_: Request, res: Response) {
-    const rules = await this.rulesService.getRules();
+  async getRulesList({ query }: Request, res: Response) {
+    const unitId = typeof query.unitId === "string" ? query.unitId : undefined;
+    const rules = await this.rulesService.getRules(unitId);
     return this.ok<GetRulesListResponse>(res, { rules });
   }
 

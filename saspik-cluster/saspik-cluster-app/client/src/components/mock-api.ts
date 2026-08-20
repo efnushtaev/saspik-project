@@ -1,4 +1,4 @@
-import { mockUnits, mockObjects, MockObject, MockUnit } from './mock-data';
+import { mockUnits, mockObjects, mockRules, MockObject, MockUnit, MockRule } from './mock-data';
 
 // Mock API service
 export const mockApi = {
@@ -80,6 +80,27 @@ export const mockApi = {
     // In a real scenario, we might filter objects based on the unit ID
     // For now, we'll return all mock objects
     return { objects: mockObjects };
+  },
+
+  getRulesList: async (unitId?: string): Promise<{ rules: MockRule[] }> => {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const rules = unitId
+      ? mockRules.filter(r => r.unitId === unitId)
+      : mockRules;
+    return { rules };
+  },
+
+  setRuleEnabled: async (
+    id: string,
+    enabled: boolean,
+  ): Promise<{ rule: MockRule }> => {
+    await new Promise(resolve => setTimeout(resolve, 200));
+    const rule = mockRules.find(r => r.id === id);
+    if (!rule) {
+      throw new Error('Rule not found');
+    }
+    rule.enabled = enabled;
+    return { rule };
   },
 
   callCommand: async (deviceId: string, value: string): Promise<{ success: boolean }> => {

@@ -9,7 +9,7 @@ export type DeleteRuleResponse = { success: boolean };
 
 export interface IRulesController {
   getRulesList: (
-    req: Request,
+    req: Request<Record<string, string>, Record<string, unknown>, unknown, { unitId?: string }>,
     res: Response,
     next: NextFunction,
   ) => ControllerResponseMessage<GetRulesListResponse>;

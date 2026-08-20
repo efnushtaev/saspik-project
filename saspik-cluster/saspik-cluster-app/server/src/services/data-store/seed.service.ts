@@ -83,7 +83,22 @@ export class SeedService {
       rules?: RuleEntity[];
     };
     const rules = Array.isArray(config.rules) ? config.rules : [];
-    return rules.map((r) => ({ ...r, enabled: true }));
+    return rules.map((r) => {
+      const unitId = this.resolveRuleUnitId(r);
+      return { ...r, enabled: true, ...(unitId ? { unitId } : {}) };
+    });
+  }
+
+  private resolveRuleUnitId(rule: RuleEntity): string | undefined {
+    const topics = Array.isArray(rule.trigger?.topic)
+      ? rule.trigger.topic
+      : [rule.trigger?.topic];
+    for (const topic of topics) {
+      if (typeof topic !== "string") continue;
+      const match = topic.match(/^(?:sensor|units)\/([^/]+)(?:\/|$)/);
+      if (match) return match[1];
+    }
+    return undefined;
   }
 
   private resolveConfig(content: string): string {

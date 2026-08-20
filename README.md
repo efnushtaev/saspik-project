@@ -41,20 +41,14 @@
 - *Кроссплатформенность* – поддержка облачных и локальных развёртываний.
 
 
----
-
-
 ### Направления разработки и развития
 
 | Название | Описание |
 |---|---|
 | [saspik-meshrover](saspik-meshrover/README.md) | Наземные меш-связные роботы (UWB, LoRa mesh, TFLite) |
-| [saspik-iot](saspik-iot/README.md) | ESP32 прошивки Объектов (шлюз, сенсорный узел) |
+| [saspik-iot](saspik-iot/README.md) | ESP32 прошивки Объектов и IoT (шлюз, сенсорный узел) |
 | [saspik-cluster](saspik-cluster/README.md) | Кластер (MQTT-брокер, rule-engine, API, UI) |
-| [saspik-greenhouse](saspik-greenhouse/README.md) | Пилот Кластера - автономная теплицы (контроль и управление климатом и питанием растений) |
-
-
----
+| [saspik-greenhouse](saspik-greenhouse/README.md) | Пилот платформы - автономная теплицы (контроль и управление климатом и питанием растений) |
 
 ### Связанные проекты
 

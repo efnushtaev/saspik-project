@@ -5,6 +5,7 @@ import {
   ApiOutlined,
   InfoCircleOutlined,
   LineChartOutlined,
+  PartitionOutlined,
 } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { getUnitIdFromPathname, withUnitPath } from '../../constants';
@@ -89,6 +90,28 @@ export const Tabs = ({
           })}
         >
           Автоматика
+        </div>
+      </Link>
+      <Link
+        to={createUrl('/rules')}
+        className={cn('tab', {
+          state: isActive('/rules') ? 'active' : false,
+        })}
+      >
+        <div
+          title="Сценарии"
+          className={cn('icon', {
+            state: isActive('/rules') ? 'active' : false,
+          })}
+        >
+          <PartitionOutlined />
+        </div>
+        <div
+          className={cn('label', {
+            state: isActive('/rules') ? 'active' : false,
+          })}
+        >
+          Сценарии
         </div>
       </Link>
       <Link

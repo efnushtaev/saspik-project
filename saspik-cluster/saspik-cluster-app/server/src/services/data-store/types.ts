@@ -14,6 +14,7 @@ export interface ObjectEntity extends ObjectsDto {
 export interface RuleEntity {
   id: string;
   name?: string;
+  unitId?: string;
   trigger: { topic: string | string[]; qos?: 0 | 1 | 2 };
   when?: unknown;
   then: unknown[];

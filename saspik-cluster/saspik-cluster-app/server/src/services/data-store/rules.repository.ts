@@ -17,6 +17,11 @@ export class RulesRepository {
     return this.collection.find({}).toArray();
   }
 
+  async findByUnitId(unitId?: string): Promise<RuleEntity[]> {
+    if (!unitId) return this.findAll();
+    return this.collection.find({ unitId }).toArray();
+  }
+
   async findById(id: string): Promise<RuleEntity | null> {
     return this.collection.findOne({ id });
   }

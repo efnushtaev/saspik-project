@@ -15,8 +15,8 @@ export class RulesService implements IRulesService {
     this.logger.log("[RulesService] initialized");
   }
 
-  async getRules(): Promise<RuleDto[]> {
-    const entities = await this.rulesRepository.findAll();
+  async getRules(unitId?: string): Promise<RuleDto[]> {
+    const entities = await this.rulesRepository.findByUnitId(unitId);
     return entities.map(toRuleDto);
   }
 
