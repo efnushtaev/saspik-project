@@ -52,6 +52,7 @@ void handleWifiReconnect();
 void checkMqttTimeout();
 void sendDiagnostics();
 void publishStartupLog();
+void publishLogEvent(const char* level, const char* event, const char* msg);
 
 // ======================== SETUP ========================
 
@@ -152,6 +153,7 @@ void connectMQTT() {
         // Подписка на топик управления светодиодом
         mqttClient.subscribe(TOPIC_SUBSCRIBE);
         DeviceLog.write("mqtt connected, subscribed %s", TOPIC_SUBSCRIBE);
+        publishLogEvent("info", "connect", "mqtt connected");
     } else {
         // Фиксируем момент начала недоступности MQTT (только один раз за эпизод).
         // Не считаем сбоем первичное подключение при старте (mqttWasConnected == false).
@@ -160,6 +162,7 @@ void connectMQTT() {
         }
         Serial.print("Ошибка MQTT, rc=");
         Serial.println(mqttClient.state());
+        publishLogEvent("error", "connect-error", "mqtt connect failed");
     }
 }
 
@@ -273,6 +276,7 @@ void handleWifiReconnect() {
     if (now - wifiLostSinceMs >= WIFI_REBOOT_TIMEOUT_MS) {
         DeviceLog.write("wifi unavailable >%lus, rebooting",
                         (unsigned long)(WIFI_REBOOT_TIMEOUT_MS / 1000));
+        publishLogEvent("error", "reboot", "wifi-lost");
         delay(100);
         DeviceLog.setRebootCause("wifi-lost");
         ESP.restart();
@@ -296,6 +300,7 @@ void checkMqttTimeout() {
     if (now - mqttLostSinceMs >= MQTT_REBOOT_TIMEOUT_MS) {
         DeviceLog.write("mqtt unavailable >%lus, rebooting",
                         (unsigned long)(MQTT_REBOOT_TIMEOUT_MS / 1000));
+        publishLogEvent("error", "reboot", "mqtt-timeout");
         delay(100); // дать записаться логу
         DeviceLog.setRebootCause("mqtt-timeout");
         ESP.restart();
@@ -304,18 +309,56 @@ void checkMqttTimeout() {
 
 // ======================== ДИАГНОСТИКА В MQTT ========================
 
+// Публикует единый JSON-конверт лога в топик TOPIC_DIAG:
+//   {"level","src":"device","event","msg","topic","unitId","objectId","uptime"[,"cause"]}
+void publishLogEvent(const char* level, const char* event, const char* msg) {
+    if (!mqttClient.connected()) {
+        return;
+    }
+    StaticJsonDocument<384> doc;
+    doc["level"]    = level;
+    doc["src"]      = "device";
+    doc["event"]    = event;
+    doc["msg"]      = msg;
+    doc["topic"]    = TOPIC_DIAG;
+    doc["unitId"]   = UNIT_ID;
+    doc["objectId"] = OBJECT_ID;
+    doc["uptime"]   = (unsigned long)(millis() / 1000);
+
+    char jsonBuffer[384];
+    size_t jsonLen = serializeJson(doc, jsonBuffer);
+    mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
+}
+
 void sendDiagnostics() {
     if (!mqttClient.connected()) {
         return;
     }
-    char msg[160];
-    snprintf(msg, sizeof(msg),
-        "{\"uptime\":%lu,\"wifi\":%d,\"mqtt\":%d,\"lostSec\":%lu}",
+
+    // Единый конверт диагностики; msg — компактная сводка состояния
+    char diag[160];
+    snprintf(diag, sizeof(diag),
+        "uptime=%lus wifi=%d mqtt=%d lost=%lus",
         (unsigned long)(millis() / 1000),
         WiFi.status(),
         mqttClient.state(),
         (unsigned long)((millis() - mqttLostSinceMs) / 1000));
-    mqttClient.publish(TOPIC_DIAG, msg);
+
+    StaticJsonDocument<256> doc;
+    doc["level"]    = "warn";
+    doc["src"]      = "device";
+    doc["event"]    = "diag";
+    doc["msg"]      = diag;
+    doc["topic"]    = TOPIC_DIAG;
+    doc["unitId"]   = UNIT_ID;
+    doc["objectId"] = OBJECT_ID;
+    doc["wifi"]     = WiFi.status();
+    doc["mqtt"]     = mqttClient.state();
+    doc["lostSec"]  = (unsigned long)((millis() - mqttLostSinceMs) / 1000);
+
+    char jsonBuffer[256];
+    size_t jsonLen = serializeJson(doc, jsonBuffer);
+    mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
 }
 
 // ======================== ОТПРАВКА ХВОСТА ЛОГА ПРИ СТАРТЕ ========================
@@ -332,10 +375,28 @@ void publishStartupLog() {
         return;
     }
 
+    const char* cause = DeviceLog.rebootCause();
+
     Serial.print("[main] Отправка хвоста лога (причина: ");
-    Serial.print(DeviceLog.rebootCause());
+    Serial.print(cause);
     Serial.println(")");
-    mqttClient.publish(TOPIC_DIAG, tail);
+
+    // Единый конверт: msg — хвост лога. Причина ребута — в поле cause,
+    // event = "startup". JSON-парсинг через telegraf проходит без потерь.
+    StaticJsonDocument<1024> doc;
+    doc["level"]    = "info";
+    doc["src"]      = "device";
+    doc["event"]    = "startup";
+    doc["msg"]      = tail;
+    doc["topic"]    = TOPIC_DIAG;
+    doc["unitId"]   = UNIT_ID;
+    doc["objectId"] = OBJECT_ID;
+    doc["uptime"]   = (unsigned long)(millis() / 1000);
+    doc["cause"]    = cause;
+
+    char jsonBuffer[1024];
+    size_t jsonLen = serializeJson(doc, jsonBuffer);
+    mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
 
     // Причину сохраняем (по решению — не сбрасываем после отправки),
     // чтобы информация сохранялась до сброса/перезаписи.

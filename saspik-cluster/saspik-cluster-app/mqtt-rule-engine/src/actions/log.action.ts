@@ -2,9 +2,10 @@ import { Action } from './action.interface';
 import { MessageContext } from '../context';
 import { IMqttAdapter } from '../mqtt';
 import { LogLevel } from './types';
+import { consoleLog, publishLog } from '../logging';
 
 /**
- * Действие логирования в консоль.
+ * Действие логирования: вывод в консоль (JSON-конверт) и публикация в лог-топик.
  */
 export class LogAction implements Action {
   /**
@@ -14,24 +15,17 @@ export class LogAction implements Action {
    */
   constructor(private level: LogLevel, private message: string) {}
 
-  async execute(ctx: MessageContext, _publisher: IMqttAdapter): Promise<void> {
+  async execute(ctx: MessageContext, publisher: IMqttAdapter): Promise<void> {
     const rendered = this.renderMessage(ctx);
-    const timestamp = new Date(ctx.timestamp).toISOString();
-    const logLine = `[${timestamp}] [${this.level.toUpperCase()}] ${rendered}`;
-
-    switch (this.level) {
-      case 'info':
-        console.info(logLine);
-        break;
-      case 'warn':
-        console.warn(logLine);
-        break;
-      case 'error':
-        console.error(logLine);
-        break;
-      default:
-        console.log(logLine);
-    }
+    const env = {
+      level: this.level,
+      src: 'rule-engine',
+      event: 'log',
+      msg: rendered,
+      topic: ctx.topic,
+    };
+    consoleLog(env);
+    await publishLog(publisher, env);
   }
 
   /**

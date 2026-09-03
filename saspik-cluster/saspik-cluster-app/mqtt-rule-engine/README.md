@@ -123,12 +123,17 @@ npm run clean           # очистка dist/
 | `qos` | QoS публикации | `0` |
 | `retain` | Флаг retain | `false` |
 
-##### `log` — логирование в консоль
+##### `log` — логирование (консоль + лог-топик MQTT)
+
+Выводит в консоль и публикует в топик `rule-engine/worker/log` единый JSON-конверт лога:
+`{ "level", "src": "rule-engine", "event", "msg", "topic" }`. Telegraf отводит его в measurement `logs` в InfluxDB.
 
 | Параметр | Описание | По умолчанию |
 |---|---|---|
 | `level` | Уровень: `info`, `warn`, `error` | `info` |
 | `message` | Строка с плейсхолдерами `{{field}}` | — |
+
+Срабатывание правила логируется движком как `event=rule-fired`, ошибка выполнения — `event=rule-error`. Входящие сообщения поштучно не логируются (анти-спам).
 
 ##### `timeout` — отложенное выполнение
 

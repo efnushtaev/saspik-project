@@ -12,12 +12,36 @@ export class LocalMqttService implements IMqttService {
   private connected = false;
   private subscriptions: Map<string, (topic: string, message: Buffer) => void> = new Map();
 
+  /** Топик логов сервера (подпадает под pattern server/+/log в telegraf). */
+  private readonly logTopic = "server/worker/log";
+
   constructor(
     @inject(TYPES.Logger) private logger: ILogger,
     @inject(TYPES.ConfigService) private config: IConfigService,
   ) {
     this.logger.log("[LocalMqttService] initializing");
     this.setupConnection();
+  }
+
+  /**
+   * Публикует единый JSON-конверт лога в топик server/worker/log.
+   */
+  private publishLogEvent(
+    level: "info" | "warn" | "error",
+    event: string,
+    msg: string,
+  ): void {
+    const env = {
+      level,
+      src: "server",
+      event,
+      msg,
+      topic: this.logTopic,
+    };
+    const payload = JSON.stringify(env);
+    if (this.client && this.connected) {
+      this.client.publish(this.logTopic, payload);
+    }
   }
 
   private setupConnection(): void {
@@ -36,6 +60,7 @@ export class LocalMqttService implements IMqttService {
     this.client.on("connect", () => {
       this.connected = true;
       this.logger.log("[LocalMqttService] connected to MQTT broker");
+      this.publishLogEvent("info", "connect", `mqtt connected to ${brokerUrl}`);
       // Resubscribe to existing topics
       this.subscriptions.forEach((callback, topic) => {
         this.client?.subscribe(topic, (err: Error | null) => {
@@ -58,11 +83,13 @@ export class LocalMqttService implements IMqttService {
 
     this.client.on("error", (err: Error) => {
       this.logger.error("[LocalMqttService] MQTT client error:", err);
+      this.publishLogEvent("error", "mqtt-error", `mqtt client error: ${err.message}`);
     });
 
     this.client.on("close", () => {
       this.connected = false;
       this.logger.log("[LocalMqttService] disconnected from broker");
+      this.publishLogEvent("warn", "disconnect", "mqtt disconnected from broker");
     });
   }
 

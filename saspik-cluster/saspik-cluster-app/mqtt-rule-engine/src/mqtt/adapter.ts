@@ -1,6 +1,7 @@
 import mqtt, { MqttClient, IClientOptions, ISubscriptionGrant, IPublishPacket } from 'mqtt';
 import { IMqttAdapter, MqttSubscribeOptions, MqttPublishOptions, MqttPacket } from './types';
 import { DEFAULT_BROKER_URL, DEFAULT_CONNECT_OPTIONS } from './constants';
+import { consoleLog, publishLog, LogEnvelope } from '../logging';
 
 /**
  * Реализация MQTT-адаптера на основе библиотеки mqtt.
@@ -34,12 +35,14 @@ export class MqttAdapter implements IMqttAdapter {
 
         this.client.on('connect', () => {
           this.isConnected = true;
-          console.log(`MQTT подключён к ${this.brokerUrl}`);
+          const env: LogEnvelope = { level: 'info', src: 'rule-engine', event: 'connect', msg: `mqtt connected to ${this.brokerUrl}` };
+          consoleLog(env);
           resolve();
         });
 
         this.client.on('error', (err) => {
-          console.error('MQTT ошибка:', err);
+          const env: LogEnvelope = { level: 'error', src: 'rule-engine', event: 'mqtt-error', msg: `mqtt error: ${(err as Error).message}` };
+          consoleLog(env);
           reject(err);
         });
 
@@ -58,7 +61,9 @@ export class MqttAdapter implements IMqttAdapter {
 
         this.client.on('close', () => {
           this.isConnected = false;
-          console.log('MQTT соединение закрыто');
+          const env: LogEnvelope = { level: 'warn', src: 'rule-engine', event: 'disconnect', msg: 'mqtt connection closed' };
+          consoleLog(env);
+          publishLog(this, env).catch(() => {});
         });
       } catch (err) {
         reject(err);
@@ -136,9 +141,10 @@ export class MqttAdapter implements IMqttAdapter {
     return new Promise((resolve, reject) => {
       this.client!.publish(topic, payload, opts, (err?: Error) => {
         if (err) {
+          const env: LogEnvelope = { level: 'error', src: 'rule-engine', event: 'publish-error', msg: `publish to ${topic} failed`, topic };
+          consoleLog(env);
           reject(err);
         } else {
-          console.log(`Опубликовано в ${topic}: ${payload.toString().substring(0, 200)}`);
           resolve();
         }
       });

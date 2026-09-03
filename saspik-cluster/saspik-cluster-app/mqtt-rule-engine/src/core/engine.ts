@@ -3,6 +3,7 @@ import { MessageContext } from '../context';
 import { Rule } from '../config';
 import { RuleIndex } from './types';
 import { topicMatches } from '../utils';
+import { log } from '../logging';
 
 /**
  * Движок правил MQTT.
@@ -53,15 +54,26 @@ export class RuleEngine {
     const ctx = MessageContext.fromMqttPacket(topic, payload, packet);
     const candidates = this.findCandidates(topic);
 
-    console.log(`Получено сообщение из топика ${topic}: ${payload.toString('utf-8').trim()}`);
+    // Не логируем каждое входящее сообщение (анти-спам).
     for (const rule of candidates) {
       try {
         const conditionPassed = rule.condition ? rule.condition.evaluate(ctx) : true;
         if (conditionPassed) {
-          console.log(`Правило ${rule.id} выполнено`);
+          await log(this.adapter, {
+            level: 'info',
+            event: 'rule-fired',
+            msg: `rule ${rule.id} fired`,
+            topic,
+          });
           await this.executeActions(rule.actions, ctx);
         }
       } catch (err) {
+        await log(this.adapter, {
+          level: 'error',
+          event: 'rule-error',
+          msg: `rule ${rule.id} error`,
+          topic,
+        });
         console.error(`Ошибка при выполнении правила ${rule.id}:`, err);
       }
     }

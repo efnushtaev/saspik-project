@@ -203,8 +203,11 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
       - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_LOGS_BUCKET=${INFLUXDB_LOGS_BUCKET:-logs}
+      - INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
     volumes:
       - influxdb-data:/var/lib/influxdb2
+      - ./influxdb/init:/docker-entrypoint-initdb.d:ro
     networks:
       - fullstack-network
     deploy:
@@ -224,6 +227,7 @@ services:
       - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
       - INFLUXDB_ORG=${INFLUXDB_ORG}
       - INFLUXDB_BUCKET=${INFLUXDB_BUCKET}
+      - INFLUXDB_LOGS_BUCKET=${INFLUXDB_LOGS_BUCKET:-logs}
     depends_on:
       - mosquitto
       - influxdb

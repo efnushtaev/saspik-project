@@ -25,7 +25,7 @@ The MQTT broker provides real-time messaging between:
 - Listens on port 1883 (MQTT) and 9001 (WebSockets)
 - **Authentication enabled** (`allow_anonymous false`)
 - Password file: `/mosquitto/config/passwordfile`
-- Debug logging enabled
+- `log_type notice` (без поштучного debug — анти-спам) <!-- было debug -->
 - ACL file: `/mosquitto/config/mosquitto.acl`
 
 ### Access Control (`mosquitto.acl`)
@@ -36,6 +36,7 @@ Current ACL provides:
 3. **Топики датчиков**: `sensor/#` — publish/subscribe для сенсоров
 4. **Топики LED** (dev): `led/#` — publish/subscribe для LED-устройств
 5. **Топики команд юнитов**: `units/#` — publish/subscribe для управления реле (добавлено 2026-07-27)
+6. **Лог-топики**: `device/+/+/log`, `server/+/log`, `rule-engine/+/log` (единый JSON-конверт, 2026-09-03)
 
 ### Authentication Details
 

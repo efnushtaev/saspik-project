@@ -93,9 +93,11 @@
 <a href="#root" class="">Главная</a>
 <a href="#saspik-cluster" class="">saspik-cluster</a>
 <a href="#saspik-cluster-saspik-cluster-app-client" class="l3">saspik-cluster/saspik-cluster-app/client</a>
+<a href="#saspik-cluster-saspik-cluster-app-influxdb" class="l3">saspik-cluster/saspik-cluster-app/influxdb</a>
 <a href="#saspik-cluster-saspik-cluster-app-mqtt" class="l3">saspik-cluster/saspik-cluster-app/mqtt</a>
 <a href="#saspik-cluster-saspik-cluster-app-mqtt-rule-engine" class="l3">saspik-cluster/saspik-cluster-app/mqtt-rule-engine</a>
 <a href="#saspik-cluster-saspik-cluster-app-server" class="l3">saspik-cluster/saspik-cluster-app/server</a>
+<a href="#saspik-cluster-saspik-cluster-app-telegraf" class="l3">saspik-cluster/saspik-cluster-app/telegraf</a>
 <a href="#saspik-cluster-docs-API" class="l3">saspik-cluster/docs/API</a>
 <a href="#saspik-cluster-docs-HistoryService" class="l3">saspik-cluster/docs/HistoryService</a>
 <a href="#saspik-cluster-docs-ObjectsService" class="l3">saspik-cluster/docs/ObjectsService</a>
@@ -201,13 +203,21 @@
 <td><a href="#saspik-cluster-saspik-cluster-app-mqtt-rule-engine">mqtt-rule-engine</a></td>
 <td>Движок сценариев автоматизации для обработки данных и управления Объектами</td>
 </tr>
+<tr>
+<td><a href="#saspik-cluster-saspik-cluster-app-telegraf">telegraf</a></td>
+<td>Запись MQTT → InfluxDB (данные и логи)</td>
+</tr>
+<tr>
+<td><a href="#saspik-cluster-saspik-cluster-app-influxdb">influxdb</a></td>
+<td>InfluxDB 2.x: бакеты <code>mqtt</code> и <code>logs</code> (retention 7 дней)</td>
+</tr>
 </tbody></table>
 <h3 id="архитектура">Архитектура</h3>
 <ul>
 <li><strong>Frontend</strong>: React SPA, обслуживается через Nginx. Отображает список Юнитов, сенсоры и устройства, вложенные в каждый Юнит. Поддерживает создание/редактирование/удаление Юнитов и Объектов.</li>
 <li><strong>MongoDB</strong>: Документная БД. Хранит Юниты, Объекты и правила (коллекции <code>units</code>, <code>objects</code>, <code>rules</code>). При первой инициализации заполняется сидами из <code>server/src/data/*.config.ts</code> и <code>server/data/rules.json</code>.</li>
-<li><strong>InfluxDB</strong>: Time-series база данных. Хранит все MQTT-сообщения от устройств.</li>
-<li><strong>Telegraf</strong>: Подписывается на все MQTT-топики (<code>#</code>), парсит JSON и пишет в InfluxDB.</li>
+<li><strong>InfluxDB</strong>: Time-series база данных. Бакет <code>mqtt</code> — сенсорные/командные данные; бакет <code>logs</code> (retention 7 дней) — логи-конверты device/server/rule-engine.</li>
+<li><strong>Telegraf</strong>: Подписывается на MQTT-топики (данные → measurement <code>mqtt_consumer</code>, логи → measurement <code>logs</code>), парсит JSON и пишет в соответствующие бакеты InfluxDB.</li>
 <li><strong>Backend</strong>: Express.js сервер. Читает Юниты/Объекты/правила из MongoDB, последние значения объектов из InfluxDB и отдаёт их через REST API.</li>
 <li><strong>Nginx</strong>: Обратный прокси: статика фронтенда, прокси <code>/api/*</code> на backend.</li>
 <li><strong>Mosquitto</strong>: MQTT-брокер для обмена данными с устройствами.</li>
@@ -364,6 +374,50 @@ npm test               # Jest-тесты (App, мок-данные)
 
 </section>
 <hr class="section-sep">
+<section id="saspik-cluster-saspik-cluster-app-influxdb">
+<p><a href="../README.md">↑ Saspik-cluster</a></p>
+<h1 id="influxdb--бакеты-и-retention">InfluxDB — бакеты и retention</h1>
+<p>InfluxDB 2.x (образ <code>influxdb:2</code>) хранит данные от Telegraf.</p>
+<h2 id="бакеты">Бакеты</h2>
+<table>
+<thead>
+<tr>
+<th>Бакет</th>
+<th>ENV (default)</th>
+<th>Retention</th>
+<th>Содержимое</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Основной</td>
+<td><code>INFLUXDB_BUCKET</code> (напр. <code>mqtt</code>)</td>
+<td>задаётся <code>DOCKER_INFLUXDB_INIT_*</code></td>
+<td>сенсорные/командные данные (measurement <code>mqtt_consumer</code>)</td>
+</tr>
+<tr>
+<td>Логи</td>
+<td><code>INFLUXDB_LOGS_BUCKET</code> (<code>logs</code>)</td>
+<td><code>INFLUXDB_LOGS_RETENTION_DAYS</code> (<code>7</code>)</td>
+<td>логи-конверты device/server/rule-engine (measurement <code>logs</code>)</td>
+</tr>
+</tbody></table>
+<h2 id="инициализация">Инициализация</h2>
+<p>Основной бакет/пользователь создаются через env контейнера <code>DOCKER_INFLUXDB_INIT_*</code> при первом старте.</p>
+<p>Бакет <code>logs</code> с retention 7 дней создаётся init-скриптом <code>init/create-logs-bucket.sh</code>,<br>смонтированным в <code>/docker-entrypoint-initdb.d</code> (выполняется один раз при первой инициализации).</p>
+<p>Script использует <code>influx bucket create --retention &lt;N&gt;d</code> и CLI <code>influx</code>, ожидает готовности API (<code>influx ping</code>).</p>
+<h2 id="переменные-окружения-инфлюкс-контейнера">Переменные окружения инфлюкс-контейнера</h2>
+<pre><code class="language-env">DOCKER_INFLUXDB_INIT_MODE=setup
+DOCKER_INFLUXDB_INIT_USERNAME=admin
+DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
+DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
+DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN}
+INFLUXDB_LOGS_BUCKET=${INFLUXDB_LOGS_BUCKET:-logs}
+INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
+</code></pre>
+
+</section>
+<hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-mqtt">
 <p><a href="../README.md">↑ ATSAP Cluster App</a></p>
 <h1 id="mqtt-broker-configuration">MQTT Broker Configuration</h1>
@@ -389,7 +443,7 @@ npm test               # Jest-тесты (App, мок-данные)
 <li>Listens on port 1883 (MQTT) and 9001 (WebSockets)</li>
 <li><strong>Authentication enabled</strong> (<code>allow_anonymous false</code>)</li>
 <li>Password file: <code>/mosquitto/config/passwordfile</code></li>
-<li>Debug logging enabled</li>
+<li><code>log_type notice</code> (без поштучного debug — анти-спам) <!-- было debug --></li>
 <li>ACL file: <code>/mosquitto/config/mosquitto.acl</code></li>
 </ul>
 <h3 id="access-control-mosquittoacl">Access Control (<code>mosquitto.acl</code>)</h3>
@@ -400,6 +454,7 @@ npm test               # Jest-тесты (App, мок-данные)
 <li><strong>Топики датчиков</strong>: <code>sensor/#</code> — publish/subscribe для сенсоров</li>
 <li><strong>Топики LED</strong> (dev): <code>led/#</code> — publish/subscribe для LED-устройств</li>
 <li><strong>Топики команд юнитов</strong>: <code>units/#</code> — publish/subscribe для управления реле (добавлено 2026-07-27)</li>
+<li><strong>Лог-топики</strong>: <code>device/+/+/log</code>, <code>server/+/log</code>, <code>rule-engine/+/log</code> (единый JSON-конверт, 2026-09-03)</li>
 </ol>
 <h3 id="authentication-details">Authentication Details</h3>
 <p>Authentication has been enabled with the following credentials:</p>
@@ -729,7 +784,8 @@ npm run clean           # очистка dist/
 <td><code>false</code></td>
 </tr>
 </tbody></table>
-<h5 id="log--логирование-в-консоль"><code>log</code> — логирование в консоль</h5>
+<h5 id="log--логирование-консоль--лог-топик-mqtt"><code>log</code> — логирование (консоль + лог-топик MQTT)</h5>
+<p>Выводит в консоль и публикует в топик <code>rule-engine/worker/log</code> единый JSON-конверт лога:<br><code>{ &quot;level&quot;, &quot;src&quot;: &quot;rule-engine&quot;, &quot;event&quot;, &quot;msg&quot;, &quot;topic&quot; }</code>. Telegraf отводит его в measurement <code>logs</code> в InfluxDB.</p>
 <table>
 <thead>
 <tr>
@@ -749,6 +805,7 @@ npm run clean           # очистка dist/
 <td>—</td>
 </tr>
 </tbody></table>
+<p>Срабатывание правила логируется движком как <code>event=rule-fired</code>, ошибка выполнения — <code>event=rule-error</code>. Входящие сообщения поштучно не логируются (анти-спам).</p>
 <h5 id="timeout--отложенное-выполнение"><code>timeout</code> — отложенное выполнение</h5>
 <table>
 <thead>
@@ -1036,6 +1093,54 @@ npm run lint:fix      # ESLint с автофиксом
 </tbody></table>
 <p>Файл <code>.env</code> загружается из корня репозитория по абсолютному пути (кроме <code>NODE_ENV=prod</code>).</p>
 <p>При первом запуске (пустая БД) <code>SeedService</code> заполняет коллекции <code>units</code>, <code>objects</code>, <code>rules</code> из <code>src/data/*.config.ts</code> и файла <code>INIT_RULES_SEED_PATH</code> (env-подстановка <code>${VAR}</code> и <code>${expr:...}</code> выполняется до записи в БД). Сид идемпотентен: непустые коллекции не перезаполняются.</p>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-cluster-saspik-cluster-app-telegraf">
+<p><a href="../README.md">↑ Saspik-cluster</a></p>
+<h1 id="telegraf--запись-mqtt-→-influxdb">Telegraf — запись MQTT → InfluxDB</h1>
+<p>Подписывается на MQTT-топики кластера (mosquitto) и пишет в InfluxDB 2.x.</p>
+<h2 id="конфигурация-telegrafconf">Конфигурация (<code>telegraf.conf</code>)</h2>
+<p>Два входа <code>mqtt_consumer</code> и два выхода <code>outputs.influxdb_v2</code> (разделение по <code>namepass</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Вход</th>
+<th>Топики</th>
+<th>Measurement</th>
+<th>Бакет (выход)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Данные (<code>data_format=json</code>)</td>
+<td><code>sensor/#</code>, <code>units/#</code>, <code>led/#</code>, <code>healthcheck/#</code></td>
+<td><code>mqtt_consumer</code></td>
+<td><code>${INFLUXDB_BUCKET}</code> (напр. <code>mqtt</code>)</td>
+</tr>
+<tr>
+<td>Логи (<code>data_format=json</code>)</td>
+<td><code>device/+/+/log</code>, <code>server/+/log</code>, <code>rule-engine/+/log</code></td>
+<td><code>logs</code> (<code>name_override</code>)</td>
+<td><code>${INFLUXDB_LOGS_BUCKET}</code> (напр. <code>logs</code>)</td>
+</tr>
+</tbody></table>
+<p>Выходы разделяют потоки через <code>namepass</code>:</p>
+<ul>
+<li><code>namepass = [&quot;mqtt_consumer&quot;]</code> → только сенсорные/командные данные в основной бакет;</li>
+<li><code>namepass = [&quot;logs&quot;]</code> → только логи в отдельный бакет <code>logs</code>.</li>
+</ul>
+<h3 id="логи-measurement-logs">Логи (measurement <code>logs</code>)</h3>
+<p>Теги: <code>topic</code>, <code>level</code>, <code>event</code>, <code>src</code>, <code>unitId</code>, <code>objectId</code>.<br>Поля: <code>msg</code>, <code>cause</code>, <code>uptime</code> и др. (<code>json_string_fields = [&quot;msg&quot;,&quot;cause&quot;]</code>).</p>
+<p>Бакет <code>logs</code> создаётся при инициализации InfluxDB с retention <code>INFLUXDB_LOGS_RETENTION_DAYS</code> (по умолчанию 7 дней) — см. <code>influxdb/init/create-logs-bucket.sh</code>.</p>
+<h2 id="переменные-окружения">Переменные окружения</h2>
+<ul>
+<li><code>INFLUXDB_TOKEN</code>, <code>INFLUXDB_ORG</code>, <code>INFLUXDB_BUCKET</code> — основной бакет</li>
+<li><code>INFLUXDB_LOGS_BUCKET</code> (default <code>logs</code>), <code>INFLUXDB_LOGS_RETENTION_DAYS</code> (default <code>7</code>) — бакет логов</li>
+</ul>
+<h2 id="сборка-и-запуск">Сборка и запуск</h2>
+<pre><code class="language-bash">docker compose build telegraf
+docker compose up -d telegraf
+</code></pre>
 
 </section>
 <hr class="section-sep">
@@ -1811,6 +1916,69 @@ npm run lint:fix      # ESLint с автофиксом
 <p>Docker healthcheck. Payload: <code>&quot;test&quot;</code></p>
 <h3 id="ledcontrol"><code>led/control</code></h3>
 <p>Управление светодиодным индикатором.<br>Payload: <code>&quot;ON&quot;</code> / <code>&quot;OFF&quot;</code></p>
+<h2 id="логирование-и-диагностика-единый-конверт">Логирование и диагностика (единый конверт)</h2>
+<p>Все компоненты (device, server, rule-engine) публикуют логи в <strong>едином JSON-конверте</strong> в свои лог-топики. Telegraf отводит их в отдельный measurement <code>logs</code> в InfluxDB (бакет <code>logs</code>, retention 7 дней).</p>
+<h3 id="лог-топики">Лог-топики</h3>
+<table>
+<thead>
+<tr>
+<th>Топик</th>
+<th>Источник</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>device/{unitId}/{objectId}/log</code></td>
+<td>ESP32 (device-log): старт/ребут, connect/disconnect, диагностика, хвост лога</td>
+</tr>
+<tr>
+<td><code>server/worker/log</code></td>
+<td>Backend (Express): connect/disconnect/ошибки MQTT</td>
+</tr>
+<tr>
+<td><code>rule-engine/worker/log</code></td>
+<td>MQTT Rule Engine: срабатывание/ошибки правил, connect/disconnect</td>
+</tr>
+</tbody></table>
+<h3 id="схема-конверта">Схема конверта</h3>
+<pre><code class="language-json">{
+  &quot;level&quot;:    &quot;info&quot;,      // debug | info | warn | error
+  &quot;src&quot;:      &quot;device&quot;,    // device | server | rule-engine
+  &quot;event&quot;:    &quot;startup&quot;,   // startup|reboot|connect|disconnect|diag|rule-fired|rule-error|...
+  &quot;msg&quot;:      &quot;человекочитаемый текст&quot;,
+  &quot;topic&quot;:    &quot;device/unitId2/saspik.sa.wm.m001/log&quot;,
+  &quot;unitId&quot;:   &quot;unitId2&quot;,   // device
+  &quot;objectId&quot;: &quot;saspik.sa.wm.m001&quot;, // device
+  &quot;uptime&quot;:   12345,       // device, сек
+  &quot;cause&quot;:    &quot;wifi-lost&quot;  // device, при ребуте (wifi-lost | mqtt-timeout)
+}
+</code></pre>
+<ul>
+<li><strong>device</strong>: при старте публикует <code>event=startup</code> с хвостом лога в <code>msg</code> и причиной ребута в <code>cause</code>; при обрыве — <code>event=diag</code> с <code>msg</code>-сводкой и полями <code>wifi</code>/<code>mqtt</code>/<code>lostSec</code>; <code>event=reboot</code> перед перезапуском.</li>
+<li><strong>rule-engine</strong>: при срабатывании правила — <code>event=rule-fired</code>, при ошибке — <code>event=rule-error</code>.</li>
+<li><strong>server</strong>: при connect/disconnect/ошибке брокера — <code>event=connect|disconnect|mqtt-error</code>.</li>
+</ul>
+<h3 id="хранение-в-influxdb">Хранение в InfluxDB</h3>
+<ul>
+<li><strong>Measurement</strong>: <code>logs</code> (через <code>name_override=&quot;logs&quot;</code> в telegraf).</li>
+<li><strong>Теги</strong>: <code>topic</code>, <code>level</code>, <code>event</code>, <code>src</code>, <code>unitId</code>, <code>objectId</code>.</li>
+<li><strong>Поля</strong>: <code>msg</code>, <code>cause</code>, <code>uptime</code> и др.</li>
+<li><strong>Бакет</strong>: <code>logs</code> (<code>INFLUXDB_LOGS_BUCKET</code>), retention <strong>7 дней</strong> (<code>INFLUXDB_LOGS_RETENTION_DAYS</code>).</li>
+<li>Сенсорные данные остаются в measurement <code>mqtt_consumer</code> (бакет <code>mqtt</code>).</li>
+</ul>
+<p>Пример Flux-запроса по логам уровня <code>error</code>:</p>
+<pre><code class="language-flux">from(bucket: &quot;logs&quot;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &quot;logs&quot;)
+  |&gt; filter(fn: (r) =&gt; r.level == &quot;error&quot;)
+  |&gt; filter(fn: (r) =&gt; r._field == &quot;msg&quot;)
+  |&gt; last()
+</code></pre>
+<h3 id="против-спама">Против спама</h3>
+<ul>
+<li>Mosquitto: <code>log_type notice</code> (без поштучного debug).</li>
+<li>Rule Engine: не логирует каждое входящее сообщение — только срабатывания и ошибки правил.</li>
+<li>Device: пишет только события (старт/ребут/connect/диагностика/обрыв), а не каждое чтение сенсора.</li>
+</ul>
 <h2 id="модель-objectitem-клиент">Модель ObjectItem (клиент)</h2>
 <pre><code class="language-typescript">interface ObjectItem {
   id: string;
@@ -1834,6 +2002,9 @@ pattern readwrite clients/%c/#
 pattern readwrite sensor/#
 pattern readwrite led/#
 pattern readwrite units/#
+pattern readwrite device/+/+/log
+pattern readwrite server/+/log
+pattern readwrite rule-engine/+/log
 </code></pre>
 <ul>
 <li><code>healthcheck/#</code> — healthcheck</li>
@@ -1841,6 +2012,7 @@ pattern readwrite units/#
 <li><code>sensor/#</code> — сенсорные топики (<code>sensor/{unitId}/{objectId}</code>)</li>
 <li><code>led/#</code> — управление LED</li>
 <li><code>units/#</code> — топики команд (<code>units/{unitId}/commands/...</code>)</li>
+<li><code>device/+/+/log</code>, <code>server/+/log</code>, <code>rule-engine/+/log</code> — логи-конверты</li>
 </ul>
 <h2 id="полный-цикл-данных">Полный цикл данных</h2>
 <pre><code>ESP-NOW node                ESP32 Controller               Mosquitto               Telegraf/InfluxDB
@@ -1873,6 +2045,11 @@ pattern readwrite units/#
 <td>2026-08-05</td>
 <td></td>
 <td>Топики сенсоров переведены на паттерн <code>sensor/{unitId}/{objectId}</code> (вместо <code>sensors/...</code>)</td>
+</tr>
+<tr>
+<td>2026-09-03</td>
+<td></td>
+<td>Добавлено логирование: единый JSON-конверт, лог-топики device/server/rule-engine, measurement <code>logs</code>, ACL для лог-топиков</td>
 </tr>
 </tbody></table>
 

@@ -18,6 +18,11 @@ pattern readwrite led/#
 # Allow unit command topics for authenticated users
 pattern readwrite units/#
 
+# Allow log topics (device/server/rule-engine log envelopes)
+pattern readwrite device/+/+/log
+pattern readwrite server/+/log
+pattern readwrite rule-engine/+/log
+
 # Default: deny all other topics
 # pattern deny #
 

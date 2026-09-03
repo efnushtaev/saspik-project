@@ -18,13 +18,15 @@
 | [client](saspik-cluster-app/client/README.md) | UI, React SPA (CRA + TypeScript), панель управления IoT-кластером |
 | [mqtt](saspik-cluster-app/mqtt/README.md) | Eclipse Mosquitto MQTT-брокер с аутентификацией и ACL  |
 | [mqtt-rule-engine](saspik-cluster-app/mqtt-rule-engine/README.md) | Движок сценариев автоматизации для обработки данных и управления Объектами |
+| [telegraf](saspik-cluster-app/telegraf/README.md) | Запись MQTT → InfluxDB (данные и логи) |
+| [influxdb](saspik-cluster-app/influxdb/README.md) | InfluxDB 2.x: бакеты `mqtt` и `logs` (retention 7 дней) |
 
 ### Архитектура
 
 - **Frontend**: React SPA, обслуживается через Nginx. Отображает список Юнитов, сенсоры и устройства, вложенные в каждый Юнит. Поддерживает создание/редактирование/удаление Юнитов и Объектов.
 - **MongoDB**: Документная БД. Хранит Юниты, Объекты и правила (коллекции `units`, `objects`, `rules`). При первой инициализации заполняется сидами из `server/src/data/*.config.ts` и `server/data/rules.json`.
-- **InfluxDB**: Time-series база данных. Хранит все MQTT-сообщения от устройств.
-- **Telegraf**: Подписывается на все MQTT-топики (`#`), парсит JSON и пишет в InfluxDB.
+- **InfluxDB**: Time-series база данных. Бакет `mqtt` — сенсорные/командные данные; бакет `logs` (retention 7 дней) — логи-конверты device/server/rule-engine.
+- **Telegraf**: Подписывается на MQTT-топики (данные → measurement `mqtt_consumer`, логи → measurement `logs`), парсит JSON и пишет в соответствующие бакеты InfluxDB.
 - **Backend**: Express.js сервер. Читает Юниты/Объекты/правила из MongoDB, последние значения объектов из InfluxDB и отдаёт их через REST API.
 - **Nginx**: Обратный прокси: статика фронтенда, прокси `/api/*` на backend.
 - **Mosquitto**: MQTT-брокер для обмена данными с устройствами.
