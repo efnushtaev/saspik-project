@@ -1,0 +1,8 @@
+{
+  "name": "device-log",
+  "version": "0.1.0",
+  "description": "Non-volatile ring log (LittleFS) + reboot-cause (NVS) for ESP32 diagnostics",
+  "keywords": "log, littlefs, nvs, diagnosis, reboot",
+  "frameworks": "arduino",
+  "platforms": "espressif32"
+}

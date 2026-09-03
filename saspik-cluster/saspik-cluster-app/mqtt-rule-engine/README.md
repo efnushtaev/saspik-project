@@ -1,44 +1,80 @@
-[↑ ATSAP Cluster App](../README.md)
+[↑ Saspik-cluster](../../README.md)
 
-# MQTT Rule Engine Worker
+# ⧫ MQTT Rule Engine Worker
 
-Движок правил для MQTT, позволяющий автоматически выполнять действия при получении сообщений в заданные топики с поддержкой условий. Правила загружаются из MongoDB, HTTP API или файла (`rules.json`) и обновляются в рантайме без остановки процесса.
+#### Движок правил для MQTT: автоматическое выполнение действий по условиям
 
-## Архитектура
+Правила загружаются из MongoDB, HTTP API или файла и обновляются в рантайме без остановки процесса.
 
-Проект построен по модульному принципу, каждый компонент находится в своей папке:
+### Основные компоненты:
+- **Ядро** (`RuleEngine`) — управление подписками, оценка условий, выполнение действий
+- **MQTT** (`MqttAdapter`) — абстракция над библиотекой `mqtt`; подключение к брокеру, публикация и подписка
+- **Условия** (`Condition`) — проверка топика по regex, JSONPath, точное совпадение payload, логические композиты (AND, OR, NOT), диапазон времени (`timeBetween`)
+- **Действия** (`Action`) — публикация в топик, логирование в консоль, отложенное выполнение (`timeout`)
+- **Провайдеры правил** (`RulesProvider`) — `MongoRulesProvider`, `ApiRulesProvider`, фабрика `createRulesProvider`
+- **Конфигурация** — `RuleBuilder` (парсинг JSON-правил), `ConfigWatcher` (файловый источник с `fs.watch`)
+- **Контекст** (`MessageContext`) — доступ к payload как JSON, извлечение значений по JSONPath
 
-- **`src/core/`** – ядро движка (`RuleEngine`), управляет подписками, оценивает условия, выполняет действия.
-- **`src/mqtt/`** – адаптер MQTT (`MqttAdapter`), абстракция над библиотекой `mqtt`.
-- **`src/conditions/`** – условия (`Condition`): проверка топика по regex, JSONPath, точное совпадение payload, логические композиты (AND, OR, NOT).
-- **`src/actions/`** – действия (`Action`): публикация в топик, логирование в консоль.
-- **`src/config/`** – парсинг конфигурации (`RuleBuilder`) и файловый источник правил (`ConfigWatcher`).
-- **`src/providers/`** – источники правил (`RulesProvider`): `MongoRulesProvider`, `ApiRulesProvider`, фабрика `createRulesProvider`.
-- **`src/context/`** – контекст сообщения (`MessageContext`), предоставляет доступ к payload как JSON и извлечение значений по JSONPath.
-- **`src/utils/`** – утилиты, например сопоставление топиков с wildcards (`topicMatches`).
-- **`test/`** – тестовый клиент, мок-адаптер и примеры правил.
+### Технические детали:
+- **TypeScript**, Node.js 18+
+- **MQTT** (библиотека `mqtt`), **MongoDB** (официальный драйвер)
+- tslog, ts-node (разработка)
 
-## Источники правил
+### Внутренняя структура
 
-Источник выбирается переменной окружения `RULES_SOURCE`:
+```
+mqtt-rule-engine/
+├── src/
+│   ├── index.ts                  # Точка входа: MqttAdapter + RuleEngine + провайдер правил
+│   ├── core/                     # Ядро движка (RuleEngine)
+│   ├── mqtt/                     # MQTT-адаптер (MqttAdapter)
+│   ├── conditions/               # Условия (regex, jsonpath, payloadEquals, timeBetween)
+│   │   └── composite/            # Составные условия (and, or, not)
+│   ├── actions/                  # Действия (publish, log, timeout)
+│   ├── config/                   # RuleBuilder (парсинг правил), ConfigWatcher (файловый мониторинг)
+│   ├── providers/                # Источники правил (Mongo, API, фабрика)
+│   ├── context/                  # Контекст сообщения (MessageContext)
+│   └── utils/                    # Утилиты (topic-matcher с wildcards)
+├── test/                         # Тестовый клиент, мок-адаптер, примеры правил
+├── rules.json                    # Дефолтный файл правил
+├── Dockerfile
+├── package.json
+└── tsconfig.json
+```
 
-| Значение | Источник | Описание |
+### Запуск
+
+```bash
+npm install
+npm run dev             # ts-node (разработка)
+npm run build           # компиляция tsc в dist/
+npm start               # production: node dist/src/index.js
+npm run lint            # ESLint
+npm run test            # тестовый клиент на мок-адаптере
+npm run clean           # очистка dist/
+```
+
+### Переменные окружения
+
+| Переменная | Описание | По умолчанию |
 |---|---|---|
-| `mongo` (по умолчанию) | MongoDB | Коллекция `rules`, поле `enabled` отключает правило |
+| `MQTT_BROKER_URL` | URL MQTT-брокера | `mqtt://localhost:1883` |
+| `MQTT_USERNAME` / `MQTT_PASSWORD` | Авторизация на брокере | — |
+| `RULES_SOURCE` | Источник правил | `mongo` |
+| `MONGODB_URL` | Строка подключения к MongoDB (при `RULES_SOURCE=mongo`) | — |
+| `RULES_API_URL` | URL API-сервера (при `RULES_SOURCE=api`) | — |
+| `CONFIG_PATH` | Путь к файлу правил (при `RULES_SOURCE=file`) | `./rules.json` |
+| `RULES_POLL_INTERVAL_MS` | Интервал опроса источника правил, мс | `5000` |
+
+### Источники правил
+
+| Значение `RULES_SOURCE` | Источник | Описание |
+|---|---|---|
+| `mongo` | MongoDB | Коллекция `rules`, поле `enabled` отключает правило |
 | `api` | HTTP API сервера | `GET {RULES_API_URL}`, ожидает `{ "rules": [...] }` или `[...]` |
 | `file` | Локальный `rules.json` | Файловый источник с отслеживанием изменений (`ConfigWatcher`) |
 
-Все источники поддерживают env-подстановку в правилах (`${VAR}` и `${expr:...}`) и опрос с интервалом `RULES_POLL_INTERVAL_MS` (по умолчанию 5000 мс). При изменении правил движок перестраивает подписки без перезапуска.
-
-Переменные окружения:
-
-```
-RULES_SOURCE=mongo            # mongo | api | file
-MONGODB_URL=mongodb://mongo:27017/saspik   # для RULES_SOURCE=mongo
-RULES_API_URL=http://backend:3001/api/v1/rules  # для RULES_SOURCE=api
-RULES_POLL_INTERVAL_MS=5000   # интервал опроса
-CONFIG_PATH=./rules.json      # для RULES_SOURCE=file
-```
+Все источники поддерживают env-подстановку в правилах (`${VAR}` и `${expr:...}`) и опрос с интервалом `RULES_POLL_INTERVAL_MS`. При изменении правил движок перестраивает подписки без перезапуска.
 
 ### Формат правила
 
@@ -56,190 +92,68 @@ CONFIG_PATH=./rules.json      # для RULES_SOURCE=file
 }
 ```
 
-## Установка и запуск
+#### Триггер (`trigger`)
+- `topic` — строка или массив строк. Поддерживает MQTT wildcards `+` (один уровень) и `#` (много уровней)
+- `qos` — уровень качества обслуживания (0, 1, 2). По умолчанию 0
 
-### Предварительные требования
+#### Условия (`when`)
 
-- Node.js 18 или выше
-- MQTT-брокер (например, Mosquitto)
-- MongoDB (для `RULES_SOURCE=mongo`, по умолчанию)
-
-### Установка
-
-```bash
-cd mqtt-rule-engine
-npm install
-```
-
-### Сборка
-
-```bash
-npm run build
-```
-
-### Запуск основного воркера
-
-По умолчанию правила загружаются из MongoDB (коллекция `rules`). Для локального запуска укажите брокер и источник:
-
-```bash
-MQTT_BROKER_URL=mqtt://localhost:1883 \
-MONGODB_URL=mongodb://localhost:27017/saspik \
-RULES_SOURCE=mongo npm start
-```
-
-Для файлового источника создайте `rules.json` в корне проекта (пример ниже) или укажите путь через `CONFIG_PATH`:
-
-```bash
-MQTT_BROKER_URL=mqtt://localhost:1883 RULES_SOURCE=file CONFIG_PATH=./rules.json npm start
-```
-
-### Запуск тестового клиента
-
-Тестовый клиент использует мок-адаптер и демонстрирует работу движка без реального MQTT-брокера.
-
-```bash
-npm run test
-```
-
-## Формат конфигурации правил
-
-Конфигурация представляет собой JSON-файл с массивом правил.
-
-```json
-{
-  "rules": [
-    {
-      "id": "unique_rule_id",
-      "trigger": {
-        "topic": "sensor/temperature",
-        "qos": 0
-      },
-      "when": {
-        "jsonpath": "$.value > 30"
-      },
-      "then": [
-        {
-          "action": "log",
-          "params": {
-            "level": "warn",
-            "message": "Температура превысила порог: {{value}}°C"
-          }
-        },
-        {
-          "action": "publish",
-          "params": {
-            "topic": "alerts/high_temperature",
-            "payload": "{\"value\": {{value}}, \"timestamp\": \"{{timestamp}}\"}",
-            "qos": 1,
-            "retain": false
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-### Триггер (`trigger`)
-
-- `topic` – строка или массив строк. Может содержать MQTT wildcards `+` (один уровень) и `#` (много уровней).
-- `qos` – уровень качества обслуживания (0, 1, 2). По умолчанию 0.
-
-### Условия (`when`)
-
-Условие может быть опущено – тогда правило срабатывает на любое сообщение в топике.
-
-Поддерживаемые типы условий:
+Условие может быть опущено — тогда правило срабатывает на любое сообщение в топике.
 
 | Тип | Параметр | Пример |
-|-----|----------|--------|
+|---|---|---|
 | `topicRegex` | Регулярное выражение для топика | `"^sensor/.+/status$"` |
-| `jsonpath` | Выражение вида `$.field оператор значение` | `"$.temperature > 30"` |
+| `jsonpath` | Выражение `$.field оператор значение` | `"$.temperature > 30"` |
 | `payloadEquals` | Точное совпадение payload как строки | `"OK"` |
+| `timeBetween` | Диапазон времени срабатывания | `{ "from": "22:00", "to": "06:00" }` |
 | `and` | Массив условий (логическое И) | `[{"topicRegex": "^sensor/.+"}, {"jsonpath": "$.value > 0"}]` |
 | `or` | Массив условий (логическое ИЛИ) | аналогично `and` |
 | `not` | Одно условие (логическое НЕ) | `{"topicRegex": "^test/.+"}` |
 
-### Действия (`then`)
+#### Действия (`then`)
 
 Массив действий, выполняемых последовательно при срабатывании правила.
 
-#### Действие `log`
+##### `publish` — публикация в топик
 
-Логирует сообщение в консоль с заданным уровнем.
+| Параметр | Описание | По умолчанию |
+|---|---|---|
+| `topic` | Топик для публикации | — |
+| `payload` | Строка payload, поддерживает плейсхолдеры `{{field}}` | — |
+| `qos` | QoS публикации | `0` |
+| `retain` | Флаг retain | `false` |
 
-Параметры:
-- `level` – `info`, `warn`, `error` (по умолчанию `info`)
-- `message` – строка, может содержать плейсхолдеры `{{fieldName}}`, которые заменяются на значения из JSON payload.
+##### `log` — логирование в консоль
 
-#### Действие `publish`
+| Параметр | Описание | По умолчанию |
+|---|---|---|
+| `level` | Уровень: `info`, `warn`, `error` | `info` |
+| `message` | Строка с плейсхолдерами `{{field}}` | — |
 
-Публикует сообщение в указанный топик.
+##### `timeout` — отложенное выполнение
 
-Параметры:
-- `topic` – топик для публикации
-- `payload` – строка payload, может содержать плейсхолдеры `{{fieldName}}`
-- `qos` – QoS публикации (по умолчанию 0)
-- `retain` – флаг retain (по умолчанию false)
+| Параметр | Описание |
+|---|---|
+| `delayMs` | Задержка в миллисекундах |
+| `then` | Массив действий для выполнения после задержки |
 
-## Обновление правил в рантайме
+### Обновление правил в рантайме
 
 Воркер опрашивает источник правил каждые `RULES_POLL_INTERVAL_MS` (по умолчанию 5000 мс) и пересобирает правила при изменении:
 
-- **`mongo` / `api`** — опрос по таймеру; при изменении набора правил движок обновляет подписки без остановки процесса.
-- **`file`** — отслеживание изменений файла `rules.json` через `fs.watchFile` (перезагрузка при сохранении).
+- **`mongo` / `api`** — опрос по таймеру; при изменении набора правил движок обновляет подписки без остановки процесса
+- **`file`** — отслеживание изменений файла через `fs.watchFile` (перезагрузка при сохранении)
 
-Правила с `enabled: false` пропускаются и их топики отписываются.
+Правила с `enabled: false` пропускаются, их топики отписываются.
 
-## Добавление новых типов условий и действий
+### Добавление новых типов условий и действий
 
-### Новый тип условия
+**Новый тип условия:**
+1. Создайте класс, реализующий интерфейс `Condition` (метод `evaluate`)
+2. Добавьте константу типа в `src/conditions/constants.ts`
+3. Расширьте метод `buildCondition` в `src/config/builder.ts`
 
-1. Создайте класс, реализующий интерфейс `Condition` (метод `evaluate`).
-2. Добавьте константу типа в `src/conditions/constants.ts`.
-3. Расширьте метод `buildCondition` в `src/config/builder.ts`, добавив обработку нового типа.
-
-### Новый тип действия
-
-1. Создайте класс, реализующий интерфейс `Action` (метод `execute`).
-2. Добавьте константу типа в `src/actions/constants.ts`.
-3. Расширьте метод `buildAction` в `src/config/builder.ts`.
-
-## Примеры
-
-Примеры правил находятся в `test/sample-rules.json` и `rules.json`.
-
-## Тестирование
-
-Для модульного тестирования используется мок-адаптер `MockMqttAdapter`, который имитирует подключение к брокеру и позволяет симулировать входящие сообщения.
-
-Запуск тестового клиента:
-
-```bash
-npm run test
-```
-
-## Структура каталога
-
-```
-.
-├── Dockerfile
-├── example.rules.json
-├── package.json
-├── README.md
-├── rules.json
-├── src/
-│   ├── index.ts              # Точка входа: MqttAdapter + RuleEngine + провайдер правил
-│   ├── core/                 # Ядро движка (RuleEngine)
-│   ├── mqtt/                 # MQTT-адаптер
-│   ├── conditions/           # Условия
-│   ├── actions/              # Действия
-│   ├── config/               # Парсинг правил (RuleBuilder), файловый источник (ConfigWatcher)
-│   └── providers/            # Источники правил (Mongo, API, фабрика)
-├── test/
-└── tsconfig.json
-```
-
-## Лицензия
-
-MIT
+**Новый тип действия:**
+1. Создайте класс, реализующий интерфейс `Action` (метод `execute`)
+2. Добавьте константу типа в `src/actions/constants.ts`
+3. Расширьте метод `buildAction` в `src/config/builder.ts`

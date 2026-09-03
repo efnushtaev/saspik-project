@@ -1,4 +1,6 @@
-# MQTT Topics & Data Formats
+[↑ Saspik-cluster](../README.md)
+
+# docs/mqtt-topics
 
 Централизованное описание топиков и форматов сообщений для обмена с MQTT-брокером кластера.
 
@@ -12,6 +14,18 @@
 | Username | `admin` |
 | Password | `password123` |
 | Client ID | произвольный уникальный |
+
+### Локальное окружение (docker-compose)
+
+Локальный брокер (mosquitto) поднимается в docker-compose и отличается от продакшена:
+
+| Параметр | Значение |
+|---|---|
+| Host | `localhost` (внутри docker — `mosquitto`) |
+| Port MQTT | `1883` |
+| Port WebSocket | `9001` |
+| Аутентификация | `allow_anonymous false`, `passwordfile` |
+| ACL | `acl_file` mosquitto.acl |
 
 ## Топики публикации (device → broker)
 
@@ -142,12 +156,14 @@ pattern readwrite healthcheck/#
 pattern readwrite clients/%c/#
 pattern readwrite sensor/#
 pattern readwrite led/#
+pattern readwrite units/#
 ```
 
 - `healthcheck/#` — healthcheck
 - `clients/%c/#` — пространство имён клиента (по Client ID)
 - `sensor/#` — сенсорные топики (`sensor/{unitId}/{objectId}`)
 - `led/#` — управление LED
+- `units/#` — топики команд (`units/{unitId}/commands/...`)
 
 ## Полный цикл данных
 

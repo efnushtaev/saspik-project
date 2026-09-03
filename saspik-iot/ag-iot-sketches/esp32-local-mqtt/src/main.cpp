@@ -16,6 +16,7 @@
 #include "config.h"
 #include "env_config.h"
 #include "WifiConfig.h"
+#include "DeviceLog.h"
 
 // ======================== ГЛОБАЛЬНЫЕ ОБЪЕКТЫ ========================
 
@@ -29,12 +30,28 @@ DeviceConfig config;
 // Неблокирующий таймер
 uint32_t lastSensorReadMs = 0;
 
+// ======================== ДИАГНОСТИКА / УСТОЙЧИВОСТЬ ========================
+// Параметры (таймауты, топик диагностики) заданы в config.h:
+//   MQTT_REBOOT_TIMEOUT_MS, WIFI_REBOOT_TIMEOUT_MS,
+//   WIFI_RECONNECT_INTERVAL_MS, DIAG_PUBLISH_INTERVAL_MS, TOPIC_DIAG
+
+uint32_t mqttLostSinceMs = 0;      // момент начала непрерывной недоступности MQTT
+bool     mqttWasConnected = false; // был ли MQTT подключён (для первого подключения)
+uint32_t wifiLostSinceMs = 0;      // момент начала непрерывного обрыва WiFi
+uint32_t lastWifiReconnectMs = 0;
+uint32_t lastDiagPublishMs = 0;
+bool     startupLogSent = false;   // отправлен ли хвост лога после старта
+
 // ======================== ПРОТОТИПЫ ========================
 
 void connectMQTT();
 void callbackMQTT(char* topic, byte* payload, unsigned int length);
 void publishSensorData();
 void setLed(bool on);
+void handleWifiReconnect();
+void checkMqttTimeout();
+void sendDiagnostics();
+void publishStartupLog();
 
 // ======================== SETUP ========================
 
@@ -54,6 +71,15 @@ void setup() {
     if (!WifiConfig.begin(config, CONFIG_BUTTON_PIN, &defaults)) {
         return;
     }
+
+    // Инициализация энергонезависимого лога (LittleFS) и причины ребута
+    DeviceLog.begin();
+    if (DeviceLog.hasRebootCause()) {
+        Serial.print("[main] Предыдущий ребут по причине: ");
+        Serial.println(DeviceLog.rebootCause());
+    }
+    DeviceLog.write("=== started, reason=%s ===",
+                    DeviceLog.rebootCause()[0] ? DeviceLog.rebootCause() : "none");
 
     // Настройка пина светодиода (active low)
     pinMode(PIN_LED, OUTPUT);
@@ -81,11 +107,26 @@ void loop() {
         return;
     }
 
+    // Восстановление WiFi при обрыве (иначе MQTT никогда не переподключится)
+    handleWifiReconnect();
+
     // Поддержание MQTT-соединения (каждый вызов loop)
     if (!mqttClient.connected()) {
         connectMQTT();
+    } else {
+        // Успешное соединение — сбрасываем таймер "недоступности"
+        mqttLostSinceMs = 0;
     }
     mqttClient.loop();
+
+    // Авто-ребут при длительной недоступности MQTT
+    checkMqttTimeout();
+
+    // Отправка хвоста лога после успешного стартового подключения
+    if (!startupLogSent && mqttClient.connected()) {
+        publishStartupLog();
+        startupLogSent = true;
+    }
 
     // Неблокирующая отправка данных по таймеру
     uint32_t now = millis();
@@ -103,20 +144,20 @@ void connectMQTT() {
     clientId += WiFi.macAddress();
     clientId.replace(":", "");
 
-    Serial.print("Подключение к MQTT-брокеру: ");
-    Serial.print(config.mqttHost);
-    Serial.print(":");
-    Serial.println(config.mqttPort);
-
     if (mqttClient.connect(clientId.c_str(), config.mqttUser, config.mqttPass)) {
         Serial.println("MQTT подключён.");
+        mqttWasConnected = true;
+        mqttLostSinceMs = 0; // сброс таймера
 
         // Подписка на топик управления светодиодом
-        // Retained-сообщение будет доставлено сразу после подписки
         mqttClient.subscribe(TOPIC_SUBSCRIBE);
-        Serial.print("Подписка на топик: ");
-        Serial.println(TOPIC_SUBSCRIBE);
+        DeviceLog.write("mqtt connected, subscribed %s", TOPIC_SUBSCRIBE);
     } else {
+        // Фиксируем момент начала недоступности MQTT (только один раз за эпизод).
+        // Не считаем сбоем первичное подключение при старте (mqttWasConnected == false).
+        if (mqttLostSinceMs == 0 && mqttWasConnected) {
+            mqttLostSinceMs = millis();
+        }
         Serial.print("Ошибка MQTT, rc=");
         Serial.println(mqttClient.state());
     }
@@ -203,4 +244,99 @@ void publishSensorData() {
     } else {
         Serial.println("Ошибка публикации MQTT");
     }
+}
+
+// ======================== ВОССТАНОВЛЕНИЕ WIFI ========================
+
+void handleWifiReconnect() {
+    if (WiFi.status() == WL_CONNECTED) {
+        wifiLostSinceMs = 0;
+        return;
+    }
+
+    uint32_t now = millis();
+    // Не чаще одного раза в WIFI_RECONNECT_INTERVAL_MS
+    if (now - lastWifiReconnectMs < WIFI_RECONNECT_INTERVAL_MS) {
+        return;
+    }
+    lastWifiReconnectMs = now;
+
+    if (wifiLostSinceMs == 0) {
+        wifiLostSinceMs = now;
+    }
+    DeviceLog.write("wifi lost (status=%d), reconnecting", WiFi.status());
+    WiFi.disconnect();
+    WiFi.reconnect();
+
+    // Резерв: если WiFi не поднялся за WIFI_REBOOT_TIMEOUT_MS (5 минут),
+    // полный рестарт устройства (Wi-Fi повторного коннекта недостаточно).
+    if (now - wifiLostSinceMs >= WIFI_REBOOT_TIMEOUT_MS) {
+        DeviceLog.write("wifi unavailable >%lus, rebooting",
+                        (unsigned long)(WIFI_REBOOT_TIMEOUT_MS / 1000));
+        delay(100);
+        DeviceLog.setRebootCause("wifi-lost");
+        ESP.restart();
+    }
+}
+
+// ======================== АВТО-РЕБУТ ПРИ ДОЛГОЙ НЕДОСТУПНОСТИ MQTT ========================
+
+void checkMqttTimeout() {
+    if (mqttLostSinceMs == 0) {
+        return;
+    }
+    uint32_t now = millis();
+
+    // Периодическая публикация диагностики во время сбоя (для удалённого мониторинга)
+    if (now - lastDiagPublishMs >= DIAG_PUBLISH_INTERVAL_MS) {
+        lastDiagPublishMs = now;
+        sendDiagnostics();
+    }
+
+    if (now - mqttLostSinceMs >= MQTT_REBOOT_TIMEOUT_MS) {
+        DeviceLog.write("mqtt unavailable >%lus, rebooting",
+                        (unsigned long)(MQTT_REBOOT_TIMEOUT_MS / 1000));
+        delay(100); // дать записаться логу
+        DeviceLog.setRebootCause("mqtt-timeout");
+        ESP.restart();
+    }
+}
+
+// ======================== ДИАГНОСТИКА В MQTT ========================
+
+void sendDiagnostics() {
+    if (!mqttClient.connected()) {
+        return;
+    }
+    char msg[160];
+    snprintf(msg, sizeof(msg),
+        "{\"uptime\":%lu,\"wifi\":%d,\"mqtt\":%d,\"lostSec\":%lu}",
+        (unsigned long)(millis() / 1000),
+        WiFi.status(),
+        mqttClient.state(),
+        (unsigned long)((millis() - mqttLostSinceMs) / 1000));
+    mqttClient.publish(TOPIC_DIAG, msg);
+}
+
+// ======================== ОТПРАВКА ХВОСТА ЛОГА ПРИ СТАРТЕ ========================
+
+void publishStartupLog() {
+    // Только если была зафиксирована причина предыдущего ребута
+    if (!DeviceLog.hasRebootCause()) {
+        return;
+    }
+
+    char tail[512];
+    size_t n = DeviceLog.readTail(tail, sizeof(tail));
+    if (n == 0) {
+        return;
+    }
+
+    Serial.print("[main] Отправка хвоста лога (причина: ");
+    Serial.print(DeviceLog.rebootCause());
+    Serial.println(")");
+    mqttClient.publish(TOPIC_DIAG, tail);
+
+    // Причину сохраняем (по решению — не сбрасываем после отправки),
+    // чтобы информация сохранялась до сброса/перезаписи.
 }
