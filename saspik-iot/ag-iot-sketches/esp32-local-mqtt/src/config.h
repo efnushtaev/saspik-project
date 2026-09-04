@@ -44,3 +44,8 @@ constexpr uint32_t SENSOR_INTERVAL_MS = 2000;
 
 // --- Тип датчика DHT (DHT22 = 22) ---
 constexpr uint8_t DHT_TYPE = 22;
+
+// --- Мок датчика ---
+// true — генерировать данные псевдослучайно (физический DHT22 не подключён),
+// false — читать реальный датчик.
+constexpr bool USE_MOCK_SENSOR = true;

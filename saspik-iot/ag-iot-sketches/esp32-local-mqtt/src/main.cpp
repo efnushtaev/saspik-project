@@ -232,14 +232,23 @@ void setLed(bool on) {
 // ======================== ПУБЛИКАЦИЯ ДАННЫХ ДАТЧИКА ========================
 
 void publishSensorData() {
-    // Чтение температуры и влажности
-    float humidity    = dht.readHumidity();
-    float temperature = dht.readTemperature();  // °C
+    float humidity, temperature;
 
-    // Проверка на ошибку чтения (nan)
-    if (isnan(humidity) || isnan(temperature)) {
-        Serial.println("Ошибка чтения DHT22: получены некорректные данные (nan)");
-        return;
+    if (USE_MOCK_SENSOR) {
+        // Мок: плавно меняющиеся значения на основе millis() (нет физического датчика)
+        float t = (float)millis() / 1000.0f;
+        temperature = 23.0f + 3.0f * sinf(t * 0.1f);
+        humidity    = 45.0f + 8.0f * sinf(t * 0.07f + 2.0f);
+    } else {
+        // Реальный DHT22
+        humidity    = dht.readHumidity();
+        temperature = dht.readTemperature();  // °C
+
+        // Проверка на ошибку чтения (nan)
+        if (isnan(humidity) || isnan(temperature)) {
+            Serial.println("Ошибка чтения DHT22: получены некорректные данные (nan)");
+            return;
+        }
     }
 
     // Формирование JSON с помощью ArduinoJson v6
