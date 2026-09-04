@@ -39,6 +39,7 @@ uint32_t mqttLostSinceMs = 0;      // момент начала непрерыв
 bool     mqttWasConnected = false; // был ли MQTT подключён (для первого подключения)
 uint32_t wifiLostSinceMs = 0;      // момент начала непрерывного обрыва WiFi
 uint32_t lastWifiReconnectMs = 0;
+uint32_t lastMqttConnectMs = 0;    // момент последней попытки подключения к MQTT
 uint32_t lastDiagPublishMs = 0;
 bool     startupLogSent = false;   // отправлен ли хвост лога после старта
 
@@ -72,15 +73,17 @@ void setup() {
     if (!WifiConfig.begin(config, CONFIG_BUTTON_PIN, &defaults)) {
         return;
     }
+    Serial.printf("[main] setup: WiFi ok at %lums\n", (unsigned long)millis());
 
-    // Инициализация энергонезависимого лога (LittleFS) и причины ребута
+    // Инициализация причины ребута (NVS); файловый лог не используется
     DeviceLog.begin();
+    Serial.printf("[main] setup: DeviceLog ok at %lums\n", (unsigned long)millis());
     if (DeviceLog.hasRebootCause()) {
         Serial.print("[main] Предыдущий ребут по причине: ");
         Serial.println(DeviceLog.rebootCause());
     }
-    DeviceLog.write("=== started, reason=%s ===",
-                    DeviceLog.rebootCause()[0] ? DeviceLog.rebootCause() : "none");
+    Serial.printf("[main] started, причиной reboot: %s\n",
+                  DeviceLog.rebootCause()[0] ? DeviceLog.rebootCause() : "none");
 
     // Настройка пина светодиода (active low)
     pinMode(PIN_LED, OUTPUT);
@@ -92,14 +95,23 @@ void setup() {
     // Настройка MQTT из конфига
     mqttClient.setServer(config.mqttHost, config.mqttPort);
     mqttClient.setCallback(callbackMQTT);
+    // Короткий таймаут TCP, чтобы connect() не блокировал loop() дольше
+    // таймаута Task WDT (иначе возникает бесконечный rst:0x8 при недоступном брокере).
+    wifiClient.setTimeout(MQTT_CONNECT_TIMEOUT_MS / 1000);
+    mqttClient.setSocketTimeout(MQTT_CONNECT_TIMEOUT_MS / 1000);
 
     Serial.print("Client ID: ");
     Serial.println("esp32-dht22-" + WiFi.macAddress());
+    Serial.printf("[main] setup: done at %lums, entering loop\n", (unsigned long)millis());
 }
 
 // ======================== LOOP ========================
 
 void loop() {
+    // Кормим Task WDT и даём время фоновым задачам (WiFi/стека).
+    // Без этого длительные операции (connect и т.п.) вызывают rst:0x8 reset.
+    yield();
+
     // Обслуживание captive portal (no-op в штатном режиме)
     WifiConfig.handlePortal();
 
@@ -111,9 +123,15 @@ void loop() {
     // Восстановление WiFi при обрыве (иначе MQTT никогда не переподключится)
     handleWifiReconnect();
 
-    // Поддержание MQTT-соединения (каждый вызов loop)
+    uint32_t now = millis();
+    // Поддержание MQTT-соединения, но не чаще одного раза в интервал:
+    // connect() блокирует до MQTT_CONNECT_TIMEOUT_MS, и без этого может
+    // удерживать loop() дольше таймаута Task WDT (недоступный брокер -> rst:0x8).
     if (!mqttClient.connected()) {
-        connectMQTT();
+        if (now - lastMqttConnectMs >= MQTT_RECONNECT_INTERVAL_MS) {
+            lastMqttConnectMs = now;
+            connectMQTT();
+        }
     } else {
         // Успешное соединение — сбрасываем таймер "недоступности"
         mqttLostSinceMs = 0;
@@ -130,7 +148,6 @@ void loop() {
     }
 
     // Неблокирующая отправка данных по таймеру
-    uint32_t now = millis();
     if (now - lastSensorReadMs >= SENSOR_INTERVAL_MS) {
         lastSensorReadMs = now;
         publishSensorData();
@@ -152,7 +169,7 @@ void connectMQTT() {
 
         // Подписка на топик управления светодиодом
         mqttClient.subscribe(TOPIC_SUBSCRIBE);
-        DeviceLog.write("mqtt connected, subscribed %s", TOPIC_SUBSCRIBE);
+        Serial.printf("mqtt connected, subscribed %s\n", TOPIC_SUBSCRIBE);
         publishLogEvent("info", "connect", "mqtt connected");
     } else {
         // Фиксируем момент начала недоступности MQTT (только один раз за эпизод).
@@ -267,15 +284,15 @@ void handleWifiReconnect() {
     if (wifiLostSinceMs == 0) {
         wifiLostSinceMs = now;
     }
-    DeviceLog.write("wifi lost (status=%d), reconnecting", WiFi.status());
+    Serial.printf("wifi lost (status=%d), reconnecting\n", WiFi.status());
     WiFi.disconnect();
     WiFi.reconnect();
 
     // Резерв: если WiFi не поднялся за WIFI_REBOOT_TIMEOUT_MS (5 минут),
     // полный рестарт устройства (Wi-Fi повторного коннекта недостаточно).
     if (now - wifiLostSinceMs >= WIFI_REBOOT_TIMEOUT_MS) {
-        DeviceLog.write("wifi unavailable >%lus, rebooting",
-                        (unsigned long)(WIFI_REBOOT_TIMEOUT_MS / 1000));
+        Serial.printf("wifi unavailable >%lus, rebooting\n",
+                      (unsigned long)(WIFI_REBOOT_TIMEOUT_MS / 1000));
         publishLogEvent("error", "reboot", "wifi-lost");
         delay(100);
         DeviceLog.setRebootCause("wifi-lost");
@@ -298,10 +315,10 @@ void checkMqttTimeout() {
     }
 
     if (now - mqttLostSinceMs >= MQTT_REBOOT_TIMEOUT_MS) {
-        DeviceLog.write("mqtt unavailable >%lus, rebooting",
-                        (unsigned long)(MQTT_REBOOT_TIMEOUT_MS / 1000));
+        Serial.printf("mqtt unavailable >%lus, rebooting\n",
+                      (unsigned long)(MQTT_REBOOT_TIMEOUT_MS / 1000));
         publishLogEvent("error", "reboot", "mqtt-timeout");
-        delay(100); // дать записаться логу
+        delay(100); // дать уйти конверту в MQTT
         DeviceLog.setRebootCause("mqtt-timeout");
         ESP.restart();
     }
@@ -361,7 +378,7 @@ void sendDiagnostics() {
     mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
 }
 
-// ======================== ОТПРАВКА ХВОСТА ЛОГА ПРИ СТАРТЕ ========================
+// ======================== СТАРТОВЫЙ КОНВЕРТ (ПРИЧИНА РЕБУТА) ========================
 
 void publishStartupLog() {
     // Только если была зафиксирована причина предыдущего ребута
@@ -369,35 +386,25 @@ void publishStartupLog() {
         return;
     }
 
-    char tail[512];
-    size_t n = DeviceLog.readTail(tail, sizeof(tail));
-    if (n == 0) {
-        return;
-    }
-
     const char* cause = DeviceLog.rebootCause();
 
-    Serial.print("[main] Отправка хвоста лога (причина: ");
-    Serial.print(cause);
-    Serial.println(")");
+    Serial.print("[main] Стартовый конверт, причина ребута: ");
+    Serial.println(cause);
 
-    // Единый конверт: msg — хвост лога. Причина ребута — в поле cause,
-    // event = "startup". JSON-парсинг через telegraf проходит без потерь.
-    StaticJsonDocument<1024> doc;
+    // Единый конверт: event = "startup", причина ребута — в поле cause.
+    // (Файловый кольцевой лог убран для стабильности — только NVS rebooot cause.)
+    StaticJsonDocument<384> doc;
     doc["level"]    = "info";
     doc["src"]      = "device";
     doc["event"]    = "startup";
-    doc["msg"]      = tail;
+    doc["msg"]      = "startup after reboot";
     doc["topic"]    = TOPIC_DIAG;
     doc["unitId"]   = UNIT_ID;
     doc["objectId"] = OBJECT_ID;
     doc["uptime"]   = (unsigned long)(millis() / 1000);
     doc["cause"]    = cause;
 
-    char jsonBuffer[1024];
+    char jsonBuffer[384];
     size_t jsonLen = serializeJson(doc, jsonBuffer);
     mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
-
-    // Причину сохраняем (по решению — не сбрасываем после отправки),
-    // чтобы информация сохранялась до сброса/перезаписи.
 }
