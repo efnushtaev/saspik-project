@@ -121,7 +121,8 @@
 
 ### `healthcheck/ping`
 
-Docker healthcheck. Payload: `"test"`
+Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).
+Payload: `{"payload":"test"}` (валидный JSON — ранее был текст `test`, из-за которого telegraf, подписанный на `healthcheck/#` как на JSON, ронял батч `mqtt_consumer`; топик убран из JSON-входа telegraf).
 
 ### `led/control`
 

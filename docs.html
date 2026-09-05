@@ -1113,7 +1113,7 @@ npm run lint:fix      # ESLint с автофиксом
 </thead>
 <tbody><tr>
 <td>Данные (<code>data_format=json</code>)</td>
-<td><code>sensor/#</code>, <code>units/#</code>, <code>led/#</code>, <code>healthcheck/#</code></td>
+<td><code>sensor/#</code>, <code>units/#</code>, <code>led/#</code></td>
 <td><code>mqtt_consumer</code></td>
 <td><code>${INFLUXDB_BUCKET}</code> (напр. <code>mqtt</code>)</td>
 </tr>
@@ -1124,6 +1124,9 @@ npm run lint:fix      # ESLint с автофиксом
 <td><code>${INFLUXDB_LOGS_BUCKET}</code> (напр. <code>logs</code>)</td>
 </tr>
 </tbody></table>
+<blockquote>
+<p>Вход «Данные» <strong>намеренно не подписан</strong> на <code>healthcheck/#</code>: healthcheck mosquitto<br>публикует в <code>healthcheck/ping</code> payload каждые 30 с, и не-JSON payload (<code>test</code>)<br>ломал парсер <code>data_format=json</code>, из-за чего падал <strong>весь батч</strong> <code>mqtt_consumer</code><br>и новые данные не доходили до InfluxDB (см. раздел «Известные проблемы» ниже).</p>
+</blockquote>
 <p>Выходы разделяют потоки через <code>namepass</code>:</p>
 <ul>
 <li><code>namepass = [&quot;mqtt_consumer&quot;]</code> → только сенсорные/командные данные в основной бакет;</li>
@@ -1140,6 +1143,19 @@ npm run lint:fix      # ESLint с автофиксом
 <h2 id="сборка-и-запуск">Сборка и запуск</h2>
 <pre><code class="language-bash">docker compose build telegraf
 docker compose up -d telegraf
+</code></pre>
+<h2 id="известные-проблемы">Известные проблемы</h2>
+<h3 id="healthcheckping-ломал-json-парсер-092026"><code>healthcheck/ping</code> ломал JSON-парсер (09.2026)</h3>
+<p><strong>Симптом:</strong> в логах telegraf ошибка<br><code>[inputs.mqtt_consumer] Error in plugin: invalid character &#39;e&#39; in literal true (expecting &#39;r&#39;)</code>,<br>и <strong>новые данные не появлялись</strong> в InfluxDB (ни сенсорные, ни логи) — падал весь батч <code>mqtt_consumer</code>.</p>
+<p><strong>Причина:</strong> healthcheck контейнера mosquitto каждые 30 с публикует в <code>healthcheck/ping</code><br>payload <code>test</code> (не JSON). Telegraf был подписан на <code>healthcheck/#</code> во входе с <code>data_format=json</code>,<br>поэтому каждый healthcheck-тик ронял парсер и запись.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li><code>healthcheck/#</code> убран из JSON-входа telegraf (<code>sensor/#</code>, <code>units/#</code>, <code>led/#</code> остались).</li>
+<li>Payload healthcheck mosquitto в <code>docker-compose.yml</code> заменён на валидный JSON:<br><code>-m &quot;test&quot;</code> → <code>-m &#39;{&quot;payload&quot;:&quot;test&quot;}&#39;</code> (семантически корректный формат на будущее —<br>даже если топик снова подпишут на JSON-вход, он не сломает парсер).</li>
+</ol>
+<p>После правок — пересобрать и перезапустить:</p>
+<pre><code class="language-bash">docker compose build telegraf
+docker compose up -d telegraf mosquitto
 </code></pre>
 
 </section>
@@ -1913,7 +1929,7 @@ docker compose up -d telegraf
 </code></pre>
 <h2 id="служебные-топики">Служебные топики</h2>
 <h3 id="healthcheckping"><code>healthcheck/ping</code></h3>
-<p>Docker healthcheck. Payload: <code>&quot;test&quot;</code></p>
+<p>Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).<br>Payload: <code>{&quot;payload&quot;:&quot;test&quot;}</code> (валидный JSON — ранее был текст <code>test</code>, из-за которого telegraf, подписанный на <code>healthcheck/#</code> как на JSON, ронял батч <code>mqtt_consumer</code>; топик убран из JSON-входа telegraf).</p>
 <h3 id="ledcontrol"><code>led/control</code></h3>
 <p>Управление светодиодным индикатором.<br>Payload: <code>&quot;ON&quot;</code> / <code>&quot;OFF&quot;</code></p>
 <h2 id="логирование-и-диагностика-единый-конверт">Логирование и диагностика (единый конверт)</h2>
