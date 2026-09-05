@@ -128,7 +128,7 @@ services:
     networks:
       - fullstack-network
     healthcheck:
-      test: ["CMD", "mosquitto_pub", "-h", "localhost", "-u", "admin", "-P", "password123", "-t", "healthcheck/ping", "-m", "test"]
+      test: ["CMD", "mosquitto_pub", "-h", "localhost", "-u", "admin", "-P", "password123", "-t", "healthcheck/ping", "-m", "{\"payload\":\"test\"}"]
       interval: 30s
       timeout: 10s
       retries: 3
