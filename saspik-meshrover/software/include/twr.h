@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "dw1000.h"
+#include "dwm3000.h"
 
 #define TWR_FRAME_TYPE_POLL    0x01
 #define TWR_FRAME_TYPE_RESP    0x02
@@ -26,7 +26,7 @@ typedef struct {
 } twr_t;
 
 void twr_init(twr_t *twr);
-esp_err_t twr_do_ranging(twr_t *twr, dw1000_t *dev, int role);
+esp_err_t twr_do_ranging(twr_t *twr, dwm3000_t *dev, int role);
 
 static inline uint64_t ts_to_ps(uint64_t ts)
 {

@@ -36,20 +36,6 @@ static void _make_final(uint8_t *frame, uint8_t seq,
     }
 }
 
-static int _parse_poll(const uint8_t *frame, size_t len)
-{
-    if (len < TWR_PAYLOAD_POLL_LEN) return -1;
-    if (frame[0] != TWR_FRAME_TYPE_POLL) return -1;
-    return frame[1];
-}
-
-static int _parse_resp(const uint8_t *frame, size_t len)
-{
-    if (len < TWR_PAYLOAD_RESP_LEN) return -1;
-    if (frame[0] != TWR_FRAME_TYPE_RESP) return -1;
-    return frame[1];
-}
-
 static void _parse_final(const uint8_t *frame, size_t len,
                          uint64_t *t1, uint64_t *t4)
 {
@@ -63,13 +49,13 @@ static void _parse_final(const uint8_t *frame, size_t len,
     }
 }
 
-static void _wait_for_irq(dw1000_t *dev, uint32_t mask, uint32_t timeout_ms)
+static void _wait_for_irq(dwm3000_t *dev, uint32_t mask, uint32_t timeout_ms)
 {
     uint32_t elapsed = 0;
     while (elapsed < timeout_ms) {
-        uint32_t status = dw1000_read_irq(dev);
+        uint32_t status = dwm3000_read_irq(dev);
         if (status & mask) {
-            dw1000_clear_irq(dev, mask);
+            dwm3000_clear_irq(dev, mask);
             return;
         }
         vTaskDelay(pdMS_TO_TICKS(1));
@@ -78,7 +64,7 @@ static void _wait_for_irq(dw1000_t *dev, uint32_t mask, uint32_t timeout_ms)
     ESP_LOGW(TAG, "IRQ timeout after %lu ms", (unsigned long)timeout_ms);
 }
 
-esp_err_t twr_do_ranging(twr_t *twr, dw1000_t *dev, int role)
+esp_err_t twr_do_ranging(twr_t *twr, dwm3000_t *dev, int role)
 {
     uint8_t frame[128];
     size_t frame_len;
@@ -86,62 +72,62 @@ esp_err_t twr_do_ranging(twr_t *twr, dw1000_t *dev, int role)
     uint32_t serr;
 
     if (role == TWR_ROLE_TAG) {
-        dw1000_clear_irq(dev, 0xFFFFFFFF);
-        dw1000_enable_irq(dev, DW1000_IRQ_CMD_TX_DONE | DW1000_IRQ_CMD_RX_DATA);
+        dwm3000_clear_irq(dev, 0xFFFFFFFF);
+        dwm3000_enable_irq(dev, DWM3000_IRQ_CMD_TX_DONE | DWM3000_IRQ_CMD_RX_DATA);
 
         _make_poll(frame, twr->seq);
-        dw1000_send_frame(dev, frame, TWR_PAYLOAD_POLL_LEN);
-        _wait_for_irq(dev, DW1000_IRQ_CMD_TX_DONE, 100);
-        if (!(dw1000_read_irq(dev) & DW1000_IRQ_CMD_TX_DONE) == 0) {
-            twr->t1 = dw1000_read_tx_timestamp(dev);
+        dwm3000_send_frame(dev, frame, TWR_PAYLOAD_POLL_LEN);
+        _wait_for_irq(dev, DWM3000_IRQ_CMD_TX_DONE, 100);
+        if (!(dwm3000_read_irq(dev) & DWM3000_IRQ_CMD_TX_DONE) == 0) {
+            twr->t1 = dwm3000_read_tx_timestamp(dev);
         }
 
-        dw1000_set_rx_enable(dev, true);
-        _wait_for_irq(dev, DW1000_IRQ_CMD_RX_DATA, UWB_FRAME_TIMEOUT_MS + 500);
-        status = dw1000_read_irq(dev);
-        if (status & DW1000_IRQ_CMD_RX_DATA) {
-            twr->t4 = dw1000_read_rx_timestamp(dev);
+        dwm3000_set_rx_enable(dev, true);
+        _wait_for_irq(dev, DWM3000_IRQ_CMD_RX_DATA, UWB_FRAME_TIMEOUT_MS + 500);
+        status = dwm3000_read_irq(dev);
+        if (status & DWM3000_IRQ_CMD_RX_DATA) {
+            twr->t4 = dwm3000_read_rx_timestamp(dev);
             twr->t2 = twr->t4;
         } else {
-            serr = dw1000_read32(dev, DW1000_SYS_STATUS, 0x00);
+            serr = dwm3000_read32(dev, DWM3000_SYS_STATUS, 0x00);
             ESP_LOGW(TAG, "TAG: no response (status=0x%08lX)", (unsigned long)serr);
-            dw1000_set_rx_enable(dev, false);
-            dw1000_clear_irq(dev, 0xFFFFFFFF);
+            dwm3000_set_rx_enable(dev, false);
+            dwm3000_clear_irq(dev, 0xFFFFFFFF);
             vTaskDelay(pdMS_TO_TICKS(10));
             return ESP_ERR_TIMEOUT;
         }
 
     } else {
-        dw1000_set_rx_enable(dev, true);
-        _wait_for_irq(dev, DW1000_IRQ_CMD_RX_DATA, UWB_FRAME_TIMEOUT_MS + 500);
-        status = dw1000_read_irq(dev);
-        if (!(status & DW1000_IRQ_CMD_RX_DATA)) {
-            dw1000_clear_irq(dev, 0xFFFFFFFF);
+        dwm3000_set_rx_enable(dev, true);
+        _wait_for_irq(dev, DWM3000_IRQ_CMD_RX_DATA, UWB_FRAME_TIMEOUT_MS + 500);
+        status = dwm3000_read_irq(dev);
+        if (!(status & DWM3000_IRQ_CMD_RX_DATA)) {
+            dwm3000_clear_irq(dev, 0xFFFFFFFF);
             return ESP_ERR_TIMEOUT;
         }
 
         frame_len = sizeof(frame);
-        dw1000_recv_frame(dev, frame, &frame_len, 0);
+        dwm3000_recv_frame(dev, frame, &frame_len, 0);
 
         if (frame[0] == TWR_FRAME_TYPE_POLL) {
-            twr->t2 = dw1000_read_rx_timestamp(dev);
-            dw1000_clear_irq(dev, 0xFFFFFFFF);
+            twr->t2 = dwm3000_read_rx_timestamp(dev);
+            dwm3000_clear_irq(dev, 0xFFFFFFFF);
 
             _make_resp(frame, twr->seq);
-            dw1000_send_frame(dev, frame, TWR_PAYLOAD_RESP_LEN);
-            _wait_for_irq(dev, DW1000_IRQ_CMD_TX_DONE, 100);
-            twr->t3 = dw1000_read_tx_timestamp(dev);
+            dwm3000_send_frame(dev, frame, TWR_PAYLOAD_RESP_LEN);
+            _wait_for_irq(dev, DWM3000_IRQ_CMD_TX_DONE, 100);
+            twr->t3 = dwm3000_read_tx_timestamp(dev);
 
-            dw1000_set_rx_enable(dev, true);
-            _wait_for_irq(dev, DW1000_IRQ_CMD_RX_DATA, UWB_FRAME_TIMEOUT_MS + 500);
-            status = dw1000_read_irq(dev);
-            if (status & DW1000_IRQ_CMD_RX_DATA) {
+            dwm3000_set_rx_enable(dev, true);
+            _wait_for_irq(dev, DWM3000_IRQ_CMD_RX_DATA, UWB_FRAME_TIMEOUT_MS + 500);
+            status = dwm3000_read_irq(dev);
+            if (status & DWM3000_IRQ_CMD_RX_DATA) {
                 frame_len = sizeof(frame);
-                dw1000_recv_frame(dev, frame, &frame_len, 0);
+                dwm3000_recv_frame(dev, frame, &frame_len, 0);
                 if (frame[0] == TWR_FRAME_TYPE_FINAL) {
                     _parse_final(frame, frame_len, &twr->t1, &twr->t4);
-                    twr->t2 = dw1000_read_rx_timestamp(dev);
-                    dw1000_clear_irq(dev, 0xFFFFFFFF);
+                    twr->t2 = dwm3000_read_rx_timestamp(dev);
+                    dwm3000_clear_irq(dev, 0xFFFFFFFF);
                 }
             }
 
@@ -158,15 +144,15 @@ esp_err_t twr_do_ranging(twr_t *twr, dw1000_t *dev, int role)
             }
 
         } else if (frame[0] == TWR_FRAME_TYPE_RESP) {
-            twr->t4 = dw1000_read_rx_timestamp(dev);
-            dw1000_clear_irq(dev, 0xFFFFFFFF);
+            twr->t4 = dwm3000_read_rx_timestamp(dev);
+            dwm3000_clear_irq(dev, 0xFFFFFFFF);
 
             _make_final(frame, twr->seq, twr->t1, twr->t4);
-            dw1000_send_frame(dev, frame, TWR_PAYLOAD_FINAL_LEN);
-            _wait_for_irq(dev, DW1000_IRQ_CMD_TX_DONE, 100);
+            dwm3000_send_frame(dev, frame, TWR_PAYLOAD_FINAL_LEN);
+            _wait_for_irq(dev, DWM3000_IRQ_CMD_TX_DONE, 100);
 
-            dw1000_set_rx_enable(dev, false);
-            dw1000_clear_irq(dev, 0xFFFFFFFF);
+            dwm3000_set_rx_enable(dev, false);
+            dwm3000_clear_irq(dev, 0xFFFFFFFF);
         }
 
         vTaskDelay(pdMS_TO_TICKS(10));

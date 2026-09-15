@@ -4,6 +4,19 @@
 
 ## Ход работ
 
+### 2026-09-15 — Порт прошивки на DWM3000 (DW3110): init/калибровка из драйвера DW3000
+
+Статус: код написан, `pio run` собирается → осталась проверка на железе.
+
+- **Вердикт:** DW3000 несовместим с DW1000 на уровне протокола SPI и регистров (другой формат адресации EAM/FAC, свои служебные регистры и init-калибровка). «Минимальная» адаптация невозможна — выполнен полноценный перенос в свою библиотеку `lib/dwm3000`, API `dwm3000_*` сохранён.
+- **SPI-слой** (`_reg_xfer`): режим `0x80` write / read; двухбайтовый заголовок EAMRW (`reg_file = 0x1F & ((reg+sub)>>16)`, `reg_offset = 0x7F & (reg+sub)`, `addr = (reg_file<<9)|(reg_offset<<2)`); однобайтовый FACRW при `reg_offset==0`; `len==0` — fast-команда (`CMD_TX=1, CMD_RX=2, CMD_TXRXOFF=0, CMD_CLR_IRQS=0x12`).
+- **Регистры DW3000** (в `dwm3000.h`): `DEV_ID=0x0` (ожидаемый `0xDECA0311`), `SYS_CFG=0x10`, `TX_FCTRL=0x24`, `SYS_ENABLE=0x3C`, `SYS_STATUS=0x44` (TXFRS bit7, RXFCG bit14, CP_LOCK bit1, RCINIT bit24), `RX_FINFO=0x4C`, `RX_TIME=0x64`, `TX_TIME=0x74`, `CHAN_CTRL=0x10014`, `TX_BUFFER=0x140000`, `RX_BUFFER=0x120000`; служебные — `STS_CFG0, DGC_CFG/CFG0/CFG1/LUT0..6, OTP_CFG, DTUNE0/3, RX_CAL_*, TX_CTRL_LO/HI, LDO_*, PLL_CFG/CAL, XTAL, CIA_CONF, CLK_CTRL, SEQ_CTRL`.
+- **`dwm3000_configure()`** — полная инициализация канала 5 (OPS kick SHORT, DTUNE PAC8/PD_SFDTOC, CHAN_CTRL=ch5/pcode9/SFD1, TX_FCTRL data rate/PLEN, RF-analog `_RF_TXCTRL_CH5=_RF_PLL_CFG_CH5` и др., PLL-лок, DGC LUT ch5, PGF-калибровка best-effort, TX_ANTD/TX_POWER). Вызывается из `main.cpp` после сеттеров.
+- **Сеттеры** `set_channel/set_prf/set_data_rate` теперь сохраняют значения в `dwm3000_t` (`set_data_rate(0)→DWT_BR_850K`). `set_prf` на DW3000 хранится, но не влияет на конфигурацию.
+- **Формат кадра:** в TX-буфер пишется `len+2` байт (2 последних — CRC на месте доработки чипом), `TX_FCTRL.TXFLEN=len+2`, флаг TR; приём — `RX_FINFO.RXFLEN` (вкл. CRC), чтение `RX_BUFFER`. Метки времени — 5 байт из `TX_TIME`/`RX_TIME`.
+- **Сборка:** починены два инфраструктурных бага — сломанный Python-vinv окружение ESP-IDF (`.pio/penv/.espidf-6.0.1`, пересоздано) и отсутствие include-пути `include/` для lib-исходников (добавлен `-I include` в `platformio.ini`).
+- **Проверить на железе:** DEV_ID (`0xDECA0311`), PLL lock, дальность/замеры TWR. Возможен риск «не стартует с первого раза» — первый флеш без PGF-cал к примеру.
+
 ### 2026-09-15 — Корректное соединение DWM3000 ↔ ESP32-S3 (WROOM)
 
 Статус: в работе — распиновка модуля к ESP32-S3, сверка с фактическими пинами meshrover.
