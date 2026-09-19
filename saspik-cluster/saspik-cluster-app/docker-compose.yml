@@ -196,6 +196,7 @@ services:
     restart: unless-stopped
     ports:
       - "8086:8086"
+    entrypoint: ["/bin/bash", "/provision/bootstrap.sh"]
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
@@ -203,11 +204,13 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
       - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN}
-      - INFLUXDB_LOGS_BUCKET=${INFLUXDB_LOGS_BUCKET:-logs}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_ORG=${INFLUXDB_ORG}
+      - INFLUXDB_BUCKETS=${INFLUXDB_BUCKETS:-mqtt,logs}
       - INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
     volumes:
       - influxdb-data:/var/lib/influxdb2
-      - ./influxdb/init:/docker-entrypoint-initdb.d:ro
+      - ./influxdb/provision:/provision:ro
     networks:
       - fullstack-network
     deploy:
@@ -241,26 +244,6 @@ services:
         reservations:
           cpus: '0.1'
           memory: 64M
-
-  # Одноразовый job: создаёт бакет логов на уже инициализированном volume
-  # (docker-entrypoint-initdb.d больше не выполняется). Идемпотентен.
-  ensure-logs-bucket:
-    image: influxdb:2
-    container_name: ensure-logs-bucket
-    restart: "no"
-    depends_on:
-      - influxdb
-    environment:
-      - INFLUXDB_HOST=http://influxdb:8086
-      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
-      - INFLUXDB_ORG=${INFLUXDB_ORG}
-      - INFLUXDB_LOGS_BUCKET=${INFLUXDB_LOGS_BUCKET:-logs}
-      - INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
-    volumes:
-      - ./influxdb/init:/docker-entrypoint-initdb.d:ro
-    entrypoint: ["/bin/sh", "-c", "sh /docker-entrypoint-initdb.d/create-logs-bucket.sh"]
-    networks:
-      - fullstack-network
 
 volumes:
   mongo-data:

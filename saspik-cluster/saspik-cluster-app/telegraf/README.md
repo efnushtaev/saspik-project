@@ -27,7 +27,8 @@
 Теги: `topic`, `level`, `event`, `src`, `unitId`, `objectId`.
 Поля: `msg`, `cause`, `uptime` и др. (`json_string_fields = ["msg","cause"]`).
 
-Бакет `logs` создаётся при инициализации InfluxDB с retention `INFLUXDB_LOGS_RETENTION_DAYS` (по умолчанию 7 дней) — см. `influxdb/init/create-logs-bucket.sh`.
+Бакет `logs` создаётся на каждом старте InfluxDB скриптом `influxdb/provision/ensure-buckets.sh`
+с retention `INFLUXDB_LOGS_RETENTION_DAYS` (по умолчанию 7 дней) — см. `influxdb/README.md`.
 
 ## Переменные окружения
 
