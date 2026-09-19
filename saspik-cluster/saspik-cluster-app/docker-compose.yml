@@ -191,7 +191,7 @@ services:
           memory: 64M
 
   influxdb:
-    image: influxdb:2
+    build: ./influxdb
     container_name: influxdb
     restart: unless-stopped
     ports:
@@ -210,7 +210,6 @@ services:
       - INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
     volumes:
       - influxdb-data:/var/lib/influxdb2
-      - ./influxdb/provision:/provision:ro
     networks:
       - fullstack-network
     deploy:

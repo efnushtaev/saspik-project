@@ -2,7 +2,11 @@
 
 # InfluxDB — бакеты и retention
 
-InfluxDB 2.x (образ `influxdb:2`) хранит данные от Telegraf.
+InfluxDB 2.x хранит данные от Telegraf. Образ собирается локально из
+`influxdb/Dockerfile` (`FROM influxdb:2.9.1`), в который **вшит каталог
+`provision/`** — никаких bind-mount'ов скриптов в compose, они всегда доступны
+внутри образа по пути `/provision/` (важно для деплоя через Portainer из Git,
+где bind-mount на недостающий каталог на сервере падал бы).
 
 ## Бакеты
 
@@ -16,14 +20,20 @@ InfluxDB 2.x (образ `influxdb:2`) хранит данные от Telegraf.
 Основной бакет/пользователь создаются через env контейнера `DOCKER_INFLUXDB_INIT_*` при первом старте.
 
 Бакет `logs` с retention 7 дней создаётся вместе с основным бакетом на **каждом
-старте контейнера** обёрткой `provision/bootstrap.sh`:
+старте контейнера** обёрткой `provision/bootstrap.sh` (лежит в образе):
 
 - `bootstrap.sh` — entrypoint-обёртка: запускает штатный `/entrypoint.sh influxd`
   (на свежем volume он выполняет setup и создаёт org/токен/бакет `mqtt`),
-  дожидается API на `:8086` и вызывает `ensure-buckets.sh`.
+  дожидается API на `:8086` (до 300 с) и вызывает `ensure-buckets.sh`.
 - `ensure-buckets.sh` — идемпотентно создаёт бакеты из `INFLUXDB_BUCKETS`
   (по умолчанию `mqtt,logs`), если их нет. `logs` — с retention
   `INFLUXDB_LOGS_RETENTION_DAYS` (по умолчанию 7 дней), `mqtt` — без retention.
+  Токен/org берёт из `INFLUXDB_TOKEN`/`INFLUXDB_ORG`, при их отсутствии —
+  из `DOCKER_INFLUXDB_INIT_ADMIN_TOKEN`/`DOCKER_INFLUXDB_INIT_ORG`.
+
+Provisioning **нефатален**: даже если бакеты не создались, influxd продолжает
+работать на `:8086` (в логах предупреждение) — provisioning не может уронить
+доступность InfluxDB.
 
 Благодаря этому бакеты гарантированно существуют и на уже инициализированном
 volume (штатный `/docker-entrypoint-initdb.d` там не выполнялся бы).

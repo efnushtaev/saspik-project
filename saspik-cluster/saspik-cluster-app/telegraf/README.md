@@ -29,6 +29,7 @@
 
 Бакет `logs` создаётся на каждом старте InfluxDB скриптом `influxdb/provision/ensure-buckets.sh`
 с retention `INFLUXDB_LOGS_RETENTION_DAYS` (по умолчанию 7 дней) — см. `influxdb/README.md`.
+Скрипт вшит в образ InfluxDB (см. `influxdb/Dockerfile`).
 
 ## Переменные окружения
 
