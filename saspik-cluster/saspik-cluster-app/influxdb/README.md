@@ -15,10 +15,16 @@ InfluxDB 2.x (образ `influxdb:2`) хранит данные от Telegraf.
 
 Основной бакет/пользователь создаются через env контейнера `DOCKER_INFLUXDB_INIT_*` при первом старте.
 
-Бакет `logs` с retention 7 дней создаётся init-скриптом `init/create-logs-bucket.sh`,
-смонтированным в `/docker-entrypoint-initdb.d` (выполняется один раз при первой инициализации).
+Бакет `logs` с retention 7 дней создаётся двумя путями:
 
-Script использует `influx bucket create --retention <N>d` и CLI `influx`, ожидает готовности API (`influx ping`).
+1. **init-скрипт** `init/create-logs-bucket.sh`, смонтированный в `/docker-entrypoint-initdb.d` (выполняется один раз при первой инициализации volume `influxdb-data`).
+2. **Сервис `ensure-logs-bucket`** (`docker-compose.yml`) — одноразовый job на тот случай, если volume уже инициализирован и init-скрипт больше не сработает (например, при добавлении фичи на существующем деплое). Идемпотентен: если бакет есть — просто выходит с кодом 0.
+
+Оба используют один и тот же скрипт; адрес API задаётся `INFLUXDB_HOST` (внутри контейнера influxdb — `http://localhost:8086`, из `ensure-logs-bucket` — `http://influxdb:8086`). Запуск на уже развёрнутом стенде:
+
+```bash
+docker compose up -d ensure-logs-bucket
+```
 
 ## Переменные окружения инфлюкс-контейнера
 
