@@ -377,7 +377,7 @@ npm test               # Jest-тесты (App, мок-данные)
 <section id="saspik-cluster-saspik-cluster-app-influxdb">
 <p><a href="../README.md">↑ Saspik-cluster</a></p>
 <h1 id="influxdb--бакеты-и-retention">InfluxDB — бакеты и retention</h1>
-<p>InfluxDB 2.x (образ <code>influxdb:2</code>) хранит данные от Telegraf.</p>
+<p>InfluxDB 2.x хранит данные от Telegraf. Образ собирается локально из<br><code>influxdb/Dockerfile</code> (<code>FROM influxdb:2.9.1</code>), в который <strong>вшит каталог<br><code>provision/</code></strong> — никаких bind-mount&#39;ов скриптов в compose, они всегда доступны<br>внутри образа по пути <code>/provision/</code> (важно для деплоя через Portainer из Git,<br>где bind-mount на недостающий каталог на сервере падал бы).</p>
 <h2 id="бакеты">Бакеты</h2>
 <table>
 <thead>
@@ -403,8 +403,13 @@ npm test               # Jest-тесты (App, мок-данные)
 </tbody></table>
 <h2 id="инициализация">Инициализация</h2>
 <p>Основной бакет/пользователь создаются через env контейнера <code>DOCKER_INFLUXDB_INIT_*</code> при первом старте.</p>
-<p>Бакет <code>logs</code> с retention 7 дней создаётся init-скриптом <code>init/create-logs-bucket.sh</code>,<br>смонтированным в <code>/docker-entrypoint-initdb.d</code> (выполняется один раз при первой инициализации).</p>
-<p>Script использует <code>influx bucket create --retention &lt;N&gt;d</code> и CLI <code>influx</code>, ожидает готовности API (<code>influx ping</code>).</p>
+<p>Бакет <code>logs</code> с retention 7 дней создаётся вместе с основным бакетом на <strong>каждом<br>старте контейнера</strong> обёрткой <code>provision/bootstrap.sh</code> (лежит в образе):</p>
+<ul>
+<li><code>bootstrap.sh</code> — entrypoint-обёртка: запускает штатный <code>/entrypoint.sh influxd</code><br>(на свежем volume он выполняет setup и создаёт org/токен/бакет <code>mqtt</code>),<br>дожидается API на <code>:8086</code> (до 300 с) и вызывает <code>ensure-buckets.sh</code>.</li>
+<li><code>ensure-buckets.sh</code> — идемпотентно создаёт бакеты из <code>INFLUXDB_BUCKETS</code><br>(по умолчанию <code>mqtt,logs</code>), если их нет. <code>logs</code> — с retention<br><code>INFLUXDB_LOGS_RETENTION_DAYS</code> (по умолчанию 7 дней), <code>mqtt</code> — без retention.<br>Токен/org берёт из <code>INFLUXDB_TOKEN</code>/<code>INFLUXDB_ORG</code>, при их отсутствии —<br>из <code>DOCKER_INFLUXDB_INIT_ADMIN_TOKEN</code>/<code>DOCKER_INFLUXDB_INIT_ORG</code>.</li>
+</ul>
+<p>Provisioning <strong>нефатален</strong>: даже если бакеты не создались, influxd продолжает<br>работать на <code>:8086</code> (в логах предупреждение) — provisioning не может уронить<br>доступность InfluxDB.</p>
+<p>Благодаря этому бакеты гарантированно существуют и на уже инициализированном<br>volume (штатный <code>/docker-entrypoint-initdb.d</code> там не выполнялся бы).<br>Setup через env <code>DOCKER_INFLUXDB_INIT_*</code> остаётся для свежего volume — он же<br>создаёт служебные бакеты <code>_monitoring</code> и <code>_tasks</code>.</p>
 <h2 id="переменные-окружения-инфлюкс-контейнера">Переменные окружения инфлюкс-контейнера</h2>
 <pre><code class="language-env">DOCKER_INFLUXDB_INIT_MODE=setup
 DOCKER_INFLUXDB_INIT_USERNAME=admin
@@ -412,7 +417,7 @@ DOCKER_INFLUXDB_INIT_PASSWORD=admin123
 DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
 DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
 DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN}
-INFLUXDB_LOGS_BUCKET=${INFLUXDB_LOGS_BUCKET:-logs}
+INFLUXDB_BUCKETS=${INFLUXDB_BUCKETS:-mqtt,logs}
 INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
 </code></pre>
 
@@ -1134,7 +1139,15 @@ npm run lint:fix      # ESLint с автофиксом
 </ul>
 <h3 id="логи-measurement-logs">Логи (measurement <code>logs</code>)</h3>
 <p>Теги: <code>topic</code>, <code>level</code>, <code>event</code>, <code>src</code>, <code>unitId</code>, <code>objectId</code>.<br>Поля: <code>msg</code>, <code>cause</code>, <code>uptime</code> и др. (<code>json_string_fields = [&quot;msg&quot;,&quot;cause&quot;]</code>).</p>
-<p>Бакет <code>logs</code> создаётся при инициализации InfluxDB с retention <code>INFLUXDB_LOGS_RETENTION_DAYS</code> (по умолчанию 7 дней) — см. <code>influxdb/init/create-logs-bucket.sh</code>.</p>
+<p>Бакет <code>logs</code> создаётся на каждом старте InfluxDB скриптом <code>influxdb/provision/ensure-buckets.sh</code><br>с retention <code>INFLUXDB_LOGS_RETENTION_DAYS</code> (по умолчанию 7 дней) — см. <code>influxdb/README.md</code>.<br>Скрипт вшит в образ InfluxDB (см. <code>influxdb/Dockerfile</code>).</p>
+<h3 id="просмотр-логов-в-data-explorer">Просмотр логов в Data Explorer</h3>
+<p>Ошибка <code>unsupported input type for mean aggregate: string</code> при выборе бакета <code>logs</code><br>в Data Explorer InfluxDB (<code>:8086</code>) — <strong>не баг пайплайна</strong>: дефолтный запрос UI<br>применяет <code>aggregateWindow(every: ..., fn: mean)</code>, а <code>mean()</code> во Flux работает только<br>с числами. Поля логов (<code>msg</code>, <code>cause</code>) — строки (<code>json_string_fields</code>), поэтому<br>агрегировать их средним нельзя. Бакет <code>mqtt</code> не падает, потому что там дефолтное<br>поле числовое (<code>value</code>).</p>
+<p>Смотреть логи без ошибки можно двумя способами:</p>
+<ul>
+<li><strong>Сменить агрегацию</strong> в Query Builder: вместо <code>mean</code> выбрать <code>last</code> или <code>count</code><br>(подходят и для строковых полей).</li>
+<li><strong>Вставить готовый скрипт</strong> в Script Editor — см. <code>influxdb/queries/logs-view.flux</code><br>(сырые логи <code>limit(n: 200)</code> или last по <code>src</code>/<code>topic</code>). Вид — Table / Logs.</li>
+</ul>
+<p>Ошибки в коде нет — её генерирует только Data Explorer; сервис чтения состояния<br>(<code>influxDbStateStore.service.ts</code>) использует <code>last()</code>, а не <code>mean()</code>.</p>
 <h2 id="переменные-окружения">Переменные окружения</h2>
 <ul>
 <li><code>INFLUXDB_TOKEN</code>, <code>INFLUXDB_ORG</code>, <code>INFLUXDB_BUCKET</code> — основной бакет</li>
@@ -2670,7 +2683,7 @@ GPIO 15            ←  IRQ
 GND                →  GND
 </code></pre>
 <blockquote>
-<p>Пин-аут требует сверки с даташитом DWM3000 (Qorvo). В отличие от DWM1000, у DWM3000 часть пинов переключена. Перед разводкой платы обязательно сверить назначение по документации.</p>
+<p>Пин-аут сверен с <code>software/include/pins.h</code> (SPI2_HOST, GPIO10–15). DWM3000 работает в SPI Mode 0, тактовая частота до 23 МГц — текущие 20 МГц в <code>config.h</code> корректны.</p>
 </blockquote>
 <h2 id="питание">Питание</h2>
 <pre><code>LiPo 3.7V → LDO 3.3V → ESP32-S3 VDD33
@@ -2694,7 +2707,8 @@ DWM3000 VDD — выход внутреннего регулятора 1.8В (C8
 </code></pre>
 <h2 id="известные-проблемы-схемы">Известные проблемы схемы</h2>
 <ul>
-<li>Пин-аут DWM3000 требует верификации — в текущей схеме используются предположительные соединения по аналогии с DWM1000.</li>
+<li>Узел собран по односторонней плате с керамической антенной DWM3000; для дальности &gt;20 м может понадобиться выносная антенна (референсная плата Qorvo).</li>
+<li>Прошивка <code>lib/dwm3000</code> написана под DW3110 и почищена от DW1000-регистров; все устаревшие упоминания DW1000 схемно неактуальны.</li>
 </ul>
 
 </section>
