@@ -43,6 +43,7 @@ export class InfluxDbStateStoreService implements IStateStoreService {
         |> filter(fn: (r) => r.topic == "${topic}")
         |> filter(fn: (r) => r._field == "${field || "state"}")
         |> last()
+        |> group()
         |> sort(columns: ["_time"], desc: true)
         |> limit(n: 1)
     `;
