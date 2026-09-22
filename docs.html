@@ -2020,8 +2020,8 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-greenhouse">
-<p><a href="#root">↑ SASPIK Project</a></p>
-<h1 id="⧫-saspik-greenhouse">⧫ SASPIK Greenhouse</h1>
+<p><a href="#root">↑ Назад</a></p>
+<h1 id="⧫-saspik-greenhouse">⧫ Saspik-greenhouse</h1>
 <h4 id="esp32-управление-микроклиматом-теплицы">ESP32-управление микроклиматом теплицы</h4>
 <p>Контекст проекта: <code>opencode/agents.md → saspik-greenhouse</code>.</p>
 <h3 id="структура-каталога">Структура каталога</h3>
@@ -2038,7 +2038,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-greenhouse-docs-grow_chamber">
-<p><a href="#saspik-greenhouse">↑ SASPIK Greenhouse</a></p>
+<p><a href="#saspik-greenhouse">↑ Saspik-greenhouse</a></p>
 <h1 id="⧫-камера-выращивания--гидропонная-установка-на-2-куста">⧫ Камера выращивания — гидропонная установка на 2 куста</h1>
 <h4 id="гидропонная-установка-для-клубники-ebb--flow-на-базе-трубы-пвх-ø200-мм">Гидропонная установка для клубники (ebb &amp; flow) на базе трубы ПВХ ø200 мм</h4>
 <p>Питательный раствор подаётся сверху помпой, заполняет трубу до уровня перелива,<br>затем самотеком сливается обратно в бак.<br>Управление помпой — через ESP32 + MQTT + rule-engine (SASPIK Cluster).</p>
@@ -2261,7 +2261,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-greenhouse-docs-sensor-ph-ec">
-<p><a href="#saspik-greenhouse">↑ SASPIK Greenhouse</a></p>
+<p><a href="#saspik-greenhouse">↑ Saspik-greenhouse</a></p>
 <h1 id="⧫-датчики-ph-и-ec">⧫ Датчики pH и EC</h1>
 <h4 id="датчики-ph-и-электропроводности-ec-для-контроля-питательного-раствора">Датчики pH и электропроводности (EC) для контроля питательного раствора</h4>
 <p>Ссылка: <a href="https://lesson.iarduino.ru/page/sensor-ph-tds/">Урок iArduino — датчики pH и TDS</a></p>
@@ -2269,113 +2269,116 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-iot">
-<h1 id="saspik-iot">SASPIK IoT</h1>
 <p><a href="#root">↑ SASPIK Project</a></p>
-<p>ESP32 прошивки для IoT-датчиков: шлюз, сенсорные узлы (ESP-NOW, MQTT, deep sleep).</p>
-<p>Контекст проекта: <code>opencode/agents.md → saspik-iot</code>.</p>
-<h2 id="программное-обеспечение">Программное обеспечение</h2>
+<h1 id="⧫-saspik-iot">⧫ SASPIK IoT</h1>
+<h4 id="esp32-прошивки-для-iot-устройств-шлюз-сенсорные-узлы-esp-now-mqtt-deep-sleep">ESP32 прошивки для IoT-устройств: шлюз, сенсорные узлы (ESP-NOW, MQTT, deep sleep)</h4>
+<p>Контекст проекта: <code>opencode/agents.md → saspik-iot</code>.<br>Скетчи живут в <code>ag-iot-sketches/</code>.</p>
+<h3 id="программное-обеспечение">Программное обеспечение</h3>
 <ul>
-<li><a href="saspik-iot/ag-iot-sketches/README.md"><code>ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
+<li><a href="ag-iot-sketches/README.md"><code>ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
 </ul>
-<h2 id="классификация-устройств">Классификация устройств</h2>
+<h3 id="классификация-устройств">Классификация устройств</h3>
 <p>Устройства классифицируются по формату <code>saspik.{роли}.{протокол}.{питание}{nnn}</code>.<br>Подробнее: <a href="#saspik-iot-docs-classification"><code>docs/classification.md</code></a></p>
 
 </section>
 <hr class="section-sep">
 <section id="saspik-iot-docs-classification">
-<h1 id="классификация-iot-устройств-саспик">Классификация IoT-устройств САСПИК</h1>
-<h2 id="формат">Формат</h2>
+<p><a href="#saspik-iot">↑ SASPIK IoT</a></p>
+<h1 id="⧫-классификация-iot-устройств-саспик">⧫ Классификация IoT-устройств САСПИК</h1>
+<h4 id="шифр-устройства-saspikролипротоколпитаниеnnn">Шифр устройства <code>saspik.{роли}.{протокол}.{питание}{nnn}</code></h4>
+<p>Формат — один зарегистрированный шифр на устройство.<br>Роли, протоколы и питание можно комбинировать.</p>
+<h3 id="формат">Формат</h3>
 <pre><code>saspik.{роли}.{протокол}.{питание}{nnn}
 </code></pre>
-<h2 id="коды">Коды</h2>
-<h3 id="роли-можно-комбинировать">Роли (можно комбинировать)</h3>
+<h3 id="коды">Коды</h3>
+<h4 id="роли-можно-комбинировать">Роли (можно комбинировать)</h4>
 <table>
 <thead>
 <tr>
-<th>Код</th>
-<th>Значение</th>
+<th align="left">Код</th>
+<th align="left">Значение</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>g</code></td>
-<td>Gateway (шлюз)</td>
+<td align="left"><code>g</code></td>
+<td align="left">Gateway (шлюз)</td>
 </tr>
 <tr>
-<td><code>s</code></td>
-<td>Sensor (сенсор)</td>
+<td align="left"><code>s</code></td>
+<td align="left">Sensor (сенсор)</td>
 </tr>
 <tr>
-<td><code>a</code></td>
-<td>Actuator (исполнительное устройство)</td>
+<td align="left"><code>a</code></td>
+<td align="left">Actuator (исполнительное устройство)</td>
 </tr>
 </tbody></table>
-<h3 id="протоколы-можно-комбинировать">Протоколы (можно комбинировать)</h3>
+<h4 id="протоколы-можно-комбинировать">Протоколы (можно комбинировать)</h4>
 <table>
 <thead>
 <tr>
-<th>Код</th>
-<th>Значение</th>
+<th align="left">Код</th>
+<th align="left">Значение</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>wm</code></td>
-<td>WiFi + MQTT</td>
+<td align="left"><code>wm</code></td>
+<td align="left">WiFi + MQTT</td>
 </tr>
 <tr>
-<td><code>en</code></td>
-<td>ESP-NOW</td>
+<td align="left"><code>en</code></td>
+<td align="left">ESP-NOW</td>
 </tr>
 <tr>
-<td><code>lr</code></td>
-<td>LoRa</td>
+<td align="left"><code>lr</code></td>
+<td align="left">LoRa</td>
 </tr>
 </tbody></table>
-<h3 id="питание-можно-комбинировать">Питание (можно комбинировать)</h3>
+<h4 id="питание-можно-комбинировать">Питание (можно комбинировать)</h4>
 <table>
 <thead>
 <tr>
-<th>Код</th>
-<th>Значение</th>
+<th align="left">Код</th>
+<th align="left">Значение</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>m</code></td>
-<td>mains (сетевое)</td>
+<td align="left"><code>m</code></td>
+<td align="left">mains (сетевое)</td>
 </tr>
 <tr>
-<td><code>b</code></td>
-<td>battery (батарейное)</td>
+<td align="left"><code>b</code></td>
+<td align="left">battery (батарейное)</td>
 </tr>
 </tbody></table>
-<h3 id="номер">Номер</h3>
+<h4 id="номер">Номер</h4>
 <p>Трёхзначный серийный номер: <code>001</code>, <code>002</code>… <code>000</code> — шаблон.</p>
-<h2 id="примеры">Примеры</h2>
+<h3 id="примеры">Примеры</h3>
 <table>
 <thead>
 <tr>
-<th>Класс</th>
-<th>Устройство</th>
+<th align="left">Класс</th>
+<th align="left">Устройство</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>saspik.g.wm.m001</code></td>
-<td>esp32-controller (шлюз ESP-NOW → MQTT + реле)</td>
+<td align="left"><code>saspik.g.wm.m001</code></td>
+<td align="left">esp32-controller (шлюз ESP-NOW → MQTT + реле)</td>
 </tr>
 <tr>
-<td><code>saspik.sa.wm.m001</code></td>
-<td>esp32-local-mqtt (DHT22 + LED, WiFi+MQTT)</td>
+<td align="left"><code>saspik.sa.wm.m001</code></td>
+<td align="left">esp32-local-mqtt (DHT22 + LED, WiFi+MQTT)</td>
 </tr>
 <tr>
-<td><code>saspik.s.en.b001</code></td>
-<td>saspik-iot-node-sensor-1 (DHT22 + float sensor, ESP-NOW, battery)</td>
+<td align="left"><code>saspik.s.en.b001</code></td>
+<td align="left">saspik-iot-node-sensor-1 (DHT22 + float sensor, ESP-NOW, battery)</td>
 </tr>
 <tr>
-<td><code>saspik.s.en.b002</code></td>
-<td>esp32-battery-check (DHT22, ESP-NOW, battery)</td>
+<td align="left"><code>saspik.s.en.b002</code></td>
+<td align="left">esp32-battery-check (DHT22, ESP-NOW, battery)</td>
 </tr>
 <tr>
-<td><code>saspik.s.en.b000</code></td>
-<td>esp32-node-template (шаблон)</td>
+<td align="left"><code>saspik.s.en.b000</code></td>
+<td align="left">esp32-node-template (шаблон)</td>
 </tr>
 </tbody></table>
 

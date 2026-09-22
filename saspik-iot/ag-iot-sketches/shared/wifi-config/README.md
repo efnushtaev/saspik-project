@@ -1,8 +1,13 @@
-# wifi-config
+[↑ ag-iot-sketches](../README.md)
 
-Универсальный captive portal для ESP32 (Arduino / PlatformIO): конфигурация **Wi-Fi и MQTT** без перепрошивки. Настройки сохраняются в **NVS** (`Preferences`) и переживают перезагрузку и потерю питания.
+# ⧫ wifi-config
 
-## Возможности
+#### Универсальный captive portal для ESP32 (Arduino / PlatformIO): конфигурация Wi-Fi и MQTT
+
+Конфигурация Wi-Fi и MQTT без перепрошивки. Настройки сохраняются в **NVS**
+(`Preferences`) и переживают перезагрузку и потерю питания.
+
+### Возможности
 
 - Captive portal (DNS-перехват → `192.168.4.1`) на AP `SASPIK-XXXX`
 - Форма: SSID/пароль Wi-Fi, MQTT хост/порт/логин/пароль
@@ -11,7 +16,7 @@
 - Активация: **первое включение** (нет конфига в NVS) или **кнопка при старте**
 - Без внешних зависимостей: `Preferences`, `DNSServer`, `WebServer` из ESP32 Arduino Core
 
-## Подключение к проекту
+### Подключение к проекту
 
 В `platformio.ini` добавьте путь к общему каталогу библиотек:
 
@@ -20,7 +25,7 @@ lib_extra_dirs =
     ../shared
 ```
 
-## Использование
+### Использование
 
 ```cpp
 #include "WifiConfig.h"
@@ -39,7 +44,7 @@ void loop() {
 }
 ```
 
-### Параметры `begin()`
+#### Параметры `begin()`
 
 ```cpp
 bool begin(DeviceConfig& out, int8_t buttonPin = -1, const DeviceConfig* defaults = nullptr);
@@ -50,7 +55,7 @@ bool begin(DeviceConfig& out, int8_t buttonPin = -1, const DeviceConfig* default
 - `defaults` — дефолтные значения (например из `env_config.h`/`config.h`), если NVS пуст
 - возвращает `true` — подключено к Wi-Fi (штатный режим), `false` — активен портал
 
-### Пин кнопки
+#### Пин кнопки
 
 Пин задаётся в `config.h` каждого скетча:
 
@@ -58,7 +63,7 @@ bool begin(DeviceConfig& out, int8_t buttonPin = -1, const DeviceConfig* default
 #define CONFIG_BUTTON_PIN 15
 ```
 
-## Структура
+### Структура
 
 ```
 wifi-config/
