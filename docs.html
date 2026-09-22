@@ -381,32 +381,33 @@ npm test               # Jest-тесты (App, мок-данные)
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-influxdb">
 <p><a href="../README.md">↑ Saspik-cluster</a></p>
-<h1 id="influxdb--бакеты-и-retention">InfluxDB — бакеты и retention</h1>
-<p>InfluxDB 2.x хранит данные от Telegraf. Образ собирается локально из<br><code>influxdb/Dockerfile</code> (<code>FROM influxdb:2.9.1</code>), в который <strong>вшит каталог<br><code>provision/</code></strong> — никаких bind-mount&#39;ов скриптов в compose, они всегда доступны<br>внутри образа по пути <code>/provision/</code> (важно для деплоя через Portainer из Git,<br>где bind-mount на недостающий каталог на сервере падал бы).</p>
-<h2 id="бакеты">Бакеты</h2>
+<h1 id="⧫-influxdb--бакеты-и-retention">⧫ InfluxDB — бакеты и retention</h1>
+<h4 id="time-series-база-данных-influxdb-2x-для-сенсорных-данных-и-логов">Time-series база данных (InfluxDB 2.x) для сенсорных данных и логов</h4>
+<p>InfluxDB 2.x хранит данные от Telegraf.<br>Образ собирается локально из <code>influxdb/Dockerfile</code> (<code>FROM influxdb:2.9.1</code>).<br>В образ вшит каталог <code>provision/</code> — никаких bind-mount&#39;ов скриптов в compose, они всегда доступны<br>внутри образа по пути <code>/provision/</code> (важно для деплоя через Portainer из Git,<br>где bind-mount на недостающий каталог на сервере падал бы).</p>
+<h3 id="бакеты">Бакеты</h3>
 <table>
 <thead>
 <tr>
-<th>Бакет</th>
-<th>ENV (default)</th>
-<th>Retention</th>
-<th>Содержимое</th>
+<th align="left">Бакет</th>
+<th align="left">ENV (default)</th>
+<th align="left">Retention</th>
+<th align="left">Содержимое</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Основной</td>
-<td><code>INFLUXDB_BUCKET</code> (напр. <code>mqtt</code>)</td>
-<td>задаётся <code>DOCKER_INFLUXDB_INIT_*</code></td>
-<td>сенсорные/командные данные (measurement <code>mqtt_consumer</code>)</td>
+<td align="left">Основной</td>
+<td align="left"><code>INFLUXDB_BUCKET</code> (напр. <code>mqtt</code>)</td>
+<td align="left">задаётся <code>DOCKER_INFLUXDB_INIT_*</code></td>
+<td align="left">сенсорные/командные данные (measurement <code>mqtt_consumer</code>)</td>
 </tr>
 <tr>
-<td>Логи</td>
-<td><code>INFLUXDB_LOGS_BUCKET</code> (<code>logs</code>)</td>
-<td><code>INFLUXDB_LOGS_RETENTION_DAYS</code> (<code>7</code>)</td>
-<td>логи-конверты device/server/rule-engine (measurement <code>logs</code>)</td>
+<td align="left">Логи</td>
+<td align="left"><code>INFLUXDB_LOGS_BUCKET</code> (<code>logs</code>)</td>
+<td align="left"><code>INFLUXDB_LOGS_RETENTION_DAYS</code> (<code>7</code>)</td>
+<td align="left">логи-конверты device/server/rule-engine (measurement <code>logs</code>)</td>
 </tr>
 </tbody></table>
-<h2 id="инициализация">Инициализация</h2>
+<h3 id="инициализация">Инициализация</h3>
 <p>Основной бакет/пользователь создаются через env контейнера <code>DOCKER_INFLUXDB_INIT_*</code> при первом старте.</p>
 <p>Бакет <code>logs</code> с retention 7 дней создаётся вместе с основным бакетом на <strong>каждом<br>старте контейнера</strong> обёрткой <code>provision/bootstrap.sh</code> (лежит в образе):</p>
 <ul>
@@ -415,7 +416,7 @@ npm test               # Jest-тесты (App, мок-данные)
 </ul>
 <p>Provisioning <strong>нефатален</strong>: даже если бакеты не создались, influxd продолжает<br>работать на <code>:8086</code> (в логах предупреждение) — provisioning не может уронить<br>доступность InfluxDB.</p>
 <p>Благодаря этому бакеты гарантированно существуют и на уже инициализированном<br>volume (штатный <code>/docker-entrypoint-initdb.d</code> там не выполнялся бы).<br>Setup через env <code>DOCKER_INFLUXDB_INIT_*</code> остаётся для свежего volume — он же<br>создаёт служебные бакеты <code>_monitoring</code> и <code>_tasks</code>.</p>
-<h2 id="переменные-окружения-инфлюкс-контейнера">Переменные окружения инфлюкс-контейнера</h2>
+<h3 id="переменные-окружения-контейнера">Переменные окружения контейнера</h3>
 <pre><code class="language-env">DOCKER_INFLUXDB_INIT_MODE=setup
 DOCKER_INFLUXDB_INIT_USERNAME=admin
 DOCKER_INFLUXDB_INIT_PASSWORD=admin123
@@ -1991,40 +1992,10 @@ docker compose up -d telegraf mosquitto
 <td align="left"><code>ON</code> — включить, <code>OFF</code> — выключить</td>
 </tr>
 </tbody></table>
-<h4 id="unitsunitidcommandsobjectid"><code>units/{unitId}/commands/{objectId}</code></h4>
 <h3 id="служебные-топики">Служебные топики</h3>
 <h4 id="healthcheckping"><code>healthcheck/ping</code></h4>
 <p>Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).</p>
 <p>Payload: <code>{&quot;payload&quot;:&quot;test&quot;}</code> (валидный JSON — ранее был текст <code>test</code>, из-за которого telegraf, подписанный на <code>healthcheck/#</code> как на JSON, ронял батч <code>mqtt_consumer</code>; топик убран из JSON-входа telegraf).</p>
-<h4 id="unitsunitidsensors"><code>units/{unitId}/sensors</code></h4>
-<p>Используется ClimateControlService для получения сводки по всем сенсорам юнита.</p>
-<pre><code class="language-json">{
-  &quot;objectsList&quot;: [
-    { &quot;sensorType&quot;: &quot;temperature&quot;, &quot;value&quot;: 24.5 },
-    { &quot;sensorType&quot;: &quot;humidity&quot;, &quot;value&quot;: 65.0 },
-    { &quot;sensorType&quot;: &quot;float&quot;, &quot;value&quot;: 0 }
-  ]
-}
-</code></pre>
-<h5 id="структура-2">Структура</h5>
-<table>
-<thead>
-<tr>
-<th align="left">Поле</th>
-<th align="left">Тип</th>
-<th align="left">Описание</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>objectsList</code></td>
-<td align="left">array</td>
-<td align="left">Массив показаний: <code>{ sensorType, value }</code> по каждому сенсору юнита</td>
-</tr>
-</tbody></table>
-<h4 id="clientsclientid"><code>clients/{clientId}/#</code></h4>
-<p>Пространство имён клиента (по Client ID, <code>%c</code> в ACL). Назначение — изолированные топики конкретного подключения.</p>
-<h3 id="логирование-и-диагностика">Логирование и диагностика</h3>
-<p>Логирование и диагностика кластера (единый JSON-конверт, лог-топики, хранение в InfluxDB) описаны в <a href="#saspik-cluster-docs-logs">docs/logs</a>.</p>
 <h3 id="брокер">Брокер</h3>
 <table>
 <thead>

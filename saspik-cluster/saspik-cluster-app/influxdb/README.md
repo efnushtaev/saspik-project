@@ -1,21 +1,23 @@
 [↑ Saspik-cluster](../README.md)
 
-# InfluxDB — бакеты и retention
+# ⧫ InfluxDB — бакеты и retention
 
-InfluxDB 2.x хранит данные от Telegraf. Образ собирается локально из
-`influxdb/Dockerfile` (`FROM influxdb:2.9.1`), в который **вшит каталог
-`provision/`** — никаких bind-mount'ов скриптов в compose, они всегда доступны
+#### Time-series база данных (InfluxDB 2.x) для сенсорных данных и логов
+
+InfluxDB 2.x хранит данные от Telegraf.
+Образ собирается локально из `influxdb/Dockerfile` (`FROM influxdb:2.9.1`).
+В образ вшит каталог `provision/` — никаких bind-mount'ов скриптов в compose, они всегда доступны
 внутри образа по пути `/provision/` (важно для деплоя через Portainer из Git,
 где bind-mount на недостающий каталог на сервере падал бы).
 
-## Бакеты
+### Бакеты
 
 | Бакет | ENV (default) | Retention | Содержимое |
-|---|---|---|---|
+| :--- | :--- | :--- | :--- |
 | Основной | `INFLUXDB_BUCKET` (напр. `mqtt`) | задаётся `DOCKER_INFLUXDB_INIT_*` | сенсорные/командные данные (measurement `mqtt_consumer`) |
 | Логи | `INFLUXDB_LOGS_BUCKET` (`logs`) | `INFLUXDB_LOGS_RETENTION_DAYS` (`7`) | логи-конверты device/server/rule-engine (measurement `logs`) |
 
-## Инициализация
+### Инициализация
 
 Основной бакет/пользователь создаются через env контейнера `DOCKER_INFLUXDB_INIT_*` при первом старте.
 
@@ -40,7 +42,7 @@ volume (штатный `/docker-entrypoint-initdb.d` там не выполня�
 Setup через env `DOCKER_INFLUXDB_INIT_*` остаётся для свежего volume — он же
 создаёт служебные бакеты `_monitoring` и `_tasks`.
 
-## Переменные окружения инфлюкс-контейнера
+### Переменные окружения контейнера
 
 ```env
 DOCKER_INFLUXDB_INIT_MODE=setup
