@@ -1,12 +1,12 @@
-# SASPIK Greenhouse
-
 [↑ SASPIK Project](../README.md)
 
-ESP32-управление микроклиматом теплицы: датчики, реле, автополив, MQTT-связь с кластером.
+# ⧫ SASPIK Greenhouse
+
+#### ESP32-управление микроклиматом теплицы
 
 Контекст проекта: `opencode/agents.md → saspik-greenhouse`.
 
-## Структура каталога
+### Структура каталога
 
 ```
 .
