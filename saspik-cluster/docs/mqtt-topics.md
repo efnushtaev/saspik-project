@@ -25,7 +25,6 @@
 | `units/{unitId}/sensors`           | агрегированные данные      | `units/unitId1/sensors`                  |
 | `server/`                          | логи backend (Express)     | `server/worker/log`                      |
 | `rule-engine/`                     | логи MQTT Rule Engine      | `rule-engine/worker/log`                 |
-| `led/`                             | управление LED             | `led/control`                            |
 | `healthcheck/`                     | healthcheck mosquitto      | `healthcheck/ping`                       |
 
 ##### Сегменты
@@ -66,29 +65,11 @@
 String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT_ID);
 ```
 
-#### `sensor/{unitId}/{objectId}` (поплавковый датчик)
-
-Модель: float/поплавковый датчик уровня воды (например для генератора влажности).
-
-```json
-{
-  "floatSensor": 0
-}
-```
-
-##### Структура
-
-| Поле          | Тип   | Описание                                  |
-| :------------ | :---- | :---------------------------------------- |
-| `floatSensor` | number| `0` — воды нет, `1` — вода есть          |
-
-Внешний формат legacy-сидов может содержать поле `timestamp` (ISO 8601) — см. `esp32-controller`.
-
 ### Топики команд (broker → device)
 
 #### `device/{unitId}/{objectId}`
 
-Команды на объект-устройство (например LED-индикатор).
+Команды на объект-устройство.
 
 ```json
 {"state": "ON"}
@@ -103,38 +84,6 @@ String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT
 
 #### `units/{unitId}/commands/{objectId}`
 
-Управление нагрузками через реле (объекты `a_relay1`–`a_relay4`). Реле внутри юнита адресуются через секцию `commands/`.
-
-| Реле          | Нагрузка                     | GPIO |
-| :------------ | :--------------------------- | :--- |
-| `a_relay1`    | Свет                         | 27   |
-| `a_relay2`    | Увлажнитель                  | 13   |
-| `a_relay3`    | Вентилятор                   | 12   |
-| `a_relay4`    | Полив / клапан               | 14   |
-
-Поддерживаются два формата payload:
-
-**JSON-строка** (основной формат, используется rule engine):
-
-```
-"1"   // включить
-"0"   // выключить
-```
-
-**JSON-объект** (альтернативный, совместимость с mqtt-local):
-
-```json
-{"state": "ON"}
-{"state": "OFF"}
-```
-
-##### Структура
-
-| Формат    | Значение          | Направление                          |
-| :-------- | :---------------- | :----------------------------------- |
-| `"1"`/`"0"` | JSON-строка       | включить/выключить (rule engine)     |
-| `{"state":"ON"/"OFF"}` | JSON-объект | включить/выключить (mqtt-local)      |
-
 ### Служебные топики
 
 #### `healthcheck/ping`
@@ -142,12 +91,6 @@ String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT
 Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).
 
 Payload: `{"payload":"test"}` (валидный JSON — ранее был текст `test`, из-за которого telegraf, подписанный на `healthcheck/#` как на JSON, ронял батч `mqtt_consumer`; топик убран из JSON-входа telegraf).
-
-#### `led/control`
-
-Управление светодиодным индикатором.
-
-Payload: `"ON"` / `"OFF"`
 
 #### `units/{unitId}/sensors`
 
@@ -173,62 +116,9 @@ Payload: `"ON"` / `"OFF"`
 
 Пространство имён клиента (по Client ID, `%c` в ACL). Назначение — изолированные топики конкретного подключения.
 
-### Логирование и диагностика (единый конверт)
+### Логирование и диагностика
 
-Все компоненты (device, server, rule-engine) публикуют логи в **едином JSON-конверте** в свои лог-топики. Telegraf отводит их в отдельный measurement `logs` в InfluxDB (бакет `logs`, retention 7 дней).
-
-##### Лог-топики
-
-| Топик | Источник |
-| :--- | :--- |
-| `device/{unitId}/{objectId}/log` | ESP32 (device-log): старт/ребут, connect/disconnect, диагностика, хвост лога |
-| `server/worker/log` | Backend (Express): connect/disconnect/ошибки MQTT |
-| `rule-engine/worker/log` | MQTT Rule Engine: срабатывание/ошибки правил, connect/disconnect |
-
-##### Схема конверта
-
-```json
-{
-  "level":    "info",      // debug | info | warn | error
-  "src":      "device",    // device | server | rule-engine
-  "event":    "startup",   // startup|reboot|connect|disconnect|diag|rule-fired|rule-error|...
-  "msg":      "человекочитаемый текст",
-  "topic":    "device/unitId2/saspik.sa.wm.m001/log",
-  "unitId":   "unitId2",   // device
-  "objectId": "saspik.sa.wm.m001", // device
-  "uptime":   12345,       // device, сек
-  "cause":    "wifi-lost"  // device, при ребуте (wifi-lost | mqtt-timeout)
-}
-```
-
-- **device**: при старте публикует `event=startup` с хвостом лога в `msg` и причиной ребута в `cause`; при обрыве — `event=diag` с `msg`-сводкой и полями `wifi`/`mqtt`/`lostSec`; `event=reboot` перед перезапуском.
-- **rule-engine**: при срабатывании правила — `event=rule-fired`, при ошибке — `event=rule-error`.
-- **server**: при connect/disconnect/ошибке брокера — `event=connect|disconnect|mqtt-error`.
-
-##### Хранение в InfluxDB
-
-- **Measurement**: `logs` (через `name_override="logs"` в telegraf).
-- **Теги**: `topic`, `level`, `event`, `src`, `unitId`, `objectId`.
-- **Поля**: `msg`, `cause`, `uptime` и др.
-- **Бакет**: `logs` (`INFLUXDB_LOGS_BUCKET`), retention **7 дней** (`INFLUXDB_LOGS_RETENTION_DAYS`).
-- Сенсорные данные остаются в measurement `mqtt_consumer` (бакет `mqtt`).
-
-Пример Flux-запроса по логам уровня `error`:
-
-```flux
-from(bucket: "logs")
-  |> range(start: -1h)
-  |> filter(fn: (r) => r._measurement == "logs")
-  |> filter(fn: (r) => r.level == "error")
-  |> filter(fn: (r) => r._field == "msg")
-  |> last()
-```
-
-##### Против спама
-
-- Mosquitto: `log_type notice` (без поштучного debug).
-- Rule Engine: не логирует каждое входящее сообщение — только срабатывания и ошибки правил.
-- Device: пишет только события (старт/ребут/connect/диагностика/обрыв), а не каждое чтение сенсора.
+Логирование и диагностика кластера (единый JSON-конверт, лог-топики, хранение в InfluxDB) описаны в [docs/logs](logs.md).
 
 ### Брокер
 
@@ -260,23 +150,7 @@ from(bucket: "logs")
 | `healthcheck/#` | healthcheck |
 | `clients/%c/#` | пространство имён клиента (по Client ID) |
 | `sensor/#` | сенсорные топики (`sensor/{unitId}/{objectId}`) |
-| `led/#` | управление LED |
 | `units/#` | топики команд (`units/{unitId}/commands/...`) |
 | `device/+/+/log` | логи-конверты device |
 | `server/+/log` | логи-конверты server |
 | `rule-engine/+/log` | логи-конверты rule-engine |
-
-### Полный цикл данных
-
-```
-ESP-NOW node                ESP32 Controller               Mosquitto               Telegraf/InfluxDB
-    │                              │                          │                          │
-    │── binary(CRC8) ─────────────>│                          │                          │
-    │    [temp, hum, float, ts]    │                          │                          │
-    │                              │── JSON sensor/{unitId}/{objectId} ─>│─ all topics (#) ─>│
-    │                              │                          │                          │
-    │                              │<── "1"/"0" ─────────────│                          │
-    │                              │    units/.../commands/a_relay1-4                     │
-    │                              │                          │                          │
-    │                              │    GPIO → relay ON/OFF   │                          │
-```

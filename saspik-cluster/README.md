@@ -43,6 +43,7 @@
 | [RulesService](docs/RulesService.md) | Конфигурация правил и сценариев (Rule Engine) |
 | [UnitsService](docs/UnitsService.md) | Конфигурация Юнитов (Unit), JSON Schema DTO |
 | [mqtt-topics](docs/mqtt-topics.md) | Список MQTT-топиков |
+| [logs](docs/logs.md) | Логирование и диагностика: единый JSON-конверт, лог-топики, хранение в InfluxDB |
 
 ### Конфигурация Nginx
 

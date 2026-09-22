@@ -103,6 +103,7 @@
 <a href="#saspik-cluster-docs-ObjectsService" class="l3">saspik-cluster/docs/ObjectsService</a>
 <a href="#saspik-cluster-docs-RulesService" class="l3">saspik-cluster/docs/RulesService</a>
 <a href="#saspik-cluster-docs-UnitsService" class="l3">saspik-cluster/docs/UnitsService</a>
+<a href="#saspik-cluster-docs-logs" class="l3">saspik-cluster/docs/logs</a>
 <a href="#saspik-cluster-docs-mqtt-topics" class="l3">saspik-cluster/docs/mqtt-topics</a>
 <a href="#saspik-greenhouse" class="">saspik-greenhouse</a>
 <a href="#saspik-greenhouse-docs-grow_chamber" class="l3">saspik-greenhouse/docs/grow_chamber</a>
@@ -255,6 +256,10 @@
 <tr>
 <td><a href="#saspik-cluster-docs-mqtt-topics">mqtt-topics</a></td>
 <td>Список MQTT-топиков</td>
+</tr>
+<tr>
+<td><a href="#saspik-cluster-docs-logs">logs</a></td>
+<td>Логирование и диагностика: единый JSON-конверт, лог-топики, хранение в InfluxDB</td>
 </tr>
 </tbody></table>
 <h3 id="конфигурация-nginx">Конфигурация Nginx</h3>
@@ -1782,6 +1787,76 @@ docker compose up -d telegraf mosquitto
 
 </section>
 <hr class="section-sep">
+<section id="saspik-cluster-docs-logs">
+<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<h1 id="⧫-docslogs">⧫ docs/logs</h1>
+<p>Логирование и диагностика кластера: единый JSON-конверт для всех компонентов, лог-топики и хранение в InfluxDB.</p>
+<h3 id="формат">Формат</h3>
+<p>Все компоненты (device, server, rule-engine) публикуют логи в <strong>едином JSON-конверте</strong> в свои лог-топики. Telegraf отводит их в отдельный measurement <code>logs</code> в InfluxDB (бакет <code>logs</code>, retention 7 дней).</p>
+<h5 id="лог-топики">Лог-топики</h5>
+<table>
+<thead>
+<tr>
+<th align="left">Топик</th>
+<th align="left">Источник</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>device/{unitId}/{objectId}/log</code></td>
+<td align="left">ESP32 (device-log): старт/ребут, connect/disconnect, диагностика, хвост лога</td>
+</tr>
+<tr>
+<td align="left"><code>server/worker/log</code></td>
+<td align="left">Backend (Express): connect/disconnect/ошибки MQTT</td>
+</tr>
+<tr>
+<td align="left"><code>rule-engine/worker/log</code></td>
+<td align="left">MQTT Rule Engine: срабатывание/ошибки правил, connect/disconnect</td>
+</tr>
+</tbody></table>
+<h5 id="схема-конверта">Схема конверта</h5>
+<pre><code class="language-json">{
+  &quot;level&quot;:    &quot;info&quot;,      // debug | info | warn | error
+  &quot;src&quot;:      &quot;device&quot;,    // device | server | rule-engine
+  &quot;event&quot;:    &quot;startup&quot;,   // startup|reboot|connect|disconnect|diag|rule-fired|rule-error|...
+  &quot;msg&quot;:      &quot;человекочитаемый текст&quot;,
+  &quot;topic&quot;:    &quot;device/unitId2/saspik.sa.wm.m001/log&quot;,
+  &quot;unitId&quot;:   &quot;unitId2&quot;,   // device
+  &quot;objectId&quot;: &quot;saspik.sa.wm.m001&quot;, // device
+  &quot;uptime&quot;:   12345,       // device, сек
+  &quot;cause&quot;:    &quot;wifi-lost&quot;  // device, при ребуте (wifi-lost | mqtt-timeout)
+}
+</code></pre>
+<ul>
+<li><strong>device</strong>: при старте публикует <code>event=startup</code> с хвостом лога в <code>msg</code> и причиной ребута в <code>cause</code>; при обрыве — <code>event=diag</code> с <code>msg</code>-сводкой и полями <code>wifi</code>/<code>mqtt</code>/<code>lostSec</code>; <code>event=reboot</code> перед перезапуском.</li>
+<li><strong>rule-engine</strong>: при срабатывании правила — <code>event=rule-fired</code>, при ошибке — <code>event=rule-error</code>.</li>
+<li><strong>server</strong>: при connect/disconnect/ошибке брокера — <code>event=connect|disconnect|mqtt-error</code>.</li>
+</ul>
+<h3 id="хранение-в-influxdb">Хранение в InfluxDB</h3>
+<ul>
+<li><strong>Measurement</strong>: <code>logs</code> (через <code>name_override=&quot;logs&quot;</code> в telegraf).</li>
+<li><strong>Теги</strong>: <code>topic</code>, <code>level</code>, <code>event</code>, <code>src</code>, <code>unitId</code>, <code>objectId</code>.</li>
+<li><strong>Поля</strong>: <code>msg</code>, <code>cause</code>, <code>uptime</code> и др.</li>
+<li><strong>Бакет</strong>: <code>logs</code> (<code>INFLUXDB_LOGS_BUCKET</code>), retention <strong>7 дней</strong> (<code>INFLUXDB_LOGS_RETENTION_DAYS</code>).</li>
+<li>Сенсорные данные остаются в measurement <code>mqtt_consumer</code> (бакет <code>mqtt</code>).</li>
+</ul>
+<p>Пример Flux-запроса по логам уровня <code>error</code>:</p>
+<pre><code class="language-flux">from(bucket: &quot;logs&quot;)
+  |&gt; range(start: -1h)
+  |&gt; filter(fn: (r) =&gt; r._measurement == &quot;logs&quot;)
+  |&gt; filter(fn: (r) =&gt; r.level == &quot;error&quot;)
+  |&gt; filter(fn: (r) =&gt; r._field == &quot;msg&quot;)
+  |&gt; last()
+</code></pre>
+<h3 id="против-спама">Против спама</h3>
+<ul>
+<li>Mosquitto: <code>log_type notice</code> (без поштучного debug).</li>
+<li>Rule Engine: не логирует каждое входящее сообщение — только срабатывания и ошибки правил.</li>
+<li>Device: пишет только события (старт/ребут/connect/диагностика/обрыв), а не каждое чтение сенсора.</li>
+</ul>
+
+</section>
+<hr class="section-sep">
 <section id="saspik-cluster-docs-mqtt-topics">
 <p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsmqtt-topics">⧫ docs/mqtt-topics</h1>
@@ -1834,11 +1909,6 @@ docker compose up -d telegraf mosquitto
 <td align="left"><code>rule-engine/</code></td>
 <td align="left">логи MQTT Rule Engine</td>
 <td align="left"><code>rule-engine/worker/log</code></td>
-</tr>
-<tr>
-<td align="left"><code>led/</code></td>
-<td align="left">управление LED</td>
-<td align="left"><code>led/control</code></td>
 </tr>
 <tr>
 <td align="left"><code>healthcheck/</code></td>
@@ -1900,35 +1970,13 @@ docker compose up -d telegraf mosquitto
 <p>Топик формируется устройством из типа, юнита и id объекта:</p>
 <pre><code class="language-cpp">String topic = String(OBJECT_TYPE) + &#39;/&#39; + String(UNIT_ID) + &#39;/&#39; + String(OBJECT_ID);
 </code></pre>
-<h4 id="sensorunitidobjectid-поплавковый-датчик"><code>sensor/{unitId}/{objectId}</code> (поплавковый датчик)</h4>
-<p>Модель: float/поплавковый датчик уровня воды (например для генератора влажности).</p>
-<pre><code class="language-json">{
-  &quot;floatSensor&quot;: 0
-}
-</code></pre>
-<h5 id="структура-1">Структура</h5>
-<table>
-<thead>
-<tr>
-<th align="left">Поле</th>
-<th align="left">Тип</th>
-<th align="left">Описание</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>floatSensor</code></td>
-<td align="left">number</td>
-<td align="left"><code>0</code> — воды нет, <code>1</code> — вода есть</td>
-</tr>
-</tbody></table>
-<p>Внешний формат legacy-сидов может содержать поле <code>timestamp</code> (ISO 8601) — см. <code>esp32-controller</code>.</p>
 <h3 id="топики-команд-broker-→-device">Топики команд (broker → device)</h3>
 <h4 id="deviceunitidobjectid"><code>device/{unitId}/{objectId}</code></h4>
-<p>Команды на объект-устройство (например LED-индикатор).</p>
+<p>Команды на объект-устройство.</p>
 <pre><code class="language-json">{&quot;state&quot;: &quot;ON&quot;}
 {&quot;state&quot;: &quot;OFF&quot;}
 </code></pre>
-<h5 id="структура-2">Структура</h5>
+<h5 id="структура-1">Структура</h5>
 <table>
 <thead>
 <tr>
@@ -1944,72 +1992,10 @@ docker compose up -d telegraf mosquitto
 </tr>
 </tbody></table>
 <h4 id="unitsunitidcommandsobjectid"><code>units/{unitId}/commands/{objectId}</code></h4>
-<p>Управление нагрузками через реле (объекты <code>a_relay1</code>–<code>a_relay4</code>). Реле внутри юнита адресуются через секцию <code>commands/</code>.</p>
-<table>
-<thead>
-<tr>
-<th align="left">Реле</th>
-<th align="left">Нагрузка</th>
-<th align="left">GPIO</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>a_relay1</code></td>
-<td align="left">Свет</td>
-<td align="left">27</td>
-</tr>
-<tr>
-<td align="left"><code>a_relay2</code></td>
-<td align="left">Увлажнитель</td>
-<td align="left">13</td>
-</tr>
-<tr>
-<td align="left"><code>a_relay3</code></td>
-<td align="left">Вентилятор</td>
-<td align="left">12</td>
-</tr>
-<tr>
-<td align="left"><code>a_relay4</code></td>
-<td align="left">Полив / клапан</td>
-<td align="left">14</td>
-</tr>
-</tbody></table>
-<p>Поддерживаются два формата payload:</p>
-<p><strong>JSON-строка</strong> (основной формат, используется rule engine):</p>
-<pre><code>&quot;1&quot;   // включить
-&quot;0&quot;   // выключить
-</code></pre>
-<p><strong>JSON-объект</strong> (альтернативный, совместимость с mqtt-local):</p>
-<pre><code class="language-json">{&quot;state&quot;: &quot;ON&quot;}
-{&quot;state&quot;: &quot;OFF&quot;}
-</code></pre>
-<h5 id="структура-3">Структура</h5>
-<table>
-<thead>
-<tr>
-<th align="left">Формат</th>
-<th align="left">Значение</th>
-<th align="left">Направление</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>&quot;1&quot;</code>/<code>&quot;0&quot;</code></td>
-<td align="left">JSON-строка</td>
-<td align="left">включить/выключить (rule engine)</td>
-</tr>
-<tr>
-<td align="left"><code>{&quot;state&quot;:&quot;ON&quot;/&quot;OFF&quot;}</code></td>
-<td align="left">JSON-объект</td>
-<td align="left">включить/выключить (mqtt-local)</td>
-</tr>
-</tbody></table>
 <h3 id="служебные-топики">Служебные топики</h3>
 <h4 id="healthcheckping"><code>healthcheck/ping</code></h4>
 <p>Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).</p>
 <p>Payload: <code>{&quot;payload&quot;:&quot;test&quot;}</code> (валидный JSON — ранее был текст <code>test</code>, из-за которого telegraf, подписанный на <code>healthcheck/#</code> как на JSON, ронял батч <code>mqtt_consumer</code>; топик убран из JSON-входа telegraf).</p>
-<h4 id="ledcontrol"><code>led/control</code></h4>
-<p>Управление светодиодным индикатором.</p>
-<p>Payload: <code>&quot;ON&quot;</code> / <code>&quot;OFF&quot;</code></p>
 <h4 id="unitsunitidsensors"><code>units/{unitId}/sensors</code></h4>
 <p>Используется ClimateControlService для получения сводки по всем сенсорам юнита.</p>
 <pre><code class="language-json">{
@@ -2020,7 +2006,7 @@ docker compose up -d telegraf mosquitto
   ]
 }
 </code></pre>
-<h5 id="структура-4">Структура</h5>
+<h5 id="структура-2">Структура</h5>
 <table>
 <thead>
 <tr>
@@ -2037,69 +2023,8 @@ docker compose up -d telegraf mosquitto
 </tbody></table>
 <h4 id="clientsclientid"><code>clients/{clientId}/#</code></h4>
 <p>Пространство имён клиента (по Client ID, <code>%c</code> в ACL). Назначение — изолированные топики конкретного подключения.</p>
-<h3 id="логирование-и-диагностика-единый-конверт">Логирование и диагностика (единый конверт)</h3>
-<p>Все компоненты (device, server, rule-engine) публикуют логи в <strong>едином JSON-конверте</strong> в свои лог-топики. Telegraf отводит их в отдельный measurement <code>logs</code> в InfluxDB (бакет <code>logs</code>, retention 7 дней).</p>
-<h5 id="лог-топики">Лог-топики</h5>
-<table>
-<thead>
-<tr>
-<th align="left">Топик</th>
-<th align="left">Источник</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>device/{unitId}/{objectId}/log</code></td>
-<td align="left">ESP32 (device-log): старт/ребут, connect/disconnect, диагностика, хвост лога</td>
-</tr>
-<tr>
-<td align="left"><code>server/worker/log</code></td>
-<td align="left">Backend (Express): connect/disconnect/ошибки MQTT</td>
-</tr>
-<tr>
-<td align="left"><code>rule-engine/worker/log</code></td>
-<td align="left">MQTT Rule Engine: срабатывание/ошибки правил, connect/disconnect</td>
-</tr>
-</tbody></table>
-<h5 id="схема-конверта">Схема конверта</h5>
-<pre><code class="language-json">{
-  &quot;level&quot;:    &quot;info&quot;,      // debug | info | warn | error
-  &quot;src&quot;:      &quot;device&quot;,    // device | server | rule-engine
-  &quot;event&quot;:    &quot;startup&quot;,   // startup|reboot|connect|disconnect|diag|rule-fired|rule-error|...
-  &quot;msg&quot;:      &quot;человекочитаемый текст&quot;,
-  &quot;topic&quot;:    &quot;device/unitId2/saspik.sa.wm.m001/log&quot;,
-  &quot;unitId&quot;:   &quot;unitId2&quot;,   // device
-  &quot;objectId&quot;: &quot;saspik.sa.wm.m001&quot;, // device
-  &quot;uptime&quot;:   12345,       // device, сек
-  &quot;cause&quot;:    &quot;wifi-lost&quot;  // device, при ребуте (wifi-lost | mqtt-timeout)
-}
-</code></pre>
-<ul>
-<li><strong>device</strong>: при старте публикует <code>event=startup</code> с хвостом лога в <code>msg</code> и причиной ребута в <code>cause</code>; при обрыве — <code>event=diag</code> с <code>msg</code>-сводкой и полями <code>wifi</code>/<code>mqtt</code>/<code>lostSec</code>; <code>event=reboot</code> перед перезапуском.</li>
-<li><strong>rule-engine</strong>: при срабатывании правила — <code>event=rule-fired</code>, при ошибке — <code>event=rule-error</code>.</li>
-<li><strong>server</strong>: при connect/disconnect/ошибке брокера — <code>event=connect|disconnect|mqtt-error</code>.</li>
-</ul>
-<h5 id="хранение-в-influxdb">Хранение в InfluxDB</h5>
-<ul>
-<li><strong>Measurement</strong>: <code>logs</code> (через <code>name_override=&quot;logs&quot;</code> в telegraf).</li>
-<li><strong>Теги</strong>: <code>topic</code>, <code>level</code>, <code>event</code>, <code>src</code>, <code>unitId</code>, <code>objectId</code>.</li>
-<li><strong>Поля</strong>: <code>msg</code>, <code>cause</code>, <code>uptime</code> и др.</li>
-<li><strong>Бакет</strong>: <code>logs</code> (<code>INFLUXDB_LOGS_BUCKET</code>), retention <strong>7 дней</strong> (<code>INFLUXDB_LOGS_RETENTION_DAYS</code>).</li>
-<li>Сенсорные данные остаются в measurement <code>mqtt_consumer</code> (бакет <code>mqtt</code>).</li>
-</ul>
-<p>Пример Flux-запроса по логам уровня <code>error</code>:</p>
-<pre><code class="language-flux">from(bucket: &quot;logs&quot;)
-  |&gt; range(start: -1h)
-  |&gt; filter(fn: (r) =&gt; r._measurement == &quot;logs&quot;)
-  |&gt; filter(fn: (r) =&gt; r.level == &quot;error&quot;)
-  |&gt; filter(fn: (r) =&gt; r._field == &quot;msg&quot;)
-  |&gt; last()
-</code></pre>
-<h5 id="против-спама">Против спама</h5>
-<ul>
-<li>Mosquitto: <code>log_type notice</code> (без поштучного debug).</li>
-<li>Rule Engine: не логирует каждое входящее сообщение — только срабатывания и ошибки правил.</li>
-<li>Device: пишет только события (старт/ребут/connect/диагностика/обрыв), а не каждое чтение сенсора.</li>
-</ul>
+<h3 id="логирование-и-диагностика">Логирование и диагностика</h3>
+<p>Логирование и диагностика кластера (единый JSON-конверт, лог-топики, хранение в InfluxDB) описаны в <a href="#saspik-cluster-docs-logs">docs/logs</a>.</p>
 <h3 id="брокер">Брокер</h3>
 <table>
 <thead>
@@ -2184,10 +2109,6 @@ docker compose up -d telegraf mosquitto
 <td align="left">сенсорные топики (<code>sensor/{unitId}/{objectId}</code>)</td>
 </tr>
 <tr>
-<td align="left"><code>led/#</code></td>
-<td align="left">управление LED</td>
-</tr>
-<tr>
 <td align="left"><code>units/#</code></td>
 <td align="left">топики команд (<code>units/{unitId}/commands/...</code>)</td>
 </tr>
@@ -2204,18 +2125,6 @@ docker compose up -d telegraf mosquitto
 <td align="left">логи-конверты rule-engine</td>
 </tr>
 </tbody></table>
-<h3 id="полный-цикл-данных">Полный цикл данных</h3>
-<pre><code>ESP-NOW node                ESP32 Controller               Mosquitto               Telegraf/InfluxDB
-    │                              │                          │                          │
-    │── binary(CRC8) ─────────────&gt;│                          │                          │
-    │    [temp, hum, float, ts]    │                          │                          │
-    │                              │── JSON sensor/{unitId}/{objectId} ─&gt;│─ all topics (#) ─&gt;│
-    │                              │                          │                          │
-    │                              │&lt;── &quot;1&quot;/&quot;0&quot; ─────────────│                          │
-    │                              │    units/.../commands/a_relay1-4                     │
-    │                              │                          │                          │
-    │                              │    GPIO → relay ON/OFF   │                          │
-</code></pre>
 
 </section>
 <hr class="section-sep">
