@@ -121,11 +121,11 @@
 <p>Система позволяет гибко объединять оборудование, управлять производственными процессами и обмениваться данными между участниками в реальном времени.</p>
 <p><strong><a href="https://efnushtaev.github.io/saspik-project/">Промо-лендинг проекта</a></strong></p>
 <h3 id="иерархия-системы">Иерархия системы</h3>
-<h5 id="⧫-кластер">⧫ Кластер</h5>
+<h4 id="кластер">Кластер</h4>
 <p>Базовый автономный элемент распределённой сети САСПИК.<br>Может быть развёрнут как в удалённом облаке, так и на локальном сервере предприятия.<br>Каждый Кластер независим, но при необходимости может взаимодействовать с другими Кластерами через защищённые каналы.</p>
-<h5 id="⧫-юнит">⧫ Юнит</h5>
+<h4 id="юнит">Юнит</h4>
 <p>Составная часть кластера, выделяемая по функциональному назначению (например, «теплица», «цех», «склад», «логистический хаб»).<br>В рамках одного Кластера может быть развёрнуто произвольное количество Юнитов разного типа.<br>Объединение существующих и добавление новых Юнитов в Кластер и их конфигурация выполняются пользователем через UI управления платформы.</p>
-<h5 id="⧫-объект">⧫ Объект</h5>
+<h4 id="объект">Объект</h4>
 <p>Отдельное физическое или виртуальное устройство (датчик, контроллер, станок, камера, шлюз и т.д.).<br>Объекты подключаются к платформе для управления, мониторинга и обмена данными между собой.<br>Может быть частью любого Юнита (гибкая привязка), что позволяет перенастраивать логику работы без физического переподключения.</p>
 <h3 id="ключевые-особенности">Ключевые особенности</h3>
 <ul>
@@ -380,7 +380,7 @@ npm test               # Jest-тесты (App, мок-данные)
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-influxdb">
-<p><a href="../README.md">↑ Saspik-cluster</a></p>
+<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
 <h1 id="⧫-influxdb--бакеты-и-retention">⧫ InfluxDB — бакеты и retention</h1>
 <h4 id="time-series-база-данных-influxdb-2x-для-сенсорных-данных-и-логов">Time-series база данных (InfluxDB 2.x) для сенсорных данных и логов</h4>
 <p>InfluxDB 2.x хранит данные от Telegraf.<br>Образ собирается локально из <code>influxdb/Dockerfile</code> (<code>FROM influxdb:2.9.1</code>).<br>В образ вшит каталог <code>provision/</code> — никаких bind-mount&#39;ов скриптов в compose, они всегда доступны<br>внутри образа по пути <code>/provision/</code> (важно для деплоя через Portainer из Git,<br>где bind-mount на недостающий каталог на сервере падал бы).</p>
@@ -582,7 +582,7 @@ docker compose up -d mosquitto
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-mqtt-rule-engine">
 <p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
-<h1 id="⧫-mqtt-rule-engine-worker">⧫ MQTT Rule Engine Worker</h1>
+<h1 id="⧫-mqtt-rule-engine--воркер">⧫ MQTT Rule Engine — Воркер</h1>
 <h4 id="движок-правил-для-mqtt-автоматическое-выполнение-действий-по-условиям">Движок правил для MQTT: автоматическое выполнение действий по условиям</h4>
 <p>Правила загружаются из MongoDB, HTTP API или файла и обновляются в рантайме без остановки процесса.</p>
 <h3 id="основные-компоненты">Основные компоненты:</h3>
@@ -633,70 +633,70 @@ npm run clean           # очистка dist/
 <table>
 <thead>
 <tr>
-<th>Переменная</th>
-<th>Описание</th>
-<th>По умолчанию</th>
+<th align="left">Переменная</th>
+<th align="left">Описание</th>
+<th align="left">По умолчанию</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>MQTT_BROKER_URL</code></td>
-<td>URL MQTT-брокера</td>
-<td><code>mqtt://localhost:1883</code></td>
+<td align="left"><code>MQTT_BROKER_URL</code></td>
+<td align="left">URL MQTT-брокера</td>
+<td align="left"><code>mqtt://localhost:1883</code></td>
 </tr>
 <tr>
-<td><code>MQTT_USERNAME</code> / <code>MQTT_PASSWORD</code></td>
-<td>Авторизация на брокере</td>
-<td>—</td>
+<td align="left"><code>MQTT_USERNAME</code> / <code>MQTT_PASSWORD</code></td>
+<td align="left">Авторизация на брокере</td>
+<td align="left">—</td>
 </tr>
 <tr>
-<td><code>RULES_SOURCE</code></td>
-<td>Источник правил</td>
-<td><code>mongo</code></td>
+<td align="left"><code>RULES_SOURCE</code></td>
+<td align="left">Источник правил</td>
+<td align="left"><code>mongo</code></td>
 </tr>
 <tr>
-<td><code>MONGODB_URL</code></td>
-<td>Строка подключения к MongoDB (при <code>RULES_SOURCE=mongo</code>)</td>
-<td>—</td>
+<td align="left"><code>MONGODB_URL</code></td>
+<td align="left">Строка подключения к MongoDB (при <code>RULES_SOURCE=mongo</code>)</td>
+<td align="left">—</td>
 </tr>
 <tr>
-<td><code>RULES_API_URL</code></td>
-<td>URL API-сервера (при <code>RULES_SOURCE=api</code>)</td>
-<td>—</td>
+<td align="left"><code>RULES_API_URL</code></td>
+<td align="left">URL API-сервера (при <code>RULES_SOURCE=api</code>)</td>
+<td align="left">—</td>
 </tr>
 <tr>
-<td><code>CONFIG_PATH</code></td>
-<td>Путь к файлу правил (при <code>RULES_SOURCE=file</code>)</td>
-<td><code>./rules.json</code></td>
+<td align="left"><code>CONFIG_PATH</code></td>
+<td align="left">Путь к файлу правил (при <code>RULES_SOURCE=file</code>)</td>
+<td align="left"><code>./rules.json</code></td>
 </tr>
 <tr>
-<td><code>RULES_POLL_INTERVAL_MS</code></td>
-<td>Интервал опроса источника правил, мс</td>
-<td><code>5000</code></td>
+<td align="left"><code>RULES_POLL_INTERVAL_MS</code></td>
+<td align="left">Интервал опроса источника правил, мс</td>
+<td align="left"><code>5000</code></td>
 </tr>
 </tbody></table>
 <h3 id="источники-правил">Источники правил</h3>
 <table>
 <thead>
 <tr>
-<th>Значение <code>RULES_SOURCE</code></th>
-<th>Источник</th>
-<th>Описание</th>
+<th align="left">Значение <code>RULES_SOURCE</code></th>
+<th align="left">Источник</th>
+<th align="left">Описание</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>mongo</code></td>
-<td>MongoDB</td>
-<td>Коллекция <code>rules</code>, поле <code>enabled</code> отключает правило</td>
+<td align="left"><code>mongo</code></td>
+<td align="left">MongoDB</td>
+<td align="left">Коллекция <code>rules</code>, поле <code>enabled</code> отключает правило</td>
 </tr>
 <tr>
-<td><code>api</code></td>
-<td>HTTP API сервера</td>
-<td><code>GET {RULES_API_URL}</code>, ожидает <code>{ &quot;rules&quot;: [...] }</code> или <code>[...]</code></td>
+<td align="left"><code>api</code></td>
+<td align="left">HTTP API сервера</td>
+<td align="left"><code>GET {RULES_API_URL}</code>, ожидает <code>{ &quot;rules&quot;: [...] }</code> или <code>[...]</code></td>
 </tr>
 <tr>
-<td><code>file</code></td>
-<td>Локальный <code>rules.json</code></td>
-<td>Файловый источник с отслеживанием изменений (<code>ConfigWatcher</code>)</td>
+<td align="left"><code>file</code></td>
+<td align="left">Локальный <code>rules.json</code></td>
+<td align="left">Файловый источник с отслеживанием изменений (<code>ConfigWatcher</code>)</td>
 </tr>
 </tbody></table>
 <p>Все источники поддерживают env-подстановку в правилах (<code>${VAR}</code> и <code>${expr:...}</code>) и опрос с интервалом <code>RULES_POLL_INTERVAL_MS</code>. При изменении правил движок перестраивает подписки без перезапуска.</p>
@@ -722,45 +722,45 @@ npm run clean           # очистка dist/
 <table>
 <thead>
 <tr>
-<th>Тип</th>
-<th>Параметр</th>
-<th>Пример</th>
+<th align="left">Тип</th>
+<th align="left">Параметр</th>
+<th align="left">Пример</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>topicRegex</code></td>
-<td>Регулярное выражение для топика</td>
-<td><code>&quot;^sensor/.+/status$&quot;</code></td>
+<td align="left"><code>topicRegex</code></td>
+<td align="left">Регулярное выражение для топика</td>
+<td align="left"><code>&quot;^sensor/.+/status$&quot;</code></td>
 </tr>
 <tr>
-<td><code>jsonpath</code></td>
-<td>Выражение <code>$.field оператор значение</code></td>
-<td><code>&quot;$.temperature &gt; 30&quot;</code></td>
+<td align="left"><code>jsonpath</code></td>
+<td align="left">Выражение <code>$.field оператор значение</code></td>
+<td align="left"><code>&quot;$.temperature &gt; 30&quot;</code></td>
 </tr>
 <tr>
-<td><code>payloadEquals</code></td>
-<td>Точное совпадение payload как строки</td>
-<td><code>&quot;OK&quot;</code></td>
+<td align="left"><code>payloadEquals</code></td>
+<td align="left">Точное совпадение payload как строки</td>
+<td align="left"><code>&quot;OK&quot;</code></td>
 </tr>
 <tr>
-<td><code>timeBetween</code></td>
-<td>Диапазон времени срабатывания</td>
-<td><code>{ &quot;from&quot;: &quot;22:00&quot;, &quot;to&quot;: &quot;06:00&quot; }</code></td>
+<td align="left"><code>timeBetween</code></td>
+<td align="left">Диапазон времени срабатывания</td>
+<td align="left"><code>{ &quot;from&quot;: &quot;22:00&quot;, &quot;to&quot;: &quot;06:00&quot; }</code></td>
 </tr>
 <tr>
-<td><code>and</code></td>
-<td>Массив условий (логическое И)</td>
-<td><code>[{&quot;topicRegex&quot;: &quot;^sensor/.+&quot;}, {&quot;jsonpath&quot;: &quot;$.value &gt; 0&quot;}]</code></td>
+<td align="left"><code>and</code></td>
+<td align="left">Массив условий (логическое И)</td>
+<td align="left"><code>[{&quot;topicRegex&quot;: &quot;^sensor/.+&quot;}, {&quot;jsonpath&quot;: &quot;$.value &gt; 0&quot;}]</code></td>
 </tr>
 <tr>
-<td><code>or</code></td>
-<td>Массив условий (логическое ИЛИ)</td>
-<td>аналогично <code>and</code></td>
+<td align="left"><code>or</code></td>
+<td align="left">Массив условий (логическое ИЛИ)</td>
+<td align="left">аналогично <code>and</code></td>
 </tr>
 <tr>
-<td><code>not</code></td>
-<td>Одно условие (логическое НЕ)</td>
-<td><code>{&quot;topicRegex&quot;: &quot;^test/.+&quot;}</code></td>
+<td align="left"><code>not</code></td>
+<td align="left">Одно условие (логическое НЕ)</td>
+<td align="left"><code>{&quot;topicRegex&quot;: &quot;^test/.+&quot;}</code></td>
 </tr>
 </tbody></table>
 <h4 id="действия-then">Действия (<code>then</code>)</h4>
@@ -769,30 +769,30 @@ npm run clean           # очистка dist/
 <table>
 <thead>
 <tr>
-<th>Параметр</th>
-<th>Описание</th>
-<th>По умолчанию</th>
+<th align="left">Параметр</th>
+<th align="left">Описание</th>
+<th align="left">По умолчанию</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>topic</code></td>
-<td>Топик для публикации</td>
-<td>—</td>
+<td align="left"><code>topic</code></td>
+<td align="left">Топик для публикации</td>
+<td align="left">—</td>
 </tr>
 <tr>
-<td><code>payload</code></td>
-<td>Строка payload, поддерживает плейсхолдеры <code>{{field}}</code></td>
-<td>—</td>
+<td align="left"><code>payload</code></td>
+<td align="left">Строка payload, поддерживает плейсхолдеры <code>{{field}}</code></td>
+<td align="left">—</td>
 </tr>
 <tr>
-<td><code>qos</code></td>
-<td>QoS публикации</td>
-<td><code>0</code></td>
+<td align="left"><code>qos</code></td>
+<td align="left">QoS публикации</td>
+<td align="left"><code>0</code></td>
 </tr>
 <tr>
-<td><code>retain</code></td>
-<td>Флаг retain</td>
-<td><code>false</code></td>
+<td align="left"><code>retain</code></td>
+<td align="left">Флаг retain</td>
+<td align="left"><code>false</code></td>
 </tr>
 </tbody></table>
 <h5 id="log--логирование-консоль--лог-топик-mqtt"><code>log</code> — логирование (консоль + лог-топик MQTT)</h5>
@@ -800,20 +800,20 @@ npm run clean           # очистка dist/
 <table>
 <thead>
 <tr>
-<th>Параметр</th>
-<th>Описание</th>
-<th>По умолчанию</th>
+<th align="left">Параметр</th>
+<th align="left">Описание</th>
+<th align="left">По умолчанию</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>level</code></td>
-<td>Уровень: <code>info</code>, <code>warn</code>, <code>error</code></td>
-<td><code>info</code></td>
+<td align="left"><code>level</code></td>
+<td align="left">Уровень: <code>info</code>, <code>warn</code>, <code>error</code></td>
+<td align="left"><code>info</code></td>
 </tr>
 <tr>
-<td><code>message</code></td>
-<td>Строка с плейсхолдерами <code>{{field}}</code></td>
-<td>—</td>
+<td align="left"><code>message</code></td>
+<td align="left">Строка с плейсхолдерами <code>{{field}}</code></td>
+<td align="left">—</td>
 </tr>
 </tbody></table>
 <p>Срабатывание правила логируется движком как <code>event=rule-fired</code>, ошибка выполнения — <code>event=rule-error</code>. Входящие сообщения поштучно не логируются (анти-спам).</p>
@@ -821,17 +821,17 @@ npm run clean           # очистка dist/
 <table>
 <thead>
 <tr>
-<th>Параметр</th>
-<th>Описание</th>
+<th align="left">Параметр</th>
+<th align="left">Описание</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>delayMs</code></td>
-<td>Задержка в миллисекундах</td>
+<td align="left"><code>delayMs</code></td>
+<td align="left">Задержка в миллисекундах</td>
 </tr>
 <tr>
-<td><code>then</code></td>
-<td>Массив действий для выполнения после задержки</td>
+<td align="left"><code>then</code></td>
+<td align="left">Массив действий для выполнения после задержки</td>
 </tr>
 </tbody></table>
 <h3 id="обновление-правил-в-рантайме">Обновление правил в рантайме</h3>

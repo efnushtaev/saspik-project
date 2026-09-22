@@ -1,4 +1,4 @@
-[↑ Saspik-cluster](../README.md)
+[↑ Saspik-cluster](../../README.md)
 
 # ⧫ InfluxDB — бакеты и retention
 
