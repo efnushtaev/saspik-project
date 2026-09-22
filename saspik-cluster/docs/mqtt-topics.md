@@ -82,8 +82,6 @@ String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT
 | :----- | :------| :------------------------ |
 | `state`| string | `ON` — включить, `OFF` — выключить |
 
-#### `units/{unitId}/commands/{objectId}`
-
 ### Служебные топики
 
 #### `healthcheck/ping`
@@ -91,34 +89,6 @@ String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT
 Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).
 
 Payload: `{"payload":"test"}` (валидный JSON — ранее был текст `test`, из-за которого telegraf, подписанный на `healthcheck/#` как на JSON, ронял батч `mqtt_consumer`; топик убран из JSON-входа telegraf).
-
-#### `units/{unitId}/sensors`
-
-Используется ClimateControlService для получения сводки по всем сенсорам юнита.
-
-```json
-{
-  "objectsList": [
-    { "sensorType": "temperature", "value": 24.5 },
-    { "sensorType": "humidity", "value": 65.0 },
-    { "sensorType": "float", "value": 0 }
-  ]
-}
-```
-
-##### Структура
-
-| Поле          | Тип   | Описание                                          |
-| :------------ | :---- | :------------------------------------------------ |
-| `objectsList` | array | Массив показаний: `{ sensorType, value }` по каждому сенсору юнита |
-
-#### `clients/{clientId}/#`
-
-Пространство имён клиента (по Client ID, `%c` в ACL). Назначение — изолированные топики конкретного подключения.
-
-### Логирование и диагностика
-
-Логирование и диагностика кластера (единый JSON-конверт, лог-топики, хранение в InfluxDB) описаны в [docs/logs](logs.md).
 
 ### Брокер
 
