@@ -110,6 +110,12 @@
 <a href="#saspik-greenhouse-docs-sensor-ph-ec" class="l3">saspik-greenhouse/docs/sensor-ph-ec</a>
 <a href="#saspik-iot" class="">saspik-iot</a>
 <a href="#saspik-iot-docs-classification" class="l3">saspik-iot/docs/classification</a>
+<a href="#saspik-iot-ag-iot-sketches" class="l2">saspik-iot/ag-iot-sketches</a>
+<a href="#saspik-iot-ag-iot-sketches-esp32-controller" class="l3">saspik-iot/ag-iot-sketches/esp32-controller</a>
+<a href="#saspik-iot-ag-iot-sketches-esp32-local-mqtt" class="l3">saspik-iot/ag-iot-sketches/esp32-local-mqtt</a>
+<a href="#saspik-iot-ag-iot-sketches-saspik-iot-node-sensor-1" class="l3">saspik-iot/ag-iot-sketches/saspik-iot-node-sensor-1</a>
+<a href="#saspik-iot-ag-iot-sketches-shared-device-log" class="l3">saspik-iot/ag-iot-sketches/shared/device-log</a>
+<a href="#saspik-iot-ag-iot-sketches-shared-wifi-config" class="l3">saspik-iot/ag-iot-sketches/shared/wifi-config</a>
 <a href="#saspik-meshrover" class="">saspik-meshrover</a>
 <a href="#saspik-meshrover-docs-hardware" class="l3">saspik-meshrover/docs/hardware</a>
 </nav>
@@ -2275,7 +2281,7 @@ npm run lint:fix      # ESLint с автофиксом
 <p>Контекст проекта: <code>opencode/agents.md → saspik-iot</code>.<br>Скетчи живут в <code>ag-iot-sketches/</code>.</p>
 <h3 id="программное-обеспечение">Программное обеспечение</h3>
 <ul>
-<li><a href="ag-iot-sketches/README.md"><code>ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
+<li><a href="#saspik-iot-ag-iot-sketches"><code>ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
 </ul>
 <h3 id="классификация-устройств">Классификация устройств</h3>
 <p>Устройства классифицируются по формату <code>saspik.{роли}.{протокол}.{питание}{nnn}</code>.<br>Подробнее: <a href="#saspik-iot-docs-classification"><code>docs/classification.md</code></a></p>
@@ -2381,6 +2387,597 @@ npm run lint:fix      # ESLint с автофиксом
 <td align="left">esp32-node-template (шаблон)</td>
 </tr>
 </tbody></table>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-iot-ag-iot-sketches">
+<p><a href="#saspik-iot">↑ SASPIK IoT</a></p>
+<h1 id="⧫-saspik-iot-sketches">⧫ saspik-iot-sketches</h1>
+<h4 id="скетчи-для-iot-устройств-saspik">Скетчи для IoT-устройств SASPIK</h4>
+<p>Платформа — <strong>ESP32 DOIT DevKit V1</strong>.<br>Фреймворк — <strong>Arduino</strong>.</p>
+<h3 id="что-внутри">Что внутри?</h3>
+<h4 id="esp32-controller"><a href="#saspik-iot-ag-iot-sketches-esp32-controller"><em>esp32-controller</em></a></h4>
+<p>Приложение для работы ESP32 в качестве шлюза (<strong>gateway</strong>) в сети ESP-NOW. Собирает данные от узлов в ESP-NOW, и отправляет в MQTT-брокер по WiFi</p>
+<h4 id="esp32-local-mqtt"><a href="#saspik-iot-ag-iot-sketches-esp32-local-mqtt"><em>esp32-local-mqtt</em></a></h4>
+<p>Локальный MQTT-сенсор (DHT22): публикует температуру/влажность, управление светодиодом. С повышенной устойчивостью: восстановление Wi-Fi, авто-ребут при сбоях и энергонезависимый лог с причиной перезапуска (<code>device-log</code>)</p>
+<h4 id="saspik-iot-node-sensor-1"><a href="#saspik-iot-ag-iot-sketches-saspik-iot-node-sensor-1"><em>saspik-iot-node-sensor-1</em></a></h4>
+<p>Прошивка для ESP32 с датчиками DHT-22 и поплавковым датчиком (геркон). Данные отправляются по ESP-NOW на приёмник</p>
+<h3 id="рецепты-для-скетчей">Рецепты для скетчей</h3>
+<h3 id="получение-доступного-wifi-канала">Получение доступного WiFi канала</h3>
+<pre><code>int32_t getWiFiChannel(const char *ssid)
+{
+    if (int32_t n = WiFi.scanNetworks())
+    {
+        for (uint8_t i = 0; i &lt; n; i++)
+        {
+            if (!strcmp(ssid, WiFi.SSID(i).c_str()))
+            {
+                return WiFi.channel(i);
+            }
+        }
+    }
+
+    return 0;
+}
+</code></pre>
+<h4 id="как-это-работает">Как это работает?</h4>
+<p>Функция <code>getWiFiChannel</code> определяет канал Wi-Fi сети по её SSID. Она выполняет сканирование доступных сетей с помощью <code>WiFi.scanNetworks()</code> и сравнивает SSID каждой найденной сети с переданным значением.</p>
+<p>Если совпадение найдено, возвращается канал этой сети через <code>WiFi.channel(i)</code>. Если сеть не найдена или сканирование не удалось, функция возвращает <code>0</code>.</p>
+<h3 id="получение-данных-с-датчика-dht-22">Получение данных с датчика DHT-22</h3>
+<pre><code>#include &lt;DHT.h&gt;
+
+#define DHTPIN 4
+#define DHTTYPE DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+
+typedef struct struct_dht
+{
+    float temperature;
+    float humidity;
+} struct_dht;
+
+struct_dht myData;
+
+float tempReadings[10];
+float humReadings[10];
+
+bool read_dht_data(float &amp;avgTemp, float &amp;avgHum)
+{
+    for (int i = 0; i &lt; 10; i++)
+    {
+        float t = dht.readTemperature();
+        float h = dht.readHumidity();
+
+        if (isnan(t) || isnan(h))
+        {
+            Serial.println(&quot;DHT Read Failed!&quot;);
+            avgTemp = 0;
+            avgHum = 0;
+            return false;
+        }
+
+        tempReadings[i] = t;
+        humReadings[i] = h;
+        delay(200); // Задержка между измерениями
+    }
+
+    std::sort(tempReadings, tempReadings + 10);
+    std::sort(humReadings, humReadings + 10);
+
+    float tempSum = 0, humSum = 0;
+    for (int i = 2; i &lt; 8; i++)
+    {
+        tempSum += tempReadings[i];
+        humSum += humReadings[i];
+    }
+
+    avgTemp = tempSum / 6;
+    avgHum = humSum / 6;
+
+    return true;
+}
+
+
+void loop()
+{
+    dht.begin();
+    delay(500); // Для стабилизации работы датчика после запуска
+    read_dht_data(myData.temperature, myData.humidity);
+}
+</code></pre>
+<h4 id="как-это-работает-1">Как это работает?</h4>
+<p>Функция <code>read_dht_data</code> считывает данные температуры и влажности с датчика DHT-22, выполняет 10 измерений, сортирует результаты и вычисляет средние значения, исключая крайние (2 минимальных и 2 максимальных).</p>
+<p>Если чтение данных с датчика не удалось, возвращается <code>false</code>, а средние значения обнуляются.</p>
+<h3 id="структура-каталога">Структура каталога</h3>
+<pre><code>.
+├── README.md
+├── esp32-battery-check/
+├── esp32-controller/
+├── esp32-local-mqtt/
+├── esp32-node-template/
+└── saspik-iot-node-sensor-1/
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-iot-ag-iot-sketches-esp32-controller">
+<p><a href="#saspik-iot-ag-iot-sketches">↑ ag-iot-sketches</a></p>
+<h1 id="⧫-esp32-controller-esp-now-→-mqtt-gateway">⧫ ESP32 Controller (ESP-NOW → MQTT Gateway)</h1>
+<h4 id="esp32-шлюз-сбор-данных-от-узлов-по-esp-now-публикация-в-mqtt-кластера-saspik">ESP32-шлюз: сбор данных от узлов по ESP-NOW, публикация в MQTT кластера SASPIK</h4>
+<p>Шлюз собирает данные от узлов по ESP-NOW, парсит бинарный протокол с CRC8<br>и публикует JSON в MQTT кластера SASPIK.<br>Подписывается на relay-топики для управления нагрузками.</p>
+<h3 id="как-это-работает">Как это работает</h3>
+<ul>
+<li><strong>ESP-NOW</strong> — приём данных от node-устройств (температура, влажность, поплавковый датчик)</li>
+<li><strong>NTP</strong> — синхронизация времени для ISO 8601 меток в публикациях</li>
+<li><strong>MQTT</strong> — публикация JSON в топики <code>sensor/{unitId}/dht22</code> и <code>sensor/{unitId}/float-1</code> каждые 5с</li>
+<li><strong>Relay control</strong> — подписка на <code>units/{unitId}/commands/a_relay1-4</code>, управление GPIO через callback</li>
+<li><strong>Два ядра FreeRTOS</strong> — ESP-NOW на core 0, MQTT на core 1</li>
+</ul>
+<h3 id="форматы-топиков">Форматы топиков</h3>
+<p>Подробное описание всех топиков и форматов сообщений — в <a href="../../saspik-cluster/docs/mqtt-topics.md"><code>saspik-cluster/docs/mqtt-topics.md</code></a>.</p>
+<h3 id="конфигурация">Конфигурация</h3>
+<p>Все настройки в <a href="../esp32-controller/src/config.h"><code>src/config.h</code></a>:</p>
+<ul>
+<li>WiFi SSID / пароль</li>
+<li>MQTT сервер, порт, логин/пароль</li>
+<li>Unit ID, топики сенсоров и реле</li>
+<li>Пины реле</li>
+<li>NTP сервер, интервал публикации</li>
+</ul>
+<h3 id="зависимости-platformioini">Зависимости (platformio.ini)</h3>
+<ul>
+<li><code>PubSubClient</code> — MQTT</li>
+<li><code>ArduinoJson</code> — формирование JSON</li>
+<li><code>CRC8</code> — проверка целостности ESP-NOW пакетов</li>
+</ul>
+<h3 id="структура-каталога">Структура каталога</h3>
+<pre><code>.
+├── include/
+├── lib/
+├── platformio.ini
+├── README.md
+├── src/
+│   ├── config.h
+│   ├── main.cpp
+│   ├── mqtt_handler.h
+│   └── mqtt_handler.cpp
+├── test/
+└── .vscode/
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-iot-ag-iot-sketches-esp32-local-mqtt">
+<p><a href="#saspik-iot-ag-iot-sketches">↑ ag-iot-sketches</a></p>
+<h1 id="⧫-esp32-local-mqtt">⧫ esp32-local-mqtt</h1>
+<h4 id="esp32-doit-devkit-v1--dht22--mqtt-локальный-сенсор-с-устойчивостью-к-сбоям">ESP32 (DOIT DevKit V1) + DHT22 + MQTT: локальный сенсор с устойчивостью к сбоям</h4>
+<p>Скетч публикует температуру и влажность в MQTT-брокер, управляет светодиодом<br>по командам. Отличается <strong>повышенной устойчивостью</strong>: восстановление Wi-Fi,<br>авто-ребут при длительных сбоях и энергонезависимый лог событий<br>с причиной последнего перезапуска.</p>
+<h3 id="возможности">Возможности</h3>
+<ul>
+<li>Чтение температуры/влажности с DHT22 (GPIO 4) с интервалом <code>SENSOR_INTERVAL_MS</code></li>
+<li>Публикация JSON в MQTT-топик <code>sensor/unitId2/saspik.sa.wm.m001</code></li>
+<li>Управление светодиодом (GPIO 2) по командам <code>{&quot;state&quot;:&quot;ON&quot;}</code>/<code>{&quot;state&quot;:&quot;OFF&quot;}</code> с подпиской <code>device/unitId2/saspik.sa.wm.m001</code></li>
+<li>Captive portal для настройки Wi-Fi/MQTT (<code>wifi-config</code>), кнопка на GPIO 25</li>
+<li><strong>Восстановление Wi-Fi</strong>: при обрыве <code>WiFi.disconnect()+WiFi.reconnect()</code> раз в <code>WIFI_RECONNECT_INTERVAL_MS</code></li>
+<li><strong>Авто-ребут</strong>: при непрерывной недоступности MQTT &gt; <code>MQTT_REBOOT_TIMEOUT_MS</code> или Wi-Fi &gt; <code>WIFI_REBOOT_TIMEOUT_MS</code></li>
+<li><strong>Энергонезависимый лог</strong> (<code>device-log</code>): хвост событий на LittleFS + причина последнего ребута в NVS</li>
+<li><strong>Удалённая диагностика</strong>: при старте шлёт хвост лога, во время сбоя — JSON-диагностику раз в <code>DIAG_PUBLISH_INTERVAL_MS</code></li>
+</ul>
+<h3 id="параметры-configh">Параметры (config.h)</h3>
+<p>Все настраиваемые параметры вынесены в <a href="src/config.h"><code>src/config.h</code></a>:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Параметр</th>
+<th align="left">Значение</th>
+<th align="left">Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>OBJECT_ID</code> / <code>UNIT_ID</code> / <code>OBJECT_TYPE</code></td>
+<td align="left"><code>saspik.sa.wm.m001</code> / <code>unitId2</code> / <code>sensor</code></td>
+<td align="left">Идентификация объекта</td>
+</tr>
+<tr>
+<td align="left"><code>MQTT_BROKER</code> / <code>MQTT_PORT</code> / <code>MQTT_USER</code> / <code>MQTT_PASS</code></td>
+<td align="left">—</td>
+<td align="left">Параметры брокера</td>
+</tr>
+<tr>
+<td align="left"><code>TOPIC_SUBSCRIBE</code></td>
+<td align="left"><code>device/unitId2/saspik.sa.wm.m001</code></td>
+<td align="left">Топик управления (LED)</td>
+</tr>
+<tr>
+<td align="left"><code>TOPIC_DIAG</code></td>
+<td align="left"><code>device/unitId2/saspik.sa.wm.m001/log</code></td>
+<td align="left">Топик лога и диагностики</td>
+</tr>
+<tr>
+<td align="left"><code>MQTT_REBOOT_TIMEOUT_MS</code></td>
+<td align="left"><code>900000</code> (15 мин)</td>
+<td align="left">МQТТ недоступен → ребут</td>
+</tr>
+<tr>
+<td align="left"><code>WIFI_REBOOT_TIMEOUT_MS</code></td>
+<td align="left"><code>300000</code> (5 мин)</td>
+<td align="left">Wi-Fi не поднялся → ребут</td>
+</tr>
+<tr>
+<td align="left"><code>WIFI_RECONNECT_INTERVAL_MS</code></td>
+<td align="left"><code>10000</code></td>
+<td align="left">Интервал попыток восстановления Wi-Fi</td>
+</tr>
+<tr>
+<td align="left"><code>DIAG_PUBLISH_INTERVAL_MS</code></td>
+<td align="left"><code>60000</code></td>
+<td align="left">Период публикации диагностики при сбое</td>
+</tr>
+<tr>
+<td align="left"><code>SENSOR_INTERVAL_MS</code></td>
+<td align="left"><code>2000</code></td>
+<td align="left">Период чтения датчика</td>
+</tr>
+<tr>
+<td align="left"><code>DHT_TYPE</code></td>
+<td align="left"><code>22</code></td>
+<td align="left">Тип датчика DHT</td>
+</tr>
+<tr>
+<td align="left"><code>PIN_DHT</code> / <code>PIN_LED</code> / <code>CONFIG_BUTTON_PIN</code></td>
+<td align="left"><code>4</code> / <code>2</code> / <code>25</code></td>
+<td align="left">Пины</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Значения по умолчанию (SSID/пароль Wi-Fi) берутся из <code>env_config.h</code>, который генерируется <code>extra_script.py</code> из переменных окружения <code>.env</code>.</p>
+</blockquote>
+<h3 id="диагностика">Диагностика</h3>
+<p>Топик <code>TOPIC_DIAG</code> (<code>device/unitId2/saspik.sa.wm.m001/log</code>):</p>
+<ul>
+<li><strong>При старте</strong> (если был зафиксирован предыдущий ребут): публикуется хвост лога с событиями.</li>
+<li><strong>Во время сбоя</strong> (раз в <code>DIAG_PUBLISH_INTERVAL_MS</code>): JSON:</li>
+</ul>
+<pre><code class="language-json">{&quot;uptime&quot;:12345,&quot;wifi&quot;:3,&quot;mqtt&quot;:-2,&quot;lostSec&quot;:60}
+</code></pre>
+<p>Причины ребута: <code>wifi-lost</code>, <code>mqtt-timeout</code>. Лог также доступен в Serial (<code>pio device monitor</code>).</p>
+<h3 id="сборка-и-прошивка">Сборка и прошивка</h3>
+<pre><code class="language-bash"># Сборка
+pio run
+
+# Прошивка (и файловая система для лога при первом прошивании)
+pio run -t upload
+pio run -t uploadfs
+
+# Монитор Serial
+pio device monitor
+</code></pre>
+<h3 id="зависимости">Зависимости</h3>
+<ul>
+<li><code>knolleary/PubSubClient</code>, <code>adafruit/DHT sensor library</code>, <code>bblanchon/ArduinoJson</code></li>
+<li>Общие библиотеки из <code>../shared</code>: <code>wifi-config</code>, <code>device-log</code></li>
+<li>Файловая система: <code>board_build.filesystem = littlefs</code> (для лога)</li>
+</ul>
+<h3 id="структура">Структура</h3>
+<pre><code>esp32-local-mqtt/
+├── platformio.ini
+├── extra_script.py       # генерация env_config.h из .env
+└── src/
+    ├── main.cpp
+    └── config.h          # все параметры (топики, таймауты, пины)
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-iot-ag-iot-sketches-saspik-iot-node-sensor-1">
+<p><a href="#saspik-iot-ag-iot-sketches">↑ ag-iot-sketches</a></p>
+<h1 id="⧫-saspik-iot-node-sensor-1">⧫ saspik-iot-node-sensor-1</h1>
+<h4 id="прошивка-для-esp32-с-датчиками-dht-22-и-поплавковым-датчиком-геркон">Прошивка для ESP32 с датчиками DHT-22 и поплавковым датчиком (геркон)</h4>
+<p>Данные отправляются по ESP-NOW на приёмник.</p>
+<h3 id="аппаратная-схема">Аппаратная схема</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Пин</th>
+<th align="left">Назначение</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">GPIO4</td>
+<td align="left">DHT-22 (data)</td>
+</tr>
+<tr>
+<td align="left">GPIO13</td>
+<td align="left">Поплавковый датчик (геркон, INPUT_PULLUP)</td>
+</tr>
+</tbody></table>
+<h3 id="цикл-работы">Цикл работы</h3>
+<ol>
+<li>Пробуждение из глубокого сна (каждые 2 секунды)</li>
+<li>Чтение DHT-22 (температура, влажность)</li>
+<li>Чтение поплавкового датчика (вода есть/нет)</li>
+<li>Отправка данных по ESP-NOW</li>
+<li>Вывод JSON в Serial</li>
+<li>Глубокий сон на 2 секунды</li>
+</ol>
+<h3 id="структура-проекта">Структура проекта</h3>
+<pre><code>src/
+├── main.cpp                          # Оркестратор
+├── config.h                          # Конфигурация (пины, MAC, таймауты)
+├── sensors/
+│   ├── ISensor.h                     # Интерфейс датчика
+│   ├── Dht22Sensor.h/.cpp            # DHT-22
+│   └── FloatSensor.h/.cpp            # Поплавковый датчик
+├── communication/
+│   └── EspNowTransport.h/.cpp        # ESP-NOW транспорт
+├── system/
+│   └── SleepManager.h/.cpp           # Управление глубоким сном
+└── utils/
+    ├── Filter.h/.cpp                 # Фильтрация сигналов
+    └── Formatter.h/.cpp              # Форматирование JSON
+</code></pre>
+<h3 id="бинарный-протокол-esp-now">Бинарный протокол ESP-NOW</h3>
+<p>Данные передаются в сыром бинарном виде (не JSON, не текст).</p>
+<h4 id="формат-пакета">Формат пакета</h4>
+<pre><code>[timestamp: 4 байта] [fieldId: 1 байт] [data: N байт] ... [checksum: 1 байт]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th align="left">Смещение</th>
+<th align="left">Размер</th>
+<th align="left">Поле</th>
+<th align="left">Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">4</td>
+<td align="left"><code>timestamp</code></td>
+<td align="left">unsigned long, little-endian</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left">1</td>
+<td align="left"><code>fieldId[0]</code></td>
+<td align="left">Идентификатор первого поля (uint8_t)</td>
+</tr>
+<tr>
+<td align="left">5</td>
+<td align="left">N</td>
+<td align="left"><code>data[0]</code></td>
+<td align="left">Данные первого поля (raw binary)</td>
+</tr>
+<tr>
+<td align="left">5+N</td>
+<td align="left">1</td>
+<td align="left"><code>fieldId[1]</code></td>
+<td align="left">Идентификатор второго поля</td>
+</tr>
+<tr>
+<td align="left">6+N</td>
+<td align="left">M</td>
+<td align="left"><code>data[1]</code></td>
+<td align="left">Данные второго поля</td>
+</tr>
+<tr>
+<td align="left">...</td>
+<td align="left">...</td>
+<td align="left">...</td>
+<td align="left">...</td>
+</tr>
+<tr>
+<td align="left">last</td>
+<td align="left">1</td>
+<td align="left"><code>checksum</code></td>
+<td align="left">CRC8 от всех байт ДО checksum</td>
+</tr>
+</tbody></table>
+<h4 id="идентификаторы-полей">Идентификаторы полей</h4>
+<table>
+<thead>
+<tr>
+<th align="left">ID</th>
+<th align="left">Поле</th>
+<th align="left">Тип</th>
+<th align="left">Размер</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">temperature</td>
+<td align="left">float</td>
+<td align="left">4 байта</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">humidity</td>
+<td align="left">float</td>
+<td align="left">4 байта</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left">float_sensor</td>
+<td align="left">float</td>
+<td align="left">4 байта</td>
+</tr>
+</tbody></table>
+<h4 id="пример-пакета-20-байт">Пример пакета (20 байт)</h4>
+<pre><code>Байт  0-3:   timestamp    (unsigned long)
+Байт  4:     0x01         (FIELD_TEMPERATURE)
+Байт  5-8:   temperature  (float)
+Байт  9:     0x02         (FIELD_HUMIDITY)
+Байт 10-13:  humidity     (float)
+Байт 14:     0x03         (FIELD_FLOAT_SENSOR)
+Байт 15-18:  floatState   (float)
+Байт 19:     CRC8         (от байт 0-18)
+</code></pre>
+<h4 id="разбор-на-приёмнике">Разбор на приёмнике</h4>
+<ol>
+<li>Прочитать первые 4 байта как <code>unsigned long</code> (timestamp)</li>
+<li>В цикле читать по 1 байту (fieldId), затем известное количество байт данных для этого fieldId</li>
+<li>Последний байт — CRC8. Вычислить CRC8 от всех байт до него и сверить.</li>
+</ol>
+<h3 id="конфигурация">Конфигурация</h3>
+<p>Все настройки в <a href="../saspik-iot-node-sensor-1/src/config.h"><code>src/config.h</code></a>:</p>
+<ul>
+<li><code>WIFI_SSID</code> / <code>WIFI_PASS</code> — WiFi сеть для синхронизации канала</li>
+<li><code>ESP_NOW_RECEIVER_MAC</code> — MAC-адрес приёмника ESP-NOW</li>
+<li><code>SLEEP_SECONDS</code> — интервал глубокого сна (сек)</li>
+<li><code>SAMPLES</code> / <code>SAMPLE_DELAY</code> — количество и задержка сэмплов для фильтрации</li>
+<li><code>STAB_DELAY</code> — задержка стабилизации датчиков (мс)</li>
+</ul>
+<h3 id="зависимости-platformioini">Зависимости (platformio.ini)</h3>
+<ul>
+<li><code>adafruit/DHT sensor library</code> — DHT-22</li>
+<li><code>robtillaart/CRC</code> — CRC8 для ESP-NOW</li>
+</ul>
+<h3 id="структура-каталога">Структура каталога</h3>
+<pre><code>.
+├── include/
+├── lib/
+├── platformio.ini
+├── README.md
+├── src/
+├── test/
+└── .vscode/
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-iot-ag-iot-sketches-shared-device-log">
+<p><a href="../README.md">↑ ag-iot-sketches</a></p>
+<h1 id="⧫-device-log">⧫ device-log</h1>
+<h4 id="энергонезависимое-хранение-причины-ребута-для-esp32-arduino--platformio-в-nvs">Энергонезависимое хранение причины ребута для ESP32 (Arduino / PlatformIO) в NVS</h4>
+<p>Диагностические события публикуются в MQTT в едином JSON-конверте; здесь<br>фиксируется только причина последнего перезапуска, которая переживает<br>перезагрузку и потерю питания.</p>
+<blockquote>
+<p>История: ранее библиотека вела кольцевой файловый лог на <strong>LittleFS</strong>. Запись в LittleFS во время активного WiFi вызывала зависания/ресеты (flash-latency и нестабильность питания). По решению от файлового лога <strong>отказались</strong> — осталась только запись reboot-cause в NVS + публикация событий в MQTT.</p>
+</blockquote>
+<h3 id="возможности">Возможности</h3>
+<ul>
+<li><strong>NVS-причина ребута</strong>: <code>setRebootCause()</code>/<code>rebootCause()</code> — причина последнего ребута, не сбрасывается после чтения</li>
+<li>Редкая, малая запись в NVS — минимум flash-операций, стабильность при активном WiFi</li>
+<li>Без внешних зависимостей: <code>Preferences</code> из ESP32 Arduino Core</li>
+</ul>
+<h3 id="подключение-к-проекту">Подключение к проекту</h3>
+<p>В <code>platformio.ini</code> добавьте путь к общему каталогу библиотек:</p>
+<pre><code class="language-ini">lib_extra_dirs =
+    ../shared
+</code></pre>
+<h3 id="использование">Использование</h3>
+<pre><code class="language-cpp">#include &quot;DeviceLog.h&quot;
+
+void setup() {
+    DeviceLog.begin();
+
+    // Причина предыдущего ребута (из NVS)
+    if (DeviceLog.hasRebootCause()) {
+        Serial.println(DeviceLog.rebootCause());
+    }
+}
+
+void loop() {
+    // произошёл сбой — фиксируем причину и перезагружаемся
+    DeviceLog.setRebootCause(&quot;mqtt-timeout&quot;);
+    ESP.restart();
+}
+</code></pre>
+<h3 id="api">API</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Метод</th>
+<th align="left">Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>bool begin()</code></td>
+<td align="left">Инициализирует менеджер и загружает причину ребута из NVS</td>
+</tr>
+<tr>
+<td align="left"><code>void setRebootCause(const char* cause)</code></td>
+<td align="left">Сохраняет причину ребута в NVS</td>
+</tr>
+<tr>
+<td align="left"><code>const char* rebootCause()</code></td>
+<td align="left">Возвращает причину последнего ребута (или пустую строку)</td>
+</tr>
+<tr>
+<td align="left"><code>bool hasRebootCause()</code></td>
+<td align="left">Есть ли сохранённая причина</td>
+</tr>
+</tbody></table>
+<p>Глобальный экземпляр: <code>DeviceLog</code>.</p>
+<h3 id="причины-ребута-в-esp32-local-mqtt">Причины ребута в esp32-local-mqtt</h3>
+<p>Используются строки: <code>wifi-lost</code> (не поднялся Wi-Fi) и <code>mqtt-timeout</code> (долгая недоступность брокера). Причина отправляется на старте в MQTT-конверте (<code>event=&quot;startup&quot;</code>, поле <code>cause</code>).</p>
+<h3 id="структура">Структура</h3>
+<pre><code>device-log/
+├── library.json
+└── src/
+    ├── DeviceLog.h      # API + глобальный экземпляр
+    └── DeviceLog.cpp    # NVS-причина ребута
+</code></pre>
+
+</section>
+<hr class="section-sep">
+<section id="saspik-iot-ag-iot-sketches-shared-wifi-config">
+<p><a href="../README.md">↑ ag-iot-sketches</a></p>
+<h1 id="⧫-wifi-config">⧫ wifi-config</h1>
+<h4 id="универсальный-captive-portal-для-esp32-arduino--platformio-конфигурация-wi-fi-и-mqtt">Универсальный captive portal для ESP32 (Arduino / PlatformIO): конфигурация Wi-Fi и MQTT</h4>
+<p>Конфигурация Wi-Fi и MQTT без перепрошивки. Настройки сохраняются в <strong>NVS</strong><br>(<code>Preferences</code>) и переживают перезагрузку и потерю питания.</p>
+<h3 id="возможности">Возможности</h3>
+<ul>
+<li>Captive portal (DNS-перехват → <code>192.168.4.1</code>) на AP <code>SASPIK-XXXX</code></li>
+<li>Форма: SSID/пароль Wi-Fi, MQTT хост/порт/логин/пароль</li>
+<li>Кнопка «Сканировать Wi-Fi» (<code>GET /scan</code> → JSON список сетей)</li>
+<li>Кнопки «Сохранить и перезагрузить» (<code>POST /save</code>) и «Сбросить настройки» (<code>POST /reset</code>)</li>
+<li>Активация: <strong>первое включение</strong> (нет конфига в NVS) или <strong>кнопка при старте</strong></li>
+<li>Без внешних зависимостей: <code>Preferences</code>, <code>DNSServer</code>, <code>WebServer</code> из ESP32 Arduino Core</li>
+</ul>
+<h3 id="подключение-к-проекту">Подключение к проекту</h3>
+<p>В <code>platformio.ini</code> добавьте путь к общему каталогу библиотек:</p>
+<pre><code class="language-ini">lib_extra_dirs =
+    ../shared
+</code></pre>
+<h3 id="использование">Использование</h3>
+<pre><code class="language-cpp">#include &quot;WifiConfig.h&quot;
+
+DeviceConfig config;
+void setup() {
+    if (!WifiConfig.begin(config, CONFIG_BUTTON_PIN)) {
+        return;  // работает портал, loop() крутит handlePortal()
+    }
+    // config.wifiSsid, config.mqttHost, config.mqttPort, config.mqttUser, config.mqttPass
+}
+
+void loop() {
+    WifiConfig.handlePortal();
+    // ... основная логика (MQTT и т.п.)
+}
+</code></pre>
+<h4 id="параметры-begin">Параметры <code>begin()</code></h4>
+<pre><code class="language-cpp">bool begin(DeviceConfig&amp; out, int8_t buttonPin = -1, const DeviceConfig* defaults = nullptr);
+</code></pre>
+<ul>
+<li><code>out</code> — структура, заполняется рабочим конфигом</li>
+<li><code>buttonPin</code> — GPIO внешней кнопки (INPUT_PULLUP, нажатие = LOW), <code>-1</code> = нет кнопки</li>
+<li><code>defaults</code> — дефолтные значения (например из <code>env_config.h</code>/<code>config.h</code>), если NVS пуст</li>
+<li>возвращает <code>true</code> — подключено к Wi-Fi (штатный режим), <code>false</code> — активен портал</li>
+</ul>
+<h4 id="пин-кнопки">Пин кнопки</h4>
+<p>Пин задаётся в <code>config.h</code> каждого скетча:</p>
+<pre><code class="language-cpp">#define CONFIG_BUTTON_PIN 15
+</code></pre>
+<h3 id="структура">Структура</h3>
+<pre><code>wifi-config/
+├── library.json
+├── src/
+│   ├── WifiConfig.h      # API + DeviceConfig
+│   ├── WifiConfig.cpp    # NVS, DNS, WebServer, AP
+│   └── web/
+│       └── index_html.h  # HTML-страница портала
+</code></pre>
 
 </section>
 <hr class="section-sep">
