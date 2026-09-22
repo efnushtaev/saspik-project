@@ -1,109 +1,155 @@
 [↑ Saspik-cluster](../README.md)
 
-# docs/mqtt-topics
+# ⧫ docs/mqtt-topics
 
 Централизованное описание топиков и форматов сообщений для обмена с MQTT-брокером кластера.
 
-## Брокер
+Все топики формируются по строгой структуре сегментов: `{домен}/{unitId}/{objectId}[/суффикс]`. Тип сегмента определяется положением, значения не меняют структуру.
 
-| Параметр | Значение |
-|---|---|
-| Host | `185.72.145.19` |
-| Port MQTT | `1883` |
-| Port WebSocket | `9001` |
-| Username | `admin` |
-| Password | `password123` |
-| Client ID | произвольный уникальный |
+### Формат топика
 
-### Локальное окружение (docker-compose)
+Общий вид:
 
-Локальный брокер (mosquitto) поднимается в docker-compose и отличается от продакшена:
+```
+{домен}/{unitId}/{objectId}[/суффикс]
+```
 
-| Параметр | Значение |
-|---|---|
-| Host | `localhost` (внутри docker — `mosquitto`) |
-| Port MQTT | `1883` |
-| Port WebSocket | `9001` |
-| Аутентификация | `allow_anonymous false`, `passwordfile` |
-| ACL | `acl_file` mosquitto.acl |
+##### Домены
 
-## Топики публикации (device → broker)
+| Домен                              | Направление                | Пример                                   |
+| :--------------------------------- | :------------------------- | :--------------------------------------- |
+| `sensor/`                          | device → broker (данные)   | `sensor/unitId2/saspik.sa.wm.m002`       |
+| `device/`                          | broker → device (команды)  | `device/unitId2/saspik.sa.wm.m002`       |
+| `device/.../log`                   | device → broker (логи)     | `device/unitId2/saspik.sa.wm.m002/log`   |
+| `units/{unitId}/commands/`         | команды реле               | `units/unitId1/commands/a_relay1`        |
+| `units/{unitId}/sensors`           | агрегированные данные      | `units/unitId1/sensors`                  |
+| `server/`                          | логи backend (Express)     | `server/worker/log`                      |
+| `rule-engine/`                     | логи MQTT Rule Engine      | `rule-engine/worker/log`                 |
+| `led/`                             | управление LED             | `led/control`                            |
+| `healthcheck/`                     | healthcheck mosquitto      | `healthcheck/ping`                       |
 
-Устройства публикуют показания сенсоров в следующие топики:
+##### Сегменты
 
-### `sensor/{unitId}/dht22`
+| Сегмент     | Описание                                                      |
+| :---------- | :------------------------------------------------------------ |
+| `{unitId}`  | Идентификатор юнита (например `unitId1`, `unitId2`)           |
+| `{objectId}`| Идентификатор объекта — сенсора или устройства (например `saspik.sa.wm.m001`) |
+| `{суффикс}` | Квалификатор топика: команда (`commands/...`), логи (`/log`)  |
 
-Температура и влажность воздуха.
+Объект отвечает только за свои топики: к данным применяется `sensor/`, к управлению — `device/`, к диагностике — суффикс `/log`.
+
+### Топики публикации (device → broker)
+
+Показания сенсоров публикуются в `sensor/{unitId}/{objectId}`. Объекты-сенсоры делятся по модели датчика; канал объекта отображается на поле payload (см. ObjectsService, `spec.key`).
+
+#### `sensor/{unitId}/{objectId}` (температура/влажность)
+
+Модель: DHT22, DS18B20, BMP280 и т.д.
 
 ```json
 {
   "temperature": 24.5,
-  "humidity": 65.0,
-  "timestamp": "2026-07-26T12:00:00Z"
+  "humidity": 65.0
 }
 ```
 
-| Поле | Тип | Описание |
-|---|---|---|
-| `temperature` | number | Температура, °C |
-| `humidity` | number | Влажность, % |
-| `timestamp` | string | ISO 8601 |
+##### Структура
 
-### `sensor/{unitId}/float-1`
+| Поле         | Тип   | Описание      |
+| :----------- | :---- | :------------ |
+| `temperature`| number| Температура, °C |
+| `humidity`   | number| Влажность, %  |
 
-Поплавковый датчик уровня воды (для генератора влажности).
+Топик формируется устройством из типа, юнита и id объекта:
+
+```cpp
+String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT_ID);
+```
+
+#### `sensor/{unitId}/{objectId}` (поплавковый датчик)
+
+Модель: float/поплавковый датчик уровня воды (например для генератора влажности).
 
 ```json
 {
-  "floatSensor": 0,
-  "timestamp": "2026-07-26T12:00:00Z"
+  "floatSensor": 0
 }
 ```
 
-| Поле | Тип | Описание |
-|---|---|---|
-| `floatSensor` | number | `0` — воды нет, `1` — вода есть |
-| `timestamp` | string | ISO 8601 |
+##### Структура
 
-## Топики команд (broker → device)
+| Поле          | Тип   | Описание                                  |
+| :------------ | :---- | :---------------------------------------- |
+| `floatSensor` | number| `0` — воды нет, `1` — вода есть          |
 
-Управление нагрузками через реле.
+Внешний формат legacy-сидов может содержать поле `timestamp` (ISO 8601) — см. `esp32-controller`.
 
-### `units/{unitId}/commands/a_relay1`
+### Топики команд (broker → device)
 
-Свет (GPIO 27).
+#### `device/{unitId}/{objectId}`
 
-### `units/{unitId}/commands/a_relay2`
+Команды на объект-устройство (например LED-индикатор).
 
-Увлажнитель (GPIO 13).
+```json
+{"state": "ON"}
+{"state": "OFF"}
+```
 
-### `units/{unitId}/commands/a_relay3`
+##### Структура
 
-Вентилятор (GPIO 12).
+| Поле   | Тип    | Описание                  |
+| :----- | :------| :------------------------ |
+| `state`| string | `ON` — включить, `OFF` — выключить |
 
-### `units/{unitId}/commands/a_relay4`
+#### `units/{unitId}/commands/{objectId}`
 
-Полив / клапан (GPIO 14).
+Управление нагрузками через реле (объекты `a_relay1`–`a_relay4`). Реле внутри юнита адресуются через секцию `commands/`.
 
-### Формат команды
+| Реле          | Нагрузка                     | GPIO |
+| :------------ | :--------------------------- | :--- |
+| `a_relay1`    | Свет                         | 27   |
+| `a_relay2`    | Увлажнитель                  | 13   |
+| `a_relay3`    | Вентилятор                   | 12   |
+| `a_relay4`    | Полив / клапан               | 14   |
 
-Поддерживаются два формата:
+Поддерживаются два формата payload:
 
 **JSON-строка** (основной формат, используется rule engine):
+
 ```
 "1"   // включить
 "0"   // выключить
 ```
 
 **JSON-объект** (альтернативный, совместимость с mqtt-local):
+
 ```json
 {"state": "ON"}
 {"state": "OFF"}
 ```
 
-## Агрегированные данные (опционально)
+##### Структура
 
-### `units/{unitId}/sensors`
+| Формат    | Значение          | Направление                          |
+| :-------- | :---------------- | :----------------------------------- |
+| `"1"`/`"0"` | JSON-строка       | включить/выключить (rule engine)     |
+| `{"state":"ON"/"OFF"}` | JSON-объект | включить/выключить (mqtt-local)      |
+
+### Служебные топики
+
+#### `healthcheck/ping`
+
+Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).
+
+Payload: `{"payload":"test"}` (валидный JSON — ранее был текст `test`, из-за которого telegraf, подписанный на `healthcheck/#` как на JSON, ронял батч `mqtt_consumer`; топик убран из JSON-входа telegraf).
+
+#### `led/control`
+
+Управление светодиодным индикатором.
+
+Payload: `"ON"` / `"OFF"`
+
+#### `units/{unitId}/sensors`
 
 Используется ClimateControlService для получения сводки по всем сенсорам юнита.
 
@@ -117,31 +163,29 @@
 }
 ```
 
-## Служебные топики
+##### Структура
 
-### `healthcheck/ping`
+| Поле          | Тип   | Описание                                          |
+| :------------ | :---- | :------------------------------------------------ |
+| `objectsList` | array | Массив показаний: `{ sensorType, value }` по каждому сенсору юнита |
 
-Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).
-Payload: `{"payload":"test"}` (валидный JSON — ранее был текст `test`, из-за которого telegraf, подписанный на `healthcheck/#` как на JSON, ронял батч `mqtt_consumer`; топик убран из JSON-входа telegraf).
+#### `clients/{clientId}/#`
 
-### `led/control`
+Пространство имён клиента (по Client ID, `%c` в ACL). Назначение — изолированные топики конкретного подключения.
 
-Управление светодиодным индикатором.
-Payload: `"ON"` / `"OFF"`
-
-## Логирование и диагностика (единый конверт)
+### Логирование и диагностика (единый конверт)
 
 Все компоненты (device, server, rule-engine) публикуют логи в **едином JSON-конверте** в свои лог-топики. Telegraf отводит их в отдельный measurement `logs` в InfluxDB (бакет `logs`, retention 7 дней).
 
-### Лог-топики
+##### Лог-топики
 
 | Топик | Источник |
-|---|---|
+| :--- | :--- |
 | `device/{unitId}/{objectId}/log` | ESP32 (device-log): старт/ребут, connect/disconnect, диагностика, хвост лога |
 | `server/worker/log` | Backend (Express): connect/disconnect/ошибки MQTT |
 | `rule-engine/worker/log` | MQTT Rule Engine: срабатывание/ошибки правил, connect/disconnect |
 
-### Схема конверта
+##### Схема конверта
 
 ```json
 {
@@ -161,7 +205,7 @@ Payload: `"ON"` / `"OFF"`
 - **rule-engine**: при срабатывании правила — `event=rule-fired`, при ошибке — `event=rule-error`.
 - **server**: при connect/disconnect/ошибке брокера — `event=connect|disconnect|mqtt-error`.
 
-### Хранение в InfluxDB
+##### Хранение в InfluxDB
 
 - **Measurement**: `logs` (через `name_override="logs"` в telegraf).
 - **Теги**: `topic`, `level`, `event`, `src`, `unitId`, `objectId`.
@@ -180,73 +224,59 @@ from(bucket: "logs")
   |> last()
 ```
 
-### Против спама
+##### Против спама
 
 - Mosquitto: `log_type notice` (без поштучного debug).
 - Rule Engine: не логирует каждое входящее сообщение — только срабатывания и ошибки правил.
 - Device: пишет только события (старт/ребут/connect/диагностика/обрыв), а не каждое чтение сенсора.
 
-## Модель ObjectItem (клиент)
+### Брокер
 
-```typescript
-interface ObjectItem {
-  id: string;
-  name: string;
-  type: 'sensor' | 'device';
-  spec: {
-    key: string;
-    value?: string | number | boolean | null;
-    spec: {
-      model: string;
-      unit?: string;
-    };
-  }[];
-  description?: string;
-}
-```
+| Параметр | Значение |
+| :--- | :--- |
+| Host | `185.72.145.19` |
+| Port MQTT | `1883` |
+| Port WebSocket | `9001` |
+| Username | `admin` |
+| Password | `password123` |
+| Client ID | произвольный уникальный |
 
-`key` — идентификатор канала внутри устройства (например `"temperature"`, `"humidity"`, `"state"`).
+#### Локальное окружение (docker-compose)
 
-## Правила ACL (mosquitto.acl)
+Локальный брокер (mosquitto) поднимается в docker-compose и отличается от продакшена:
 
-```
-pattern readwrite healthcheck/#
-pattern readwrite clients/%c/#
-pattern readwrite sensor/#
-pattern readwrite led/#
-pattern readwrite units/#
-pattern readwrite device/+/+/log
-pattern readwrite server/+/log
-pattern readwrite rule-engine/+/log
-```
+| Параметр | Значение |
+| :--- | :--- |
+| Host | `localhost` (внутри docker — `mosquitto`) |
+| Port MQTT | `1883` |
+| Port WebSocket | `9001` |
+| Аутентификация | `allow_anonymous false`, `passwordfile` |
+| ACL | `acl_file` mosquitto.acl |
 
-- `healthcheck/#` — healthcheck
-- `clients/%c/#` — пространство имён клиента (по Client ID)
-- `sensor/#` — сенсорные топики (`sensor/{unitId}/{objectId}`)
-- `led/#` — управление LED
-- `units/#` — топики команд (`units/{unitId}/commands/...`)
-- `device/+/+/log`, `server/+/log`, `rule-engine/+/log` — логи-конверты
+### Правила ACL (mosquitto.acl)
 
-## Полный цикл данных
+| Паттерн | Назначение |
+| :--- | :--- |
+| `healthcheck/#` | healthcheck |
+| `clients/%c/#` | пространство имён клиента (по Client ID) |
+| `sensor/#` | сенсорные топики (`sensor/{unitId}/{objectId}`) |
+| `led/#` | управление LED |
+| `units/#` | топики команд (`units/{unitId}/commands/...`) |
+| `device/+/+/log` | логи-конверты device |
+| `server/+/log` | логи-конверты server |
+| `rule-engine/+/log` | логи-конверты rule-engine |
+
+### Полный цикл данных
 
 ```
 ESP-NOW node                ESP32 Controller               Mosquitto               Telegraf/InfluxDB
     │                              │                          │                          │
     │── binary(CRC8) ─────────────>│                          │                          │
     │    [temp, hum, float, ts]    │                          │                          │
-    │                              │── JSON sensor/{unitId}/dht22 ─>│───── all topics (#) ────>│
-    │                              │── JSON sensor/{unitId}/float-1 ─>│                         │
+    │                              │── JSON sensor/{unitId}/{objectId} ─>│─ all topics (#) ─>│
     │                              │                          │                          │
     │                              │<── "1"/"0" ─────────────│                          │
-    │                              │    units/.../a_relay1-4  │                          │
+    │                              │    units/.../commands/a_relay1-4                     │
     │                              │                          │                          │
     │                              │    GPIO → relay ON/OFF   │                          │
 ```
-
-## История изменений
-
-| Дата | Автор | Изменение |
-|---|---|---|
-| 2026-07-26 | | Начальная версия. Описаны топики сенсоров и команд |
-| 2026-08-05 | | Топики сенсоров переведены на паттерн `sensor/{unitId}/{objectId}` (вместо `sensors/...`) |
-| 2026-09-03 | | Добавлено логирование: единый JSON-конверт, лог-топики device/server/rule-engine, measurement `logs`, ACL для лог-топиков |
