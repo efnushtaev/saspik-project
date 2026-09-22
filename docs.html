@@ -1047,35 +1047,34 @@ npm run lint:fix      # ESLint с автофиксом
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-telegraf">
 <p><a href="../README.md">↑ Saspik-cluster</a></p>
-<h1 id="telegraf--запись-mqtt-→-influxdb">Telegraf — запись MQTT → InfluxDB</h1>
-<p>Подписывается на MQTT-топики кластера (mosquitto) и пишет в InfluxDB 2.x.</p>
-<h2 id="конфигурация-telegrafconf">Конфигурация (<code>telegraf.conf</code>)</h2>
+<h1 id="⧫-telegraf--запись-mqtt-→-influxdb">⧫ Telegraf — запись MQTT → InfluxDB</h1>
+<h4 id="подписка-на-mqtt-топики-кластера-и-запись-данных-и-логов-в-influxdb-2x">Подписка на MQTT-топики кластера и запись данных и логов в InfluxDB 2.x</h4>
+<p>Telegraf подписывается на топики mosquitto и пишет в InfluxDB 2.x.<br>Два входа <code>mqtt_consumer</code> и два выхода <code>outputs.influxdb_v2</code> (разделение по <code>namepass</code>).<br>Measurement для данных — <code>mqtt_consumer</code>, для логов — <code>logs</code>.</p>
+<h3 id="конфигурация-telegrafconf">Конфигурация (<code>telegraf.conf</code>)</h3>
 <p>Два входа <code>mqtt_consumer</code> и два выхода <code>outputs.influxdb_v2</code> (разделение по <code>namepass</code>):</p>
 <table>
 <thead>
 <tr>
-<th>Вход</th>
-<th>Топики</th>
-<th>Measurement</th>
-<th>Бакет (выход)</th>
+<th align="left">Вход</th>
+<th align="left">Топики</th>
+<th align="left">Measurement</th>
+<th align="left">Бакет (выход)</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Данные (<code>data_format=json</code>)</td>
-<td><code>sensor/#</code>, <code>units/#</code>, <code>led/#</code></td>
-<td><code>mqtt_consumer</code></td>
-<td><code>${INFLUXDB_BUCKET}</code> (напр. <code>mqtt</code>)</td>
+<td align="left">Данные (<code>data_format=json</code>)</td>
+<td align="left"><code>sensor/#</code>, <code>units/#</code></td>
+<td align="left"><code>mqtt_consumer</code></td>
+<td align="left"><code>${INFLUXDB_BUCKET}</code> (напр. <code>mqtt</code>)</td>
 </tr>
 <tr>
-<td>Логи (<code>data_format=json</code>)</td>
-<td><code>device/+/+/log</code>, <code>server/+/log</code>, <code>rule-engine/+/log</code></td>
-<td><code>logs</code> (<code>name_override</code>)</td>
-<td><code>${INFLUXDB_LOGS_BUCKET}</code> (напр. <code>logs</code>)</td>
+<td align="left">Логи (<code>data_format=json</code>)</td>
+<td align="left"><code>device/+/+/log</code>, <code>server/+/log</code>, <code>rule-engine/+/log</code></td>
+<td align="left"><code>logs</code> (<code>name_override</code>)</td>
+<td align="left"><code>${INFLUXDB_LOGS_BUCKET}</code> (напр. <code>logs</code>)</td>
 </tr>
 </tbody></table>
-<blockquote>
-<p>Вход «Данные» <strong>намеренно не подписан</strong> на <code>healthcheck/#</code>: healthcheck mosquitto<br>публикует в <code>healthcheck/ping</code> payload каждые 30 с, и не-JSON payload (<code>test</code>)<br>ломал парсер <code>data_format=json</code>, из-за чего падал <strong>весь батч</strong> <code>mqtt_consumer</code><br>и новые данные не доходили до InfluxDB (см. раздел «Известные проблемы» ниже).</p>
-</blockquote>
+<p>Вход «Данные» <strong>намеренно не подписан</strong> на <code>healthcheck/#</code>: healthcheck mosquitto<br>публикует в <code>healthcheck/ping</code> payload каждые 30 с, и не-JSON payload ломал парсер<br><code>data_format=json</code>, из-за чего падал весь батч <code>mqtt_consumer</code> и новые данные<br>не доходили до InfluxDB.</p>
 <p>Выходы разделяют потоки через <code>namepass</code>:</p>
 <ul>
 <li><code>namepass = [&quot;mqtt_consumer&quot;]</code> → только сенсорные/командные данные в основной бакет;</li>
@@ -1092,28 +1091,11 @@ npm run lint:fix      # ESLint с автофиксом
 <li><strong>Вставить готовый скрипт</strong> в Script Editor — см. <code>influxdb/queries/logs-view.flux</code><br>(сырые логи <code>limit(n: 200)</code> или last по <code>src</code>/<code>topic</code>). Вид — Table / Logs.</li>
 </ul>
 <p>Ошибки в коде нет — её генерирует только Data Explorer; сервис чтения состояния<br>(<code>influxDbStateStore.service.ts</code>) использует <code>last()</code>, а не <code>mean()</code>.</p>
-<h2 id="переменные-окружения">Переменные окружения</h2>
+<h3 id="переменные-окружения">Переменные окружения</h3>
 <ul>
 <li><code>INFLUXDB_TOKEN</code>, <code>INFLUXDB_ORG</code>, <code>INFLUXDB_BUCKET</code> — основной бакет</li>
 <li><code>INFLUXDB_LOGS_BUCKET</code> (default <code>logs</code>), <code>INFLUXDB_LOGS_RETENTION_DAYS</code> (default <code>7</code>) — бакет логов</li>
 </ul>
-<h2 id="сборка-и-запуск">Сборка и запуск</h2>
-<pre><code class="language-bash">docker compose build telegraf
-docker compose up -d telegraf
-</code></pre>
-<h2 id="известные-проблемы">Известные проблемы</h2>
-<h3 id="healthcheckping-ломал-json-парсер-092026"><code>healthcheck/ping</code> ломал JSON-парсер (09.2026)</h3>
-<p><strong>Симптом:</strong> в логах telegraf ошибка<br><code>[inputs.mqtt_consumer] Error in plugin: invalid character &#39;e&#39; in literal true (expecting &#39;r&#39;)</code>,<br>и <strong>новые данные не появлялись</strong> в InfluxDB (ни сенсорные, ни логи) — падал весь батч <code>mqtt_consumer</code>.</p>
-<p><strong>Причина:</strong> healthcheck контейнера mosquitto каждые 30 с публикует в <code>healthcheck/ping</code><br>payload <code>test</code> (не JSON). Telegraf был подписан на <code>healthcheck/#</code> во входе с <code>data_format=json</code>,<br>поэтому каждый healthcheck-тик ронял парсер и запись.</p>
-<p><strong>Решение:</strong></p>
-<ol>
-<li><code>healthcheck/#</code> убран из JSON-входа telegraf (<code>sensor/#</code>, <code>units/#</code>, <code>led/#</code> остались).</li>
-<li>Payload healthcheck mosquitto в <code>docker-compose.yml</code> заменён на валидный JSON:<br><code>-m &quot;test&quot;</code> → <code>-m &#39;{&quot;payload&quot;:&quot;test&quot;}&#39;</code> (семантически корректный формат на будущее —<br>даже если топик снова подпишут на JSON-вход, он не сломает парсер).</li>
-</ol>
-<p>После правок — пересобрать и перезапустить:</p>
-<pre><code class="language-bash">docker compose build telegraf
-docker compose up -d telegraf mosquitto
-</code></pre>
 
 </section>
 <hr class="section-sep">
