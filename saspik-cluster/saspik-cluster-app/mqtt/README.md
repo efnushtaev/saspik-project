@@ -1,166 +1,105 @@
-[↑ ATSAP Cluster App](../README.md)
+[↑ Saspik-cluster](../../README.md)
 
-# MQTT Broker Configuration
+# ⧫ Mosquitto — MQTT-брокер
 
-This directory contains the Eclipse Mosquitto MQTT broker configuration for the ATSAP cluster application.
+#### Eclipse Mosquitto 2.0: шина сообщений между устройствами, backend и WebSocket-клиентами
 
-## Overview
+Mosquitto — MQTT-брокер кластера.
+Собирается из `mqtt/Dockerfile` (образ Mosquitto 2.0 с собственным конфигом).
+Порты: `1883` (MQTT) и `9001` (WebSocket).
+Аутентификация включена (`allow_anonymous false`), разграничение топиков — через ACL.
 
-The MQTT broker provides real-time messaging between:
-- IoT devices/clients
-- Backend server (REST API)
-- WebSocket clients
+### Конфигурация (`mosquitto.conf`)
 
-## Files
+- Прослушивает порты `1883` (MQTT) и `9001` (WebSocket).
+- **Аутентификация включена** (`allow_anonymous false`).
+- Файл паролей: `/mosquitto/config/passwordfile`.
+- `log_type notice` (без поштучного debug — анти-спам).
+- Файл ACL: `/mosquitto/config/mosquitto.acl`.
 
-- `Dockerfile` - Builds Mosquitto 2.0 image with custom config
-- `mosquitto.conf` - Main broker configuration
-- `mosquitto.acl` - Access Control List (topic permissions)
-- `client.js` - Minimal test client
-- `test-*.js` - Various test scripts
+### Аутентификация
 
-## Configuration Details
+Учётные данные по умолчанию:
 
-### Broker Settings (`mosquitto.conf`)
-- Listens on port 1883 (MQTT) and 9001 (WebSockets)
-- **Authentication enabled** (`allow_anonymous false`)
-- Password file: `/mosquitto/config/passwordfile`
-- `log_type notice` (без поштучного debug — анти-спам) <!-- было debug -->
-- ACL file: `/mosquitto/config/mosquitto.acl`
+| Параметр | Значение |
+| :--- | :--- |
+| Username | `admin` |
+| Password | `password123` |
 
-### Access Control (`mosquitto.acl`)
+Файл паролей генерируется `mosquitto_passwd` и вшит в Docker-образ. Добавление пользователя или смена пароля:
 
-Current ACL provides:
-1. **Default deny** — все неразрешённые топики блокируются
-2. **Client namespaces**: `clients/%c/#` — каждый клиент может писать/читать в свой namespace
-3. **Топики датчиков**: `sensor/#` — publish/subscribe для сенсоров
-4. **Топики LED** (dev): `led/#` — publish/subscribe для LED-устройств
-5. **Топики команд юнитов**: `units/#` — publish/subscribe для управления реле (добавлено 2026-07-27)
-6. **Лог-топики**: `device/+/+/log`, `server/+/log`, `rule-engine/+/log` (единый JSON-конверт, 2026-09-03)
-
-### Authentication Details
-
-Authentication has been enabled with the following credentials:
-- Username: `admin`
-- Password: `password123`
-
-The password file is generated using `mosquitto_passwd` and included in the Docker image.
-
-To add more users or change passwords:
 ```bash
-# Enter the container
 docker exec -it atsap_mosquitto /bin/sh
-
-# Add a new user
-mosquitto_passwd -b /mosquitto/config/passwordfile username password
-
-# Or change password for existing user
-mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword
+mosquitto_passwd -b /mosquitto/config/passwordfile username password   # новый пользователь
+mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword   # смена пароля
 ```
 
-For production with clientId-based restrictions:
-1. Remove the `pattern readwrite #` line (already commented out)
-2. Authentication is already enabled in `mosquitto.conf`
-3. Password file is already configured
-4. Update ACL to use `user` or `client` directives if needed
+### Правила ACL (`mosquitto.acl`)
 
-## Client ID Based Topic Separation
+Порядок правил:
 
-The user requested: "для clientId=1 будут доступны топики 'test1', для clientId=2 будут доступны топики 'test2'"
+1. **Default deny** — все неразрешённые топики блокируются.
+2. **`clients/%c/#`** — каждый клиент может читать/писать в свой namespace (по Client ID).
+3. **`sensor/#`** — publish/subscribe для сенсорных топиков.
+4. **`units/#`** — publish/subscribe для топиков команд (управление реле, добавлено 2026-07-27).
+5. **Лог-топики**: `device/+/+/log`, `server/+/log`, `rule-engine/+/log` (единый JSON-конверт, 2026-09-03).
 
-### Implemented Solution
-Due to Mosquitto ACL limitations with anonymous access, we implemented namespace-based separation:
-- Client "1" → topics: `clients/1/test1`, `clients/1/#`
-- Client "2" → topics: `clients/2/test2`, `clients/2/#`
+Сводная таблица паттернов — в [docs/mqtt-topics](../docs/mqtt-topics.md).
 
-### Alternative Approaches
-1. **With authentication**: Use `client` directive in ACL for exact topic names
-2. **Application-level validation**: Validate clientId in `LocalMqttService`
-3. **Topic rewriting**: Server rewrites `test1` → `clients/1/test1`
+### Разделение топиков по Client ID
 
-## Testing
+Namespace-подход (из-за ограничений ACL при анонимном доступе):
 
-### Quick Test
+- Client `1` → топики `clients/1/test1`, `clients/1/#`.
+- Client `2` → топики `clients/2/test2`, `clients/2/#`.
+
+Альтернативы:
+
+1. **С аутентификацией** — директива `client` в ACL для точных имён топиков.
+2. **Проверка на уровне приложения** — валидация clientId в `LocalMqttService`.
+3. **Перезапись топиков** — сервер переписывает `test1` → `clients/1/test1`.
+
+### Тестирование
+
 ```bash
-cd mqtt
-node client.js
+node client.js                # тестовый клиент (с аутентификацией admin/password123)
+node test_auth.js             # проверка аутентификации
+node test_auth_clientid2.js   # аутентификация с конкретным Client ID
+node test-clientid.js         # проверка ограничений по Client ID
 ```
 
-**Note**: The client now uses authentication with username `admin` and password `password123`.
+### Запуск в Docker
 
-### Test Authentication
-```bash
-# Test basic authentication
-node test_auth.js
+Брокер включён в `docker-compose.yml` как сервис `mosquitto`:
 
-# Test authentication with specific client ID
-node test_auth_clientid2.js
-```
-
-### Test Client ID Restrictions
-```bash
-node test-clientid.js
-```
-
-### REST API Tests
-```bash
-# Publish message
-curl -X POST http://localhost:3001/api/mqtt/publish \
-  -H "Content-Type: application/json" \
-  -d '{"topic":"test/topic","message":"Hello"}'
-
-# Subscribe to topic
-curl -X POST http://localhost:3001/api/mqtt/subscribe \
-  -H "Content-Type: application/json" \
-  -d '{"topic":"test/topic"}'
-```
-
-## Docker Deployment
-
-The broker is included in `docker-compose.yml` as service `mosquitto`.
-
-### Rebuild and restart:
 ```bash
 docker compose build mosquitto
 docker compose up -d mosquitto
-```
-
-### View logs:
-```bash
 docker compose logs -f mosquitto
 ```
 
-## Troubleshooting
+### Диагностика
 
-### Broker not starting
-Check ACL syntax:
+**Брокер не стартует** — проверить синтаксис ACL:
+
 ```bash
 docker run --rm -it eclipse-mosquitto:2.0 mosquitto -c /mosquitto/config/mosquitto.conf --test
 ```
 
-### Connection refused
-- Ensure port 1883 is not blocked
-- Check if another Mosquitto instance is running
-- Verify Docker container is up: `docker ps | grep mosquitto`
+**Connection refused:**
+- Порт `1883` не заблокирован.
+- Не запущен другой экземпляр Mosquitto.
+- Контейнер поднят: `docker ps | grep mosquitto`.
 
-### ACL not enforcing
-- Mosquitto requires authentication for `client` directives
-- With `allow_anonymous true`, only `pattern` directives work
-- Check broker logs for ACL parse errors
+**ACL не применяется:**
+- Для директив `client` Mosquitto требует аутентификацию.
+- При `allow_anonymous true` работают только `pattern`-директивы.
+- В логах брокера может быть ошибка парсинга ACL.
 
-## Next Steps for Production
-
-1. **Authentication**: Already enabled with username/password authentication
-2. **TLS/SSL**: Configure encrypted connections for secure communication
-3. **Persistent storage**: Mount volume for `/mosquitto/data` to retain messages across restarts
-4. **Monitoring**: Add health checks and metrics for broker performance
-5. **High availability**: Consider cluster setup for multiple brokers
-6. **ACL refinement**: Implement more granular access control using `user` or `client` directives in ACL
-
-## Структура каталога
+### Структура каталога
 
 ```
-.
+mqtt/
 ├── Dockerfile
 ├── client.js
 ├── mosquitto.acl
