@@ -1,8 +1,8 @@
 {
-  "name": "atsap-cluster-app-backend",
+  "name": "saspik-cluster-app-backend",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:efnushtaev/atsap-cluster-app.git",
+  "repository": "git@github.com:efnushtaev/saspik-cluster-app.git",
   "author": "<efnushatev@gmail.com>",
   "license": "MIT",
   "scripts": {

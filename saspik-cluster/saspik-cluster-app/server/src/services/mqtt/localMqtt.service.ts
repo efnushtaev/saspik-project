@@ -47,7 +47,7 @@ export class LocalMqttService implements IMqttService {
   private setupConnection(): void {
     const brokerUrl = this.config.get("MQTT_BROKER_URL") || "mqtt://localhost:1883";
     const options: mqtt.IClientOptions = {
-      clientId: `atsap-server-${Date.now()}`,
+      clientId: `saspik-server-${Date.now()}`,
       clean: true,
       reconnectPeriod: 5000,
       username: this.config.get("MQTT_USERNAME"),

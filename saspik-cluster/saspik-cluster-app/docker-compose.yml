@@ -120,7 +120,7 @@ services:
     build:
       context: ./mqtt
       dockerfile: Dockerfile
-    container_name: atsap_mosquitto
+    container_name: saspik_mosquitto
     restart: unless-stopped
     ports:
       - "1883:1883"

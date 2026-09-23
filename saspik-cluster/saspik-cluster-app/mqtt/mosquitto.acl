@@ -26,12 +26,12 @@ pattern readwrite rule-engine/+/log
 # Default: deny all other topics
 # pattern deny #
 
-# Allow server (clientId "atsap-server") to access all topics
-# Note: This requires the server to connect with clientId "atsap-server"
+# Allow server (clientId "saspik-server") to access all topics
+# Note: This requires the server to connect with clientId "saspik-server"
 # and would need authentication for proper security.
 # For now, we allow all clients to publish to any topic.
 # Uncomment below for production with authentication:
-# pattern readwrite # for clientId "atsap-server"
+# pattern readwrite # for clientId "saspik-server"
 
 # Temporary: allow all topics for development
 # pattern readwrite #

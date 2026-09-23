@@ -467,7 +467,7 @@ INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
 </tr>
 </tbody></table>
 <p>Файл паролей генерируется <code>mosquitto_passwd</code> и вшит в Docker-образ. Добавление пользователя или смена пароля:</p>
-<pre><code class="language-bash">docker exec -it atsap_mosquitto /bin/sh
+<pre><code class="language-bash">docker exec -it saspik_mosquitto /bin/sh
 mosquitto_passwd -b /mosquitto/config/passwordfile username password   # новый пользователь
 mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword   # смена пароля
 </code></pre>

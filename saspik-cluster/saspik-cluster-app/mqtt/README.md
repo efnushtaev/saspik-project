@@ -29,7 +29,7 @@ Mosquitto — MQTT-брокер кластера.
 Файл паролей генерируется `mosquitto_passwd` и вшит в Docker-образ. Добавление пользователя или смена пароля:
 
 ```bash
-docker exec -it atsap_mosquitto /bin/sh
+docker exec -it saspik_mosquitto /bin/sh
 mosquitto_passwd -b /mosquitto/config/passwordfile username password   # новый пользователь
 mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword   # смена пароля
 ```
