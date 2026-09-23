@@ -1254,7 +1254,7 @@ npm run lint:fix      # ESLint с автофиксом
 <section id="saspik-cluster-docs-ObjectsService">
 <p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsobjectsservice">⧫ docs/ObjectsService</h1>
-<p>Объекты хранятся в MongoDB (коллекция <code>objects</code>) и наполняются сервисом seed при старте (<code>SeedService</code>).</p>
+<h4 id="объекты-хранятся-в-mongodb-коллекция-objects-и-наполняются-сервисом-seed-при-старте-seedservice">Объекты хранятся в MongoDB (коллекция <code>objects</code>) и наполняются сервисом seed при старте (<code>SeedService</code>).</h4>
 <p>Файловый конфиг <code>objects.json</code> больше не используется — данные живут в БД. Объект связан с юнитом полем <code>unitId</code>.</p>
 <h3 id="формат-объекта">Формат объекта</h3>
 <pre><code>{
@@ -1373,7 +1373,7 @@ npm run lint:fix      # ESLint с автофиксом
 <section id="saspik-cluster-docs-RulesService">
 <p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsrulesservice">⧫ docs/RulesService</h1>
-<p>Правила хранятся в MongoDB (коллекция <code>rules</code>, поле <code>unitId</code> связывает с юнитом) и наполняются сервисом seed при старте (<code>SeedService</code>).</p>
+<h4 id="правила-хранятся-в-mongodb-коллекция-rules-поле-unitid-связывает-с-юнитом-и-наполняются-сервисом-seed-при-старте-seedservice">Правила хранятся в MongoDB (коллекция <code>rules</code>, поле <code>unitId</code> связывает с юнитом) и наполняются сервисом seed при старте (<code>SeedService</code>).</h4>
 <p>При записи в БД подставляются переменные окружения (<code>${ENV_VAR}</code>) и выражения (<code>${expr:...}</code>).</p>
 <pre><code>{
   &quot;rules&quot;: [
@@ -1558,7 +1558,7 @@ npm run lint:fix      # ESLint с автофиксом
 <section id="saspik-cluster-docs-UnitsService">
 <p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsunitsservice">⧫ docs/UnitsService</h1>
-<p>Юниты хранятся в MongoDB (коллекция <code>units</code>) и наполняются сервисом seed при старте (<code>SeedService</code>).</p>
+<h4 id="юниты-хранятся-в-mongodb-коллекция-units-и-наполняются-сервисом-seed-при-старте-seedservice">Юниты хранятся в MongoDB (коллекция <code>units</code>) и наполняются сервисом seed при старте (<code>SeedService</code>).</h4>
 <p>Файловый конфиг <code>units.json</code> больше не используется — данные живут в БД.</p>
 <h3 id="формат-юнита">Формат юнита</h3>
 <p>Юнит — логическая единица кластера. В БД хранится только базовое описание:</p>
@@ -1698,7 +1698,7 @@ npm run lint:fix      # ESLint с автофиксом
 <section id="saspik-cluster-docs-logs">
 <p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docslogs">⧫ docs/logs</h1>
-<p>Логирование и диагностика кластера: единый JSON-конверт для всех компонентов, лог-топики и хранение в InfluxDB.</p>
+<h4 id="логирование-и-диагностика-кластера-единый-json-конверт-для-всех-компонентов-лог-топики-и-хранение-в-influxdb">Логирование и диагностика кластера: единый JSON-конверт для всех компонентов, лог-топики и хранение в InfluxDB.</h4>
 <h3 id="формат">Формат</h3>
 <p>Все компоненты (device, server, rule-engine) публикуют логи в <strong>едином JSON-конверте</strong> в свои лог-топики. Telegraf отводит их в отдельный measurement <code>logs</code> в InfluxDB (бакет <code>logs</code>, retention 7 дней).</p>
 <h5 id="лог-топики">Лог-топики</h5>
@@ -1768,7 +1768,7 @@ npm run lint:fix      # ESLint с автофиксом
 <section id="saspik-cluster-docs-mqtt-topics">
 <p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsmqtt-topics">⧫ docs/mqtt-topics</h1>
-<p>Централизованное описание топиков и форматов сообщений для обмена с MQTT-брокером кластера.</p>
+<h4 id="централизованное-описание-топиков-и-форматов-сообщений-для-обмена-с-mqtt-брокером-кластера">Централизованное описание топиков и форматов сообщений для обмена с MQTT-брокером кластера.</h4>
 <p>Все топики формируются по строгой структуре сегментов: <code>{домен}/{unitId}/{objectId}[/суффикс]</code>. Тип сегмента определяется положением, значения не меняют структуру.</p>
 <h3 id="формат-топика">Формат топика</h3>
 <p>Общий вид:</p>
@@ -2785,7 +2785,7 @@ pio device monitor
 </section>
 <hr class="section-sep">
 <section id="saspik-iot-saspik-iot-sketches-shared-device-log">
-<p><a href="../README.md">↑ Saspik-iot-sketches</a></p>
+<p><a href="#saspik-iot-saspik-iot-sketches">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-device-log">⧫ device-log</h1>
 <h4 id="энергонезависимое-хранение-причины-ребута-для-esp32-arduino--platformio-в-nvs">Энергонезависимое хранение причины ребута для ESP32 (Arduino / PlatformIO) в NVS</h4>
 <p>Диагностические события публикуются в MQTT в едином JSON-конверте; здесь<br>фиксируется только причина последнего перезапуска, которая переживает<br>перезагрузку и потерю питания.</p>
@@ -2860,7 +2860,7 @@ void loop() {
 </section>
 <hr class="section-sep">
 <section id="saspik-iot-saspik-iot-sketches-shared-wifi-config">
-<p><a href="../README.md">↑ Saspik-iot-sketches</a></p>
+<p><a href="#saspik-iot-saspik-iot-sketches">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-wifi-config">⧫ wifi-config</h1>
 <h4 id="универсальный-captive-portal-для-esp32-arduino--platformio-конфигурация-wi-fi-и-mqtt">Универсальный captive portal для ESP32 (Arduino / PlatformIO): конфигурация Wi-Fi и MQTT</h4>
 <p>Конфигурация Wi-Fi и MQTT без перепрошивки. Настройки сохраняются в <strong>NVS</strong><br>(<code>Preferences</code>) и переживают перезагрузку и потерю питания.</p>
