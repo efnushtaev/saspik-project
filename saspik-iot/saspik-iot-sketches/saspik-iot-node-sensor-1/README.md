@@ -1,4 +1,4 @@
-[↑ ag-iot-sketches](../README.md)
+[↑ Saspik-iot-sketches](../README.md)
 
 # ⧫ saspik-iot-node-sensor-1
 
@@ -102,16 +102,3 @@ src/
 
 - `adafruit/DHT sensor library` — DHT-22
 - `robtillaart/CRC` — CRC8 для ESP-NOW
-
-### Структура каталога
-
-```
-.
-├── include/
-├── lib/
-├── platformio.ini
-├── README.md
-├── src/
-├── test/
-└── .vscode/
-```

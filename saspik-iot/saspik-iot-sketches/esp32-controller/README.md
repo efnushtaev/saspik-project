@@ -1,4 +1,4 @@
-[↑ ag-iot-sketches](../README.md)
+[↑ Saspik-iot-sketches](../README.md)
 
 # ⧫ ESP32 Controller (ESP-NOW → MQTT Gateway)
 
@@ -34,20 +34,3 @@
 - `PubSubClient` — MQTT
 - `ArduinoJson` — формирование JSON
 - `CRC8` — проверка целостности ESP-NOW пакетов
-
-### Структура каталога
-
-```
-.
-├── include/
-├── lib/
-├── platformio.ini
-├── README.md
-├── src/
-│   ├── config.h
-│   ├── main.cpp
-│   ├── mqtt_handler.h
-│   └── mqtt_handler.cpp
-├── test/
-└── .vscode/
-```

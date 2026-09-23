@@ -1,4 +1,4 @@
-[↑ SASPIK IoT](../README.md)
+[↑ Saspik-iot](../README.md)
 
 # ⧫ Классификация IoT-устройств САСПИК
 

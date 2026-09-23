@@ -20,28 +20,6 @@
 - **MQTT** (библиотека `mqtt`), **MongoDB** (официальный драйвер)
 - tslog, ts-node (разработка)
 
-### Внутренняя структура
-
-```
-mqtt-rule-engine/
-├── src/
-│   ├── index.ts                  # Точка входа: MqttAdapter + RuleEngine + провайдер правил
-│   ├── core/                     # Ядро движка (RuleEngine)
-│   ├── mqtt/                     # MQTT-адаптер (MqttAdapter)
-│   ├── conditions/               # Условия (regex, jsonpath, payloadEquals, timeBetween)
-│   │   └── composite/            # Составные условия (and, or, not)
-│   ├── actions/                  # Действия (publish, log, timeout)
-│   ├── config/                   # RuleBuilder (парсинг правил), ConfigWatcher (файловый мониторинг)
-│   ├── providers/                # Источники правил (Mongo, API, фабрика)
-│   ├── context/                  # Контекст сообщения (MessageContext)
-│   └── utils/                    # Утилиты (topic-matcher с wildcards)
-├── test/                         # Тестовый клиент, мок-адаптер, примеры правил
-├── rules.json                    # Дефолтный файл правил
-├── Dockerfile
-├── package.json
-└── tsconfig.json
-```
-
 ### Запуск
 
 ```bash

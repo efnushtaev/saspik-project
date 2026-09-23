@@ -110,12 +110,12 @@
 <a href="#saspik-greenhouse-docs-sensor-ph-ec" class="l3">saspik-greenhouse/docs/sensor-ph-ec</a>
 <a href="#saspik-iot" class="">saspik-iot</a>
 <a href="#saspik-iot-docs-classification" class="l3">saspik-iot/docs/classification</a>
-<a href="#saspik-iot-ag-iot-sketches" class="l2">saspik-iot/ag-iot-sketches</a>
-<a href="#saspik-iot-ag-iot-sketches-esp32-controller" class="l3">saspik-iot/ag-iot-sketches/esp32-controller</a>
-<a href="#saspik-iot-ag-iot-sketches-esp32-local-mqtt" class="l3">saspik-iot/ag-iot-sketches/esp32-local-mqtt</a>
-<a href="#saspik-iot-ag-iot-sketches-saspik-iot-node-sensor-1" class="l3">saspik-iot/ag-iot-sketches/saspik-iot-node-sensor-1</a>
-<a href="#saspik-iot-ag-iot-sketches-shared-device-log" class="l3">saspik-iot/ag-iot-sketches/shared/device-log</a>
-<a href="#saspik-iot-ag-iot-sketches-shared-wifi-config" class="l3">saspik-iot/ag-iot-sketches/shared/wifi-config</a>
+<a href="#saspik-iot-saspik-iot-sketches" class="l2">saspik-iot/saspik-iot-sketches</a>
+<a href="#saspik-iot-saspik-iot-sketches-esp32-controller" class="l3">saspik-iot/saspik-iot-sketches/esp32-controller</a>
+<a href="#saspik-iot-saspik-iot-sketches-esp32-local-mqtt" class="l3">saspik-iot/saspik-iot-sketches/esp32-local-mqtt</a>
+<a href="#saspik-iot-saspik-iot-sketches-saspik-iot-node-sensor-1" class="l3">saspik-iot/saspik-iot-sketches/saspik-iot-node-sensor-1</a>
+<a href="#saspik-iot-saspik-iot-sketches-shared-device-log" class="l3">saspik-iot/saspik-iot-sketches/shared/device-log</a>
+<a href="#saspik-iot-saspik-iot-sketches-shared-wifi-config" class="l3">saspik-iot/saspik-iot-sketches/shared/wifi-config</a>
 <a href="#saspik-meshrover" class="">saspik-meshrover</a>
 <a href="#saspik-meshrover-docs-hardware" class="l3">saspik-meshrover/docs/hardware</a>
 </nav>
@@ -545,25 +545,6 @@ docker compose logs -f mosquitto
 <li><strong>MQTT</strong> (библиотека <code>mqtt</code>), <strong>MongoDB</strong> (официальный драйвер)</li>
 <li>tslog, ts-node (разработка)</li>
 </ul>
-<h3 id="внутренняя-структура">Внутренняя структура</h3>
-<pre><code>mqtt-rule-engine/
-├── src/
-│   ├── index.ts                  # Точка входа: MqttAdapter + RuleEngine + провайдер правил
-│   ├── core/                     # Ядро движка (RuleEngine)
-│   ├── mqtt/                     # MQTT-адаптер (MqttAdapter)
-│   ├── conditions/               # Условия (regex, jsonpath, payloadEquals, timeBetween)
-│   │   └── composite/            # Составные условия (and, or, not)
-│   ├── actions/                  # Действия (publish, log, timeout)
-│   ├── config/                   # RuleBuilder (парсинг правил), ConfigWatcher (файловый мониторинг)
-│   ├── providers/                # Источники правил (Mongo, API, фабрика)
-│   ├── context/                  # Контекст сообщения (MessageContext)
-│   └── utils/                    # Утилиты (topic-matcher с wildcards)
-├── test/                         # Тестовый клиент, мок-адаптер, примеры правил
-├── rules.json                    # Дефолтный файл правил
-├── Dockerfile
-├── package.json
-└── tsconfig.json
-</code></pre>
 <h3 id="запуск">Запуск</h3>
 <pre><code class="language-bash">npm install
 npm run dev             # ts-node (разработка)
@@ -2030,16 +2011,6 @@ npm run lint:fix      # ESLint с автофиксом
 <h1 id="⧫-saspik-greenhouse">⧫ Saspik-greenhouse</h1>
 <h4 id="esp32-управление-микроклиматом-теплицы">ESP32-управление микроклиматом теплицы</h4>
 <p>Контекст проекта: <code>opencode/agents.md → saspik-greenhouse</code>.</p>
-<h3 id="структура-каталога">Структура каталога</h3>
-<pre><code>.
-├── docs/
-│   ├── Frame 73.png                    — схема установки
-│   ├── grow_chamber.md                 — гидропонная камера на 2 куста
-│   ├── sensor-ph-ec.md                 — датчики pH и EC
-│   └── Гидропонная установка.pdf       — PDF-схема
-├── README.md
-└── TODO.md
-</code></pre>
 
 </section>
 <hr class="section-sep">
@@ -2278,10 +2249,10 @@ npm run lint:fix      # ESLint с автофиксом
 <p><a href="#root">↑ Назад</a></p>
 <h1 id="⧫-saspik-iot">⧫ Saspik-iot</h1>
 <h4 id="esp32-прошивки-для-iot-устройств-шлюз-сенсорные-узлы-esp-now-mqtt-deep-sleep">ESP32 прошивки для IoT-устройств: шлюз, сенсорные узлы (ESP-NOW, MQTT, deep sleep)</h4>
-<p>Контекст проекта: <code>opencode/agents.md → saspik-iot</code>.<br>Скетчи живут в <code>ag-iot-sketches/</code>.</p>
+<p>Контекст проекта: <code>opencode/agents.md → saspik-iot</code>.<br>Скетчи живут в <code>Saspik-iot-sketches/</code>.</p>
 <h3 id="программное-обеспечение">Программное обеспечение</h3>
 <ul>
-<li><a href="#saspik-iot-ag-iot-sketches"><code>ag-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
+<li><a href="#saspik-iot-saspik-iot-sketches"><code>Saspik-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
 </ul>
 <h3 id="классификация-устройств">Классификация устройств</h3>
 <p>Устройства классифицируются по формату <code>saspik.{роли}.{протокол}.{питание}{nnn}</code>.<br>Подробнее: <a href="#saspik-iot-docs-classification"><code>docs/classification.md</code></a></p>
@@ -2390,17 +2361,17 @@ npm run lint:fix      # ESLint с автофиксом
 
 </section>
 <hr class="section-sep">
-<section id="saspik-iot-ag-iot-sketches">
+<section id="saspik-iot-saspik-iot-sketches">
 <p><a href="#saspik-iot">↑ Saspik-iot</a></p>
-<h1 id="⧫-saspik-iot-sketches">⧫ saspik-iot-sketches</h1>
+<h1 id="⧫-saspik-iot-sketches">⧫ Saspik-iot-sketches</h1>
 <h4 id="скетчи-для-iot-устройств-saspik">Скетчи для IoT-устройств SASPIK</h4>
 <p>Платформа — <strong>ESP32 DOIT DevKit V1</strong>.<br>Фреймворк — <strong>Arduino</strong>.</p>
 <h3 id="что-внутри">Что внутри?</h3>
-<h4 id="esp32-controller"><a href="#saspik-iot-ag-iot-sketches-esp32-controller"><em>esp32-controller</em></a></h4>
+<h4 id="esp32-controller"><a href="#saspik-iot-saspik-iot-sketches-esp32-controller"><em>esp32-controller</em></a></h4>
 <p>Приложение для работы ESP32 в качестве шлюза (<strong>gateway</strong>) в сети ESP-NOW. Собирает данные от узлов в ESP-NOW, и отправляет в MQTT-брокер по WiFi</p>
-<h4 id="esp32-local-mqtt"><a href="#saspik-iot-ag-iot-sketches-esp32-local-mqtt"><em>esp32-local-mqtt</em></a></h4>
+<h4 id="esp32-local-mqtt"><a href="#saspik-iot-saspik-iot-sketches-esp32-local-mqtt"><em>esp32-local-mqtt</em></a></h4>
 <p>Локальный MQTT-сенсор (DHT22): публикует температуру/влажность, управление светодиодом. С повышенной устойчивостью: восстановление Wi-Fi, авто-ребут при сбоях и энергонезависимый лог с причиной перезапуска (<code>device-log</code>)</p>
-<h4 id="saspik-iot-node-sensor-1"><a href="#saspik-iot-ag-iot-sketches-saspik-iot-node-sensor-1"><em>saspik-iot-node-sensor-1</em></a></h4>
+<h4 id="saspik-iot-node-sensor-1"><a href="#saspik-iot-saspik-iot-sketches-saspik-iot-node-sensor-1"><em>saspik-iot-node-sensor-1</em></a></h4>
 <p>Прошивка для ESP32 с датчиками DHT-22 и поплавковым датчиком (геркон). Данные отправляются по ESP-NOW на приёмник</p>
 <h3 id="рецепты-для-скетчей">Рецепты для скетчей</h3>
 <h3 id="получение-доступного-wifi-канала">Получение доступного WiFi канала</h3>
@@ -2489,20 +2460,11 @@ void loop()
 <h4 id="как-это-работает-1">Как это работает?</h4>
 <p>Функция <code>read_dht_data</code> считывает данные температуры и влажности с датчика DHT-22, выполняет 10 измерений, сортирует результаты и вычисляет средние значения, исключая крайние (2 минимальных и 2 максимальных).</p>
 <p>Если чтение данных с датчика не удалось, возвращается <code>false</code>, а средние значения обнуляются.</p>
-<h3 id="структура-каталога">Структура каталога</h3>
-<pre><code>.
-├── README.md
-├── esp32-battery-check/
-├── esp32-controller/
-├── esp32-local-mqtt/
-├── esp32-node-template/
-└── saspik-iot-node-sensor-1/
-</code></pre>
 
 </section>
 <hr class="section-sep">
-<section id="saspik-iot-ag-iot-sketches-esp32-controller">
-<p><a href="#saspik-iot-ag-iot-sketches">↑ ag-iot-sketches</a></p>
+<section id="saspik-iot-saspik-iot-sketches-esp32-controller">
+<p><a href="#saspik-iot-saspik-iot-sketches">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-esp32-controller-esp-now-→-mqtt-gateway">⧫ ESP32 Controller (ESP-NOW → MQTT Gateway)</h1>
 <h4 id="esp32-шлюз-сбор-данных-от-узлов-по-esp-now-публикация-в-mqtt-кластера-saspik">ESP32-шлюз: сбор данных от узлов по ESP-NOW, публикация в MQTT кластера SASPIK</h4>
 <p>Шлюз собирает данные от узлов по ESP-NOW, парсит бинарный протокол с CRC8<br>и публикует JSON в MQTT кластера SASPIK.<br>Подписывается на relay-топики для управления нагрузками.</p>
@@ -2531,25 +2493,11 @@ void loop()
 <li><code>ArduinoJson</code> — формирование JSON</li>
 <li><code>CRC8</code> — проверка целостности ESP-NOW пакетов</li>
 </ul>
-<h3 id="структура-каталога">Структура каталога</h3>
-<pre><code>.
-├── include/
-├── lib/
-├── platformio.ini
-├── README.md
-├── src/
-│   ├── config.h
-│   ├── main.cpp
-│   ├── mqtt_handler.h
-│   └── mqtt_handler.cpp
-├── test/
-└── .vscode/
-</code></pre>
 
 </section>
 <hr class="section-sep">
-<section id="saspik-iot-ag-iot-sketches-esp32-local-mqtt">
-<p><a href="#saspik-iot-ag-iot-sketches">↑ ag-iot-sketches</a></p>
+<section id="saspik-iot-saspik-iot-sketches-esp32-local-mqtt">
+<p><a href="#saspik-iot-saspik-iot-sketches">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-esp32-local-mqtt">⧫ esp32-local-mqtt</h1>
 <h4 id="esp32-doit-devkit-v1--dht22--mqtt-локальный-сенсор-с-устойчивостью-к-сбоям">ESP32 (DOIT DevKit V1) + DHT22 + MQTT: локальный сенсор с устойчивостью к сбоям</h4>
 <p>Скетч публикует температуру и влажность в MQTT-брокер, управляет светодиодом<br>по командам. Отличается <strong>повышенной устойчивостью</strong>: восстановление Wi-Fi,<br>авто-ребут при длительных сбоях и энергонезависимый лог событий<br>с причиной последнего перезапуска.</p>
@@ -2670,8 +2618,8 @@ pio device monitor
 
 </section>
 <hr class="section-sep">
-<section id="saspik-iot-ag-iot-sketches-saspik-iot-node-sensor-1">
-<p><a href="#saspik-iot-ag-iot-sketches">↑ ag-iot-sketches</a></p>
+<section id="saspik-iot-saspik-iot-sketches-saspik-iot-node-sensor-1">
+<p><a href="#saspik-iot-saspik-iot-sketches">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-saspik-iot-node-sensor-1">⧫ saspik-iot-node-sensor-1</h1>
 <h4 id="прошивка-для-esp32-с-датчиками-dht-22-и-поплавковым-датчиком-геркон">Прошивка для ESP32 с датчиками DHT-22 и поплавковым датчиком (геркон)</h4>
 <p>Данные отправляются по ESP-NOW на приёмник.</p>
@@ -2833,21 +2781,11 @@ pio device monitor
 <li><code>adafruit/DHT sensor library</code> — DHT-22</li>
 <li><code>robtillaart/CRC</code> — CRC8 для ESP-NOW</li>
 </ul>
-<h3 id="структура-каталога">Структура каталога</h3>
-<pre><code>.
-├── include/
-├── lib/
-├── platformio.ini
-├── README.md
-├── src/
-├── test/
-└── .vscode/
-</code></pre>
 
 </section>
 <hr class="section-sep">
-<section id="saspik-iot-ag-iot-sketches-shared-device-log">
-<p><a href="../README.md">↑ ag-iot-sketches</a></p>
+<section id="saspik-iot-saspik-iot-sketches-shared-device-log">
+<p><a href="../README.md">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-device-log">⧫ device-log</h1>
 <h4 id="энергонезависимое-хранение-причины-ребута-для-esp32-arduino--platformio-в-nvs">Энергонезависимое хранение причины ребута для ESP32 (Arduino / PlatformIO) в NVS</h4>
 <p>Диагностические события публикуются в MQTT в едином JSON-конверте; здесь<br>фиксируется только причина последнего перезапуска, которая переживает<br>перезагрузку и потерю питания.</p>
@@ -2921,8 +2859,8 @@ void loop() {
 
 </section>
 <hr class="section-sep">
-<section id="saspik-iot-ag-iot-sketches-shared-wifi-config">
-<p><a href="../README.md">↑ ag-iot-sketches</a></p>
+<section id="saspik-iot-saspik-iot-sketches-shared-wifi-config">
+<p><a href="../README.md">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-wifi-config">⧫ wifi-config</h1>
 <h4 id="универсальный-captive-portal-для-esp32-arduino--platformio-конфигурация-wi-fi-и-mqtt">Универсальный captive portal для ESP32 (Arduino / PlatformIO): конфигурация Wi-Fi и MQTT</h4>
 <p>Конфигурация Wi-Fi и MQTT без перепрошивки. Настройки сохраняются в <strong>NVS</strong><br>(<code>Preferences</code>) и переживают перезагрузку и потерю питания.</p>

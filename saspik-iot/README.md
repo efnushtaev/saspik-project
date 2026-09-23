@@ -1,15 +1,15 @@
-[↑ SASPIK Project](../README.md)
+[↑ Назад](../README.md)
 
-# ⧫ SASPIK IoT
+# ⧫ Saspik-iot
 
 #### ESP32 прошивки для IoT-устройств: шлюз, сенсорные узлы (ESP-NOW, MQTT, deep sleep)
 
 Контекст проекта: `opencode/agents.md → saspik-iot`.
-Скетчи живут в `ag-iot-sketches/`.
+Скетчи живут в `Saspik-iot-sketches/`.
 
 ### Программное обеспечение
 
-- [`ag-iot-sketches/README.md`](ag-iot-sketches/README.md) — скетчи для ESP32 (шлюз, узлы, контроллер)
+- [`Saspik-iot-sketches/README.md`](saspik-iot-sketches/README.md) — скетчи для ESP32 (шлюз, узлы, контроллер)
 
 ### Классификация устройств
 

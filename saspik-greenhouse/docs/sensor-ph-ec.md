@@ -1,4 +1,4 @@
-[↑ SASPIK Greenhouse](../README.md)
+[↑ Saspik-greenhouse](../README.md)
 
 # ⧫ Датчики pH и EC
 

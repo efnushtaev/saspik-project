@@ -1,4 +1,4 @@
-[↑ SASPIK Greenhouse](../README.md)
+[↑ Saspik-greenhouse](../README.md)
 
 # ⧫ Камера выращивания — гидропонная установка на 2 куста
 

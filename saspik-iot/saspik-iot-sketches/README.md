@@ -1,6 +1,6 @@
-[↑ SASPIK IoT](../README.md)
+[↑ Saspik-iot](../README.md)
 
-# ⧫ saspik-iot-sketches
+# ⧫ Saspik-iot-sketches
 
 #### Скетчи для IoT-устройств SASPIK
 
@@ -120,15 +120,3 @@ void loop()
 Функция `read_dht_data` считывает данные температуры и влажности с датчика DHT-22, выполняет 10 измерений, сортирует результаты и вычисляет средние значения, исключая крайние (2 минимальных и 2 максимальных).
 
 Если чтение данных с датчика не удалось, возвращается `false`, а средние значения обнуляются.
-
-### Структура каталога
-
-```
-.
-├── README.md
-├── esp32-battery-check/
-├── esp32-controller/
-├── esp32-local-mqtt/
-├── esp32-node-template/
-└── saspik-iot-node-sensor-1/
-```
