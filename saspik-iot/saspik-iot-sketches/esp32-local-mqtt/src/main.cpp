@@ -162,10 +162,17 @@ void connectMQTT() {
     clientId += WiFi.macAddress();
     clientId.replace(":", "");
 
-    if (mqttClient.connect(clientId.c_str(), config.mqttUser, config.mqttPass)) {
+    // LWT: при обрыве соединения (таймаут keepalive, пропажа питания/связи)
+    // брокер сам публикует retained {"status":"offline"} в TOPIC_STATUS
+    constexpr char WILL_OFFLINE[] = "{\"status\":\"offline\"}";
+    if (mqttClient.connect(clientId.c_str(), config.mqttUser, config.mqttPass,
+                           TOPIC_STATUS, 0, true, WILL_OFFLINE)) {
         Serial.println("MQTT подключён.");
         mqttWasConnected = true;
         mqttLostSinceMs = 0; // сброс таймера
+
+        // Retained-статус online для сервера/UI (перезаписывает offline от LWT)
+        mqttClient.publish(TOPIC_STATUS, "{\"status\":\"online\"}", true);
 
         // Подписка на топик управления светодиодом
         mqttClient.subscribe(TOPIC_SUBSCRIBE);

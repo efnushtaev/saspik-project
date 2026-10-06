@@ -84,6 +84,15 @@
   -webkit-box-orient: vertical;
 }
 
+.objects-card__meta {
+  text-align: left;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  padding-top: 4px;
+  color: #9ca3af;
+}
+
 .objects-card__values {
   display: flex;
   flex-direction: column;

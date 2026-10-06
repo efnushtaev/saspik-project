@@ -9,6 +9,7 @@ type ObjectsCardProps = {
   title: string;
   describe: string;
   values: string[];
+  meta?: string;
   navigateTo?: string;
   onAction?: () => void;
   onOpen?: () => void;
@@ -33,7 +34,7 @@ const ValueDisplay = ({ value }: { value: string }) => {
   );
 };
 
-export const ObjectsCard = ({ title, describe, values, navigateTo = '/monitoring', onAction, onOpen }: ObjectsCardProps) => {
+export const ObjectsCard = ({ title, describe, values, meta, navigateTo = '/monitoring', onAction, onOpen }: ObjectsCardProps) => {
   const hasValues = values.length > 0;
   const navigate = useNavigate();
 
@@ -57,6 +58,7 @@ export const ObjectsCard = ({ title, describe, values, navigateTo = '/monitoring
           <div>
             <div className={cn('title')}>{title}</div>
             <div className={cn('describe')}>{describe}</div>
+            {meta && <div className={cn('meta')}>{meta}</div>}
           </div>
           <div className={cn('icons')}>
             <SunOutlined className={cn('icon')} />

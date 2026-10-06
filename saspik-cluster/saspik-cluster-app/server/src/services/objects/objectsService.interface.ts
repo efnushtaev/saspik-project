@@ -1,4 +1,7 @@
 import { ObjectsDto } from "../../dto/objects.dto";
+import { StoredState } from "../state-store/stateStore.interface";
+
+export type DeviceStatus = "online" | "offline";
 
 export interface IObjectsService {
   getObjects(typeFilter?: string, unitId?: string): Promise<ObjectsDto[]>;
@@ -10,6 +13,10 @@ export interface IObjectsService {
   getLastSensorsData(ids: string[]): Promise<Record<string, unknown>>;
 
   getObjectState(topic: string, field?: string): Promise<number | string | boolean | null>;
+
+  getObjectStateEntry(topic: string, field?: string): Promise<StoredState | null>;
+
+  getStatus(objectTopic: string): DeviceStatus | undefined;
 
   createObject(dto: Omit<ObjectsDto, "topic">, unitId: string): Promise<ObjectsDto>;
 

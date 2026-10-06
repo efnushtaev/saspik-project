@@ -24,6 +24,9 @@ constexpr char TOPIC_SUBSCRIBE[]    = "device/unitId2/saspik.sa.wm.m002";
 // --- Диагностика и устойчивость ---
 // Топик для публикации хвоста лога и диагностики (управляется через MQTT)
 constexpr char TOPIC_DIAG[]         = "device/unitId2/saspik.sa.wm.m002/log";
+// Retained-статус устройства: online публикуется при подключении,
+// offline — LWT (публикует брокер при обрыве соединения по таймауту)
+constexpr char TOPIC_STATUS[]       = "device/unitId2/saspik.sa.wm.m002/status";
 // Время непрерывной недоступности MQTT, после которого авто-ребут (мс)
 constexpr uint32_t MQTT_REBOOT_TIMEOUT_MS = 900000UL; // 15 минут
 // Время непрерывной недоступности WiFi, после которого авто-ребут (мс)

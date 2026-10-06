@@ -26,6 +26,7 @@ import { BaseController } from "../common/baseController";
 import { ILogger } from "../logger/logger.interface";
 import { TYPES } from "../types";
 import { IObjectsService } from "../services/objects";
+import { ObjectsDto } from "../dto/objects.dto";
 import { ObjectsControllersRoutesURL, RequestMethod } from "../const";
 
 function formatValue(
@@ -95,15 +96,7 @@ export class ObjectsController
     const typeFilter = params.type;
     const objects = await this.objectsService.getObjects(typeFilter, body.unitId);
     const enriched = await Promise.all(
-      objects.map(async (object) => {
-        const spec = await Promise.all(
-          object.spec.map(async (s) => {
-            const raw = await this.objectsService.getObjectState(object.topic, s.key);
-            return { key: s.key, value: formatValue(raw, s.minorPart), spec: s };
-          }),
-        );
-        return { ...object, spec };
-      }),
+      objects.map((object) => this.enrichObject(object)),
     );
     return this.ok<ListResponse>(res, { objects: enriched });
   }
@@ -114,17 +107,30 @@ export class ObjectsController
   ) {
     const objects = await this.objectsService.getByIds(body.id, body.type, body.unitId);
     const enriched = await Promise.all(
-      objects.map(async (object) => {
-        const spec = await Promise.all(
-          object.spec.map(async (s) => {
-            const raw = await this.objectsService.getObjectState(object.topic, s.key);
-            return { key: s.key, value: formatValue(raw, s.minorPart), spec: s };
-          }),
-        );
-        return { ...object, spec };
-      }),
+      objects.map((object) => this.enrichObject(object)),
     );
     return this.ok<ListResponse>(res, { objects: enriched });
+  }
+
+  private async enrichObject(object: ObjectsDto) {
+    const entries = await Promise.all(
+      object.spec.map((s) =>
+        this.objectsService.getObjectStateEntry(object.topic, s.key),
+      ),
+    );
+    const spec = object.spec.map((s, i) => ({
+      key: s.key,
+      value: formatValue(entries[i]?.value ?? null, s.minorPart),
+      spec: s,
+    }));
+    const timestamps = entries
+      .map((e) => e?.timestamp)
+      .filter((t): t is Date => t instanceof Date);
+    const updatedAt = timestamps.length
+      ? new Date(Math.max(...timestamps.map((t) => t.getTime()))).toISOString()
+      : undefined;
+    const status = this.objectsService.getStatus(object.topic);
+    return { ...object, spec, updatedAt, status };
   }
 
   async callCommand(

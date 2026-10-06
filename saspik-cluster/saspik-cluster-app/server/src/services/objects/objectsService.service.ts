@@ -1,16 +1,22 @@
 import { inject, injectable } from "inversify";
 
 import { ILogger } from "../../logger/logger.interface";
-import { IObjectsService } from ".";
+import { DeviceStatus, IObjectsService } from ".";
 import { TYPES } from "../../types";
 import { TEMPORARY_ANY } from "../../types";
-import { IStateStoreService } from "../state-store/stateStore.interface";
+import { IStateStoreService, StoredState } from "../state-store/stateStore.interface";
 import { IMqttService } from "../mqtt";
 import { ObjectsType, ObjectsDto } from "../../dto/objects.dto";
 import { ObjectEntity, ObjectsRepository, toObjectsDto } from "../data-store";
 
+// Retained-статусы устройств по ключу `${unitId}/${objectId}`
+const STATUS_TOPIC_PATTERN = "device/+/+/status";
+const STATUS_SUBSCRIBE_RETRY_MS = 3000;
+
 @injectable()
 export class ObjectsService implements IObjectsService {
+  private deviceStatuses = new Map<string, DeviceStatus>();
+
   constructor(
     @inject(TYPES.Logger) private logger: ILogger,
     @inject(TYPES.StateStoreService) private stateStore: IStateStoreService,
@@ -18,6 +24,7 @@ export class ObjectsService implements IObjectsService {
     @inject(TYPES.ObjectsRepository) private objectsRepository: ObjectsRepository,
   ) {
     this.logger.log("[ObjectsService] initialized");
+    this.subscribeDeviceStatus();
   }
 
   async getObjects(typeFilter?: string, unitId?: string): Promise<TEMPORARY_ANY[]> {
@@ -72,10 +79,56 @@ export class ObjectsService implements IObjectsService {
   }
 
   async getObjectState(topic: string, field?: string): Promise<number | string | boolean | null> {
-    this.logger.log(`[ObjectsService] getObjectState topic=${topic} field=${field}`);
-
-    const stored = await this.stateStore.get(topic, field);
+    const stored = await this.getObjectStateEntry(topic, field);
     return stored?.value ?? null;
+  }
+
+  async getObjectStateEntry(topic: string, field?: string): Promise<StoredState | null> {
+    this.logger.log(`[ObjectsService] getObjectStateEntry topic=${topic} field=${field}`);
+    return this.stateStore.get(topic, field);
+  }
+
+  getStatus(objectTopic: string): DeviceStatus | undefined {
+    const [, unitId, objectId] = objectTopic.split("/");
+    if (!unitId || !objectId) return undefined;
+    return this.deviceStatuses.get(`${unitId}/${objectId}`);
+  }
+
+  /**
+   * Подписка на retained-статусы устройств (device/+/+/status).
+   * При старте MQTT может быть ещё не подключён — повторяем до успеха;
+   * после успеха LocalMqttService сам переподписывается при реконнекте,
+   * а retained-сообщения приходят сразу при подписке.
+   */
+  private subscribeDeviceStatus(): void {
+    this.mqttService
+      .subscribe(STATUS_TOPIC_PATTERN, (topic, message) => {
+        this.handleStatusMessage(topic, message);
+      })
+      .then(() => {
+        this.logger.log(`[ObjectsService] subscribed to ${STATUS_TOPIC_PATTERN}`);
+      })
+      .catch((err: unknown) => {
+        this.logger.error(
+          `[ObjectsService] status subscribe failed, retry in ${STATUS_SUBSCRIBE_RETRY_MS}ms:`,
+          err,
+        );
+        setTimeout(() => this.subscribeDeviceStatus(), STATUS_SUBSCRIBE_RETRY_MS);
+      });
+  }
+
+  private handleStatusMessage(topic: string, message: Buffer): void {
+    try {
+      const parsed = JSON.parse(message.toString()) as { status?: unknown };
+      const status = parsed.status;
+      if (status !== "online" && status !== "offline") return;
+      const [, unitId, objectId] = topic.split("/");
+      if (!unitId || !objectId) return;
+      this.deviceStatuses.set(`${unitId}/${objectId}`, status);
+      this.logger.log(`[ObjectsService] status ${unitId}/${objectId} -> ${status}`);
+    } catch (err) {
+      this.logger.error(`[ObjectsService] invalid status payload on ${topic}:`, err);
+    }
   }
 
   async createObject(dto: Omit<ObjectsDto, "topic">, unitId: string): Promise<ObjectsDto> {

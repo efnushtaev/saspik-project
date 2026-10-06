@@ -15,6 +15,10 @@ export interface ObjectItem {
   }[];
   description?: string;
   topic?: string;
+  /** ISO-время последнего сообщения по телеметрии */
+  updatedAt?: string;
+  /** Retained-статус устройства с топика device/…/status */
+  status?: 'online' | 'offline';
 }
 
 export type PageObjectType = 'sensor' | 'device';

@@ -9,6 +9,8 @@ export type MockObject = {
   }[];
   description?: string;
   topic?: string;
+  updatedAt?: string;
+  status?: 'online' | 'offline';
 };
 
 // Mock data for objects
@@ -22,6 +24,8 @@ export const mockObjects: MockObject[] = [
       { key: 'humidity', value: '51.70', spec: { model: 'dht22', unit: '%', minorPart: 2 } },
     ],
     description: 'Датчик температуры и влажности',
+    updatedAt: new Date(Date.now() - 2 * 60_000).toISOString(),
+    status: 'online',
   },
   {
     id: 'd1',
@@ -32,6 +36,8 @@ export const mockObjects: MockObject[] = [
     ],
     description: 'Светодиодный индикатор',
     topic: 'led/control',
+    updatedAt: new Date(Date.now() - 3 * 3_600_000).toISOString(),
+    status: 'offline',
   },
 ];
 

@@ -39,7 +39,7 @@ export class InfluxDbStateStoreService implements IStateStoreService {
   async get(topic: string, field?: string): Promise<StoredState | null> {
     const flux = `
       from(bucket: "${this.bucket}")
-        |> range(start: -24h)
+        |> range(start: -30d)
         |> filter(fn: (r) => r.topic == "${topic}")
         |> filter(fn: (r) => r._field == "${field || "state"}")
         |> last()

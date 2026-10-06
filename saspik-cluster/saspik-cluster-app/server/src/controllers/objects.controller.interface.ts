@@ -18,6 +18,10 @@ export interface ObjectsListItem {
   }[];
   description?: string;
   topic: string;
+  /** ISO-время последнего значения телеметрии (max по полям spec) */
+  updatedAt?: string;
+  /** Retained-статус устройства с топика device/…/status */
+  status?: "online" | "offline";
 }
 
 export interface ListResponse {
