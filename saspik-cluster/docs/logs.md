@@ -1,4 +1,4 @@
-[↑ Saspik-cluster](../README.md)
+[↑ Saspik-cluster](saspik-cluster/README.md)
 
 # ⧫ docs/logs
 
