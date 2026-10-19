@@ -110,6 +110,7 @@
 <a href="#saspik-greenhouse-docs-sensor-ph-ec" class="l3">saspik-greenhouse/docs/sensor-ph-ec</a>
 <a href="#saspik-greenhouse-docs-smeta" class="l3">saspik-greenhouse/docs/smeta</a>
 <a href="#saspik-iot" class="">saspik-iot</a>
+<a href="#saspik-iot-docs-boilerplate-architecture" class="l3">saspik-iot/docs/boilerplate-architecture</a>
 <a href="#saspik-iot-docs-classification" class="l3">saspik-iot/docs/classification</a>
 <a href="#saspik-iot-saspik-iot-sketches" class="l2">saspik-iot/saspik-iot-sketches</a>
 <a href="#saspik-iot-saspik-iot-sketches-esp32-boilerplate" class="l3">saspik-iot/saspik-iot-sketches/esp32-boilerplate</a>
@@ -2530,6 +2531,249 @@ npm run lint:fix      # ESLint с автофиксом
 
 </section>
 <hr class="section-sep">
+<section id="saspik-iot-docs-boilerplate-architecture">
+<p><a href="#saspik-iot">↑ Saspik-iot</a></p>
+<h1 id="⧫-архитектура-esp32-boilerplate">⧫ Архитектура esp32-boilerplate</h1>
+<h4 id="solid-основа-прошивок-esp32-три-шаблона-ролей-gateway-sensor-device-на-общей-библиотеке-saspik-core">SOLID-основа прошивок ESP32: три шаблона ролей (Gateway, Sensor, Device) на общей библиотеке saspik-core</h4>
+<p>Платформа — ESP32 / S2 / S3 / C3, framework — Arduino, сборка — PlatformIO.<br>Шаблон выбирается build-флагом <code>-DDEVICE_ROLE</code> (<code>1</code> = Gateway, <code>2</code> = Sensor, <code>3</code> = Device).<br>Переиспользуемая логика — библиотека <code>lib/saspik-core</code>; приложения-шаблоны (<code>src/app/</code>) — композиционные корни (Composition Root).<br>Сборка, прошивка и конфигурация — в <a href="#saspik-iot-saspik-iot-sketches-esp32-boilerplate">README скетча</a>.<br>Контракт сообщений — единый JSON-конверт лога <code>{level,src,event,msg,topic,unitId,objectId,uptime[,cause]}</code> (см. <a href="#saspik-cluster-docs-mqtt-topics">mqtt-topics</a>).</p>
+<h3 id="общие-решения">Общие решения</h3>
+<ol>
+<li><strong>DI через конструкторы/фабрики.</strong> Модули зависят от интерфейсов (<code>IMqttClient</code>, <code>IEspNowClient</code>, <code>IConfigStore</code>, <code>ILogSink</code>…), реализации подставляются в App — это же даёт моки для host-тестов.</li>
+<li><strong>Два документированных исключения из «без глобалов».</strong> Переиспользуемые синглтоны <code>WifiConfig</code> и <code>DeviceLog</code> (shared-библиотеки, менять нельзя) изолированы за фасадами <code>CaptivePortal</code> и <code>IRebootCauseStore</code>; <code>static s_instance</code> внутри <code>MqttManager</code>/<code>EspNowManager</code> нужен для C-колбэков.</li>
+<li><strong>Два источника конфигурации.</strong><ul>
+<li>Compile-time: <code>include/config.h</code> — пины, интервалы, unitId/objectId, словари полей, таймауты.</li>
+<li>Runtime: NVS. WiFi/MQTT — через captive portal (namespace <code>saspik</code>); параметры приложения — через <code>ConfigManager</code> (namespace <code>saspik_app</code>), по умолчанию из config.h. Правило merge: defaults ← NVS (побеждает NVS).</li>
+</ul>
+</li>
+<li><strong>Формат на проводе.</strong> MQTT — JSON (топики по <a href="#saspik-cluster-docs-mqtt-topics">mqtt-topics</a>). ESP-NOW — бинарный пакет v2 (см. README); JSON в эфире не гоняем (лимит 250 байт). Мост ESP-NOW↔MQTT делает перевод binary→JSON.</li>
+<li><strong>Неблокирующий loop.</strong> <code>yield()</code> в начале loop; MQTT connect не чаще <code>MQTT_RECONNECT_INTERVAL_MS</code> + socket timeout (защита от Task WDT, rst:0x8); авто-ребут по таймаутам WiFi/MQTT — только для Gateway/Device. Периодика — через <code>TimerRegistry</code> (overflow-safe разница <code>millis()</code>).</li>
+<li><strong>Состав шаблонов.</strong><ul>
+<li><strong>Gateway</strong>: CaptivePortal, ConfigManager, WifiManager, MqttManager, Logger (UART+MQTT), EspNowManager, EspNowMqttBridge, TimerRegistry; опционально (Gateway-как-Device) — свои ISensor/IActuator.</li>
+<li><strong>Sensor</strong>: CaptivePortal (только при первом запуске), Logger (UART + ESP-NOW-лог через шлюз), EspNowManager (tx), InterfaceManager + ISensor, LightSleepManager, TimerRegistry. MQTT/WiFi STA после настройки не используются.</li>
+<li><strong>Device</strong>: CaptivePortal, ConfigManager, Logger (UART + ESP-NOW), EspNowManager (rx/tx), InterfaceManager + ISensor/IActuator, TimerRegistry.</li>
+</ul>
+</li>
+</ol>
+<h3 id="структура-проекта">Структура проекта</h3>
+<pre><code>esp32-boilerplate/
+├── platformio.ini              # env: {gateway,sensor,device}_{esp32,s2,s3,c3} + native
+├── partitions.csv              # 4MB, раздел &quot;spiffs&quot; (LittleFS — для будущего OTA)
+├── include/
+│   └── config.h                # все compile-time константы (виден и src, и lib)
+├── src/
+│   ├── main.cpp                # выбор IApp по DEVICE_ROLE, yield(), loop
+│   └── app/
+│       ├── IApp.h              # контракт шаблона: begin()/update()
+│       ├── GatewayApp.*        # Composition Root шлюза
+│       ├── SensorApp.*         # Composition Root сенсора
+│       ├── DeviceApp.*         # Composition Root устройства
+│       └── examples/           # Dht22Sensor, FloatSensor, RelayActuator (не в библиотеке)
+├── lib/saspik-core/            # переиспользуемая SOLID-библиотека
+│   ├── include/saspik/         #   core, config, log, net, wifi, portal, mqtt,
+│   │                           #   espnow, bridge, sys, interfaces
+│   └── src/                    #   реализации (firmware-only — под #ifdef ARDUINO)
+└── test/
+    ├── mocks/                  # MockMqttClient, MockEspNowClient, MockWifiManager,
+    │                           #   MockConfigStore, MockLogSink
+    ├── test_topic_builder/     # host-тесты (Unity), по одной папке test_* на сьют
+    ├── test_esp_now_codec/
+    ├── test_bridge/
+    ├── test_config_manager/
+    └── test_timer_registry/
+</code></pre>
+<p>Замечания:</p>
+<ul>
+<li><code>config.h</code> лежит в <code>include/</code> — PlatformIO добавляет его в include-путь и для <code>src/</code>, и для <code>lib/</code>. Роль-зависимые секции — через <code>#if DEVICE_ROLE == ...</code>.</li>
+<li>Публичные заголовки библиотеки — <code>lib/saspik-core/include/saspik/...</code>; приватные cpp — рядом в <code>src/</code>.</li>
+<li>shared-библиотеки (<code>wifi-config</code>, <code>device-log</code>) не копируются — подключаются через <code>lib_extra_dirs = ../shared</code>.</li>
+</ul>
+<h3 id="интерфейсы-и-классы">Интерфейсы и классы</h3>
+<p>Зависимости идут только вниз; App не переиспользуется никем.</p>
+<h5 id="интерфейсы">Интерфейсы</h5>
+<table>
+<thead>
+<tr>
+<th align="left">Интерфейс</th>
+<th align="left">Ответственность</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>IComponent</code></td>
+<td align="left">Жизненный цикл: <code>begin()</code> / <code>update()</code> — общий контракт всех менеджеров</td>
+</tr>
+<tr>
+<td align="left"><code>IApp</code></td>
+<td align="left">Контракт шаблона приложения: <code>begin()</code>, <code>update()</code>. Каждый App — Composition Root</td>
+</tr>
+<tr>
+<td align="left"><code>ILogSink</code></td>
+<td align="left">Приём готовой записи лога для вывода; не знает о JSON/топиках</td>
+</tr>
+<tr>
+<td align="left"><code>IRebootCauseStore</code></td>
+<td align="left">Чтение/запись причины ребута (фасад над shared <code>DeviceLog</code>)</td>
+</tr>
+<tr>
+<td align="left"><code>IConfigStore</code></td>
+<td align="left">NVS «ключ-значение» (обёртка Preferences); позволяет мокать merge-логику</td>
+</tr>
+<tr>
+<td align="left"><code>ICaptivePortal</code></td>
+<td align="left">Фасад над shared <code>WifiConfig</code>: begin/handlePortal/isPortalMode</td>
+</tr>
+<tr>
+<td align="left"><code>IWifiManager</code></td>
+<td align="left">Жизненный цикл STA: reconnect по интервалу, авто-ребут при потере WiFi</td>
+</tr>
+<tr>
+<td align="left"><code>IMqttClient</code></td>
+<td align="left">connect/publish/subscribe/isConnected/loop + регистрация <code>IMessageHandler</code></td>
+</tr>
+<tr>
+<td align="left"><code>IMessageHandler</code></td>
+<td align="left">Обработка одного входящего MQTT-сообщения (команды устройства, мост)</td>
+</tr>
+<tr>
+<td align="left"><code>IEspNowClient</code></td>
+<td align="left">init радио, addPeer, send, onReceive-колбэк</td>
+</tr>
+<tr>
+<td align="left"><code>ISensor</code></td>
+<td align="left"><code>begin()</code>, <code>read(SensorSample&amp;)</code>, <code>getName()</code> — пары fieldId+value</td>
+</tr>
+<tr>
+<td align="left"><code>IActuator</code></td>
+<td align="left"><code>begin()</code>, <code>setState(...)</code>, <code>getState()</code> — управляемый выход</td>
+</tr>
+<tr>
+<td align="left"><code>ISleepManager</code></td>
+<td align="left">Подготовка и вход в light sleep; запрет сна в режиме портала</td>
+</tr>
+<tr>
+<td align="left"><code>IBus</code></td>
+<td align="left">Инициализация шины; база для I2cBus/OneWireBus/SpiBus/UartBus</td>
+</tr>
+</tbody></table>
+<h5 id="классы-менеджеры">Классы-менеджеры</h5>
+<table>
+<thead>
+<tr>
+<th align="left">Класс</th>
+<th align="left">Ответственность (почему существует)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>ConfigManager</code></td>
+<td align="left">Единственный владелец RuntimeConfig; собирает из defaults(config.h) ← NVS</td>
+</tr>
+<tr>
+<td align="left"><code>Logger</code></td>
+<td align="left">Формирует JSON-конверт лога, рассылает по <code>ILogSink</code>; startup-конверт с причиной ребута</td>
+</tr>
+<tr>
+<td align="left"><code>MqttLogSink</code></td>
+<td align="left">Публикация конверта в <code>device/.../log</code>; при offline — кольцевая очередь (drop-oldest)</td>
+</tr>
+<tr>
+<td align="left"><code>UartLogSink</code></td>
+<td align="left">Вывод лога в Serial</td>
+</tr>
+<tr>
+<td align="left"><code>WifiManager</code></td>
+<td align="left">STA: восстановление с интервалом, авто-ребут по <code>WIFI_REBOOT_TIMEOUT_MS</code></td>
+</tr>
+<tr>
+<td align="left"><code>CaptivePortal</code></td>
+<td align="left">Тонкий фасад над shared <code>WifiConfigManager</code>; скрывает глобальный синглтон</td>
+</tr>
+<tr>
+<td align="left"><code>MqttManager</code></td>
+<td align="left">Адаптер PubSubClient: clientId от MAC, LWT offline + retained online, non-blocking connect, resubscribe, авто-ребут; диспетчеризация входящих</td>
+</tr>
+<tr>
+<td align="left"><code>EspNowManager</code></td>
+<td align="left">Радио ESP-NOW: init (канал STA), реестр пиров, send; RX-буфер однослотовый, доставка в update()</td>
+</tr>
+<tr>
+<td align="left"><code>EspNowCodec</code></td>
+<td align="left">Чистая сериализация пакета (host-тестируем без железа)</td>
+</tr>
+<tr>
+<td align="left"><code>EspNowMqttBridge</code></td>
+<td align="left">Мост (Gateway): DATA→JSON→<code>sensor/...</code>, LOG→<code>.../log</code>, MQTT-команда→ESP-NOW</td>
+</tr>
+<tr>
+<td align="left"><code>TopicBuilder</code></td>
+<td align="left">Построение всех топиков по unitId/objectId/суффиксу — единственное место схемы</td>
+</tr>
+<tr>
+<td align="left"><code>InterfaceManager</code></td>
+<td align="left">Фабрика шин по конфигу; раздаёт шины сенсорам/исполнителям (инверсия контроля)</td>
+</tr>
+<tr>
+<td align="left"><code>LightSleepManager</code></td>
+<td align="left">Таймерное пробуждение, накопленное время в RTC, вход в сон после flush лога</td>
+</tr>
+<tr>
+<td align="left"><code>TimerRegistry</code></td>
+<td align="left">Неблокирующая периодика, overflow-safe проверка <code>millis()</code></td>
+</tr>
+<tr>
+<td align="left"><code>GatewayApp</code> / <code>SensorApp</code> / <code>DeviceApp</code></td>
+<td align="left">Композиционные корни: только wiring графа объектов, без бизнес-логики</td>
+</tr>
+</tbody></table>
+<h3 id="зависимости-и-слои">Зависимости и слои</h3>
+<pre><code>main.cpp  (setup/loop: yield, выбор шаблона, portal.handlePortal)
+   │ DEVICE_ROLE
+   ▼
+IApp  ◄── GatewayApp / SensorApp / DeviceApp          [Composition Root]
+   │
+   ├──► ICaptivePortal ──► WifiConfigManager   (shared, синглтон, КАК ЕСТЬ)
+   ├──► ConfigManager ──► NvsConfigStore (saspik_app)
+   ├──► WifiManager ──► Arduino WiFi (STA)
+   ├──► Logger ──► UartLogSink / MqttLogSink / EspNowLogSink
+   │        └──► RebootCauseStore ──► DeviceLog   (shared, синглтон, КАК ЕСТЬ)
+   ├──► MqttManager ──► PubSubClient ──► WiFiClient   (Gateway/Device)
+   ├──► EspNowManager ──► esp_now
+   ├──► EspNowMqttBridge   (только Gateway)
+   ├──► InterfaceManager ──► IBus ──► шины ──► ISensor / IActuator
+   ├──► LightSleepManager   (только Sensor)
+   └──► TimerRegistry
+</code></pre>
+<p>Слои (проверка: нет циклов):</p>
+<pre><code>APP     : main.cpp, IApp, GatewayApp/SensorApp/DeviceApp
+DOMAIN  : Logger, EspNowMqttBridge, EspNowCodec, TopicBuilder, TimerRegistry, RuntimeConfig
+MANAGERS: ConfigManager, WifiManager, MqttManager, EspNowManager, InterfaceManager,
+          CaptivePortal, LightSleepManager
+INFRA   : PubSubClient/WiFiClient, esp_now, Arduino WiFi, Preferences, Serial
+REUSED  : WifiConfigManager, DeviceLogManager (shared)
+</code></pre>
+<p>Правила:</p>
+<ul>
+<li>App знает всех; менеджеры знают только переданные в конструктор интерфейсы.</li>
+<li>Мост не знает GatewayApp; Logger не знает MqttManager (только <code>IMqttClient</code> через sink).</li>
+<li><code>config.h</code> видят все слои, но менять значения разрешено только в App через defaults.</li>
+</ul>
+<h3 id="модули">Модули</h3>
+<p><strong>CaptivePortal.</strong> Без изменений кода shared-библиотеки: <code>begin()</code> блокирует до 20 с на STA либо поднимает AP (DNS+HTTP), <code>/save</code> пишет в NVS и делает <code>ESP.restart()</code>. «Нет NVS → сразу портал» покрывает первый запуск.</p>
+<p><strong>ConfigManager.</strong> Merge-правило: defaults (config.h) ← NVS (saspik_app) ← DeviceConfig из портала (saspik, последний побеждает). config.h — единственное место «заводских» значений.</p>
+<p><strong>Logger.</strong> Собирает конверт и раздаёт по sink&#39;ам. Startup-конверт с причиной ребута — после первого успешного MQTT-подключения. UART — всегда; MQTT/ESP-NOW — когда транспорт жив, иначе очередь drop-oldest.</p>
+<p><strong>MqttManager.</strong> Неблокирующий connect (интервал + socket timeout — против rst:0x8), retained online + LWT offline в <code>/status</code>, resubscribe после reconnect, авто-ребут по <code>MQTT_REBOOT_TIMEOUT_MS</code>, колбэк PubSubClient через статический указатель на this.</p>
+<p><strong>EspNowManager + EspNowCodec.</strong> Кодек: <code>[type(1)][timestamp LE(4)][fieldId(1)+len(1)+data]*[crc8(1)]</code>, CRC-8/MAXIM; типы DATA/LOG/COMMAND/ACK; служебные поля <code>0xFF</code>/<code>0xFE</code> — JSON лога/команды. Несовместим с v1 (node-sensor-1) — миграция узлов отдельная задача. Менеджер принимает пакеты в однослотовый RX-буфер и отдаёт их в update(), не в колбэке.</p>
+<p><strong>EspNowMqttBridge.</strong> Единственное место перевода binary↔JSON: узел→MQTT (data→JSON по fieldDict, log→конверт), MQTT→узел (команда→ESP-NOW как JSON без разбора). Маппинг objectId→MAC и словарь полей — статическая таблица в config.h.</p>
+<p><strong>InterfaceManager + шины.</strong> Фабрика создаёт по конфигу только нужные шины (пины — compile-time) и отдаёт их датчикам через конструкторы — инверсия контроля упрощает моки и переиспользование.</p>
+<p><strong>LightSleepManager.</strong> Таймерное пробуждение (<code>esp_sleep_enable_timer_wakeup</code>), накопленное время в RTC-памяти, отложенный вход в сон после flush лога, запрет сна при активном портале.</p>
+<p><strong>TimerRegistry.</strong> Задачи: чтение сенсоров, отправка данных, проверка сна. <code>yield()</code> вызывается в loop всегда, вне registry.</p>
+<h3 id="открытые-вопросы">Открытые вопросы</h3>
+<ol>
+<li><strong>Light sleep + ESP-NOW (критично для Sensor).</strong> Штатный light sleep гасит радио — команды не доходят. Варианты: one-way TX (надёжно, но нет приёма), radio-on light sleep (приём возможен, но жрёт энергию — нужен стенд и замеры), store-and-forward на шлюзе. Стратегия канала ESP-NOW при роуминге STA — подтвердить.</li>
+<li><strong>Runtime-конфиг вне портала.</strong> Портальная форма — только WiFi/MQTT. Интервалы, peer MAC, словари полей — defaults в config.h + переопределение через MQTT-команды в v2; без изменения shared <code>WifiConfig</code>.</li>
+<li><strong>Адресация команд узлам.</strong> Проверить ACL брокера для <code>device/{unitId}/+</code>; объём и формат маппинга nodeObjectId→MAC и fieldDict на шлюзе (config.h v1 / NVS v2).</li>
+</ol>
+
+</section>
+<hr class="section-sep">
 <section id="saspik-iot-docs-classification">
 <p><a href="#saspik-iot">↑ Saspik-iot</a></p>
 <h1 id="⧫-классификация-iot-устройств-саспик">⧫ Классификация IoT-устройств САСПИК</h1>
@@ -2739,7 +2983,7 @@ void loop()
 <section id="saspik-iot-saspik-iot-sketches-esp32-boilerplate">
 <h1 id="saspik-esp32-boilerplate">Saspik ESP32 Boilerplate</h1>
 <p>SOLID-база для прошивок ESP32 (Arduino framework, PlatformIO) с тремя шаблонами:<br><strong>Gateway</strong> (шлюз), <strong>Sensor</strong> (сенсор), <strong>Device</strong> (устройство). Переиспользуемая<br>логика вынесена в библиотеку <code>lib/saspik-core</code>; шаблоны — композиционные корни<br>(<code>src/app/</code>), которые собирают граф объектов через DI.</p>
-<p>Архитектура: <a href="../../docs/wip_boilerplate-architecture.md"><code>saspik-iot/docs/wip_boilerplate-architecture.md</code></a>.</p>
+<p>Архитектура: <a href="#saspik-iot-docs-boilerplate-architecture"><code>saspik-iot/docs/boilerplate-architecture.md</code></a>.</p>
 <h2 id="возможности">Возможности</h2>
 <table>
 <thead>

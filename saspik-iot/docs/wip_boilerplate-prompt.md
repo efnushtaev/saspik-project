@@ -112,7 +112,7 @@ https://github.com/efnushtaev/saspik-project/tree/main/saspik-iot/saspik-iot-ske
 
 ## ПРОМПТ 3
 
-Контекст: boilerplate `saspik-iot-sketches/esp32-boilerplate/` генерируется по ПРОМПТ 2 (архитектура — wip_boilerplate-architecture.md). Часть модулей уже сгенерирована — ниже точный статус.
+Контекст: boilerplate `saspik-iot-sketches/esp32-boilerplate/` генерируется по ПРОМПТ 2 (архитектура — boilerplate-architecture.md). Часть модулей уже сгенерирована — ниже точный статус.
 
 ### УЖЕ СДЕЛАНО (не перегенерировать; править только при необходимости)
 

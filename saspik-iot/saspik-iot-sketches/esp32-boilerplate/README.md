@@ -5,7 +5,7 @@ SOLID-база для прошивок ESP32 (Arduino framework, PlatformIO) с 
 логика вынесена в библиотеку `lib/saspik-core`; шаблоны — композиционные корни
 (`src/app/`), которые собирают граф объектов через DI.
 
-Архитектура: [`saspik-iot/docs/wip_boilerplate-architecture.md`](../../docs/wip_boilerplate-architecture.md).
+Архитектура: [`saspik-iot/docs/boilerplate-architecture.md`](../../docs/boilerplate-architecture.md).
 
 ## Возможности
 
