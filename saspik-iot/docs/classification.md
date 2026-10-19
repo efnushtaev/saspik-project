@@ -10,26 +10,26 @@
 ### Формат
 
 ```
-saspik.{роли}.{протокол}.{питание}{nnn}
+saspik-{роли}{протокол}{питание}{nnn}
 ```
 
 ### Коды
 
 #### Роли (можно комбинировать)
 
-| Код | Значение |
-| :--- | :--- |
-| `g` | Gateway (шлюз) |
-| `s` | Sensor (сенсор) |
+| Код | Значение                             |
+| :-- | :----------------------------------- |
+| `g` | Gateway (шлюз)                       |
+| `s` | Sensor (сенсор)                      |
 | `a` | Actuator (исполнительное устройство) |
 
 #### Протоколы (можно комбинировать)
 
-| Код | Значение |
-| :--- | :--- |
-| `wm` | WiFi + MQTT |
-| `en` | ESP-NOW |
-| `lr` | LoRa |
+| Код  | Значение    |
+| :--- | :---------- |
+| `wq` | WiFi + MQTT |
+| `en` | ESP-NOW     |
+| `lr` | LoRa        |
 
 #### Питание (можно комбинировать)
 
@@ -44,10 +44,10 @@ saspik.{роли}.{протокол}.{питание}{nnn}
 
 ### Примеры
 
-| Класс | Устройство |
-| :--- | :--- |
-| `saspik.g.wm.m001` | esp32-controller (шлюз ESP-NOW → MQTT + реле) |
-| `saspik.sa.wm.m001` | esp32-local-mqtt (DHT22 + LED, WiFi+MQTT) |
-| `saspik.s.en.b001` | saspik-iot-node-sensor-1 (DHT22 + float sensor, ESP-NOW, battery) |
-| `saspik.s.en.b002` | esp32-battery-check (DHT22, ESP-NOW, battery) |
-| `saspik.s.en.b000` | esp32-node-template (шаблон) |
+| Класс             | Устройство                                                        |
+| :---------------- | :---------------------------------------------------------------- |
+| `saspik-gwqm001`  | esp32-controller (шлюз ESP-NOW → MQTT + реле)                     |
+| `saspik-sawqm001` | esp32-local-mqtt (DHT22 + LED, WiFi+MQTT)                         |
+| `saspik-senb001`  | saspik-iot-node-sensor-1 (DHT22 + float sensor, ESP-NOW, battery) |
+| `saspik-senb002`  | esp32-battery-check (DHT22, ESP-NOW, battery)                     |
+| `saspik-senb000`  | esp32-node-template (шаблон)                                      |

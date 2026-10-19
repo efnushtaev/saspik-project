@@ -1,0 +1,17 @@
+{
+  "name": "saspik-core",
+  "version": "0.1.0",
+  "description": "SOLID-ядро boilerplate прошивок ESP32: конфиг (config.h + NVS), лог (JSON-конверт), WiFi/MQTT/ESP-NOW, шины I2C/OneWire/SPI/UART, light sleep",
+  "keywords": ["esp32", "mqtt", "esp-now", "iot", "solid", "saspik"],
+  "authors": [
+    {
+      "name": "Saspik project",
+      "url": "https://github.com/efnushtaev/saspik-project"
+    }
+  ],
+  "license": "MIT",
+  "build": {
+    "includeDir": "include/saspik",
+    "srcDir": "src"
+  }
+}

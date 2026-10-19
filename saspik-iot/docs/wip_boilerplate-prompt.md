@@ -108,3 +108,53 @@ https://github.com/efnushtaev/saspik-project/tree/main/saspik-iot/saspik-iot-ske
 - Есть .clang-format, LICENSE, TODO.md, заготовки тестов.
 
 Если чего-то не хватает — задай вопрос или пометь TODO, не додумывай.
+
+
+## ПРОМПТ 3
+
+Контекст: boilerplate `saspik-iot-sketches/esp32-boilerplate/` генерируется по ПРОМПТ 2 (архитектура — wip_boilerplate-architecture.md). Часть модулей уже сгенерирована — ниже точный статус.
+
+### УЖЕ СДЕЛАНО (не перегенерировать; править только при необходимости)
+
+- Корень: `platformio.ini` (env gateway/sensor/device × esp32/s2/s3/c3 + native), `partitions.csv`, `.clang-format`, `LICENSE`.
+- `include/config.h` — все compile-time константы: роль через `-DDEVICE_ROLE`, шифр `saspik-{роли}{протокол}{питание}{nnn}` (gateway=saspik-gwqm001, sensor=saspik-senb001, device=saspik-aenm001), пины `PIN_GPIO_1..5` (+`PIN_ONE_WIRE=27`), шины `BUS_*_ENABLED`/`PIN_*`, MQTT-дефолты и таймауты, `MQTT_PAYLOAD_MAX=128`, `MQTT_SUBSCRIPTIONS_MAX=8`, `MQTT_TOPIC_MAX_LEN=64`, ESP-NOW (канал/лимиты/типы 1..4/поля 0xFF,0xFE/FIELD_ID_*/`DEFAULT_GATEWAY_MAC`/`FIELD_DICTIONARY`/`NODE_TABLE`), интервалы, логирование (`LOG_*`), флаги примеров (`USE_MOCK_SENSOR`, `USE_EXAMPLE_*`).
+- `lib/saspik-core` (include/saspik + src), всё по модулям:
+  - core: `IComponent`, `DeviceInfo`, `TimerRegistry` (ClockFn, overflow-safe), `RuntimeConfig`;
+  - config: `AppConfig`, `IConfigStore` (+`putUInt8`), `NvsConfigStore` (namespace `saspik_app`), `ConfigManager` (merge defaults←NVS);
+  - log: `ILogSink`, `ILogger`, `Logger` (JSON-конверт `{level,src,event,msg,topic,unitId,objectId,uptime[,cause]}`), `UartLogSink`, `MqttLogSink` (кольцевая очередь drop-oldest), `EspNowLogSink`, `IRebootCauseStore`, `RebootCauseStore` (фасад над `DeviceLog`);
+  - net: `TopicBuilder` (+`commandWildcardTopic` = `device/{unitId}/+`), `IMessageHandler`;
+  - wifi: `IWifiManager`, `WifiManager` (reconnect по интервалу, авто-ребут по таймауту);
+  - portal: `ICaptivePortal`, `CaptivePortal` (делегирует shared `WifiConfig` как есть);
+  - mqtt: `MqttConfig`, `IMqttClient`, `MqttManager` (PubSubClient, PIMPL, LWT offline/online retained, resubscribe после reconnect, авто-ребут);
+  - espnow: `EspNowTypes`, `IEspNowClient` (+`IEspNowListener`, `addPeer`), `EspNowCodec` (чистый), `EspNowManager` (RX-буфер однослотовый, доставка в update(), не в колбэке);
+  - bridge: `EspNowMqttBridge` (чистый: DATA→sensor/{unitId}/{objectId}, LOG→.../log as-is, MQTT-команда→ESP-NOW COMMAND как JSON без разбора).
+
+### ПРИНЯТЫЕ РЕШЕНИЯ (соблюдать)
+
+- ESP-NOW протокол v2: `[type(1)][timestamp LE(4)][fieldId(1)+len(1)+data]*[crc8(1)]`; CRC-8/MAXIM (poly 0x31 отражённый → 0x8C, init 0x00); типы 1..4 = DATA/LOG/COMMAND/ACK; служебные поля `0xFF` (лог JSON), `0xFE` (команда JSON); лимит пакета 250 байт. Несовместим с v1 (node-sensor-1: без type/len) — миграция узлов на boilerplate-Sensor отдельная задача.
+- Firmware-only `.cpp` обёрнуты в `#ifdef ARDUINO` (на хосте — пустая TU); заголовки чистые (Arduino-типы скрыты за PIMPL/интерфейсами).
+- `static s_instance` только внутри `MqttManager`/`EspNowManager` (нужен для C-колбэков) — единственное задокументированное исключение из «без глобалов».
+- `MqttConfig.clientId` — полный clientId (App собирает `CLIENT_ID_PREFIX` + `OBJECT_ID`); буфер PubSubClient = `LOG_ENVELOPE_MAX_LEN` (256), чтобы влезал конверт лога.
+- env:native: `-DDEVICE_ROLE=2`, `-Iinclude`, `-Itest/native/mocks`, lib_deps только ArduinoJson.
+- IntelliSense-ошибки про includePath (WString.h и т.п.) — ожидаемы, лечатся генерацией путей PlatformIO.
+
+### ОСТАЛОСЬ СДЕЛАТЬ (генерировать по одному файлу)
+
+1. Сон: `sys/ISleepManager.h`, `sys/LightSleepManager.h/.cpp` (esp_sleep_enable_timer_wakeup + esp_light_sleep_start; millis продолжается; `#ifdef ARDUINO`).
+2. Шины: `interfaces/bus/IBus.h`, `I2cBus.h/.cpp`, `OneWireBus.h/.cpp`, `SpiBus.h/.cpp`, `UartBus.h/.cpp`, `InterfaceManager.h/.cpp` (BusConfig из config.h: `BUS_*_ENABLED`, `PIN_*`; неиспользуемые шины не создаются).
+3. Интерфейсы периферии: `interfaces/sensor/ISensor.h` + `SensorSample.h`, `interfaces/actuator/IActuator.h`.
+4. Приложения: `app/IApp.h`, `src/main.cpp` (диспетчеризация по `DEVICE_ROLE`), `GatewayApp`/`SensorApp`/`DeviceApp` (.h/.cpp) — Composition Root: DI-сборка модулей, Logger + sink'и, таймеры через `TimerRegistry`, неблокирующий loop, авто-ребут по таймаутам (кроме Sensor).
+5. Примеры периферии (`src/app/examples/`): `Dht22Sensor` (`PIN_GPIO_3`, `USE_MOCK_SENSOR`), `FloatSensor` (`PIN_GPIO_4`, `FIELD_ID_FLOAT`), `RelayActuator` (`PIN_GPIO_5`) — реализуют `ISensor`/`IActuator`.
+6. Тесты native: `test/native/mocks/` (`MockMqttClient`, `MockEspNowClient`, `MockWifiManager`, `MockConfigStore`, `MockLogSink`) + `test_*.cpp` (Unity): TopicBuilder, EspNowCodec (включая known-answer тест CRC-8/MAXIM), EspNowMqttBridge, ConfigManager, TimerRegistry.
+7. Документы: `README.md` (сборка/загрузка/монитор, выбор шаблона, структура), `TODO.md` (по списку из ПРОМПТ 2), `library.json` для saspik-core.
+8. Проверка: `pio test -e native` — зелёный; сборка `env:gateway_esp32` (далее s2/s3/c3) — без ошибок; исправить найденное.
+
+Требования — те же, что в ПРОМПТ 2: SOLID/DI без глобалов, русские комментарии «почему», Doxygen, PascalCase/camelCase/m_/UPPER_SNAKE, вложенность ≤3, без магических чисел (всё из config.h), SPDX MIT.
+
+Критерии приёмки:
+- Gateway: captive portal, Wi-Fi reconnect, MQTT sub/pub, ESP-NOW rx/tx, мост ESP-NOW↔MQTT.
+- Sensor: captive portal, лог, ESP-NOW, light sleep по таймеру, I2C/OneWire/SPI/UART.
+- Device: captive portal, лог, ESP-NOW rx/tx, I2C/OneWire/SPI/UART.
+- Все настройки — в config.h / NVS; host-тесты проходят в env:native.
+
+Если чего-то не хватает — задай вопрос или пометь TODO, не додумывай.
