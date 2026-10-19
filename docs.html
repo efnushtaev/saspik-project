@@ -108,9 +108,11 @@
 <a href="#saspik-greenhouse" class="">saspik-greenhouse</a>
 <a href="#saspik-greenhouse-docs-grow_chamber" class="l3">saspik-greenhouse/docs/grow_chamber</a>
 <a href="#saspik-greenhouse-docs-sensor-ph-ec" class="l3">saspik-greenhouse/docs/sensor-ph-ec</a>
+<a href="#saspik-greenhouse-docs-smeta" class="l3">saspik-greenhouse/docs/smeta</a>
 <a href="#saspik-iot" class="">saspik-iot</a>
 <a href="#saspik-iot-docs-classification" class="l3">saspik-iot/docs/classification</a>
 <a href="#saspik-iot-saspik-iot-sketches" class="l2">saspik-iot/saspik-iot-sketches</a>
+<a href="#saspik-iot-saspik-iot-sketches-esp32-boilerplate" class="l3">saspik-iot/saspik-iot-sketches/esp32-boilerplate</a>
 <a href="#saspik-iot-saspik-iot-sketches-esp32-controller" class="l3">saspik-iot/saspik-iot-sketches/esp32-controller</a>
 <a href="#saspik-iot-saspik-iot-sketches-esp32-local-mqtt" class="l3">saspik-iot/saspik-iot-sketches/esp32-local-mqtt</a>
 <a href="#saspik-iot-saspik-iot-sketches-saspik-iot-node-sensor-1" class="l3">saspik-iot/saspik-iot-sketches/saspik-iot-node-sensor-1</a>
@@ -333,7 +335,7 @@ npm run start:mock
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-client">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-saspik-cluster--фронтенд">⧫ Saspik-cluster — Фронтенд</h1>
 <h4 id="react-spa-для-панели-управления-iot-кластером">React SPA для панели управления IoT-кластером</h4>
 <p>Реализована на CRA + TypeScript, React 19, react-router-dom 6, иконки <code>@ant-design/icons</code>, BEM-стилизация (<code>bem-react-classname</code>)</p>
@@ -386,7 +388,7 @@ npm test               # Jest-тесты (App, мок-данные)
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-influxdb">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-influxdb--бакеты-и-retention">⧫ InfluxDB — бакеты и retention</h1>
 <h4 id="time-series-база-данных-influxdb-2x-для-сенсорных-данных-и-логов">Time-series база данных (InfluxDB 2.x) для сенсорных данных и логов</h4>
 <p>InfluxDB 2.x хранит данные от Telegraf.<br>Образ собирается локально из <code>influxdb/Dockerfile</code> (<code>FROM influxdb:2.9.1</code>).<br>В образ вшит каталог <code>provision/</code> — никаких bind-mount&#39;ов скриптов в compose, они всегда доступны<br>внутри образа по пути <code>/provision/</code> (важно для деплоя через Portainer из Git,<br>где bind-mount на недостающий каталог на сервере падал бы).</p>
@@ -436,7 +438,7 @@ INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-mqtt">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-mosquitto--mqtt-брокер">⧫ Mosquitto — MQTT-брокер</h1>
 <h4 id="eclipse-mosquitto-20-шина-сообщений-между-устройствами-backend-и-websocket-клиентами">Eclipse Mosquitto 2.0: шина сообщений между устройствами, backend и WebSocket-клиентами</h4>
 <p>Mosquitto — MQTT-брокер кластера.<br>Собирается из <code>mqtt/Dockerfile</code> (образ Mosquitto 2.0 с собственным конфигом).<br>Порты: <code>1883</code> (MQTT) и <code>9001</code> (WebSocket).<br>Аутентификация включена (<code>allow_anonymous false</code>), разграничение топиков — через ACL.</p>
@@ -525,7 +527,7 @@ docker compose logs -f mosquitto
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-mqtt-rule-engine">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-mqtt-rule-engine--воркер">⧫ MQTT Rule Engine — Воркер</h1>
 <h4 id="движок-правил-для-mqtt-автоматическое-выполнение-действий-по-условиям">Движок правил для MQTT: автоматическое выполнение действий по условиям</h4>
 <p>Правила загружаются из MongoDB, HTTP API или файла и обновляются в рантайме без остановки процесса.</p>
@@ -783,7 +785,7 @@ npm run clean           # очистка dist/
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-server">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-saspik-cluster--бекенд">⧫ Saspik-cluster — Бекенд</h1>
 <h4 id="серверное-приложение-реализующее-rest-api-для-работы-с-юнитами-объектами-и-сценариями-автоматизации">Серверное приложение, реализующее REST API для работы с Юнитами, Объектами и сценариями автоматизации</h4>
 <p>Юниты, объекты и правила хранятся в MongoDB (коллекции <code>units</code>, <code>objects</code>, <code>rules</code>)</p>
@@ -1087,7 +1089,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-docs-API">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsapi">⧫ docs/API</h1>
 <h4 id="http-api-для-управления-юнитами-объектами-и-правилами">HTTP API для управления Юнитами, Объектами и правилами</h4>
 <p>Базовый URL: <code>http://&lt;cluster-host&gt;:&lt;port&gt;/api/v1</code>.</p>
@@ -1237,7 +1239,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-docs-HistoryService">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docshistoryservice">⧫ docs/HistoryService</h1>
 <h4 id="статус-запланировано">Статус: запланировано</h4>
 <p>На данный момент не реализован: в коде сервера отсутствуют history-контроллер и history-сервис, <code>MqttController</code> инжектируется в <code>app.ts</code>, но не монтируется в роуты</p>
@@ -1252,7 +1254,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-docs-ObjectsService">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsobjectsservice">⧫ docs/ObjectsService</h1>
 <h4 id="объекты-хранятся-в-mongodb-коллекция-objects-и-наполняются-сервисом-seed-при-старте-seedservice">Объекты хранятся в MongoDB (коллекция <code>objects</code>) и наполняются сервисом seed при старте (<code>SeedService</code>).</h4>
 <p>Файловый конфиг <code>objects.json</code> больше не используется — данные живут в БД. Объект связан с юнитом полем <code>unitId</code>.</p>
@@ -1371,7 +1373,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-docs-RulesService">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsrulesservice">⧫ docs/RulesService</h1>
 <h4 id="правила-хранятся-в-mongodb-коллекция-rules-поле-unitid-связывает-с-юнитом-и-наполняются-сервисом-seed-при-старте-seedservice">Правила хранятся в MongoDB (коллекция <code>rules</code>, поле <code>unitId</code> связывает с юнитом) и наполняются сервисом seed при старте (<code>SeedService</code>).</h4>
 <p>При записи в БД подставляются переменные окружения (<code>${ENV_VAR}</code>) и выражения (<code>${expr:...}</code>).</p>
@@ -1556,7 +1558,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-docs-UnitsService">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsunitsservice">⧫ docs/UnitsService</h1>
 <h4 id="юниты-хранятся-в-mongodb-коллекция-units-и-наполняются-сервисом-seed-при-старте-seedservice">Юниты хранятся в MongoDB (коллекция <code>units</code>) и наполняются сервисом seed при старте (<code>SeedService</code>).</h4>
 <p>Файловый конфиг <code>units.json</code> больше не используется — данные живут в БД.</p>
@@ -1696,7 +1698,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-docs-logs">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docslogs">⧫ docs/logs</h1>
 <h4 id="логирование-и-диагностика-кластера-единый-json-конверт-для-всех-компонентов-лог-топики-и-хранение-в-influxdb">Логирование и диагностика кластера: единый JSON-конверт для всех компонентов, лог-топики и хранение в InfluxDB.</h4>
 <h3 id="формат">Формат</h3>
@@ -1766,7 +1768,7 @@ npm run lint:fix      # ESLint с автофиксом
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-docs-mqtt-topics">
-<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
+<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
 <h1 id="⧫-docsmqtt-topics">⧫ docs/mqtt-topics</h1>
 <h4 id="централизованное-описание-топиков-и-форматов-сообщений-для-обмена-с-mqtt-брокером-кластера">Централизованное описание топиков и форматов сообщений для обмена с MQTT-брокером кластера.</h4>
 <p>Все топики формируются по строгой структуре сегментов: <code>{домен}/{unitId}/{objectId}[/суффикс]</code>. Тип сегмента определяется положением, значения не меняют структуру.</p>
@@ -2245,6 +2247,275 @@ npm run lint:fix      # ESLint с автофиксом
 
 </section>
 <hr class="section-sep">
+<section id="saspik-greenhouse-docs-smeta">
+<p><a href="#saspik-greenhouse">↑ Saspik-greenhouse</a></p>
+<h1 id="⧫-смета--гидропонная-установка">⧫ Смета — гидропонная установка</h1>
+<h4 id="перечень-материалов-и-комплектующих-для-установки-ebb--flow-на-2-куста">Перечень материалов и комплектующих для установки ebb &amp; flow на 2 куста</h4>
+<p>Источник позиций — раздел «Спецификация материалов» в <a href="#saspik-greenhouse-docs-grow_chamber">grow_chamber</a>.<br>Покрывает только гидропонную установку, без электроники и платы мониторинга климата.<br>Цены — maxidom.ru, все позиции в наличии на 03.10.2026.</p>
+<h3 id="спецификация-материалов">Спецификация материалов</h3>
+<blockquote>
+<p>Цены и ссылки — магазин «Максидом», <a href="https://www.maxidom.ru">maxidom.ru</a></p>
+</blockquote>
+<h4 id="для-верхней-камеры">Для верхней камеры</h4>
+<table>
+<thead>
+<tr>
+<th>№</th>
+<th><strong>Деталь</strong></th>
+<th><strong>Артикул</strong></th>
+<th>Шт.</th>
+<th>Цена, ₽</th>
+<th>Сумма, ₽</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Муфта камеры проб</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001548284/">Переходник полипропиленовый РОСТерм 20мм с накидной гайкой 3/4&quot; ВР плоская</a></td>
+<td>1</td>
+<td>309</td>
+<td>309</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Угол 20мм</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001389575/">Угольник полипропиленовый PRO AQUA 20мм х 90гр</a></td>
+<td>1</td>
+<td>17</td>
+<td>17</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Труба 20мм</td>
+<td><a href="https://www.maxidom.ru/catalog/truby/1001389606/">Труба полипропиленовая PRO AQUA 20х3,4мм SDR6 2м</a></td>
+<td>1</td>
+<td>195</td>
+<td>195</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Труба 160мм</td>
+<td><a href="https://www.maxidom.ru/catalog/truby/1001612026/">Труба для наружной канализации Pro Aqua Terra SN4 160x4,9х1000мм</a></td>
+<td>1</td>
+<td>1 499</td>
+<td>1 499</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Заглушка торцевая</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1000937728/">Заглушка для наружной канализации OSTENDORF 160мм</a></td>
+<td>2</td>
+<td>388</td>
+<td>776</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>Итого</strong></td>
+<td><strong>2 796</strong></td>
+</tr>
+</tbody></table>
+<h4 id="для-камеры-взятия-проб">Для камеры взятия проб</h4>
+<table>
+<thead>
+<tr>
+<th>№</th>
+<th>Деталь</th>
+<th>Артикул</th>
+<th>Шт.</th>
+<th>Цена, ₽</th>
+<th>Сумма, ₽</th>
+<th>Комментарий</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Муфты крайние</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001422907/">Муфта полипропиленовая переходная PRO AQUA 32х20мм</a></td>
+<td>2</td>
+<td>20</td>
+<td>40</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Муфта средняя</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001389600/">Муфта полипропиленовая PRO AQUA 32мм</a></td>
+<td>1</td>
+<td>32</td>
+<td>32</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Тройник для удержания датчика</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001397818/">Тройник переходный PPR РОСТерм d32х20х32</a></td>
+<td>2</td>
+<td>29</td>
+<td>58</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Труба 20мм</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001389575/">Угольник полипропиленовый PRO AQUA 20мм х 90гр</a></td>
+<td>1</td>
+<td>17</td>
+<td>17</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Муфта 20мм 3\4</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001397776/">Муфта PPR РОСТерм комбинированная d20х3/4 НР</a></td>
+<td>4</td>
+<td>119</td>
+<td>476</td>
+<td>4 потому что надо 2 варианта переходника — с датчиками и без</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Заглушка чтобы удержать датчик</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001389581/">Заглушка полипропиленовая PRO AQUA 20мм</a></td>
+<td>2</td>
+<td>10</td>
+<td>20</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>Итого</strong></td>
+<td><strong>643</strong></td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="для-нижней-камеры">Для нижней камеры</h4>
+<table>
+<thead>
+<tr>
+<th>№</th>
+<th>Деталь</th>
+<th>Артикул</th>
+<th>Шт.</th>
+<th>Цена, ₽</th>
+<th>Сумма, ₽</th>
+<th>Комментарий</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Муфта слива\залива</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001389572/">Муфта полипропиленовая PRO AQUA 20мм х 3/4&quot; НР</a></td>
+<td>2</td>
+<td>250</td>
+<td>500</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Пробка слива\залива</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001150854/">Заглушка MPF 3/4&quot; ВР с прокладкой</a></td>
+<td>2</td>
+<td>136</td>
+<td>272</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Заглушка торцевая</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1000937728/">Заглушка для наружной канализации OSTENDORF 160мм</a></td>
+<td>2</td>
+<td>388</td>
+<td>776</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Труба 160мм</td>
+<td><a href="https://www.maxidom.ru/catalog/truby/1001612026/">Труба для наружной канализации Pro Aqua Terra SN4 160x4,9х1000мм</a></td>
+<td>1</td>
+<td>1 499</td>
+<td>1 499</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Муфта камеры проб</td>
+<td><a href="https://www.maxidom.ru/catalog/fitingi/1001548284/">Переходник полипропиленовый РОСТерм 20мм с накидной гайкой 3/4&quot; ВР плоская</a></td>
+<td>2</td>
+<td>309</td>
+<td>618</td>
+<td>2 потому что камеры в баке будет две</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Труба 20мм</td>
+<td><a href="https://www.maxidom.ru/catalog/truby/1001389606/">Труба полипропиленовая PRO AQUA 20х3,4мм SDR6 2м</a></td>
+<td>1</td>
+<td>195</td>
+<td>195</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>Итого</strong></td>
+<td><strong>3 860</strong></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="итого">Итого</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Раздел</th>
+<th align="left">Позиций</th>
+<th>Сумма, ₽</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Верхняя камера</td>
+<td align="left">5</td>
+<td>2 796</td>
+</tr>
+<tr>
+<td align="left">Камера взятия проб</td>
+<td align="left">6</td>
+<td>643</td>
+</tr>
+<tr>
+<td align="left">Нижняя камера</td>
+<td align="left">6</td>
+<td>3 860</td>
+</tr>
+<tr>
+<td align="left"><strong>Всего</strong></td>
+<td align="left"><strong>17</strong></td>
+<td><strong>7 299</strong></td>
+</tr>
+</tbody></table>
+<p>Цены указаны на 03.10.2026, розница maxidom.ru без учёта доставки.<br>Основная доля — труба ø160 и фитинги ø20/32 (5 430 ₽ из 7 299).</p>
+<h3 id="чего-не-хватает-в-смете">Чего не хватает в смете</h3>
+<p>Позиции ниже отсутствуют в спецификации <a href="#saspik-greenhouse-docs-grow_chamber">grow_chamber</a> — нужно либо добавить в таблицу, либо обосновать отказ.</p>
+<ul>
+<li><input disabled="" type="checkbox"> Плата мониторинга климата: ESP32, реле управления помпой, блок питания.</li>
+<li><input disabled="" type="checkbox"> Датчики микроклимата теплицы (влажность, температура, освещённость).</li>
+<li><input disabled="" type="checkbox"> Ёмкость и удобрения для питательного раствора.</li>
+<li><input disabled="" type="checkbox"> Субстрат — перлит (2 куста).</li>
+<li><input disabled="" type="checkbox"> Крепёж и опоры для фиксации трубы, бака и сенсорной камеры.</li>
+</ul>
+<h3 id="сборка">Сборка</h3>
+<p>Порядок сборки и схема — в <a href="#saspik-greenhouse-docs-grow_chamber">grow_chamber</a>, раздел «Сборка».</p>
+
+</section>
+<hr class="section-sep">
 <section id="saspik-iot">
 <p><a href="#root">↑ Назад</a></p>
 <h1 id="⧫-saspik-iot">⧫ Saspik-iot</h1>
@@ -2255,7 +2526,7 @@ npm run lint:fix      # ESLint с автофиксом
 <li><a href="#saspik-iot-saspik-iot-sketches"><code>Saspik-iot-sketches/README.md</code></a> — скетчи для ESP32 (шлюз, узлы, контроллер)</li>
 </ul>
 <h3 id="классификация-устройств">Классификация устройств</h3>
-<p>Устройства классифицируются по формату <code>saspik.{роли}.{протокол}.{питание}{nnn}</code>.<br>Подробнее: <a href="#saspik-iot-docs-classification"><code>docs/classification.md</code></a></p>
+<p>Устройства классифицируются по формату <code>saspik-{роли}{протокол}{питание}{nnn}</code>.<br>Подробнее: <a href="#saspik-iot-docs-classification"><code>docs/classification.md</code></a></p>
 
 </section>
 <hr class="section-sep">
@@ -2265,7 +2536,7 @@ npm run lint:fix      # ESLint с автофиксом
 <h4 id="шифр-устройства-saspikролипротоколпитаниеnnn">Шифр устройства <code>saspik.{роли}.{протокол}.{питание}{nnn}</code></h4>
 <p>Формат — один зарегистрированный шифр на устройство.<br>Роли, протоколы и питание можно комбинировать.</p>
 <h3 id="формат">Формат</h3>
-<pre><code>saspik.{роли}.{протокол}.{питание}{nnn}
+<pre><code>saspik-{роли}{протокол}{питание}{nnn}
 </code></pre>
 <h3 id="коды">Коды</h3>
 <h4 id="роли-можно-комбинировать">Роли (можно комбинировать)</h4>
@@ -2298,7 +2569,7 @@ npm run lint:fix      # ESLint с автофиксом
 </tr>
 </thead>
 <tbody><tr>
-<td align="left"><code>wm</code></td>
+<td align="left"><code>wq</code></td>
 <td align="left">WiFi + MQTT</td>
 </tr>
 <tr>
@@ -2338,23 +2609,23 @@ npm run lint:fix      # ESLint с автофиксом
 </tr>
 </thead>
 <tbody><tr>
-<td align="left"><code>saspik.g.wm.m001</code></td>
+<td align="left"><code>saspik-gwqm001</code></td>
 <td align="left">esp32-controller (шлюз ESP-NOW → MQTT + реле)</td>
 </tr>
 <tr>
-<td align="left"><code>saspik.sa.wm.m001</code></td>
+<td align="left"><code>saspik-sawqm001</code></td>
 <td align="left">esp32-local-mqtt (DHT22 + LED, WiFi+MQTT)</td>
 </tr>
 <tr>
-<td align="left"><code>saspik.s.en.b001</code></td>
+<td align="left"><code>saspik-senb001</code></td>
 <td align="left">saspik-iot-node-sensor-1 (DHT22 + float sensor, ESP-NOW, battery)</td>
 </tr>
 <tr>
-<td align="left"><code>saspik.s.en.b002</code></td>
+<td align="left"><code>saspik-senb002</code></td>
 <td align="left">esp32-battery-check (DHT22, ESP-NOW, battery)</td>
 </tr>
 <tr>
-<td align="left"><code>saspik.s.en.b000</code></td>
+<td align="left"><code>saspik-senb000</code></td>
 <td align="left">esp32-node-template (шаблон)</td>
 </tr>
 </tbody></table>
@@ -2367,6 +2638,8 @@ npm run lint:fix      # ESLint с автофиксом
 <h4 id="скетчи-для-iot-устройств-saspik">Скетчи для IoT-устройств SASPIK</h4>
 <p>Платформа — <strong>ESP32 DOIT DevKit V1</strong>.<br>Фреймворк — <strong>Arduino</strong>.</p>
 <h3 id="что-внутри">Что внутри?</h3>
+<h4 id="esp32-boilerplate"><a href="#saspik-iot-saspik-iot-sketches-esp32-boilerplate"><em>esp32-boilerplate</em></a></h4>
+<p>SOLID-основа для новых прошивок: библиотека <code>saspik-core</code> + три шаблона (Gateway, Sensor, Device), выбираются build-флагом <code>-DDEVICE_ROLE</code>. DI без глобалов, captive portal, MQTT/ESP-NOW, light sleep, host-тесты (<code>pio test -e native</code>)</p>
 <h4 id="esp32-controller"><a href="#saspik-iot-saspik-iot-sketches-esp32-controller"><em>esp32-controller</em></a></h4>
 <p>Приложение для работы ESP32 в качестве шлюза (<strong>gateway</strong>) в сети ESP-NOW. Собирает данные от узлов в ESP-NOW, и отправляет в MQTT-брокер по WiFi</p>
 <h4 id="esp32-local-mqtt"><a href="#saspik-iot-saspik-iot-sketches-esp32-local-mqtt"><em>esp32-local-mqtt</em></a></h4>
@@ -2463,6 +2736,168 @@ void loop()
 
 </section>
 <hr class="section-sep">
+<section id="saspik-iot-saspik-iot-sketches-esp32-boilerplate">
+<h1 id="saspik-esp32-boilerplate">Saspik ESP32 Boilerplate</h1>
+<p>SOLID-база для прошивок ESP32 (Arduino framework, PlatformIO) с тремя шаблонами:<br><strong>Gateway</strong> (шлюз), <strong>Sensor</strong> (сенсор), <strong>Device</strong> (устройство). Переиспользуемая<br>логика вынесена в библиотеку <code>lib/saspik-core</code>; шаблоны — композиционные корни<br>(<code>src/app/</code>), которые собирают граф объектов через DI.</p>
+<p>Архитектура: <a href="../../docs/wip_boilerplate-architecture.md"><code>saspik-iot/docs/wip_boilerplate-architecture.md</code></a>.</p>
+<h2 id="возможности">Возможности</h2>
+<table>
+<thead>
+<tr>
+<th align="left">Возможность</th>
+<th align="center">Gateway</th>
+<th align="center">Sensor</th>
+<th align="center">Device</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Captive portal (WiFi/MQTT настройка)</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td align="left">Wi-Fi STA + reconnect + авто-ребут</td>
+<td align="center">✅</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td align="left">MQTT connect/sub/pub + LWT + авто-ребут</td>
+<td align="center">✅</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td align="left">ESP-NOW rx/tx</td>
+<td align="center">✅</td>
+<td align="center">✅ (tx)</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td align="left">Мост ESP-NOW ↔ MQTT</td>
+<td align="center">✅</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td align="left">Лог: UART + MQTT</td>
+<td align="center">✅</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td align="left">Лог: UART + ESP-NOW (через шлюз)</td>
+<td align="center">—</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td align="left">Light sleep по таймеру</td>
+<td align="center">—</td>
+<td align="center">✅</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td align="left">Шины I2C / OneWire / SPI / UART</td>
+<td align="center">✅*</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+<tr>
+<td align="left">Примеры ISensor/IActuator</td>
+<td align="center">✅*</td>
+<td align="center">✅</td>
+<td align="center">✅</td>
+</tr>
+</tbody></table>
+<p>* — опционально, флаги <code>USE_EXAMPLE_*</code> в <code>include/config.h</code> (Gateway-как-Device).</p>
+<h2 id="требования">Требования</h2>
+<ul>
+<li><a href="https://platformio.org/install">PlatformIO Core</a> (≥ 6.x)</li>
+<li>Плата ESP32 / ESP32-S2 / ESP32-S3 / ESP32-C3</li>
+</ul>
+<h2 id="сборка">Сборка</h2>
+<p>Шаблон выбирается build-флагом <code>-DDEVICE_ROLE</code> (см. <code>include/config.h</code>):<br><code>1</code> = Gateway, <code>2</code> = Sensor, <code>3</code> = Device. Готовые env — в <code>platformio.ini</code>:</p>
+<pre><code class="language-bash"># Шлюз на базовой ESP32
+pio run -e gateway_esp32
+
+# Сенсор на ESP32-S3
+pio run -e sensor_s3
+
+# Устройство на ESP32-C3
+pio run -e device_c3
+</code></pre>
+<p>Доступные env: <code>{gateway,sensor,device}_{esp32,s2,s3,c3}</code>.</p>
+<h2 id="загрузка-прошивки">Загрузка прошивки</h2>
+<pre><code class="language-bash">pio run -e gateway_esp32 -t upload
+</code></pre>
+<p>Скорость загрузки зафиксирована на 115200 (на 460800 срывается верификация<br>CP2102 — урок из esp32-local-mqtt).</p>
+<h2 id="монитор">Монитор</h2>
+<pre><code class="language-bash">pio device monitor -e gateway_esp32
+</code></pre>
+<p>Формат лога в терминале: <code>[уровень][событие] текст (аптайм, с)</code>.<br>В MQTT/ESP-NOW уходит единый JSON-конверт<br><code>{level, src, event, msg, topic, unitId, objectId, uptime[, cause]}</code>.</p>
+<h2 id="первый-запуск-настройка-через-captive-portal">Первый запуск (настройка через captive portal)</h2>
+<ol>
+<li>Прошейте устройство (см. выше).</li>
+<li>При отсутствии конфига в NVS (или зажатой кнопке <code>PIN_GPIO_2</code> при старте)<br>устройство поднимает точку доступа с порталом.</li>
+<li>Подключитесь к AP, откройте <code>http://192.168.4.1</code>, заполните WiFi/MQTT.</li>
+<li><code>POST /save</code> сохраняет конфиг в NVS и перезагружает устройство.</li>
+</ol>
+<p>Дефолты формы — из <code>include/config.h</code> (<code>WIFI_SSID</code>, <code>MQTT_BROKER</code> и т.д.).</p>
+<h2 id="структура-проекта">Структура проекта</h2>
+<pre><code>esp32-boilerplate/
+├── platformio.ini          # env: gateway/sensor/device × esp32/s2/s3/c3 + native
+├── partitions.csv          # 4MB, раздел &quot;spiffs&quot; (LittleFS — для будущего OTA)
+├── include/config.h        # ВСЕ compile-time константы (роль, пины, шины, MQTT, ESP-NOW)
+├── src/
+│   ├── main.cpp            # выбор IApp по DEVICE_ROLE, yield(), loop
+│   └── app/
+│       ├── IApp.h          # контракт шаблона: begin()/update()
+│       ├── GatewayApp.*    # Composition Root шлюза
+│       ├── SensorApp.*     # Composition Root сенсора
+│       ├── DeviceApp.*     # Composition Root устройства
+│       └── examples/       # примеры ISensor/IActuator (DHT22, геркон, реле)
+├── lib/saspik-core/        # переиспользуемая SOLID-библиотека
+│   ├── include/saspik/     #   core, config, log, net, wifi, portal, mqtt,
+│   │                       #   espnow, bridge, sys, interfaces
+│   └── src/                #   реализации (firmware-only — под #ifdef ARDUINO)
+└── test/
+    ├── mocks/              # моки интерфейсов (MockMqttClient, MockEspNowClient,
+    │                       #   MockWifiManager, MockConfigStore, MockLogSink)
+    ├── test_topic_builder/ # host-тесты (Unity): по одной папке test_* на сьют
+    ├── test_esp_now_codec/
+    ├── test_bridge/
+    ├── test_config_manager/
+    └── test_timer_registry/
+</code></pre>
+<blockquote>
+<p>Каждый сьют — отдельная папка с префиксом <code>test_</code> (требование PlatformIO:<br>папка = независимое тестовое приложение со своим <code>main()</code>).</p>
+</blockquote>
+<h2 id="host-тесты">Host-тесты</h2>
+<p>Тестируются чистые модули (без железа): топики, ESP-NOW кодек (включая<br>known-answer CRC-8/MAXIM), мост, merge-конфиг, таймеры.</p>
+<pre><code class="language-bash">pio test -e native
+</code></pre>
+<h2 id="конфигурация">Конфигурация</h2>
+<ul>
+<li><strong>Compile-time</strong> — <code>include/config.h</code>: роль, unitId/objectId, пины, шины<br>(<code>BUS_*_ENABLED</code>/<code>PIN_*</code>), MQTT-дефолты и таймауты, ESP-NOW (канал, типы,<br>словарь полей, таблица узлов), интервалы, логирование, флаги примеров.</li>
+<li><strong>Runtime</strong> — NVS: WiFi/MQTT через captive portal (namespace <code>saspik</code>,<br>shared/wifi-config), параметры приложения (интервалы, канал, пиры) через<br><code>ConfigManager</code> (namespace <code>saspik_app</code>). Правило merge: defaults ← NVS<br>(NVS побеждает).</li>
+</ul>
+<h2 id="протокол-esp-now-v2">Протокол ESP-NOW (v2)</h2>
+<pre><code>[type(1)] [timestamp LE(4)] [fieldId(1)+len(1)+data]* [crc8(1)]
+</code></pre>
+<ul>
+<li>Типы: 1=DATA, 2=LOG, 3=COMMAND, 4=ACK.</li>
+<li>Служебные поля: <code>0xFF</code> — JSON лога, <code>0xFE</code> — JSON команды.</li>
+<li>CRC-8/MAXIM (полином 0x31 отражённый → 0x8C, init 0x00).</li>
+<li>Лимит пакета — 250 байт (<code>ESP_NOW_PACKET_MAX</code>).</li>
+<li>Несовместим с v1 (node-sensor-1); миграция узлов — отдельная задача.</li>
+</ul>
+<h2 id="лицензия">Лицензия</h2>
+<p>MIT (см. <code>LICENSE</code>). Все файлы — с SPDX-заголовком.</p>
+
+</section>
+<hr class="section-sep">
 <section id="saspik-iot-saspik-iot-sketches-esp32-controller">
 <p><a href="#saspik-iot-saspik-iot-sketches">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-esp32-controller-esp-now-→-mqtt-gateway">⧫ ESP32 Controller (ESP-NOW → MQTT Gateway)</h1>
@@ -2504,8 +2939,8 @@ void loop()
 <h3 id="возможности">Возможности</h3>
 <ul>
 <li>Чтение температуры/влажности с DHT22 (GPIO 4) с интервалом <code>SENSOR_INTERVAL_MS</code></li>
-<li>Публикация JSON в MQTT-топик <code>sensor/unitId2/saspik.sa.wm.m001</code></li>
-<li>Управление светодиодом (GPIO 2) по командам <code>{&quot;state&quot;:&quot;ON&quot;}</code>/<code>{&quot;state&quot;:&quot;OFF&quot;}</code> с подпиской <code>device/unitId2/saspik.sa.wm.m001</code></li>
+<li>Публикация JSON в MQTT-топик <code>sensor/unitId2/saspik.sa.wm.m002</code></li>
+<li>Управление светодиодом (GPIO 2) по командам <code>{&quot;state&quot;:&quot;ON&quot;}</code>/<code>{&quot;state&quot;:&quot;OFF&quot;}</code> с подпиской <code>device/unitId2/saspik.sa.wm.m002</code></li>
 <li>Captive portal для настройки Wi-Fi/MQTT (<code>wifi-config</code>), кнопка на GPIO 25</li>
 <li><strong>Восстановление Wi-Fi</strong>: при обрыве <code>WiFi.disconnect()+WiFi.reconnect()</code> раз в <code>WIFI_RECONNECT_INTERVAL_MS</code></li>
 <li><strong>Авто-ребут</strong>: при непрерывной недоступности MQTT &gt; <code>MQTT_REBOOT_TIMEOUT_MS</code> или Wi-Fi &gt; <code>WIFI_REBOOT_TIMEOUT_MS</code></li>
@@ -2524,7 +2959,7 @@ void loop()
 </thead>
 <tbody><tr>
 <td align="left"><code>OBJECT_ID</code> / <code>UNIT_ID</code> / <code>OBJECT_TYPE</code></td>
-<td align="left"><code>saspik.sa.wm.m001</code> / <code>unitId2</code> / <code>sensor</code></td>
+<td align="left"><code>saspik.sa.wm.m002</code> / <code>unitId2</code> / <code>sensor</code></td>
 <td align="left">Идентификация объекта</td>
 </tr>
 <tr>
@@ -2534,12 +2969,12 @@ void loop()
 </tr>
 <tr>
 <td align="left"><code>TOPIC_SUBSCRIBE</code></td>
-<td align="left"><code>device/unitId2/saspik.sa.wm.m001</code></td>
+<td align="left"><code>device/unitId2/saspik.sa.wm.m002</code></td>
 <td align="left">Топик управления (LED)</td>
 </tr>
 <tr>
 <td align="left"><code>TOPIC_DIAG</code></td>
-<td align="left"><code>device/unitId2/saspik.sa.wm.m001/log</code></td>
+<td align="left"><code>device/unitId2/saspik.sa.wm.m002/log</code></td>
 <td align="left">Топик лога и диагностики</td>
 </tr>
 <tr>
@@ -2582,7 +3017,7 @@ void loop()
 <p>Значения по умолчанию (SSID/пароль Wi-Fi) берутся из <code>env_config.h</code>, который генерируется <code>extra_script.py</code> из переменных окружения <code>.env</code>.</p>
 </blockquote>
 <h3 id="диагностика">Диагностика</h3>
-<p>Топик <code>TOPIC_DIAG</code> (<code>device/unitId2/saspik.sa.wm.m001/log</code>):</p>
+<p>Топик <code>TOPIC_DIAG</code> (<code>device/unitId2/saspik.sa.wm.m002/log</code>):</p>
 <ul>
 <li><strong>При старте</strong> (если был зафиксирован предыдущий ребут): публикуется хвост лога с событиями.</li>
 <li><strong>Во время сбоя</strong> (раз в <code>DIAG_PUBLISH_INTERVAL_MS</code>): JSON:</li>

@@ -12,8 +12,8 @@
 ### Возможности
 
 - Чтение температуры/влажности с DHT22 (GPIO 4) с интервалом `SENSOR_INTERVAL_MS`
-- Публикация JSON в MQTT-топик `sensor/unitId2/saspik.sa.wm.m001`
-- Управление светодиодом (GPIO 2) по командам `{"state":"ON"}`/`{"state":"OFF"}` с подпиской `device/unitId2/saspik.sa.wm.m001`
+- Публикация JSON в MQTT-топик `sensor/unitId2/saspik.sa.wm.m002`
+- Управление светодиодом (GPIO 2) по командам `{"state":"ON"}`/`{"state":"OFF"}` с подпиской `device/unitId2/saspik.sa.wm.m002`
 - Captive portal для настройки Wi-Fi/MQTT (`wifi-config`), кнопка на GPIO 25
 - **Восстановление Wi-Fi**: при обрыве `WiFi.disconnect()+WiFi.reconnect()` раз в `WIFI_RECONNECT_INTERVAL_MS`
 - **Авто-ребут**: при непрерывной недоступности MQTT > `MQTT_REBOOT_TIMEOUT_MS` или Wi-Fi > `WIFI_REBOOT_TIMEOUT_MS`
@@ -26,10 +26,10 @@
 
 | Параметр | Значение | Описание |
 | :--- | :--- | :--- |
-| `OBJECT_ID` / `UNIT_ID` / `OBJECT_TYPE` | `saspik.sa.wm.m001` / `unitId2` / `sensor` | Идентификация объекта |
+| `OBJECT_ID` / `UNIT_ID` / `OBJECT_TYPE` | `saspik.sa.wm.m002` / `unitId2` / `sensor` | Идентификация объекта |
 | `MQTT_BROKER` / `MQTT_PORT` / `MQTT_USER` / `MQTT_PASS` | — | Параметры брокера |
-| `TOPIC_SUBSCRIBE` | `device/unitId2/saspik.sa.wm.m001` | Топик управления (LED) |
-| `TOPIC_DIAG` | `device/unitId2/saspik.sa.wm.m001/log` | Топик лога и диагностики |
+| `TOPIC_SUBSCRIBE` | `device/unitId2/saspik.sa.wm.m002` | Топик управления (LED) |
+| `TOPIC_DIAG` | `device/unitId2/saspik.sa.wm.m002/log` | Топик лога и диагностики |
 | `MQTT_REBOOT_TIMEOUT_MS` | `900000` (15 мин) | МQТТ недоступен → ребут |
 | `WIFI_REBOOT_TIMEOUT_MS` | `300000` (5 мин) | Wi-Fi не поднялся → ребут |
 | `WIFI_RECONNECT_INTERVAL_MS` | `10000` | Интервал попыток восстановления Wi-Fi |
@@ -42,7 +42,7 @@
 
 ### Диагностика
 
-Топик `TOPIC_DIAG` (`device/unitId2/saspik.sa.wm.m001/log`):
+Топик `TOPIC_DIAG` (`device/unitId2/saspik.sa.wm.m002/log`):
 
 - **При старте** (если был зафиксирован предыдущий ребут): публикуется хвост лога с событиями.
 - **Во время сбоя** (раз в `DIAG_PUBLISH_INTERVAL_MS`): JSON:

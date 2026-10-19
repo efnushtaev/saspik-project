@@ -2,6 +2,16 @@
 
 ## Ход работ
 
+### 2026-10-14
+### Анализ логов unitId2 и план выравнивания на m002
+
+Статус: план согласован, реализация не начата.
+
+- Расшифрованы логи unitId2 за 7 дней (бакет `logs`): один инцидент — недоступность MQTT >15 мин → ребут `cause=mqtt-timeout` → восстановление 10.10 ~19:00 UTC, дальше стабильно. `_time` всех строк — граница часового окна `aggregateWindow`, не точное время событий.
+- Выявлены две проблемы: (1) рассинхрон прошивки — `objectId=saspik.sa.wm.m001` при топике `device/unitId2/saspik.sa.wm.m002/log` (на устройстве старая сборка, git-`config.h` уже весь m002); (2) мёртвые ветки логирования — `reboot`/`connect-error`/`diag` не доходят до MQTT из-за guard `!mqttClient.connected()`, в Influx попадают только `connect` и `startup`.
+- Согласован план: эталон m002; сервер — `unitId2.config.ts` (sensor → `sensor/unitId2/saspik.sa.wm.m002`, led → `device/unitId2/saspik.sa.wm.m002` c id `led`), telegraf — подписка `device/+/+` для чтения состояния LED, миграция Mongo (m001-объект не удалять).
+- Открытые риски: `updateObject()` пересчитывает topic по `type/unitId/id` — правка LED-объекта через UI оборвёт топик (как у реле unitId1).
+
 ### 2026-09-28
 ### Доработка кнопок возврата на предыдущие страницы (frontend)
 

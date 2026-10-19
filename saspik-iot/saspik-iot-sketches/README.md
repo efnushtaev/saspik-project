@@ -9,6 +9,10 @@
 
 ### Что внутри?
 
+#### [_esp32-boilerplate_](./esp32-boilerplate/README.md)
+
+SOLID-основа для новых прошивок: библиотека `saspik-core` + три шаблона (Gateway, Sensor, Device), выбираются build-флагом `-DDEVICE_ROLE`. DI без глобалов, captive portal, MQTT/ESP-NOW, light sleep, host-тесты (`pio test -e native`)
+
 #### [_esp32-controller_](./esp32-controller/README.md)
 
 Приложение для работы ESP32 в качестве шлюза (**gateway**) в сети ESP-NOW. Собирает данные от узлов в ESP-NOW, и отправляет в MQTT-брокер по WiFi
