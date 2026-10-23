@@ -29,11 +29,14 @@
 ### 2026-10-14
 ### Пост-mortem логирования esp32-local-mqtt
 
-Статус: план согласован, реализация не начата.
+Статус: выполнено 2026-10-20 — код готов, сборка `pio run -e esp32dev` успешна (RAM 14%, Flash 62.4%); перешивка и ручные сценарии — вручную.
 
-- Согласован план исправления мёртвых событий: удалить недостижимые `publishLogEvent("error", ...)` (reboot ×2, connect-error) и `sendDiagnostics()` + `DIAG_PUBLISH_INTERVAL_MS`; вместо них — событие `reconnect` с полями `downSec`/`errors` при восстановлении после обрыва.
-- `prevUptime` (секунды сессии до ребута) сохранять в NVS через `DeviceLog` и добавить в startup-конверт; после отправки очищать cause и prevUptime (иначе обычная перезагрузка повторно шлёт ложный `cause=mqtt-timeout`).
-- Код в git уже весь m002 — пересборка (`pio run`) и перешивка вручную.
+- Удалены недостижимые `publishLogEvent("error", ...)` (reboot ×2, connect-error) и `sendDiagnostics()` + `DIAG_PUBLISH_INTERVAL_MS` (main.cpp, config.h).
+- Вместо них — событие `reconnect` с полями `downSec`/`errors` в success-ветке `connectMQTT()` до сброса `mqttLostSinceMs`; счётчик `mqttConnectErrors` в fail-ветке, сброс после успеха; при первом подключении — прежний `event="connect"`.
+- `prevUptime` сохраняется в NVS (`DeviceLog.savePrevUptime()` перед `wifi-lost`/`mqtt-timeout` рестартами) и добавлен в startup-конверт; после отправки `DeviceLog.clearRebootData()` стирает cause и prevUptime — обычная перезагрузка больше не шлёт ложный `cause=mqtt-timeout`.
+- Дополнительно (найдено при аудите): null-проверка поля `state` в `callbackMQTT()` — мусорный payload без `state` раньше ронял устройство (`strcmp(nullptr)`).
+- Кластер под эти правки не дорабатывается: telegraf принимает новые числовые поля автоматически, rule-engine на логи не завязан.
+- Ручные сценарии после прошивки: (1) старт после авто-ребута — `startup` с `cause`/`prevUptime`, обычный рестарт — без ложного cause; (2) остановить брокер ~на минуту — `reconnect` с `downSec`/`errors`; (3) команда `{"foo":1}` — игнор без краша.
 
 ### 2026-10-06
 Разработка промпта для бойлерплейта прошивок
