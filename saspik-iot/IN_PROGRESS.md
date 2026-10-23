@@ -2,6 +2,20 @@
 
 ## Ход работ
 
+### 2026-10-20
+### Прошивка esp32-relay-x8 (ESP32 Relay Board x8)
+
+Статус: план согласован, реализация не начата.
+
+- Новый скетч `saspik-iot-sketches/esp32-relay-x8` на базе esp32-boilerplate (saspik-core), без ESP-NOW: подключение WiFi+MQTT напрямую, `unitId3`, objectId `saspik-awqm001` (actuator+wq+mains), clientId `saspik-a`+objectId.
+- Плата: 8 реле на прямых GPIO — relay1..8 = GPIO32, 33, 25, 26, 27, 14, 12, 13; HIGH = вкл; на старте все LOW («none go HIGH at startup» — инициализация пинов первым шагом в setup); GPIO12 — strapping (MTDI), отметить в README.
+- Топики: команды `device/unitId3/saspik-awqm001/relay1..8` с payload `{"state":"ON"|"OFF"}`; retained state `…/state` = `{"relay1":"ON",…,"relay8":"OFF"}`; логи `…/log`, LWT `…/status`. Подписка одна — `commandTopic + "/+"`, handler принимает только relay1..8 и state.
+- Восстановление реле: boot → OFF → после MQTT connect применяем retained `…/state` (идемпотентно, публикация только при реальном изменении — эхо-петель нет); baseline all-OFF публикуем только если за grace ~3 с после connect retained не пришёл. Авто-ребуты оставить как в boilerplate (MQTT >15 мин / WiFi >5 мин → ребут, состояние вернётся из retained).
+- Портал: кнопка GPIO0/BOOT (портал также откроется при пустом NVS).
+- Состав: `platformio.ini` (env `relay_x8_esp32`, `lib_extra_dirs = ../shared` + `../esp32-boilerplate/lib`, `lib_ldf_mode = deep+`, `-Iinclude`), `include/config.h` (суперсет boilerplate-конфига), `src/RelayBank`, `src/RelayCommandHandler`, `src/RelayX8App`, `src/main.cpp`, README по шаблону ⧫.
+- Верификация: `pio run -e relay_x8_esp32`; прошивка и ручной тест (mosquitto_pub на relay1..8, retained после ребута, логи в telegraf) — вручную пользователем.
+- Документация: запись в README скетчей, новые топики в `saspik-cluster/docs/mqtt-topics.md`, регенерация docs.html. Вне скоупа (follow-up): регистрация unitId3/объекта в Mongo для UI, production-ACL mosquitto, интеграция climate-control с unitId3.
+
 ### 2026-10-19
 ### Закрытие пунктов бэклога и коммит boilerplate
 
