@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { createCn } from 'bem-react-classname';
 
 import { mockApi, isMockMode } from '../mock-api';
-import { ObjectFormFields, ObjectFormValues, emptyObjectFormValues, emptySpecRow } from '../object-form';
+import { ObjectFormFields, ObjectFormValues, emptyObjectFormValues, emptySpecRow, stripIdPostfix } from '../object-form';
 import { ConfirmModal } from '../confirm-modal';
 import { ObjectItem } from '../objects-list/types';
 import { NAVIGATION_PATHS, withUnitPath } from '../constants';
@@ -277,7 +277,7 @@ export const ObjectPage = () => {
               </tr>
               <tr>
                 <th className={cn('spec-label')}>Топик</th>
-                <td>{object.topic || `${object.type}/${unitId}/${object.id}`}</td>
+                <td>{object.topic || `${object.type}/${unitId}/${stripIdPostfix(object.id)}`}</td>
               </tr>
             </tbody>
           </table>

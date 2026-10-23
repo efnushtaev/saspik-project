@@ -1849,6 +1849,34 @@ npm run lint:fix      # ESLint с автофиксом
 </tr>
 </tbody></table>
 <p>Объект отвечает только за свои топики: к данным применяется <code>sensor/</code>, к управлению — <code>device/</code>, к диагностике — суффикс <code>/log</code>.</p>
+<h3 id="нейминг-объектов-постфиксы">Нейминг объектов (постфиксы)</h3>
+<p>Идентификатор объекта в UI и БД состоит из базового идентификатора устройства и постфикса функциональной роли:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Постфикс</th>
+<th align="left">Роль (тип объекта)</th>
+<th align="left">Пример id</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>-sensor</code></td>
+<td align="left">мониторинг (<code>sensor</code>)</td>
+<td align="left"><code>saspik.sa.wm.m003-sensor</code></td>
+</tr>
+<tr>
+<td align="left"><code>-device</code></td>
+<td align="left">автоматика (<code>device</code>)</td>
+<td align="left"><code>saspik.sa.wm.m003-device</code></td>
+</tr>
+</tbody></table>
+<p>Правила:</p>
+<ul>
+<li>сегмент <code>{objectId}</code> в топике — всегда <strong>база без постфикса</strong>: для объекта <code>saspik.sa.wm.m003-sensor</code> топик будет <code>sensor/unitId3/saspik.sa.wm.m003</code>;</li>
+<li>в прошивке <code>OBJECT_ID</code> задаётся базой без постфикса — публикация данных <code>sensor/{unitId}/{base}</code> и подписка на команды <code>device/{unitId}/{base}</code> совпадают с топиком объекта из UI;</li>
+<li>сервер при создании объекта сам дописывает постфикс по типу и строит топик от базы, поэтому поле ID в форме содержит итоговое значение, которое уйдёт в базу;</li>
+<li>объекты, созданные до постфиксов (например <code>saspik.sa.wm.m003</code>), совместимы: постфикс просто отсутствует, топики выводятся от того же базового идентификатора.</li>
+</ul>
 <h3 id="топики-публикации-device-→-broker">Топики публикации (device → broker)</h3>
 <p>Показания сенсоров публикуются в <code>sensor/{unitId}/{objectId}</code>. Объекты-сенсоры делятся по модели датчика; канал объекта отображается на поле payload (см. ObjectsService, <code>spec.key</code>).</p>
 <h4 id="sensorunitidobjectid-температуравлажность"><code>sensor/{unitId}/{objectId}</code> (температура/влажность)</h4>

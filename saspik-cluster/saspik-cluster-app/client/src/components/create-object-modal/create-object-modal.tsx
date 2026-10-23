@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { createCn } from 'bem-react-classname';
 
@@ -9,11 +9,26 @@ import {
   ObjectType,
   emptyObjectFormValues,
   emptySpecRow,
+  stripIdPostfix,
+  withTypePostfix,
 } from '../object-form';
 
 import './styles.css';
 
 const cn = createCn('create-object-modal');
+
+const fetchObjectsIds = async (type: ObjectType, unitId: string): Promise<string[]> => {
+  const response = await fetch(`/api/v1/objects/list/${type}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ unitId }),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = (await response.json()) as { objects?: { id: string }[] };
+  return (data.objects ?? []).map(obj => obj.id);
+};
 
 interface CreateObjectModalProps {
   open: boolean;
@@ -33,6 +48,7 @@ export const CreateObjectModal = ({
   const [values, setValues] = useState<ObjectFormValues>(() =>
     emptyObjectFormValues(defaultType),
   );
+  const [existingIds, setExistingIds] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -43,6 +59,47 @@ export const CreateObjectModal = ({
       setSubmitting(false);
     }
   }, [open, defaultType]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    let cancelled = false;
+    const loadExistingIds = async () => {
+      try {
+        let ids: string[];
+        if (isMockMode()) {
+          const [sensors, automations] = await Promise.all([
+            mockApi.getSensorsList(unitId),
+            mockApi.getAutomationsList(unitId),
+          ]);
+          ids = [...sensors.objects, ...automations.objects].map(obj => obj.id);
+        } else {
+          const [sensorIds, deviceIds] = await Promise.all([
+            fetchObjectsIds('sensor', unitId),
+            fetchObjectsIds('device', unitId),
+          ]);
+          ids = [...sensorIds, ...deviceIds];
+        }
+        if (!cancelled) {
+          setExistingIds(ids);
+        }
+      } catch {
+        if (!cancelled) {
+          setExistingIds([]);
+        }
+      }
+    };
+    loadExistingIds();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, unitId]);
+
+  const idSuggestions = useMemo(
+    () => Array.from(new Set(existingIds.map(stripIdPostfix))).sort(),
+    [existingIds],
+  );
 
   if (!open) {
     return null;
@@ -74,8 +131,14 @@ export const CreateObjectModal = ({
       return;
     }
 
+    const id = withTypePostfix(values.objectId, values.type);
+    if (existingIds.includes(id)) {
+      setError(`Объект «${id}» уже существует в ${unitId}`);
+      return;
+    }
+
     const payload = {
-      id: values.objectId.trim(),
+      id,
       name: values.name.trim(),
       type: values.type,
       spec: values.spec.map(s => ({
@@ -124,6 +187,7 @@ export const CreateObjectModal = ({
         <ObjectFormFields
           values={values}
           unitId={unitId}
+          idSuggestions={idSuggestions}
           onChange={patch => setValues(prev => ({ ...prev, ...patch }))}
           onSpecChange={updateSpecRow}
           onSpecAdd={addSpecRow}

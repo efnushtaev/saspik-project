@@ -13,6 +13,19 @@ import { ObjectEntity, ObjectsRepository, toObjectsDto } from "../data-store";
 const STATUS_TOPIC_PATTERN = "device/+/+/status";
 const STATUS_SUBSCRIBE_RETRY_MS = 3000;
 
+// Постфиксы функциональных ролей: sensor — мониторинг, device — автоматика.
+// В сегмент топика идёт только база objectId без постфикса.
+const ID_POSTFIXES = ["-sensor", "-device"] as const;
+
+const stripIdPostfix = (id: string): string => {
+  for (const postfix of ID_POSTFIXES) {
+    if (id.endsWith(postfix)) {
+      return id.slice(0, -postfix.length);
+    }
+  }
+  return id;
+};
+
 @injectable()
 export class ObjectsService implements IObjectsService {
   private deviceStatuses = new Map<string, DeviceStatus>();
@@ -136,9 +149,11 @@ export class ObjectsService implements IObjectsService {
 
     this.validateObjectDto(dto, unitId);
 
-    const topic = `${dto.type}/${unitId}/${dto.id}`;
+    const base = stripIdPostfix(dto.id.trim());
+    const id = `${base}-${dto.type}`;
+    const topic = `${dto.type}/${unitId}/${base}`;
     const entity: ObjectEntity = {
-      id: dto.id,
+      id,
       name: dto.name,
       type: dto.type,
       spec: dto.spec,
@@ -159,7 +174,23 @@ export class ObjectsService implements IObjectsService {
 
     this.validateObjectDto(dto, unitId);
 
-    const topic = `${dto.type}/${unitId}/${id}`;
+    const existing = (await this.objectsRepository.findByIds([id])).find(
+      (obj) => obj.unitId === unitId,
+    );
+    const base = stripIdPostfix(id);
+    const existingTopic = existing?.topic ?? "";
+    const [existingDomain, existingUnit] = existingTopic.split("/");
+    const isCanonicalTopic =
+      existingTopic !== "" &&
+      (existingDomain === "sensor" || existingDomain === "device") &&
+      existingUnit === unitId;
+    // Канонический topic пересчитываем от текущего типа и базы objectId;
+    // неканонический (seed-объекты с произвольными топиками) сохраняем как есть,
+    // иначе пересчёт оборвёт их подписки/состояние.
+    const topic =
+      isCanonicalTopic || !existingTopic
+        ? `${dto.type}/${unitId}/${base}`
+        : existingTopic;
     const saved = await this.objectsRepository.update(id, unitId, {
       name: dto.name,
       type: dto.type,

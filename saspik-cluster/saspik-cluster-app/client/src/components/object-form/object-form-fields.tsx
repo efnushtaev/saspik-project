@@ -1,16 +1,19 @@
 import { createCn } from 'bem-react-classname';
 
-import { ObjectFormValues, SpecRow } from './types';
+import { ObjectFormValues, SpecRow, stripIdPostfix, withTypePostfix } from './types';
 
 import './styles.css';
 
 const cn = createCn('object-form');
+
+const ID_SUGGESTIONS_LIST_ID = 'object-form-id-suggestions';
 
 interface ObjectFormFieldsProps {
   values: ObjectFormValues;
   unitId: string;
   disabled?: boolean;
   idReadonly?: boolean;
+  idSuggestions?: string[];
   variant?: 'stacked' | 'table';
   onChange: (patch: Partial<ObjectFormValues>) => void;
   onSpecChange: (index: number, patch: Partial<SpecRow>) => void;
@@ -23,13 +26,14 @@ export const ObjectFormFields = ({
   unitId,
   disabled = false,
   idReadonly = false,
+  idSuggestions = [],
   variant = 'stacked',
   onChange,
   onSpecChange,
   onSpecAdd,
   onSpecRemove,
 }: ObjectFormFieldsProps) => {
-  const topic = `${values.type}/${unitId}/${values.objectId}`;
+  const topic = `${values.type}/${unitId}/${stripIdPostfix(values.objectId)}`;
   const inputCls = variant === 'table' ? cn('table-input') : cn('input');
 
   const nameInput = (
@@ -47,7 +51,14 @@ export const ObjectFormFields = ({
       className={inputCls}
       value={values.type}
       disabled={disabled}
-      onChange={e => onChange({ type: e.target.value as ObjectFormValues['type'] })}
+      onChange={e => {
+        const nextType = e.target.value as ObjectFormValues['type'];
+        const patch: Partial<ObjectFormValues> = { type: nextType };
+        if (!idReadonly && values.objectId.trim()) {
+          patch.objectId = withTypePostfix(values.objectId, nextType);
+        }
+        onChange(patch);
+      }}
     >
       <option value="sensor">sensor</option>
       <option value="device">device</option>
@@ -60,10 +71,27 @@ export const ObjectFormFields = ({
       value={values.objectId}
       disabled={disabled}
       readOnly={idReadonly}
+      list={!idReadonly && idSuggestions.length > 0 ? ID_SUGGESTIONS_LIST_ID : undefined}
       onChange={e => onChange({ objectId: e.target.value })}
-      placeholder="Например, s7"
+      onBlur={() => {
+        if (idReadonly || disabled || !values.objectId.trim()) return;
+        const normalized = withTypePostfix(values.objectId, values.type);
+        if (normalized !== values.objectId) {
+          onChange({ objectId: normalized });
+        }
+      }}
+      placeholder="Например, saspik.sa.wm.m003"
     />
   );
+
+  const idDatalist =
+    !idReadonly && idSuggestions.length > 0 ? (
+      <datalist id={ID_SUGGESTIONS_LIST_ID}>
+        {idSuggestions.map(base => (
+          <option key={base} value={base} />
+        ))}
+      </datalist>
+    ) : null;
 
   const descInput = (
     <input
@@ -98,7 +126,10 @@ export const ObjectFormFields = ({
             </tr>
             <tr>
               <th className={cn('table-label')}>ID</th>
-              <td>{idInput}</td>
+              <td>
+                {idInput}
+                {idDatalist}
+              </td>
             </tr>
             <tr>
               <th className={cn('table-label')}>Юнит</th>
@@ -204,6 +235,7 @@ export const ObjectFormFields = ({
       <label className={cn('field')}>
         <span className={cn('label')}>ID</span>
         {idInput}
+        {idDatalist}
       </label>
 
       <label className={cn('field')}>

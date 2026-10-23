@@ -1,4 +1,5 @@
 import { mockUnits, mockObjects, mockRules, MockObject, MockUnit, MockRule } from './mock-data';
+import { stripIdPostfix, withTypePostfix } from './object-form/types';
 
 // Mock API service
 export const mockApi = {
@@ -117,8 +118,9 @@ export const mockApi = {
     unitId: string;
   }): Promise<{ object: MockObject }> => {
     await new Promise(resolve => setTimeout(resolve, 300));
+    const id = withTypePostfix(payload.id, payload.type);
     const object: MockObject = {
-      id: payload.id,
+      id,
       name: payload.name,
       type: payload.type,
       spec: payload.spec.map(s => ({
@@ -131,7 +133,7 @@ export const mockApi = {
         },
       })),
       description: payload.description,
-      topic: `${payload.type}/${payload.unitId}/${payload.id}`,
+      topic: `${payload.type}/${payload.unitId}/${stripIdPostfix(payload.id)}`,
     };
     mockObjects.push(object);
     return { object };
@@ -175,7 +177,7 @@ export const mockApi = {
         },
       }));
     }
-    object.topic = `${payload.type ?? object.type}/${payload.unitId ?? ''}/${id}`;
+    object.topic = `${payload.type ?? object.type}/${payload.unitId ?? ''}/${stripIdPostfix(id)}`;
     return { object };
   },
 
