@@ -12,6 +12,7 @@ DeviceLogManager DeviceLog;
 // NVS-пространство и ключи
 static const char NVS_NAMESPACE[]  = "devicelog";
 static const char KEY_REBOOT_CAUSE[] = "reboot_cause";
+static const char KEY_PREV_UPTIME[] = "prev_uptime";
 
 // ---------------------------------------------------------------------------
 // NVS: причина последнего ребута
@@ -42,8 +43,20 @@ void DeviceLogManager::saveRebootCause(const char* cause) {
     prefs.end();
 }
 
+void DeviceLogManager::loadPrevUptime() {
+    prevUptime_ = 0;
+    Preferences prefs;
+    if (!prefs.begin(NVS_NAMESPACE, true)) {
+        prefs.end();
+        return;
+    }
+    prevUptime_ = prefs.getUInt(KEY_PREV_UPTIME, 0);
+    prefs.end();
+}
+
 bool DeviceLogManager::begin() {
     loadRebootCause();
+    loadPrevUptime();
     return true;
 }
 
@@ -58,4 +71,28 @@ const char* DeviceLogManager::rebootCause() const {
 
 bool DeviceLogManager::hasRebootCause() const {
     return rebootCause_[0] != '\0';
+}
+
+void DeviceLogManager::savePrevUptime() {
+    Preferences prefs;
+    if (!prefs.begin(NVS_NAMESPACE, false)) {
+        return;
+    }
+    prefs.putUInt(KEY_PREV_UPTIME, (uint32_t)(millis() / 1000));
+    prefs.end();
+}
+
+uint32_t DeviceLogManager::prevUptime() const {
+    return prevUptime_;
+}
+
+void DeviceLogManager::clearRebootData() {
+    Preferences prefs;
+    if (prefs.begin(NVS_NAMESPACE, false)) {
+        prefs.remove(KEY_REBOOT_CAUSE);
+        prefs.remove(KEY_PREV_UPTIME);
+        prefs.end();
+    }
+    rebootCause_[0] = '\0';
+    prevUptime_ = 0;
 }

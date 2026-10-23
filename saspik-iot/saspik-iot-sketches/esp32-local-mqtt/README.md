@@ -17,8 +17,8 @@
 - Captive portal для настройки Wi-Fi/MQTT (`wifi-config`), кнопка на GPIO 25
 - **Восстановление Wi-Fi**: при обрыве `WiFi.disconnect()+WiFi.reconnect()` раз в `WIFI_RECONNECT_INTERVAL_MS`
 - **Авто-ребут**: при непрерывной недоступности MQTT > `MQTT_REBOOT_TIMEOUT_MS` или Wi-Fi > `WIFI_REBOOT_TIMEOUT_MS`
-- **Энергонезависимый лог** (`device-log`): хвост событий на LittleFS + причина последнего ребута в NVS
-- **Удалённая диагностика**: при старте шлёт хвост лога, во время сбоя — JSON-диагностику раз в `DIAG_PUBLISH_INTERVAL_MS`
+- **Энергонезависимый лог** (`device-log`): причина ребута и длительность прошлой сессии (`prevUptime`) в NVS
+- **Удалённая диагностика**: при старте — конверт `startup` с `cause`/`prevUptime`, после обрыва MQTT — событие `reconnect` с `downSec`/`errors`
 
 ### Параметры (config.h)
 
@@ -33,7 +33,8 @@
 | `MQTT_REBOOT_TIMEOUT_MS` | `900000` (15 мин) | МQТТ недоступен → ребут |
 | `WIFI_REBOOT_TIMEOUT_MS` | `300000` (5 мин) | Wi-Fi не поднялся → ребут |
 | `WIFI_RECONNECT_INTERVAL_MS` | `10000` | Интервал попыток восстановления Wi-Fi |
-| `DIAG_PUBLISH_INTERVAL_MS` | `60000` | Период публикации диагностики при сбое |
+| `MQTT_RECONNECT_INTERVAL_MS` | `3000` | Интервал попыток подключения к MQTT |
+| `MQTT_CONNECT_TIMEOUT_MS` | `4000` | Таймаут TCP-соединения с брокером |
 | `SENSOR_INTERVAL_MS` | `2000` | Период чтения датчика |
 | `DHT_TYPE` | `22` | Тип датчика DHT |
 | `PIN_DHT` / `PIN_LED` / `CONFIG_BUTTON_PIN` | `4` / `2` / `25` | Пины |
@@ -44,11 +45,18 @@
 
 Топик `TOPIC_DIAG` (`device/unitId2/saspik.sa.wm.m002/log`):
 
-- **При старте** (если был зафиксирован предыдущий ребут): публикуется хвост лога с событиями.
-- **Во время сбоя** (раз в `DIAG_PUBLISH_INTERVAL_MS`): JSON:
+- **При старте** (если был зафиксирован авто-ребут): конверт `startup` с причиной
+  и длительностью прошлой сессии; после отправки `cause`/`prevUptime` стираются
+  из NVS, чтобы обычный (не авто-) перезагрузка не шлёт ложную причину:
 
 ```json
-{"uptime":12345,"wifi":3,"mqtt":-2,"lostSec":60}
+{"level":"info","src":"device","event":"startup","msg":"startup after reboot","uptime":5,"cause":"mqtt-timeout","prevUptime":923}
+```
+
+- **После восстановления MQTT** после обрыва: событие `reconnect`:
+
+```json
+{"level":"info","src":"device","event":"reconnect","msg":"mqtt reconnected","uptime":1000,"downSec":45,"errors":15}
 ```
 
 Причины ребута: `wifi-lost`, `mqtt-timeout`. Лог также доступен в Serial (`pio device monitor`).
@@ -59,9 +67,8 @@
 # Сборка
 pio run
 
-# Прошивка (и файловая система для лога при первом прошивании)
+# Прошивка
 pio run -t upload
-pio run -t uploadfs
 
 # Монитор Serial
 pio device monitor

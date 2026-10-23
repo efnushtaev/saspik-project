@@ -39,8 +39,6 @@ constexpr uint32_t WIFI_RECONNECT_INTERVAL_MS = 10000UL;
 constexpr uint32_t MQTT_RECONNECT_INTERVAL_MS = 3000UL;
 // Таймаут TCP-соединения к брокеру (мс) — чтобы connect не висел дольше WDT.
 constexpr uint32_t MQTT_CONNECT_TIMEOUT_MS   = 4000UL;
-// Интервал публикации диагностики в MQTT во время длительного сбоя (мс)
-constexpr uint32_t DIAG_PUBLISH_INTERVAL_MS = 60000UL;
 
 // --- Интервал чтения датчика (мс) ---
 constexpr uint32_t SENSOR_INTERVAL_MS = 2000;

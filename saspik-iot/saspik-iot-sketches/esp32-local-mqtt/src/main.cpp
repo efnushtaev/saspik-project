@@ -33,14 +33,14 @@ uint32_t lastSensorReadMs = 0;
 // ======================== ДИАГНОСТИКА / УСТОЙЧИВОСТЬ ========================
 // Параметры (таймауты, топик диагностики) заданы в config.h:
 //   MQTT_REBOOT_TIMEOUT_MS, WIFI_REBOOT_TIMEOUT_MS,
-//   WIFI_RECONNECT_INTERVAL_MS, DIAG_PUBLISH_INTERVAL_MS, TOPIC_DIAG
+//   WIFI_RECONNECT_INTERVAL_MS, MQTT_CONNECT_TIMEOUT_MS, TOPIC_DIAG
 
 uint32_t mqttLostSinceMs = 0;      // момент начала непрерывной недоступности MQTT
 bool     mqttWasConnected = false; // был ли MQTT подключён (для первого подключения)
+uint32_t mqttConnectErrors = 0;    // неудачных попыток подключения за текущий эпизод
 uint32_t wifiLostSinceMs = 0;      // момент начала непрерывного обрыва WiFi
 uint32_t lastWifiReconnectMs = 0;
 uint32_t lastMqttConnectMs = 0;    // момент последней попытки подключения к MQTT
-uint32_t lastDiagPublishMs = 0;
 bool     startupLogSent = false;   // отправлен ли хвост лога после старта
 
 // ======================== ПРОТОТИПЫ ========================
@@ -51,9 +51,9 @@ void publishSensorData();
 void setLed(bool on);
 void handleWifiReconnect();
 void checkMqttTimeout();
-void sendDiagnostics();
 void publishStartupLog();
 void publishLogEvent(const char* level, const char* event, const char* msg);
+void publishReconnectLog(uint32_t downSec, uint32_t errors);
 
 // ======================== SETUP ========================
 
@@ -169,7 +169,6 @@ void connectMQTT() {
                            TOPIC_STATUS, 0, true, WILL_OFFLINE)) {
         Serial.println("MQTT подключён.");
         mqttWasConnected = true;
-        mqttLostSinceMs = 0; // сброс таймера
 
         // Retained-статус online для сервера/UI (перезаписывает offline от LWT)
         mqttClient.publish(TOPIC_STATUS, "{\"status\":\"online\"}", true);
@@ -177,16 +176,27 @@ void connectMQTT() {
         // Подписка на топик управления светодиодом
         mqttClient.subscribe(TOPIC_SUBSCRIBE);
         Serial.printf("mqtt connected, subscribed %s\n", TOPIC_SUBSCRIBE);
-        publishLogEvent("info", "connect", "mqtt connected");
+
+        // Событие восстановления после обрыва — до сброса таймера недоступности
+        // (downSec — длительность обрыва, errors — число неудачных попыток).
+        // При первом подключении на старте — обычное событие connect.
+        if (mqttLostSinceMs != 0) {
+            publishReconnectLog((millis() - mqttLostSinceMs) / 1000,
+                                mqttConnectErrors);
+        } else {
+            publishLogEvent("info", "connect", "mqtt connected");
+        }
+        mqttLostSinceMs = 0;     // сброс таймера
+        mqttConnectErrors = 0;   // счётчик попыток отработал — обнуляем
     } else {
         // Фиксируем момент начала недоступности MQTT (только один раз за эпизод).
         // Не считаем сбоем первичное подключение при старте (mqttWasConnected == false).
         if (mqttLostSinceMs == 0 && mqttWasConnected) {
             mqttLostSinceMs = millis();
         }
+        ++mqttConnectErrors;
         Serial.print("Ошибка MQTT, rc=");
         Serial.println(mqttClient.state());
-        publishLogEvent("error", "connect-error", "mqtt connect failed");
     }
 }
 
@@ -217,6 +227,10 @@ void callbackMQTT(char* topic, byte* payload, unsigned int length) {
     }
 
     const char* state = doc["state"];
+    if (state == nullptr) {
+        Serial.println("Команда без поля state — игнорируется");
+        return;
+    }
     if (strcmp(state, "ON") == 0) {
         setLed(true);
     } else if (strcmp(state, "OFF") == 0) {
@@ -309,8 +323,7 @@ void handleWifiReconnect() {
     if (now - wifiLostSinceMs >= WIFI_REBOOT_TIMEOUT_MS) {
         Serial.printf("wifi unavailable >%lus, rebooting\n",
                       (unsigned long)(WIFI_REBOOT_TIMEOUT_MS / 1000));
-        publishLogEvent("error", "reboot", "wifi-lost");
-        delay(100);
+        DeviceLog.savePrevUptime(); // prevUptime уйдёт в startup-конверт после ребута
         DeviceLog.setRebootCause("wifi-lost");
         ESP.restart();
     }
@@ -324,17 +337,10 @@ void checkMqttTimeout() {
     }
     uint32_t now = millis();
 
-    // Периодическая публикация диагностики во время сбоя (для удалённого мониторинга)
-    if (now - lastDiagPublishMs >= DIAG_PUBLISH_INTERVAL_MS) {
-        lastDiagPublishMs = now;
-        sendDiagnostics();
-    }
-
     if (now - mqttLostSinceMs >= MQTT_REBOOT_TIMEOUT_MS) {
         Serial.printf("mqtt unavailable >%lus, rebooting\n",
                       (unsigned long)(MQTT_REBOOT_TIMEOUT_MS / 1000));
-        publishLogEvent("error", "reboot", "mqtt-timeout");
-        delay(100); // дать уйти конверту в MQTT
+        DeviceLog.savePrevUptime(); // prevUptime уйдёт в startup-конверт после ребута
         DeviceLog.setRebootCause("mqtt-timeout");
         ESP.restart();
     }
@@ -363,33 +369,26 @@ void publishLogEvent(const char* level, const char* event, const char* msg) {
     mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
 }
 
-void sendDiagnostics() {
+// Событие восстановления MQTT после обрыва:
+//   downSec — длительность недоступности (с), errors — число неудачных попыток.
+// Публикуется до сброса mqttLostSinceMs, иначе downSec будет равен 0.
+void publishReconnectLog(uint32_t downSec, uint32_t errors) {
     if (!mqttClient.connected()) {
         return;
     }
-
-    // Единый конверт диагностики; msg — компактная сводка состояния
-    char diag[160];
-    snprintf(diag, sizeof(diag),
-        "uptime=%lus wifi=%d mqtt=%d lost=%lus",
-        (unsigned long)(millis() / 1000),
-        WiFi.status(),
-        mqttClient.state(),
-        (unsigned long)((millis() - mqttLostSinceMs) / 1000));
-
-    StaticJsonDocument<256> doc;
-    doc["level"]    = "warn";
+    StaticJsonDocument<384> doc;
+    doc["level"]    = "info";
     doc["src"]      = "device";
-    doc["event"]    = "diag";
-    doc["msg"]      = diag;
+    doc["event"]    = "reconnect";
+    doc["msg"]      = "mqtt reconnected";
     doc["topic"]    = TOPIC_DIAG;
     doc["unitId"]   = UNIT_ID;
     doc["objectId"] = OBJECT_ID;
-    doc["wifi"]     = WiFi.status();
-    doc["mqtt"]     = mqttClient.state();
-    doc["lostSec"]  = (unsigned long)((millis() - mqttLostSinceMs) / 1000);
+    doc["uptime"]   = (unsigned long)(millis() / 1000);
+    doc["downSec"]  = downSec;
+    doc["errors"]   = errors;
 
-    char jsonBuffer[256];
+    char jsonBuffer[384];
     size_t jsonLen = serializeJson(doc, jsonBuffer);
     mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
 }
@@ -407,8 +406,9 @@ void publishStartupLog() {
     Serial.print("[main] Стартовый конверт, причина ребута: ");
     Serial.println(cause);
 
-    // Единый конверт: event = "startup", причина ребута — в поле cause.
-    // (Файловый кольцевой лог убран для стабильности — только NVS rebooot cause.)
+    // Единый конверт: event = "startup", причина ребута — в поле cause,
+    // длительность сессии до ребута — в поле prevUptime (0/нет — питания
+    // выключали, а не авто-ребут).
     StaticJsonDocument<384> doc;
     doc["level"]    = "info";
     doc["src"]      = "device";
@@ -419,8 +419,15 @@ void publishStartupLog() {
     doc["objectId"] = OBJECT_ID;
     doc["uptime"]   = (unsigned long)(millis() / 1000);
     doc["cause"]    = cause;
+    if (DeviceLog.prevUptime() > 0) {
+        doc["prevUptime"] = DeviceLog.prevUptime();
+    }
 
     char jsonBuffer[384];
     size_t jsonLen = serializeJson(doc, jsonBuffer);
     mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
+
+    // Конверт отправлен — стираем cause и prevUptime из NVS, иначе после
+    // обычной (не авто-) перезагрузки startup повторно ушёл бы с ложным cause.
+    DeviceLog.clearRebootData();
 }

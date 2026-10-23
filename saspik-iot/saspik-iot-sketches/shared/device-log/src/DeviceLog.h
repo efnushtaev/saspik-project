@@ -36,11 +36,33 @@ public:
      */
     bool hasRebootCause() const;
 
+    /**
+     * @brief Сохраняет длительность текущей сессии (сек) в NVS.
+     *        Вызывается непосредственно перед авто-ребутом, чтобы после
+     *        перезагрузки отправить prevUptime в startup-конверте.
+     */
+    void savePrevUptime();
+
+    /**
+     * @brief Длительность сессии до последнего авто-ребута, сек
+     *        (0 — не сохранялась, т.е. питания включались заново).
+     */
+    uint32_t prevUptime() const;
+
+    /**
+     * @brief Стирает причину ребута и prevUptime из NVS.
+     *        Вызывается после отправки startup-конверта: иначе обычная
+     *        перезагрузка повторно отправляла бы ложный cause из прошлой сессии.
+     */
+    void clearRebootData();
+
 private:
     void loadRebootCause();
     void saveRebootCause(const char* cause);
+    void loadPrevUptime();
 
     char rebootCause_[64];
+    uint32_t prevUptime_ = 0;
 };
 
 extern DeviceLogManager DeviceLog;
