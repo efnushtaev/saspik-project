@@ -2528,6 +2528,8 @@ npm run lint:fix      # ESLint с автофиксом
 </ul>
 <h3 id="классификация-устройств">Классификация устройств</h3>
 <p>Устройства классифицируются по формату <code>saspik-{роли}{протокол}{питание}{nnn}</code>.<br>Подробнее: <a href="#saspik-iot-docs-classification"><code>docs/classification.md</code></a></p>
+<h3 id="реестр-устройств">Реестр устройств</h3>
+<p>Таблица созданных устройств (objectId, прошивка, тип, описание): <a href="devices.md"><code>devices.md</code></a></p>
 
 </section>
 <hr class="section-sep">
@@ -3188,8 +3190,8 @@ pio run -e device_c3
 <li>Captive portal для настройки Wi-Fi/MQTT (<code>wifi-config</code>), кнопка на GPIO 25</li>
 <li><strong>Восстановление Wi-Fi</strong>: при обрыве <code>WiFi.disconnect()+WiFi.reconnect()</code> раз в <code>WIFI_RECONNECT_INTERVAL_MS</code></li>
 <li><strong>Авто-ребут</strong>: при непрерывной недоступности MQTT &gt; <code>MQTT_REBOOT_TIMEOUT_MS</code> или Wi-Fi &gt; <code>WIFI_REBOOT_TIMEOUT_MS</code></li>
-<li><strong>Энергонезависимый лог</strong> (<code>device-log</code>): хвост событий на LittleFS + причина последнего ребута в NVS</li>
-<li><strong>Удалённая диагностика</strong>: при старте шлёт хвост лога, во время сбоя — JSON-диагностику раз в <code>DIAG_PUBLISH_INTERVAL_MS</code></li>
+<li><strong>Энергонезависимый лог</strong> (<code>device-log</code>): причина ребута и длительность прошлой сессии (<code>prevUptime</code>) в NVS</li>
+<li><strong>Удалённая диагностика</strong>: при старте — конверт <code>startup</code> с <code>cause</code>/<code>prevUptime</code>, после обрыва MQTT — событие <code>reconnect</code> с <code>downSec</code>/<code>errors</code></li>
 </ul>
 <h3 id="параметры-configh">Параметры (config.h)</h3>
 <p>Все настраиваемые параметры вынесены в <a href="src/config.h"><code>src/config.h</code></a>:</p>
@@ -3237,9 +3239,14 @@ pio run -e device_c3
 <td align="left">Интервал попыток восстановления Wi-Fi</td>
 </tr>
 <tr>
-<td align="left"><code>DIAG_PUBLISH_INTERVAL_MS</code></td>
-<td align="left"><code>60000</code></td>
-<td align="left">Период публикации диагностики при сбое</td>
+<td align="left"><code>MQTT_RECONNECT_INTERVAL_MS</code></td>
+<td align="left"><code>3000</code></td>
+<td align="left">Интервал попыток подключения к MQTT</td>
+</tr>
+<tr>
+<td align="left"><code>MQTT_CONNECT_TIMEOUT_MS</code></td>
+<td align="left"><code>4000</code></td>
+<td align="left">Таймаут TCP-соединения с брокером</td>
 </tr>
 <tr>
 <td align="left"><code>SENSOR_INTERVAL_MS</code></td>
@@ -3263,19 +3270,22 @@ pio run -e device_c3
 <h3 id="диагностика">Диагностика</h3>
 <p>Топик <code>TOPIC_DIAG</code> (<code>device/unitId2/saspik.sa.wm.m002/log</code>):</p>
 <ul>
-<li><strong>При старте</strong> (если был зафиксирован предыдущий ребут): публикуется хвост лога с событиями.</li>
-<li><strong>Во время сбоя</strong> (раз в <code>DIAG_PUBLISH_INTERVAL_MS</code>): JSON:</li>
+<li><strong>При старте</strong> (если был зафиксирован авто-ребут): конверт <code>startup</code> с причиной<br>и длительностью прошлой сессии; после отправки <code>cause</code>/<code>prevUptime</code> стираются<br>из NVS, чтобы обычный (не авто-) перезагрузка не шлёт ложную причину:</li>
 </ul>
-<pre><code class="language-json">{&quot;uptime&quot;:12345,&quot;wifi&quot;:3,&quot;mqtt&quot;:-2,&quot;lostSec&quot;:60}
+<pre><code class="language-json">{&quot;level&quot;:&quot;info&quot;,&quot;src&quot;:&quot;device&quot;,&quot;event&quot;:&quot;startup&quot;,&quot;msg&quot;:&quot;startup after reboot&quot;,&quot;uptime&quot;:5,&quot;cause&quot;:&quot;mqtt-timeout&quot;,&quot;prevUptime&quot;:923}
+</code></pre>
+<ul>
+<li><strong>После восстановления MQTT</strong> после обрыва: событие <code>reconnect</code>:</li>
+</ul>
+<pre><code class="language-json">{&quot;level&quot;:&quot;info&quot;,&quot;src&quot;:&quot;device&quot;,&quot;event&quot;:&quot;reconnect&quot;,&quot;msg&quot;:&quot;mqtt reconnected&quot;,&quot;uptime&quot;:1000,&quot;downSec&quot;:45,&quot;errors&quot;:15}
 </code></pre>
 <p>Причины ребута: <code>wifi-lost</code>, <code>mqtt-timeout</code>. Лог также доступен в Serial (<code>pio device monitor</code>).</p>
 <h3 id="сборка-и-прошивка">Сборка и прошивка</h3>
 <pre><code class="language-bash"># Сборка
 pio run
 
-# Прошивка (и файловая система для лога при первом прошивании)
+# Прошивка
 pio run -t upload
-pio run -t uploadfs
 
 # Монитор Serial
 pio device monitor
