@@ -18,8 +18,10 @@ pattern readwrite led/#
 # Allow unit command topics for authenticated users
 pattern readwrite units/#
 
-# Allow log topics (device/server/rule-engine log envelopes)
-pattern readwrite device/+/+/log
+# Allow all device topics: commands (device/<unit>/<object>),
+# retained state/status (device/<unit>/<object>/state|status) and
+# log envelopes (device/<unit>/<object>/log)
+pattern readwrite device/#
 pattern readwrite server/+/log
 pattern readwrite rule-engine/+/log
 

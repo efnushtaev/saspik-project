@@ -44,6 +44,24 @@ export class LocalMqttService implements IMqttService {
     }
   }
 
+  /**
+   * Сопоставление входящего топика с подпиской в семантике MQTT:
+   * `+` — ровно один сегмент, `#` — остаток топика (включая ноль сегментов).
+   * Нужно, потому что событие message приходит с точным топиком,
+   * а ключ карты подписок — фильтр (например `device/+/+/status`).
+   */
+  private static topicMatches(filter: string, topic: string): boolean {
+    const filterParts = filter.split("/");
+    const topicParts = topic.split("/");
+    for (let i = 0; i < filterParts.length; i++) {
+      const part = filterParts[i];
+      if (part === "#") return true;
+      if (i >= topicParts.length) return false;
+      if (part !== "+" && part !== topicParts[i]) return false;
+    }
+    return filterParts.length === topicParts.length;
+  }
+
   private setupConnection(): void {
     const brokerUrl = this.config.get("MQTT_BROKER_URL") || "mqtt://localhost:1883";
     const options: mqtt.IClientOptions = {
@@ -75,10 +93,11 @@ export class LocalMqttService implements IMqttService {
     });
 
     this.client.on("message", (topic: string, message: Buffer) => {
-      const callback = this.subscriptions.get(topic);
-      if (callback) {
-        callback(topic, message);
-      }
+      this.subscriptions.forEach((callback, filter) => {
+        if (LocalMqttService.topicMatches(filter, topic)) {
+          callback(topic, message);
+        }
+      });
     });
 
     this.client.on("error", (err: Error) => {

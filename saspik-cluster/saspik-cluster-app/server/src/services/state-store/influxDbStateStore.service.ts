@@ -40,7 +40,7 @@ export class InfluxDbStateStoreService implements IStateStoreService {
     const flux = `
       from(bucket: "${this.bucket}")
         |> range(start: -30d)
-        |> filter(fn: (r) => r.topic == "${topic}")
+        |> filter(fn: (r) => r.topic == "${topic}" or r.topic == "${topic}/state")
         |> filter(fn: (r) => r._field == "${field || "state"}")
         |> last()
         |> group()

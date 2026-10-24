@@ -1,8 +1,8 @@
 #include <stdint.h>
 
 // --- Параметры объекта ---
-constexpr char OBJECT_ID[] = "saspik.sa.wm.m002";
-constexpr char UNIT_ID[] = "unitId2";
+constexpr char OBJECT_ID[] = "saspik.sa.wm.m003";
+constexpr char UNIT_ID[] = "unitId3";
 constexpr char OBJECT_TYPE[] = "sensor";
 
 // --- Пины ---
@@ -19,14 +19,17 @@ constexpr char MQTT_BROKER[]        = "192.168.0.118";
 constexpr uint16_t MQTT_PORT        = 1883;
 constexpr char MQTT_USER[]          = "admin";
 constexpr char MQTT_PASS[]          = "password123";
-constexpr char TOPIC_SUBSCRIBE[]    = "device/unitId2/saspik.sa.wm.m002";
+constexpr char TOPIC_SUBSCRIBE[]    = "device/unitId3/saspik.sa.wm.m003";
 
 // --- Диагностика и устойчивость ---
 // Топик для публикации хвоста лога и диагностики (управляется через MQTT)
-constexpr char TOPIC_DIAG[]         = "device/unitId2/saspik.sa.wm.m002/log";
+constexpr char TOPIC_DIAG[]         = "device/unitId3/saspik.sa.wm.m003/log";
+// Retained-состояние светодиода: {"state":"ON"|"OFF"}, публикуется устройством
+// после каждой смены состояния и при подключении; читается telegraf → Influx → UI
+constexpr char TOPIC_STATE[]        = "device/unitId3/saspik.sa.wm.m003/state";
 // Retained-статус устройства: online публикуется при подключении,
 // offline — LWT (публикует брокер при обрыве соединения по таймауту)
-constexpr char TOPIC_STATUS[]       = "device/unitId2/saspik.sa.wm.m002/status";
+constexpr char TOPIC_STATUS[]       = "device/unitId3/saspik.sa.wm.m003/status";
 // Время непрерывной недоступности MQTT, после которого авто-ребут (мс)
 constexpr uint32_t MQTT_REBOOT_TIMEOUT_MS = 900000UL; // 15 минут
 // Время непрерывной недоступности WiFi, после которого авто-ребут (мс)

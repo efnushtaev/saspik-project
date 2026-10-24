@@ -30,6 +30,9 @@ DeviceConfig config;
 // Неблокирующий таймер
 uint32_t lastSensorReadMs = 0;
 
+// Текущее состояние светодиода (публикуется retained в TOPIC_STATE)
+bool ledState = false;
+
 // ======================== ДИАГНОСТИКА / УСТОЙЧИВОСТЬ ========================
 // Параметры (таймауты, топик диагностики) заданы в config.h:
 //   MQTT_REBOOT_TIMEOUT_MS, WIFI_REBOOT_TIMEOUT_MS,
@@ -49,6 +52,7 @@ void connectMQTT();
 void callbackMQTT(char* topic, byte* payload, unsigned int length);
 void publishSensorData();
 void setLed(bool on);
+void publishLedState();
 void handleWifiReconnect();
 void checkMqttTimeout();
 void publishStartupLog();
@@ -173,6 +177,10 @@ void connectMQTT() {
         // Retained-статус online для сервера/UI (перезаписывает offline от LWT)
         mqttClient.publish(TOPIC_STATUS, "{\"status\":\"online\"}", true);
 
+        // Retained-состояние LED: после ребута актуализирует Influx/UI
+        // фактическим состоянием пина (LED стартует выключенным)
+        publishLedState();
+
         // Подписка на топик управления светодиодом
         mqttClient.subscribe(TOPIC_SUBSCRIBE);
         Serial.printf("mqtt connected, subscribed %s\n", TOPIC_SUBSCRIBE);
@@ -246,8 +254,19 @@ void callbackMQTT(char* topic, byte* payload, unsigned int length) {
 void setLed(bool on) {
     // Active low: LOW = включено, HIGH = выключено
     digitalWrite(PIN_LED, on ? LOW : HIGH);
+    ledState = on;
     Serial.print(on ? "Светодиод ВКЛЮЧЁН" : "Светодиод ВЫКЛЮЧЕН");
     Serial.println(" (GPIO 2)");
+    // Retained-состояние в TOPIC_STATE — источник данных для telegraf → Influx → UI
+    publishLedState();
+}
+
+// Публикует retained {"state":"ON"|"OFF"} в TOPIC_STATE.
+void publishLedState() {
+    if (!mqttClient.connected()) {
+        return;
+    }
+    mqttClient.publish(TOPIC_STATE, ledState ? "{\"state\":\"ON\"}" : "{\"state\":\"OFF\"}", true);
 }
 
 // ======================== ПУБЛИКАЦИЯ ДАННЫХ ДАТЧИКА ========================
