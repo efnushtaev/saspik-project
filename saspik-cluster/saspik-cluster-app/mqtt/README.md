@@ -1,4 +1,4 @@
-[↑ Saspik-cluster](saspik-cluster/README.md)
+[↑ Saspik-cluster](../../README.md)
 
 # ⧫ Mosquitto — MQTT-брокер
 
@@ -39,12 +39,17 @@ mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword   # сме�
 Порядок правил:
 
 1. **Default deny** — все неразрешённые топики блокируются.
-2. **`clients/%c/#`** — каждый клиент может читать/писать в свой namespace (по Client ID).
-3. **`sensor/#`** — publish/subscribe для сенсорных топиков.
-4. **`units/#`** — publish/subscribe для топиков команд (управление реле, добавлено 2026-07-27).
-5. **Лог-топики**: `device/+/+/log`, `server/+/log`, `rule-engine/+/log` (единый JSON-конверт, 2026-09-03).
+2. **`healthcheck/#`** — healthcheck брокера.
+3. **`clients/%c/#`** — каждый клиент может читать/писать в свой namespace (по Client ID).
+4. **`sensor/#`** — publish/subscribe для сенсорных топиков.
+5. **`led/#`** — управление LED.
+6. **`units/#`** — publish/subscribe для топиков команд (управление реле, добавлено 2026-07-27).
+7. **`device/#`** — команды `device/{unitId}/{objectId}`, retained-состояние `/state`, `/status` и лог `/log` (с 2026-10-29 вместо `device/+/+/log`).
+8. **Лог-топики backend**: `server/+/log`, `rule-engine/+/log` (единый JSON-конверт, 2026-09-03).
 
-Сводная таблица паттернов — в [docs/mqtt-topics](../docs/mqtt-topics.md).
+Сводная таблица паттернов — в [docs/mqtt-topics](../../docs/mqtt-topics.md).
+
+> **После изменения ACL нужна пересборка образа.** `mosquitto.acl` и `mosquitto.conf` копируются в образ в `mqtt/Dockerfile`; `docker compose restart` / `up -d` без `--build` поднимают старый ACL. Используйте `docker compose build mosquitto && docker compose up -d mosquitto` (или bind-mount ACL).
 
 ### Разделение топиков по Client ID
 

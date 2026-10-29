@@ -2,6 +2,16 @@
 
 ## Ход работ
 
+### 2026-10-29
+### Состояние LED в MQTT: прошивка и retained-публикации
+
+Статус: состояние LED работает на проде; доработки зафиксированы, не реализованы.
+
+- Причина: на плате была сборка до `a9f4b43` — команда LED и `status` уже были, а `TOPIC_STATE`/`publishLedState()` ещё нет. После прошивки текущего `esp32-local-mqtt` плата публикует retained `{"state":"ON"|"OFF"}` при подключении и каждой смене; проверено end-to-end (MQTT → telegraf → Influx → UI).
+- Баг retained: в `main.cpp` вызовы `mqttClient.publish(topic, jsonBuffer, jsonLen)` (сенсор и лог-конверты) из-за перегрузки `publish(const char*, const char*, boolean)` публикуют данные как retained. Исправить на явный вызов с `(const uint8_t*)` + `size_t` + `false`.
+- Надёжность подписки: проверять результат `subscribe(TOPIC_SUBSCRIBE)` и повторять подписку; сейчас при отказе устройство молча остаётся без команд.
+- Опционально: периодический republish `state` как страховка от потери retained при пересоздании mosquitto без volume.
+
 ### 2026-10-20
 ### Прошивка esp32-relay-x8 (ESP32 Relay Board x8)
 

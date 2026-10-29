@@ -6,18 +6,20 @@
 
 Скетч публикует температуру и влажность в MQTT-брокер, управляет светодиодом
 по командам. Отличается **повышенной устойчивостью**: восстановление Wi-Fi,
-авто-ребут при длительных сбоях и энергонезависимый лог событий
-с причиной последнего перезапуска.
+авто-ребут при длительных сбоях и энергонезависимая причина последнего
+перезапуска (NVS).
 
 ### Возможности
 
 - Чтение температуры/влажности с DHT22 (GPIO 4) с интервалом `SENSOR_INTERVAL_MS`
-- Публикация JSON в MQTT-топик `sensor/unitId2/saspik.sa.wm.m002`
-- Управление светодиодом (GPIO 2) по командам `{"state":"ON"}`/`{"state":"OFF"}` с подпиской `device/unitId2/saspik.sa.wm.m002`
+- Публикация JSON в MQTT-топик `sensor/unitId3/saspik.sa.wm.m003`
+- Управление светодиодом (GPIO 2) по командам `{"state":"ON"}`/`{"state":"OFF"}` с подпиской `device/unitId3/saspik.sa.wm.m003`
+- **Retained-состояние LED**: `{"state":"ON"|"OFF"}` в `device/unitId3/saspik.sa.wm.m003/state` при подключении и каждой смене — источник для telegraf → Influx → UI
+- **Retained-статус**: `{"status":"online"}` при подключении, `offline` — LWT брокера в `device/unitId3/saspik.sa.wm.m003/status`
 - Captive portal для настройки Wi-Fi/MQTT (`wifi-config`), кнопка на GPIO 25
 - **Восстановление Wi-Fi**: при обрыве `WiFi.disconnect()+WiFi.reconnect()` раз в `WIFI_RECONNECT_INTERVAL_MS`
 - **Авто-ребут**: при непрерывной недоступности MQTT > `MQTT_REBOOT_TIMEOUT_MS` или Wi-Fi > `WIFI_REBOOT_TIMEOUT_MS`
-- **Энергонезависимый лог** (`device-log`): причина ребута и длительность прошлой сессии (`prevUptime`) в NVS
+- **Энергонезависимая диагностика** (`device-log`): причина ребута и длительность прошлой сессии (`prevUptime`) в NVS
 - **Удалённая диагностика**: при старте — конверт `startup` с `cause`/`prevUptime`, после обрыва MQTT — событие `reconnect` с `downSec`/`errors`
 
 ### Параметры (config.h)
@@ -26,10 +28,12 @@
 
 | Параметр | Значение | Описание |
 | :--- | :--- | :--- |
-| `OBJECT_ID` / `UNIT_ID` / `OBJECT_TYPE` | `saspik.sa.wm.m002` / `unitId2` / `sensor` | Идентификация объекта |
+| `OBJECT_ID` / `UNIT_ID` / `OBJECT_TYPE` | `saspik.sa.wm.m003` / `unitId3` / `sensor` | Идентификация объекта |
 | `MQTT_BROKER` / `MQTT_PORT` / `MQTT_USER` / `MQTT_PASS` | — | Параметры брокера |
-| `TOPIC_SUBSCRIBE` | `device/unitId2/saspik.sa.wm.m002` | Топик управления (LED) |
-| `TOPIC_DIAG` | `device/unitId2/saspik.sa.wm.m002/log` | Топик лога и диагностики |
+| `TOPIC_SUBSCRIBE` | `device/unitId3/saspik.sa.wm.m003` | Топик управления (LED) |
+| `TOPIC_STATE` | `device/unitId3/saspik.sa.wm.m003/state` | Retained-состояние LED (ON/OFF) |
+| `TOPIC_STATUS` | `device/unitId3/saspik.sa.wm.m003/status` | Retained-статус (online/LWT offline) |
+| `TOPIC_DIAG` | `device/unitId3/saspik.sa.wm.m003/log` | Топик лога и диагностики |
 | `MQTT_REBOOT_TIMEOUT_MS` | `900000` (15 мин) | МQТТ недоступен → ребут |
 | `WIFI_REBOOT_TIMEOUT_MS` | `300000` (5 мин) | Wi-Fi не поднялся → ребут |
 | `WIFI_RECONNECT_INTERVAL_MS` | `10000` | Интервал попыток восстановления Wi-Fi |
@@ -43,7 +47,7 @@
 
 ### Диагностика
 
-Топик `TOPIC_DIAG` (`device/unitId2/saspik.sa.wm.m002/log`):
+Топик `TOPIC_DIAG` (`device/unitId3/saspik.sa.wm.m003/log`):
 
 - **При старте** (если был зафиксирован авто-ребут): конверт `startup` с причиной
   и длительностью прошлой сессии; после отправки `cause`/`prevUptime` стираются
@@ -78,7 +82,7 @@ pio device monitor
 
 - `knolleary/PubSubClient`, `adafruit/DHT sensor library`, `bblanchon/ArduinoJson`
 - Общие библиотеки из `../shared`: `wifi-config`, `device-log`
-- Файловая система: `board_build.filesystem = littlefs` (для лога)
+- Файловая система не используется: причина ребута и лог-метаданные — в NVS (`Preferences`)
 
 ### Структура
 
@@ -88,5 +92,6 @@ esp32-local-mqtt/
 ├── extra_script.py       # генерация env_config.h из .env
 └── src/
     ├── main.cpp
-    └── config.h          # все параметры (топики, таймауты, пины)
+    ├── config.h          # все параметры (топики, таймауты, пины)
+    └── env_config.h      # генерируется из .env (Wi-Fi по умолчанию)
 ```

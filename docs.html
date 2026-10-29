@@ -439,7 +439,7 @@ INFLUXDB_LOGS_RETENTION_DAYS=${INFLUXDB_LOGS_RETENTION_DAYS:-7}
 </section>
 <hr class="section-sep">
 <section id="saspik-cluster-saspik-cluster-app-mqtt">
-<p><a href="saspik-cluster/README.md">↑ Saspik-cluster</a></p>
+<p><a href="#saspik-cluster">↑ Saspik-cluster</a></p>
 <h1 id="⧫-mosquitto--mqtt-брокер">⧫ Mosquitto — MQTT-брокер</h1>
 <h4 id="eclipse-mosquitto-20-шина-сообщений-между-устройствами-backend-и-websocket-клиентами">Eclipse Mosquitto 2.0: шина сообщений между устройствами, backend и WebSocket-клиентами</h4>
 <p>Mosquitto — MQTT-брокер кластера.<br>Собирается из <code>mqtt/Dockerfile</code> (образ Mosquitto 2.0 с собственным конфигом).<br>Порты: <code>1883</code> (MQTT) и <code>9001</code> (WebSocket).<br>Аутентификация включена (<code>allow_anonymous false</code>), разграничение топиков — через ACL.</p>
@@ -478,12 +478,18 @@ mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword   # сме�
 <p>Порядок правил:</p>
 <ol>
 <li><strong>Default deny</strong> — все неразрешённые топики блокируются.</li>
+<li><strong><code>healthcheck/#</code></strong> — healthcheck брокера.</li>
 <li><strong><code>clients/%c/#</code></strong> — каждый клиент может читать/писать в свой namespace (по Client ID).</li>
 <li><strong><code>sensor/#</code></strong> — publish/subscribe для сенсорных топиков.</li>
+<li><strong><code>led/#</code></strong> — управление LED.</li>
 <li><strong><code>units/#</code></strong> — publish/subscribe для топиков команд (управление реле, добавлено 2026-07-27).</li>
-<li><strong>Лог-топики</strong>: <code>device/+/+/log</code>, <code>server/+/log</code>, <code>rule-engine/+/log</code> (единый JSON-конверт, 2026-09-03).</li>
+<li><strong><code>device/#</code></strong> — команды <code>device/{unitId}/{objectId}</code>, retained-состояние <code>/state</code>, <code>/status</code> и лог <code>/log</code> (с 2026-10-29 вместо <code>device/+/+/log</code>).</li>
+<li><strong>Лог-топики backend</strong>: <code>server/+/log</code>, <code>rule-engine/+/log</code> (единый JSON-конверт, 2026-09-03).</li>
 </ol>
-<p>Сводная таблица паттернов — в <a href="../docs/mqtt-topics.md">docs/mqtt-topics</a>.</p>
+<p>Сводная таблица паттернов — в <a href="#saspik-cluster-docs-mqtt-topics">docs/mqtt-topics</a>.</p>
+<blockquote>
+<p><strong>После изменения ACL нужна пересборка образа.</strong> <code>mosquitto.acl</code> и <code>mosquitto.conf</code> копируются в образ в <code>mqtt/Dockerfile</code>; <code>docker compose restart</code> / <code>up -d</code> без <code>--build</code> поднимают старый ACL. Используйте <code>docker compose build mosquitto &amp;&amp; docker compose up -d mosquitto</code> (или bind-mount ACL).</p>
+</blockquote>
 <h3 id="разделение-топиков-по-client-id">Разделение топиков по Client ID</h3>
 <p>Namespace-подход (из-за ограничений ACL при анонимном доступе):</p>
 <ul>
@@ -1789,17 +1795,27 @@ npm run lint:fix      # ESLint с автофиксом
 <tbody><tr>
 <td align="left"><code>sensor/</code></td>
 <td align="left">device → broker (данные)</td>
-<td align="left"><code>sensor/unitId2/saspik.sa.wm.m002</code></td>
+<td align="left"><code>sensor/unitId3/saspik.sa.wm.m003</code></td>
 </tr>
 <tr>
 <td align="left"><code>device/</code></td>
 <td align="left">broker → device (команды)</td>
-<td align="left"><code>device/unitId2/saspik.sa.wm.m002</code></td>
+<td align="left"><code>device/unitId3/saspik.sa.wm.m003</code></td>
+</tr>
+<tr>
+<td align="left"><code>device/.../state</code></td>
+<td align="left">device → broker (retained)</td>
+<td align="left"><code>device/unitId3/saspik.sa.wm.m003/state</code></td>
+</tr>
+<tr>
+<td align="left"><code>device/.../status</code></td>
+<td align="left">device → broker (retained)</td>
+<td align="left"><code>device/unitId3/saspik.sa.wm.m003/status</code></td>
 </tr>
 <tr>
 <td align="left"><code>device/.../log</code></td>
 <td align="left">device → broker (логи)</td>
-<td align="left"><code>device/unitId2/saspik.sa.wm.m002/log</code></td>
+<td align="left"><code>device/unitId3/saspik.sa.wm.m003/log</code></td>
 </tr>
 <tr>
 <td align="left"><code>units/{unitId}/commands/</code></td>
@@ -1930,6 +1946,17 @@ npm run lint:fix      # ESLint с автофиксом
 <td align="left"><code>ON</code> — включить, <code>OFF</code> — выключить</td>
 </tr>
 </tbody></table>
+<h3 id="состояние-и-статус-устройства">Состояние и статус устройства</h3>
+<h4 id="deviceunitidobjectidstate"><code>device/{unitId}/{objectId}/state</code></h4>
+<p>Retained-состояние исполнителя. Публикуется устройством при подключении и после каждой смены; telegraf подписан на <code>device/+/+/state</code> и складывает <code>state</code> в Influx, откуда его читает UI.</p>
+<pre><code class="language-json">{&quot;state&quot;: &quot;ON&quot;}
+</code></pre>
+<h4 id="deviceunitidobjectidstatus"><code>device/{unitId}/{objectId}/status</code></h4>
+<p>Retained-статус присутствия. <code>online</code> публикуется при подключении, <code>offline</code> — LWT-сообщение брокера при обрыве соединения.</p>
+<pre><code class="language-json">{&quot;status&quot;: &quot;online&quot;}
+{&quot;status&quot;: &quot;offline&quot;}
+</code></pre>
+<p>Оба топика входят в ACL-правило <code>device/#</code> вместе с командами и логом.</p>
 <h3 id="служебные-топики">Служебные топики</h3>
 <h4 id="healthcheckping"><code>healthcheck/ping</code></h4>
 <p>Docker healthcheck контейнера mosquitto (публикуется каждые 30 с).</p>
@@ -2018,12 +2045,16 @@ npm run lint:fix      # ESLint с автофиксом
 <td align="left">сенсорные топики (<code>sensor/{unitId}/{objectId}</code>)</td>
 </tr>
 <tr>
+<td align="left"><code>led/#</code></td>
+<td align="left">управление LED</td>
+</tr>
+<tr>
 <td align="left"><code>units/#</code></td>
 <td align="left">топики команд (<code>units/{unitId}/commands/...</code>)</td>
 </tr>
 <tr>
-<td align="left"><code>device/+/+/log</code></td>
-<td align="left">логи-конверты device</td>
+<td align="left"><code>device/#</code></td>
+<td align="left">команды, retained <code>state</code>/<code>status</code> и логи device</td>
 </tr>
 <tr>
 <td align="left"><code>server/+/log</code></td>
@@ -2034,6 +2065,9 @@ npm run lint:fix      # ESLint с автофиксом
 <td align="left">логи-конверты rule-engine</td>
 </tr>
 </tbody></table>
+<blockquote>
+<p>ACL вшит в образ (<code>mqtt/Dockerfile</code>). После правки <code>mosquitto.acl</code> нужен rebuild <code>mosquitto</code> (<code>docker compose build mosquitto &amp;&amp; docker compose up -d mosquitto</code>); <code>restart</code>/<code>up -d</code> без <code>--build</code> поднимают старый ACL.</p>
+</blockquote>
 
 </section>
 <hr class="section-sep">
@@ -3209,16 +3243,18 @@ pio run -e device_c3
 <p><a href="#saspik-iot-saspik-iot-sketches">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-esp32-local-mqtt">⧫ esp32-local-mqtt</h1>
 <h4 id="esp32-doit-devkit-v1--dht22--mqtt-локальный-сенсор-с-устойчивостью-к-сбоям">ESP32 (DOIT DevKit V1) + DHT22 + MQTT: локальный сенсор с устойчивостью к сбоям</h4>
-<p>Скетч публикует температуру и влажность в MQTT-брокер, управляет светодиодом<br>по командам. Отличается <strong>повышенной устойчивостью</strong>: восстановление Wi-Fi,<br>авто-ребут при длительных сбоях и энергонезависимый лог событий<br>с причиной последнего перезапуска.</p>
+<p>Скетч публикует температуру и влажность в MQTT-брокер, управляет светодиодом<br>по командам. Отличается <strong>повышенной устойчивостью</strong>: восстановление Wi-Fi,<br>авто-ребут при длительных сбоях и энергонезависимая причина последнего<br>перезапуска (NVS).</p>
 <h3 id="возможности">Возможности</h3>
 <ul>
 <li>Чтение температуры/влажности с DHT22 (GPIO 4) с интервалом <code>SENSOR_INTERVAL_MS</code></li>
-<li>Публикация JSON в MQTT-топик <code>sensor/unitId2/saspik.sa.wm.m002</code></li>
-<li>Управление светодиодом (GPIO 2) по командам <code>{&quot;state&quot;:&quot;ON&quot;}</code>/<code>{&quot;state&quot;:&quot;OFF&quot;}</code> с подпиской <code>device/unitId2/saspik.sa.wm.m002</code></li>
+<li>Публикация JSON в MQTT-топик <code>sensor/unitId3/saspik.sa.wm.m003</code></li>
+<li>Управление светодиодом (GPIO 2) по командам <code>{&quot;state&quot;:&quot;ON&quot;}</code>/<code>{&quot;state&quot;:&quot;OFF&quot;}</code> с подпиской <code>device/unitId3/saspik.sa.wm.m003</code></li>
+<li><strong>Retained-состояние LED</strong>: <code>{&quot;state&quot;:&quot;ON&quot;|&quot;OFF&quot;}</code> в <code>device/unitId3/saspik.sa.wm.m003/state</code> при подключении и каждой смене — источник для telegraf → Influx → UI</li>
+<li><strong>Retained-статус</strong>: <code>{&quot;status&quot;:&quot;online&quot;}</code> при подключении, <code>offline</code> — LWT брокера в <code>device/unitId3/saspik.sa.wm.m003/status</code></li>
 <li>Captive portal для настройки Wi-Fi/MQTT (<code>wifi-config</code>), кнопка на GPIO 25</li>
 <li><strong>Восстановление Wi-Fi</strong>: при обрыве <code>WiFi.disconnect()+WiFi.reconnect()</code> раз в <code>WIFI_RECONNECT_INTERVAL_MS</code></li>
 <li><strong>Авто-ребут</strong>: при непрерывной недоступности MQTT &gt; <code>MQTT_REBOOT_TIMEOUT_MS</code> или Wi-Fi &gt; <code>WIFI_REBOOT_TIMEOUT_MS</code></li>
-<li><strong>Энергонезависимый лог</strong> (<code>device-log</code>): причина ребута и длительность прошлой сессии (<code>prevUptime</code>) в NVS</li>
+<li><strong>Энергонезависимая диагностика</strong> (<code>device-log</code>): причина ребута и длительность прошлой сессии (<code>prevUptime</code>) в NVS</li>
 <li><strong>Удалённая диагностика</strong>: при старте — конверт <code>startup</code> с <code>cause</code>/<code>prevUptime</code>, после обрыва MQTT — событие <code>reconnect</code> с <code>downSec</code>/<code>errors</code></li>
 </ul>
 <h3 id="параметры-configh">Параметры (config.h)</h3>
@@ -3233,7 +3269,7 @@ pio run -e device_c3
 </thead>
 <tbody><tr>
 <td align="left"><code>OBJECT_ID</code> / <code>UNIT_ID</code> / <code>OBJECT_TYPE</code></td>
-<td align="left"><code>saspik.sa.wm.m002</code> / <code>unitId2</code> / <code>sensor</code></td>
+<td align="left"><code>saspik.sa.wm.m003</code> / <code>unitId3</code> / <code>sensor</code></td>
 <td align="left">Идентификация объекта</td>
 </tr>
 <tr>
@@ -3243,12 +3279,22 @@ pio run -e device_c3
 </tr>
 <tr>
 <td align="left"><code>TOPIC_SUBSCRIBE</code></td>
-<td align="left"><code>device/unitId2/saspik.sa.wm.m002</code></td>
+<td align="left"><code>device/unitId3/saspik.sa.wm.m003</code></td>
 <td align="left">Топик управления (LED)</td>
 </tr>
 <tr>
+<td align="left"><code>TOPIC_STATE</code></td>
+<td align="left"><code>device/unitId3/saspik.sa.wm.m003/state</code></td>
+<td align="left">Retained-состояние LED (ON/OFF)</td>
+</tr>
+<tr>
+<td align="left"><code>TOPIC_STATUS</code></td>
+<td align="left"><code>device/unitId3/saspik.sa.wm.m003/status</code></td>
+<td align="left">Retained-статус (online/LWT offline)</td>
+</tr>
+<tr>
 <td align="left"><code>TOPIC_DIAG</code></td>
-<td align="left"><code>device/unitId2/saspik.sa.wm.m002/log</code></td>
+<td align="left"><code>device/unitId3/saspik.sa.wm.m003/log</code></td>
 <td align="left">Топик лога и диагностики</td>
 </tr>
 <tr>
@@ -3296,7 +3342,7 @@ pio run -e device_c3
 <p>Значения по умолчанию (SSID/пароль Wi-Fi) берутся из <code>env_config.h</code>, который генерируется <code>extra_script.py</code> из переменных окружения <code>.env</code>.</p>
 </blockquote>
 <h3 id="диагностика">Диагностика</h3>
-<p>Топик <code>TOPIC_DIAG</code> (<code>device/unitId2/saspik.sa.wm.m002/log</code>):</p>
+<p>Топик <code>TOPIC_DIAG</code> (<code>device/unitId3/saspik.sa.wm.m003/log</code>):</p>
 <ul>
 <li><strong>При старте</strong> (если был зафиксирован авто-ребут): конверт <code>startup</code> с причиной<br>и длительностью прошлой сессии; после отправки <code>cause</code>/<code>prevUptime</code> стираются<br>из NVS, чтобы обычный (не авто-) перезагрузка не шлёт ложную причину:</li>
 </ul>
@@ -3322,7 +3368,7 @@ pio device monitor
 <ul>
 <li><code>knolleary/PubSubClient</code>, <code>adafruit/DHT sensor library</code>, <code>bblanchon/ArduinoJson</code></li>
 <li>Общие библиотеки из <code>../shared</code>: <code>wifi-config</code>, <code>device-log</code></li>
-<li>Файловая система: <code>board_build.filesystem = littlefs</code> (для лога)</li>
+<li>Файловая система не используется: причина ребута и лог-метаданные — в NVS (<code>Preferences</code>)</li>
 </ul>
 <h3 id="структура">Структура</h3>
 <pre><code>esp32-local-mqtt/
@@ -3330,7 +3376,8 @@ pio device monitor
 ├── extra_script.py       # генерация env_config.h из .env
 └── src/
     ├── main.cpp
-    └── config.h          # все параметры (топики, таймауты, пины)
+    ├── config.h          # все параметры (топики, таймауты, пины)
+    └── env_config.h      # генерируется из .env (Wi-Fi по умолчанию)
 </code></pre>
 
 </section>

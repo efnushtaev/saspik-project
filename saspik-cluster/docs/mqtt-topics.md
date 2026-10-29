@@ -18,9 +18,11 @@
 
 | Домен                              | Направление                | Пример                                   |
 | :--------------------------------- | :------------------------- | :--------------------------------------- |
-| `sensor/`                          | device → broker (данные)   | `sensor/unitId2/saspik.sa.wm.m002`       |
-| `device/`                          | broker → device (команды)  | `device/unitId2/saspik.sa.wm.m002`       |
-| `device/.../log`                   | device → broker (логи)     | `device/unitId2/saspik.sa.wm.m002/log`   |
+| `sensor/`                          | device → broker (данные)   | `sensor/unitId3/saspik.sa.wm.m003`       |
+| `device/`                          | broker → device (команды)  | `device/unitId3/saspik.sa.wm.m003`       |
+| `device/.../state`                 | device → broker (retained) | `device/unitId3/saspik.sa.wm.m003/state` |
+| `device/.../status`                | device → broker (retained) | `device/unitId3/saspik.sa.wm.m003/status` |
+| `device/.../log`                   | device → broker (логи)     | `device/unitId3/saspik.sa.wm.m003/log`   |
 | `units/{unitId}/commands/`         | команды реле               | `units/unitId1/commands/a_relay1`        |
 | `units/{unitId}/sensors`           | агрегированные данные      | `units/unitId1/sensors`                  |
 | `server/`                          | логи backend (Express)     | `server/worker/log`                      |
@@ -98,6 +100,27 @@ String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT
 | :----- | :------| :------------------------ |
 | `state`| string | `ON` — включить, `OFF` — выключить |
 
+### Состояние и статус устройства
+
+#### `device/{unitId}/{objectId}/state`
+
+Retained-состояние исполнителя. Публикуется устройством при подключении и после каждой смены; telegraf подписан на `device/+/+/state` и складывает `state` в Influx, откуда его читает UI.
+
+```json
+{"state": "ON"}
+```
+
+#### `device/{unitId}/{objectId}/status`
+
+Retained-статус присутствия. `online` публикуется при подключении, `offline` — LWT-сообщение брокера при обрыве соединения.
+
+```json
+{"status": "online"}
+{"status": "offline"}
+```
+
+Оба топика входят в ACL-правило `device/#` вместе с командами и логом.
+
 ### Служебные топики
 
 #### `healthcheck/ping`
@@ -136,7 +159,10 @@ Payload: `{"payload":"test"}` (валидный JSON — ранее был те�
 | `healthcheck/#` | healthcheck |
 | `clients/%c/#` | пространство имён клиента (по Client ID) |
 | `sensor/#` | сенсорные топики (`sensor/{unitId}/{objectId}`) |
+| `led/#` | управление LED |
 | `units/#` | топики команд (`units/{unitId}/commands/...`) |
-| `device/+/+/log` | логи-конверты device |
+| `device/#` | команды, retained `state`/`status` и логи device |
 | `server/+/log` | логи-конверты server |
 | `rule-engine/+/log` | логи-конверты rule-engine |
+
+> ACL вшит в образ (`mqtt/Dockerfile`). После правки `mosquitto.acl` нужен rebuild `mosquitto` (`docker compose build mosquitto && docker compose up -d mosquitto`); `restart`/`up -d` без `--build` поднимают старый ACL.
