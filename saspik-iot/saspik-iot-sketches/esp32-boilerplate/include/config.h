@@ -136,14 +136,42 @@ constexpr uint8_t ESP_NOW_MAX_PEERS = 4;     ///< Максимум пиров (v
 constexpr size_t ESP_NOW_PACKET_MAX = 250;   ///< Стандартный лимит payload ESP-NOW
 
 // Типы сообщений ESP-NOW (первый байт пакета, см. EspNowCodec).
-constexpr uint8_t ESP_NOW_TYPE_DATA = 1;     ///< Данные с датчиков (сенсор → шлюз)
+constexpr uint8_t ESP_NOW_TYPE_DATA = 1;     ///< Данные с датчиков (узел → шлюз)
 constexpr uint8_t ESP_NOW_TYPE_LOG = 2;      ///< JSON-конверт лога (узел → шлюз)
 constexpr uint8_t ESP_NOW_TYPE_COMMAND = 3;  ///< Команда (шлюз → устройство)
 constexpr uint8_t ESP_NOW_TYPE_ACK = 4;      ///< Подтверждение приёма команды
+constexpr uint8_t ESP_NOW_TYPE_STATE = 5;    ///< Состояние автоматов (узел → шлюз)
 
-// Служебные field id внутри пакета (логи/команды несут готовый JSON).
+// Служебные field id внутри пакета (готовый JSON, имена каналов — внутри).
 constexpr uint8_t ESP_NOW_FIELD_LOG_JSON = 0xFF;
 constexpr uint8_t ESP_NOW_FIELD_COMMAND_JSON = 0xFE;
+constexpr uint8_t ESP_NOW_FIELD_DATA_JSON = 0xFD;
+constexpr uint8_t ESP_NOW_FIELD_STATE_JSON = 0xFC;
+
+// ======================== Пользовательские каналы ========================
+// Имя канала — произвольное (UTF-8), пин/роль/модель — здесь. Ключ в UI
+// (spec.key) должен совпадать с key. На одном objectId может быть несколько
+// каналов. Автоматического discovery нет: config.h — источник истины.
+
+enum class ChannelRole : uint8_t { Sensor, Actuator };
+enum class ChannelModel : uint8_t { Dht22, Float, Relay, Led };
+
+struct ChannelConfig {
+    const char* key;   ///< имя канала
+    const char* key2;  ///< второй ключ DHT22, иначе nullptr
+    uint8_t pin;       ///< пользовательский GPIO
+    ChannelRole role;
+    ChannelModel model;
+    bool activeLow;    ///< для LED/реле: LOW = включено
+    bool mock;         ///< для сенсоров: значения без железа
+};
+
+constexpr ChannelConfig CHANNELS[] = {
+    {"свет", nullptr, 13, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+    {"полив", nullptr, 26, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+};
+constexpr size_t MAX_CHANNELS = 8;
+constexpr size_t CHANNEL_COUNT = sizeof(CHANNELS) / sizeof(CHANNELS[0]);
 
 // Идентификаторы полей примерных датчиков (должны совпадать со словарём ниже).
 constexpr uint8_t FIELD_ID_TEMPERATURE = 1;
@@ -180,7 +208,10 @@ constexpr size_t FIELD_DICTIONARY_SIZE =
 // Таблица узлов шлюза. Заполняется MAC реальных узлов; пустая строка objectId
 // означает «нет узлов» (тогда мост работает как чистый пересыльщик без маршрутизации).
 constexpr NodeEntry NODE_TABLE[] = {
+    // Тестовый/примерный узел; MAC заменить на реальный.
     {"saspik-senb001", {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},
+    // Новое устройство автоматики (boilerplate, Device): MAC заменить на реальный.
+    {"saspik-aenm001", {0x02, 0x00, 0x00, 0x00, 0x00, 0x01}},
 };
 constexpr size_t NODE_TABLE_SIZE = sizeof(NODE_TABLE) / sizeof(NODE_TABLE[0]);
 
@@ -204,8 +235,7 @@ constexpr uint8_t LOG_SINKS_MAX = 4;              ///< Максимум sink'о�
 // как пользоваться интерфейсами ISensor/IActuator. Мок-режим повторяет
 // поведение esp32-local-mqtt (плавные псевдо-данные без железа).
 
+// App-шаблоны используют ChannelBank и CHANNELS[]; файлы examples/* оставлены
+// как справка по интерфейсам ISensor/IActuator.
 constexpr bool USE_MOCK_SENSOR = true;            ///< DHT22: мок вместо реального чтения
-constexpr bool USE_EXAMPLE_DHT22 = true;          ///< Подключить пример DHT22 (Sensor/Device/Gateway-свои)
-constexpr bool USE_EXAMPLE_FLOAT = false;         ///< Подключить пример поплавкового датчика
-constexpr bool USE_EXAMPLE_RELAY = false;         ///< Подключить пример реле (Device/Gateway)
 constexpr uint8_t DHT_TYPE = 22;                  ///< DHT22 = 22

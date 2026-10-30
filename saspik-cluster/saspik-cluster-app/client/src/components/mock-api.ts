@@ -104,8 +104,15 @@ export const mockApi = {
     return { rule };
   },
 
-  callCommand: async (deviceId: string, value: string): Promise<{ success: boolean }> => {
+  callCommand: async (
+    deviceId: string,
+    value: string,
+    key?: string,
+  ): Promise<{ success: boolean }> => {
     await new Promise(resolve => setTimeout(resolve, 200));
+    void deviceId;
+    void value;
+    void key;
     return { success: true };
   },
 

@@ -16,6 +16,7 @@
 #ifdef ARDUINO
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <string.h>
 
 #include "espnow/EspNowCodec.h"
@@ -41,13 +42,8 @@ SensorApp::SensorApp()
       m_sleep(&m_logger),
       m_timers(&clockMillis),
       m_cfg(),
-#if USE_EXAMPLE_DHT22
-      m_dht22(PIN_GPIO_3),
-#endif
-#if USE_EXAMPLE_FLOAT
-      m_floatSensor(PIN_GPIO_4),
-#endif
-      m_interfaces()  // последний инициализатор — всегда присутствует
+      m_channels(),
+      m_interfaces()
 {
 }
 
@@ -69,12 +65,7 @@ bool SensorApp::begin() {
     m_espNow.addPeer(m_cfg.app.peers[0].mac);
 
     m_interfaces.begin();
-#if USE_EXAMPLE_DHT22
-    m_dht22.begin();
-#endif
-#if USE_EXAMPLE_FLOAT
-    m_floatSensor.begin();
-#endif
+    m_channels.begin();
 
     m_sleep.configure(m_cfg.app.sleepIntervalMs);
     m_timers.add(m_cfg.app.sensorIntervalMs, onSensorTimer, this);
@@ -103,38 +94,31 @@ void SensorApp::onSleepCheckTimer(void* arg) {
 }
 
 void SensorApp::readAndSendSensors() {
+    if (!m_channels.hasSensors()) {
+        return;
+    }
+    StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
+    m_channels.readSensors(doc);
+    if (doc.size() == 0) {
+        return;
+    }
+    char payload[MQTT_PAYLOAD_MAX];
+    const size_t payloadLen = serializeJson(doc, payload, sizeof(payload));
+
     EspNowPacket packet = {};
     packet.type = ESP_NOW_TYPE_DATA;
     packet.timestampMs = millis();
+    EspNowField& field = packet.fields[0];
+    field.id = ESP_NOW_FIELD_DATA_JSON;
+    field.data = reinterpret_cast<const uint8_t*>(payload);
+    field.len = static_cast<uint8_t>(payloadLen);
+    packet.fieldCount = 1;
 
-#if USE_EXAMPLE_DHT22
-    addSampleToPacket(packet, m_dht22.read());
-#endif
-#if USE_EXAMPLE_FLOAT
-    addSampleToPacket(packet, m_floatSensor.read());
-#endif
-
-    if (packet.fieldCount == 0) {
-        return;  // ни одного валидного измерения — эфир не мусорим
-    }
     uint8_t buffer[ESP_NOW_PACKET_MAX];
     const size_t len = EspNowCodec::encode(packet, buffer, sizeof(buffer));
     if (len > 0) {
         m_espNow.send(m_cfg.app.peers[0].mac, buffer, len);
     }
-}
-
-void SensorApp::addSampleToPacket(EspNowPacket& packet,
-                                  const SensorSample& sample) {
-    if (!sample.valid || packet.fieldCount >= ESP_NOW_MAX_FIELDS) {
-        return;  // невалидное измерение или пакет уже полон
-    }
-    EspNowField& field = packet.fields[packet.fieldCount++];
-    field.id = sample.fieldId;
-    // Кодек копирует данные в буфер сразу (encode), поэтому указатель на
-    // локальную переменную безопасен.
-    field.data = reinterpret_cast<const uint8_t*>(&sample.value);
-    field.len = sizeof(sample.value);
 }
 
 void SensorApp::checkSleep() {

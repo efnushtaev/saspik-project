@@ -12,7 +12,7 @@ export interface UseObjectsListResult {
   objects: ObjectItem[];
   loading: boolean;
   error: string | null;
-  sendCommand: (deviceId: string, value: string) => Promise<void>;
+  sendCommand: (deviceId: string, value: string, key?: string) => Promise<void>;
   updateObjectValue: (objectId: string, specKey: string, newValue: string) => void;
 }
 
@@ -92,16 +92,16 @@ export const useObjectsListFetching = (
     };
   }, [location.search, type, unitIdProp, resolveUnitId]);
 
-  const sendCommand = async (deviceId: string, value: string) => {
+  const sendCommand = async (deviceId: string, value: string, key?: string) => {
     try {
       if (isMockMode()) {
-        await mockApi.callCommand(deviceId, value);
+        await mockApi.callCommand(deviceId, value, key);
       } else {
         const unitId = resolveUnitId();
         const response = await fetch(`/api/v1/objects/command/${deviceId}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ value, unitId }),
+          body: JSON.stringify({ value, unitId, ...(key ? { key } : {}) }),
         });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

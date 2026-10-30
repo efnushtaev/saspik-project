@@ -3,13 +3,15 @@
  * EspNowMqttBridge.h — мост ESP-NOW ↔ MQTT (шаблон Gateway).
  *
  * Направления:
- *   узел → шлюз: данные (ESP_NOW_TYPE_DATA) публикуются в
- *     sensor/{unitId}/{objectIdУзла} (fieldId → имя ключа по FIELD_DICTIONARY);
- *     логи (ESP_NOW_TYPE_LOG) — в device/{unitId}/{objectIdУзла}/log
- *     (JSON-конверт узла передаётся as-is в поле ESP_NOW_FIELD_LOG_JSON);
- *   шлюз → узел: MQTT-команда на device/{unitId}/{objectIdУзла} упаковывается
- *     в ESP-NOW COMMAND с полем ESP_NOW_FIELD_COMMAND_JSON — шлюз работает
- *     маршрутизатором и не разбирает команды (их знает сам узел).
+ *   узел → шлюз: данные (ESP_NOW_TYPE_DATA) с JSON-картой имён публикуются
+ *     as-is в sensor/{unitId}/{objectIdУзла}; legacy float-поля
+ *     (FIELD_DICTIONARY) поддерживаются для совместимости;
+ *     логи (ESP_NOW_TYPE_LOG) — в device/{unitId}/{objectIdУзла}/log;
+ *     состояние автоматов (ESP_NOW_TYPE_STATE) — retained в
+ *     device/{unitId}/{objectIdУзла}/state;
+ *   шлюз → узел: MQTT-команда на device/{unitId}/{objectIdУзла}/command
+ *     упаковывается в ESP-NOW COMMAND с полем ESP_NOW_FIELD_COMMAND_JSON —
+ *     шлюз работает маршрутизатором и не разбирает команды.
  *
  * Чистый модуль: без Arduino, покрывается host-тестами
  * (MockMqttClient + MockEspNowClient). Словарь полей и таблица узлов —
@@ -55,6 +57,7 @@ public:
 private:
     void forwardData(const uint8_t* srcMac, const EspNowPacket& packet);
     void forwardLog(const uint8_t* srcMac, const EspNowPacket& packet);
+    void forwardState(const uint8_t* srcMac, const EspNowPacket& packet);
     void handleCommand(const char* topic, const char* payload);
     const NodeEntry* findNodeByMac(const uint8_t* mac) const;
     const NodeEntry* findNodeByObjectId(const char* objectId) const;

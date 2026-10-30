@@ -44,7 +44,7 @@ mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword   # сме�
 4. **`sensor/#`** — publish/subscribe для сенсорных топиков.
 5. **`led/#`** — управление LED.
 6. **`units/#`** — publish/subscribe для топиков команд (управление реле, добавлено 2026-07-27).
-7. **`device/#`** — команды `device/{unitId}/{objectId}`, retained-состояние `/state`, `/status` и лог `/log` (с 2026-10-29 вместо `device/+/+/log`).
+7. **`device/#`** — команды `device/{unitId}/{objectId}/command`, retained-состояние `/state`, `/status` и лог `/log` (с 2026-10-29 вместо `device/+/+/log`).
 8. **Лог-топики backend**: `server/+/log`, `rule-engine/+/log` (единый JSON-конверт, 2026-09-03).
 
 Сводная таблица паттернов — в [docs/mqtt-topics](../../docs/mqtt-topics.md).

@@ -44,6 +44,8 @@ export type GetByIdsBodyReq = {
 
 export type CommandBodyReq = {
   value: string;
+  /** Ключ канала (spec.key); для device-объектов задаёт имя канала. */
+  key?: string;
   unitId?: string;
 };
 

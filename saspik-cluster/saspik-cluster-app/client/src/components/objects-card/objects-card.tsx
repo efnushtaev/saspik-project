@@ -5,10 +5,17 @@ import { SunOutlined, EllipsisOutlined } from '@ant-design/icons';
 
 import './styles.css';
 
+export type ObjectsCardControl = {
+  key: string;
+  value: string;
+  onToggle: () => void;
+};
+
 type ObjectsCardProps = {
   title: string;
   describe: string;
   values: string[];
+  controls?: ObjectsCardControl[];
   meta?: string;
   navigateTo?: string;
   onAction?: () => void;
@@ -34,7 +41,7 @@ const ValueDisplay = ({ value }: { value: string }) => {
   );
 };
 
-export const ObjectsCard = ({ title, describe, values, meta, navigateTo = '/monitoring', onAction, onOpen }: ObjectsCardProps) => {
+export const ObjectsCard = ({ title, describe, values, controls, meta, navigateTo = '/monitoring', onAction, onOpen }: ObjectsCardProps) => {
   const hasValues = values.length > 0;
   const navigate = useNavigate();
 
@@ -69,15 +76,42 @@ export const ObjectsCard = ({ title, describe, values, meta, navigateTo = '/moni
             )}
           </div>
         </div>
-        <div className={cn('values')}>
-          {hasValues ? (
-            values.map((v, i) => (
-              <div key={i} className={cn('value')}><ValueDisplay value={v} /></div>
-            ))
-          ) : (
-            <div className={cn('value', { loading: true })}>--</div>
-          )}
-        </div>
+        {controls ? (
+          <div className={cn('controls')}>
+            {controls.map((control) => {
+              const isOn =
+                String(control.value).toUpperCase() === 'ON' ||
+                String(control.value) === '1' ||
+                String(control.value).toLowerCase() === 'true';
+              return (
+                <div key={control.key} className={cn('control')}>
+                  <span className={cn('control-key')}>{control.key}</span>
+                  <span className={cn('control-value')}>{control.value}</span>
+                  <button
+                    type="button"
+                    className={cn('control-toggle', { on: isOn })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      control.onToggle();
+                    }}
+                  >
+                    {isOn ? 'OFF' : 'ON'}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className={cn('values')}>
+            {hasValues ? (
+              values.map((v, i) => (
+                <div key={i} className={cn('value')}><ValueDisplay value={v} /></div>
+              ))
+            ) : (
+              <div className={cn('value', { loading: true })}>--</div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

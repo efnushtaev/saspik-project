@@ -3,6 +3,25 @@
 ## Ход работ
 
 ### 2026-10-29
+### Конфигурируемые каналы: server/UI/telegraf
+
+Статус: код готов, сборки server/client успешны; end-to-end на железе — вручную.
+
+- Команды переведены на `device/{unitId}/{objectId}/command` с payload
+  `{"channel":"<key>","value":"ON"|"OFF"}`; имя канала больше не кодируется в
+  топике. Server проверяет, что `key` есть в `device.spec`, иначе команду не
+  публикует (раньше молча подставлял первый spec).
+- UI: `sendCommand(..., key)`, mock-api, контролы на карточке устройства по
+  каждому spec; для `device/` шлём `ON/OFF`, для legacy `units/` — `1/0`.
+  В форме объекта подсказка: ключ канала должен совпадать с `config.h`.
+- Telegraf: `json_string_fields = ["*"]` — имена каналов произвольные, поэтому
+  нельзя перечислять только `state`.
+- Influx: добавлено экранирование строк в Flux-запросах.
+- Объекты: `saspik-awqm001` (`unitId3`, local-mqtt) и `saspik-aenm001`
+  (`unitId2`, boilerplate); старый `m003` не трогаем.
+- Проверено: `npm run build` server и client. `npm run lint` server падает на
+  `Object.hasOwn` (старый Node/ESLint), к правкам не относится.
+
 ### ACL device/# и состояние LED в UI
 
 Статус: выполнено, проверено end-to-end на проде (185.72.145.19).

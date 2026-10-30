@@ -25,13 +25,20 @@ void test_command_topic() {
     char topic[64];
     TopicBuilder::commandTopic(topic, sizeof(topic), "unitId2",
                                "saspik-aenm001");
-    TEST_ASSERT_EQUAL_STRING("device/unitId2/saspik-aenm001", topic);
+    TEST_ASSERT_EQUAL_STRING("device/unitId2/saspik-aenm001/command", topic);
 }
 
 void test_command_wildcard_topic() {
     char topic[64];
     TopicBuilder::commandWildcardTopic(topic, sizeof(topic), "unitId2");
-    TEST_ASSERT_EQUAL_STRING("device/unitId2/+", topic);
+    TEST_ASSERT_EQUAL_STRING("device/unitId2/+/command", topic);
+}
+
+void test_state_topic() {
+    char topic[64];
+    TopicBuilder::stateTopic(topic, sizeof(topic), "unitId2",
+                             "saspik-aenm001");
+    TEST_ASSERT_EQUAL_STRING("device/unitId2/saspik-aenm001/state", topic);
 }
 
 void test_log_topic() {
@@ -61,6 +68,7 @@ int main(int argc, char** argv) {
     RUN_TEST(test_data_topic);
     RUN_TEST(test_command_topic);
     RUN_TEST(test_command_wildcard_topic);
+    RUN_TEST(test_state_topic);
     RUN_TEST(test_log_topic);
     RUN_TEST(test_status_topic);
     RUN_TEST(test_small_buffer_truncates_safely);

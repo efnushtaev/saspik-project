@@ -3,6 +3,25 @@
 ## Ход работ
 
 ### 2026-10-29
+### Конфигурируемые каналы: local-mqtt и boilerplate
+
+Статус: код готов, сборки и host-тесты успешны; прошивка/ручные сценарии — вручную.
+
+- `esp32-local-mqtt` переведён на новый объект `saspik-awqm001` (`unitId3`):
+  `CHANNELS[]` в `config.h` (имя, пин, роль, модель), два реле на GPIO 13/26.
+  Команда — `device/.../command` `{"channel":"свет","value":"ON"}`, состояние —
+  retained JSON-карта `{"свет":"ON","полив":"OFF"}`; сенсоры — JSON-карта с
+  произвольными именами. GPIO 25 остаётся кнопкой портала.
+- `esp32-boilerplate`: добавлен `ChannelBank` (сборка из `CHANNELS[]`), каналы
+  `свет`/`полив` на 13/26. Device шлёт ESP-NOW DATA/STATE JSON, шлюз публикует
+  DATA as-is в `sensor/...`, STATE — retained в `device/.../state`; команды
+  маршрутизируются на `device/{unitId}/+/command`. Legacy float-поля и
+  `{"state":"ON"}` сохранены для совместимости.
+- Проверено: `pio test -e native` (29 тестов), `pio run -e device_esp32`,
+  `-e gateway_esp32`, `-e sensor_esp32`; `pio run` local-mqtt.
+- Старые `m003`-объекты и прошивка не менялись (вариант A: новое физическое
+  устройство). ID `saspik-awqm001`/`saspik-aenm001` — принятые дефолты.
+
 ### Состояние LED в MQTT: прошивка и retained-публикации
 
 Статус: состояние LED работает на проде; доработки зафиксированы, не реализованы.

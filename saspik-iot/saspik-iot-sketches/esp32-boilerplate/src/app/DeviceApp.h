@@ -3,13 +3,10 @@
  * DeviceApp.h — Composition Root шаблона «Device».
  *
  * Устройство без сна: портал → конфиг → лог (UART + ESP-NOW через шлюз) →
- * ESP-NOW rx/tx → шины/датчики/исполнители. Данные датчиков уходят шлюзу
- * пакетами DATA, команды от шлюза приходят пакетами COMMAND (поле
- * ESP_NOW_FIELD_COMMAND_JSON, формат {"state":"ON"|"OFF"} — см. mqtt-topics.md).
- *
- * v1: один исполнитель на объект — команда применяется ко всем подключённым
- * исполнителям; маршрутизация по имени (несколько исполнителей на объект) —
- * TODO (см. TODO.md).
+ * ESP-NOW rx/tx → шины/датчики/исполнители. Каналы собираются из CHANNELS[]
+ * (config.h). Данные уходят шлюзу пакетами DATA с JSON-картой имён, команды
+ * приходят пакетами COMMAND ({"channel":"<имя>","value":"ON"|"OFF"}), а
+ * состояние автоматов — пакетами STATE (retained в MQTT публикует мост).
  *
  * Файл firmware-only: обёрнут в #ifdef ARDUINO (на хосте — пустой заголовок).
  */
@@ -24,13 +21,9 @@
 #include "core/DeviceInfo.h"
 #include "core/RuntimeConfig.h"
 #include "core/TimerRegistry.h"
+#include "app/examples/ChannelBank.h"
 #include "espnow/EspNowManager.h"
-#include "examples/Dht22Sensor.h"
-#include "examples/FloatSensor.h"
-#include "examples/RelayActuator.h"
-#include "interfaces/actuator/IActuator.h"
 #include "interfaces/bus/InterfaceManager.h"
-#include "interfaces/sensor/ISensor.h"
 #include "log/EspNowLogSink.h"
 #include "log/Logger.h"
 #include "log/RebootCauseStore.h"
@@ -55,9 +48,9 @@ private:
     static void onSensorTimer(void* arg);
     static void onDiagTimer(void* arg);
     void readAndSendSensors();
+    void sendState();
     void applyCommand(const char* payload);
     void publishDiag();
-    void addSampleToPacket(EspNowPacket& packet, const SensorSample& sample);
     DeviceConfig buildDefaults() const;
 
     // Порядок объявления = порядок инициализации (важно для DI-связей).
@@ -73,18 +66,7 @@ private:
     TimerRegistry m_timers;
     RuntimeConfig m_cfg;
 
-#if USE_EXAMPLE_DHT22
-    Dht22Sensor m_dht22;
-#endif
-#if USE_EXAMPLE_FLOAT
-    FloatSensor m_floatSensor;
-#endif
-#if USE_EXAMPLE_RELAY
-    RelayActuator m_relay;
-#endif
-    // m_interfaces объявлен ПОСЛЕ датчиков/исполнителей: в списке инициализации
-    // он идёт последним (всегда присутствует) — иначе при выключенных флагах
-    // примеров список заканчивался бы запятой (синтаксическая ошибка).
+    ChannelBank m_channels;
     InterfaceManager m_interfaces;
 };
 

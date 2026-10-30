@@ -70,19 +70,48 @@ export class ObjectsService implements IObjectsService {
     return result.map(toObjectsDto);
   }
 
-  async callCommand(deviceId: string, value: string, unitId?: string): Promise<void> {
+  async callCommand(
+    deviceId: string,
+    value: string,
+    unitId?: string,
+    key?: string,
+  ): Promise<void> {
     this.logger.log(
-      `[ObjectsService] callCommand for device ${deviceId}, value ${value}${unitId ? ` unit=${unitId}` : ""}`,
+      `[ObjectsService] callCommand for device ${deviceId}, value ${value}${key ? ` key=${key}` : ""}${unitId ? ` unit=${unitId}` : ""}`,
     );
 
     const device = (await this.objectsRepository.findByUnitId(unitId)).find(
       (obj) => obj.id === deviceId && obj.type === ObjectsType.DEVICE,
     );
-    if (device) {
-      const specKey = device.spec?.[0]?.key || "state";
-      const payload = JSON.stringify({ [specKey]: value });
-      await this.mqttService.publish(device.topic, payload);
+    if (!device) {
+      return;
     }
+
+    // Ключ канала должен принадлежать объекту: не публикуем в произвольные топики.
+    const requestedKey = key?.trim();
+    const isCanonicalDeviceTopic = device.topic.startsWith("device/");
+    // Старые объекты saspik.sa.* живут на прошивке, которая ждёт команду в
+    // базовом топике. Их не переводим на /command, чтобы не сломать m003.
+    const isLegacyObjectId = device.id.startsWith("saspik.sa.");
+
+    if (isCanonicalDeviceTopic && requestedKey && !isLegacyObjectId) {
+      if (!device.spec?.some((spec) => spec.key === requestedKey)) {
+        this.logger.log(
+          `[ObjectsService] unknown channel key=${requestedKey} for ${deviceId}`,
+        );
+        return;
+      }
+      // Новый контракт: имя канала передаётся в payload, а не в топик.
+      // Один /command на объект, поэтому имена каналов могут быть любыми.
+      const payload = JSON.stringify({ channel: requestedKey, value });
+      await this.mqttService.publish(`${device.topic}/command`, payload);
+      return;
+    }
+
+    // Legacy: units/# и старые device-объекты с командой в базовом топике.
+    const specKey = device.spec?.[0]?.key || "state";
+    const payload = JSON.stringify({ [specKey]: value });
+    await this.mqttService.publish(device.topic, payload);
   }
 
   async getLastSensorsData(ids: string[]): Promise<Record<string, unknown>> {

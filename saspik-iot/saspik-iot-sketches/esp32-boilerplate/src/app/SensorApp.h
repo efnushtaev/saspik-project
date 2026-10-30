@@ -25,11 +25,9 @@
 #include "core/DeviceInfo.h"
 #include "core/RuntimeConfig.h"
 #include "core/TimerRegistry.h"
+#include "app/examples/ChannelBank.h"
 #include "espnow/EspNowManager.h"
-#include "examples/Dht22Sensor.h"
-#include "examples/FloatSensor.h"
 #include "interfaces/bus/InterfaceManager.h"
-#include "interfaces/sensor/ISensor.h"
 #include "log/EspNowLogSink.h"
 #include "log/Logger.h"
 #include "log/RebootCauseStore.h"
@@ -52,7 +50,6 @@ private:
     static void onSleepCheckTimer(void* arg);
     void readAndSendSensors();
     void checkSleep();
-    void addSampleToPacket(EspNowPacket& packet, const SensorSample& sample);
     DeviceConfig buildDefaults() const;
 
     // Порядок объявления = порядок инициализации (важно для DI-связей).
@@ -69,15 +66,7 @@ private:
     TimerRegistry m_timers;
     RuntimeConfig m_cfg;
 
-#if USE_EXAMPLE_DHT22
-    Dht22Sensor m_dht22;
-#endif
-#if USE_EXAMPLE_FLOAT
-    FloatSensor m_floatSensor;
-#endif
-    // m_interfaces объявлен ПОСЛЕ датчиков: в списке инициализации он идёт
-    // последним (всегда присутствует) — иначе при выключенных флагах примеров
-    // список заканчивался бы запятой (синтаксическая ошибка).
+    ChannelBank m_channels;
     InterfaceManager m_interfaces;
 };
 

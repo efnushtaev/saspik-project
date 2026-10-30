@@ -8,7 +8,12 @@ export interface IObjectsService {
 
   getByIds(ids: string[], typeFilter?: string, unitId?: string): Promise<ObjectsDto[]>;
 
-  callCommand(deviceId: string, value: string, unitId?: string): Promise<void>;
+  callCommand(
+    deviceId: string,
+    value: string,
+    unitId?: string,
+    key?: string,
+  ): Promise<void>;
 
   getLastSensorsData(ids: string[]): Promise<Record<string, unknown>>;
 

@@ -6,6 +6,9 @@ import { IConfigService } from "../../config/config.service.interface";
 import { TYPES } from "../../types";
 import { IStateStoreService, StoredState } from "./stateStore.interface";
 
+const escapeFluxString = (value: string): string =>
+  value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+
 @injectable()
 export class InfluxDbStateStoreService implements IStateStoreService {
   private queryApi: QueryApi;
@@ -37,11 +40,16 @@ export class InfluxDbStateStoreService implements IStateStoreService {
   }
 
   async get(topic: string, field?: string): Promise<StoredState | null> {
+    // Имена каналов задаёт пользователь, поэтому подставляем их в Flux только
+    // после экранирования — иначе кавычка/обратный слэш ломают запрос.
+    const escapedTopic = escapeFluxString(topic);
+    const escapedField = escapeFluxString(field || "state");
+    const escapedBucket = escapeFluxString(this.bucket);
     const flux = `
-      from(bucket: "${this.bucket}")
+      from(bucket: "${escapedBucket}")
         |> range(start: -30d)
-        |> filter(fn: (r) => r.topic == "${topic}" or r.topic == "${topic}/state")
-        |> filter(fn: (r) => r._field == "${field || "state"}")
+        |> filter(fn: (r) => r.topic == "${escapedTopic}" or r.topic == "${escapedTopic}/state")
+        |> filter(fn: (r) => r._field == "${escapedField}")
         |> last()
         |> group()
         |> sort(columns: ["_time"], desc: true)

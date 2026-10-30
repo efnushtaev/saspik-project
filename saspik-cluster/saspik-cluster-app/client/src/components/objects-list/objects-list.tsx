@@ -13,9 +13,11 @@ import { transformObjectToCard } from '../../utils/transform-object-to-card';
 
 const cn = createCn('listing');
 
-const toggleDeviceValue = (obj: ObjectItem): string | null => {
-  const specEntry = obj.spec?.[0];
-  if (!specEntry) return null;
+const toggleDeviceValue = (obj: ObjectItem, specEntry: ObjectItem['spec'][number]): string => {
+  // Новый контракт device/#: канал передаётся в payload, значение бинарное ON/OFF.
+  if ((obj.topic || '').startsWith('device/')) {
+    return String(specEntry.value ?? '').toUpperCase() === 'ON' ? 'OFF' : 'ON';
+  }
   if (specEntry.spec?.model === 'led') {
     return specEntry.value == null || String(specEntry.value) === 'OFF'
       ? 'ON'
@@ -58,19 +60,23 @@ export const ObjectsList = ({ type = 'sensor', unitId: unitIdProp }: ObjectsList
       {objects.map((obj, index) => {
         const cardProps = transformObjectToCard(obj);
         const isDevice = type === 'device';
-
+        const controls = isDevice
+          ? obj.spec.map((specEntry) => ({
+              key: specEntry.key,
+              value: specEntry.value == null ? '--' : String(specEntry.value),
+              onToggle: () => {
+                const newValue = toggleDeviceValue(obj, specEntry);
+                sendCommand(obj.id, newValue, specEntry.key);
+                updateObjectValue(obj.id, specEntry.key, newValue);
+              },
+            }))
+          : undefined;
         return (
           <ObjectsCard
             key={index}
             {...cardProps}
+            controls={controls}
             navigateTo={withUnitPath(NAVIGATION_PATHS[type], unitId)}
-            onAction={isDevice ? () => {
-              const newValue = toggleDeviceValue(obj);
-              if (newValue) {
-                sendCommand(obj.id, newValue);
-                updateObjectValue(obj.id, obj.spec[0].key, newValue);
-              }
-            } : undefined}
             onOpen={() => navigate(unitId ? `/unit/${unitId}/object/${obj.id}` : `/object/${obj.id}`)}
           />
         );

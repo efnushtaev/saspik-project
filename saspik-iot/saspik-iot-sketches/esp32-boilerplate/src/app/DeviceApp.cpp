@@ -14,6 +14,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <string.h>
+#include <strings.h>
 
 #include "espnow/EspNowCodec.h"
 
@@ -36,16 +37,8 @@ DeviceApp::DeviceApp()
       m_espNowSink(m_espNow, DEFAULT_GATEWAY_MAC),
       m_timers(&clockMillis),
       m_cfg(),
-#if USE_EXAMPLE_DHT22
-      m_dht22(PIN_GPIO_3),
-#endif
-#if USE_EXAMPLE_FLOAT
-      m_floatSensor(PIN_GPIO_4),
-#endif
-#if USE_EXAMPLE_RELAY
-      m_relay(PIN_GPIO_5),
-#endif
-      m_interfaces()  // последний инициализатор — всегда присутствует
+      m_channels(),
+      m_interfaces()
 {
 }
 
@@ -67,18 +60,13 @@ bool DeviceApp::begin() {
     m_espNow.setListener(this);  // устройство принимает команды шлюза
 
     m_interfaces.begin();
-#if USE_EXAMPLE_DHT22
-    m_dht22.begin();
-#endif
-#if USE_EXAMPLE_FLOAT
-    m_floatSensor.begin();
-#endif
-#if USE_EXAMPLE_RELAY
-    m_relay.begin();
-#endif
+    m_channels.begin();
 
     m_timers.add(m_cfg.app.sensorIntervalMs, onSensorTimer, this);
     m_timers.add(m_cfg.app.diagIntervalMs, onDiagTimer, this);
+
+    // Начальное состояние автоматов — шлюз опубликует его retained в MQTT.
+    sendState();
 
     m_logger.logInfo("app", "device started");
     return true;
@@ -128,20 +116,26 @@ void DeviceApp::onDiagTimer(void* arg) {
 }
 
 void DeviceApp::readAndSendSensors() {
+    if (!m_channels.hasSensors()) {
+        return;
+    }
+    StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
+    m_channels.readSensors(doc);
+    if (doc.size() == 0) {
+        return;  // ни одного валидного измерения — эфир не мусорим
+    }
+    char payload[MQTT_PAYLOAD_MAX];
+    const size_t payloadLen = serializeJson(doc, payload, sizeof(payload));
+
     EspNowPacket packet = {};
     packet.type = ESP_NOW_TYPE_DATA;
     packet.timestampMs = millis();
+    EspNowField& field = packet.fields[0];
+    field.id = ESP_NOW_FIELD_DATA_JSON;
+    field.data = reinterpret_cast<const uint8_t*>(payload);
+    field.len = static_cast<uint8_t>(payloadLen);
+    packet.fieldCount = 1;
 
-#if USE_EXAMPLE_DHT22
-    addSampleToPacket(packet, m_dht22.read());
-#endif
-#if USE_EXAMPLE_FLOAT
-    addSampleToPacket(packet, m_floatSensor.read());
-#endif
-
-    if (packet.fieldCount == 0) {
-        return;  // ни одного валидного измерения — эфир не мусорим
-    }
     uint8_t buffer[ESP_NOW_PACKET_MAX];
     const size_t len = EspNowCodec::encode(packet, buffer, sizeof(buffer));
     if (len > 0) {
@@ -149,36 +143,78 @@ void DeviceApp::readAndSendSensors() {
     }
 }
 
-void DeviceApp::addSampleToPacket(EspNowPacket& packet,
-                                  const SensorSample& sample) {
-    if (!sample.valid || packet.fieldCount >= ESP_NOW_MAX_FIELDS) {
-        return;  // невалидное измерение или пакет уже полон
+void DeviceApp::sendState() {
+    if (!m_channels.hasActuators()) {
+        return;
     }
-    EspNowField& field = packet.fields[packet.fieldCount++];
-    field.id = sample.fieldId;
-    // Кодек копирует данные в буфер сразу (encode), поэтому указатель на
-    // локальную переменную безопасен.
-    field.data = reinterpret_cast<const uint8_t*>(&sample.value);
-    field.len = sizeof(sample.value);
+    StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
+    m_channels.writeState(doc);
+    if (doc.size() == 0) {
+        return;
+    }
+    char payload[MQTT_PAYLOAD_MAX];
+    const size_t payloadLen = serializeJson(doc, payload, sizeof(payload));
+
+    EspNowPacket packet = {};
+    packet.type = ESP_NOW_TYPE_STATE;
+    packet.timestampMs = millis();
+    EspNowField& field = packet.fields[0];
+    field.id = ESP_NOW_FIELD_STATE_JSON;
+    field.data = reinterpret_cast<const uint8_t*>(payload);
+    field.len = static_cast<uint8_t>(payloadLen);
+    packet.fieldCount = 1;
+
+    uint8_t buffer[ESP_NOW_PACKET_MAX];
+    const size_t len = EspNowCodec::encode(packet, buffer, sizeof(buffer));
+    if (len > 0) {
+        m_espNow.send(m_cfg.app.peers[0].mac, buffer, len);
+    }
 }
 
 void DeviceApp::applyCommand(const char* payload) {
-    // Формат команды — из mqtt-topics.md: {"state":"ON"|"OFF"}.
     StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
     if (deserializeJson(doc, payload)) {
         m_logger.logWarn("cmd", "bad json");
         return;
     }
-    const char* state = doc["state"];
-    if (state == nullptr) {
-        m_logger.logWarn("cmd", "no state field");
+    // Новый контракт — value, legacy — state. Для legacy ниже выберем
+    // первый автомат.
+    const char* fieldValue = doc["value"] | "";
+    const char* legacyState = doc["state"] | "";
+    const char* value = fieldValue[0] != '\0' ? fieldValue : legacyState;
+    bool on = false;
+    if (strcasecmp(value, "ON") == 0 || strcmp(value, "1") == 0 ||
+        strcasecmp(value, "TRUE") == 0) {
+        on = true;
+    } else if (strcasecmp(value, "OFF") == 0 || strcmp(value, "0") == 0 ||
+               strcasecmp(value, "FALSE") == 0) {
+        on = false;
+    } else {
+        m_logger.logWarn("cmd", "bad value");
         return;
     }
-    const float level = (strcmp(state, "ON") == 0) ? 1.0f : 0.0f;
-#if USE_EXAMPLE_RELAY
-    m_relay.set(level);
-#endif
-    m_logger.logInfo("cmd", state);
+
+    const char* channel = doc["channel"] | "";
+    bool applied = false;
+    if (channel[0] != '\0') {
+        applied = m_channels.applyCommand(channel, on);
+        if (!applied) {
+            m_logger.logWarn("cmd", "unknown channel");
+            return;
+        }
+    } else if (legacyState[0] != '\0') {
+        // Совместимость с legacy {"state":"ON"} — первый автомат.
+        applied = m_channels.applyFirst(strcasecmp(legacyState, "ON") == 0);
+        if (!applied) {
+            m_logger.logWarn("cmd", "unknown state");
+            return;
+        }
+    } else {
+        m_logger.logWarn("cmd", "no channel field");
+        return;
+    }
+    sendState();
+    m_logger.logInfo("cmd", on ? "ON" : "OFF");
 }
 
 void DeviceApp::publishDiag() {

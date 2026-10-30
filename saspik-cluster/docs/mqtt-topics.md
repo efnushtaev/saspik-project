@@ -18,11 +18,11 @@
 
 | Домен                              | Направление                | Пример                                   |
 | :--------------------------------- | :------------------------- | :--------------------------------------- |
-| `sensor/`                          | device → broker (данные)   | `sensor/unitId3/saspik.sa.wm.m003`       |
-| `device/`                          | broker → device (команды)  | `device/unitId3/saspik.sa.wm.m003`       |
-| `device/.../state`                 | device → broker (retained) | `device/unitId3/saspik.sa.wm.m003/state` |
-| `device/.../status`                | device → broker (retained) | `device/unitId3/saspik.sa.wm.m003/status` |
-| `device/.../log`                   | device → broker (логи)     | `device/unitId3/saspik.sa.wm.m003/log`   |
+| `sensor/`                          | device → broker (данные)   | `sensor/unitId3/saspik-awqm001`          |
+| `device/.../command`               | broker → device (команды)  | `device/unitId3/saspik-awqm001/command`  |
+| `device/.../state`                 | device → broker (retained) | `device/unitId3/saspik-awqm001/state`    |
+| `device/.../status`                | device → broker (retained) | `device/unitId3/saspik-awqm001/status`   |
+| `device/.../log`                   | device → broker (логи)     | `device/unitId3/saspik-awqm001/log`      |
 | `units/{unitId}/commands/`         | команды реле               | `units/unitId1/commands/a_relay1`        |
 | `units/{unitId}/sensors`           | агрегированные данные      | `units/unitId1/sensors`                  |
 | `server/`                          | логи backend (Express)     | `server/worker/log`                      |
@@ -53,29 +53,29 @@
 - сегмент `{objectId}` в топике — всегда **база без постфикса**: для объекта `saspik.sa.wm.m003-sensor` топик будет `sensor/unitId3/saspik.sa.wm.m003`;
 - в прошивке `OBJECT_ID` задаётся базой без постфикса — публикация данных `sensor/{unitId}/{base}` и подписка на команды `device/{unitId}/{base}` совпадают с топиком объекта из UI;
 - сервер при создании объекта сам дописывает постфикс по типу и строит топик от базы, поэтому поле ID в форме содержит итоговое значение, которое уйдёт в базу;
-- объекты, созданные до постфиксов (например `saspik.sa.wm.m003`), совместимы: постфикс просто отсутствует, топики выводятся от того же базового идентификатора.
+- объекты, созданные до постфиксов (например `saspik.sa.wm.m003`), совместимы: постфикс просто отсутствует, топики выводятся от того же базового идентификатора;
+- новые устройства автоматики: `saspik-awqm001` (`unitId3`, local-mqtt) и `saspik-aenm001` (`unitId2`, boilerplate); UI создаёт объект с постфиксом `-device`, в прошивке `OBJECT_ID` — база без постфикса.
 
 ### Топики публикации (device → broker)
 
 Показания сенсоров публикуются в `sensor/{unitId}/{objectId}`. Объекты-сенсоры делятся по модели датчика; канал объекта отображается на поле payload (см. ObjectsService, `spec.key`).
 
-#### `sensor/{unitId}/{objectId}` (температура/влажность)
+#### `sensor/{unitId}/{objectId}`
 
-Модель: DHT22, DS18B20, BMP280 и т.д.
+Payload — JSON-карта с произвольными именами каналов. Имена задаются
+пользователем в `config.h` прошивки и в UI (`spec.key`); автоматического
+discovery нет.
 
 ```json
 {
-  "temperature": 24.5,
-  "humidity": 65.0
+  "температура": 24.5,
+  "влажность": 65.0,
+  "свет": 1
 }
 ```
 
-##### Структура
-
-| Поле         | Тип   | Описание      |
-| :----------- | :---- | :------------ |
-| `temperature`| number| Температура, °C |
-| `humidity`   | number| Влажность, %  |
+Модель канала (DHT22, геркон и т.д.) определяет, какие ключи он публикует.
+Двоичные сенсоры передаются как `0`/`1`.
 
 Топик формируется устройством из типа, юнита и id объекта:
 
@@ -85,30 +85,45 @@ String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT
 
 ### Топики команд (broker → device)
 
-#### `device/{unitId}/{objectId}`
+#### `device/{unitId}/{objectId}/command`
 
-Команды на объект-устройство.
+Команды на объект-устройство. Один топик на объект; имя канала передаётся в
+payload, поэтому на одном объекте может быть сколько угодно автоматов.
 
 ```json
-{"state": "ON"}
-{"state": "OFF"}
+{"channel": "свет", "value": "ON"}
+{"channel": "полив", "value": "OFF"}
 ```
 
 ##### Структура
 
-| Поле   | Тип    | Описание                  |
-| :----- | :------| :------------------------ |
-| `state`| string | `ON` — включить, `OFF` — выключить |
+| Поле      | Тип    | Описание                          |
+| :-------- | :----- | :-------------------------------- |
+| `channel` | string | Имя канала (`spec.key` в UI)      |
+| `value`   | string | `ON` — включить, `OFF` — выключить |
+
+`value` также принимает `1`/`0` и `TRUE`/`FALSE`. Команда с неизвестным
+`channel` игнорируется устройством. Legacy `{"state":"ON"}` без `channel`
+поддерживается для старых объектов и применяется к первому автомату.
+
+Старые объекты `saspik.sa.*` (например `m003`) сервер по-прежнему отправляет в
+базовый топик `device/{unitId}/{objectId}` с payload `{"state":"ON"|"OFF"}` —
+их прошивка не знает `/command`. Новые объекты (`saspik-awqm001`,
+`saspik-aenm001`) используют `/command`.
 
 ### Состояние и статус устройства
 
 #### `device/{unitId}/{objectId}/state`
 
-Retained-состояние исполнителя. Публикуется устройством при подключении и после каждой смены; telegraf подписан на `device/+/+/state` и складывает `state` в Influx, откуда его читает UI.
+Retained-состояние всех автоматов объекта. Публикуется устройством при
+подключении и после каждой смены; telegraf подписан на `device/+/+/state` и
+складывает все строковые поля в Influx, откуда их читает UI.
 
 ```json
-{"state": "ON"}
+{"свет": "ON", "полив": "OFF"}
 ```
+
+Имена ключей совпадают с `channel` в командах и `spec.key` в UI.
 
 #### `device/{unitId}/{objectId}/status`
 

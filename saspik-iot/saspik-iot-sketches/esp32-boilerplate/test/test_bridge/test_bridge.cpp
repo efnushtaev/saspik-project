@@ -67,6 +67,41 @@ void test_data_packet_published_to_sensor_topic() {
     TEST_ASSERT_EQUAL_FLOAT(24.5f, doc["temperature"].as<float>());
 }
 
+void test_json_data_packet_published_as_is() {
+    const char* payload = "{\"свет\":1,\"температура\":23.4}";
+    EspNowPacket packet = {};
+    packet.type = ESP_NOW_TYPE_DATA;
+    packet.timestampMs = 1000;
+    packet.fields[0].id = ESP_NOW_FIELD_DATA_JSON;
+    packet.fields[0].data = reinterpret_cast<const uint8_t*>(payload);
+    packet.fields[0].len = static_cast<uint8_t>(strlen(payload));
+    packet.fieldCount = 1;
+
+    bridge->onEspNowPacket(kNodeMac, packet);
+
+    TEST_ASSERT_EQUAL_STRING("sensor/unitId2/saspik-senb001",
+                             mqtt.lastTopic());
+    TEST_ASSERT_EQUAL_STRING(payload, mqtt.lastPayload());
+}
+
+void test_state_packet_published_retained() {
+    const char* payload = "{\"свет\":\"ON\",\"полив\":\"OFF\"}";
+    EspNowPacket packet = {};
+    packet.type = ESP_NOW_TYPE_STATE;
+    packet.timestampMs = 1000;
+    packet.fields[0].id = ESP_NOW_FIELD_STATE_JSON;
+    packet.fields[0].data = reinterpret_cast<const uint8_t*>(payload);
+    packet.fields[0].len = static_cast<uint8_t>(strlen(payload));
+    packet.fieldCount = 1;
+
+    bridge->onEspNowPacket(kNodeMac, packet);
+
+    TEST_ASSERT_EQUAL_STRING("device/unitId2/saspik-senb001/state",
+                             mqtt.lastTopic());
+    TEST_ASSERT_EQUAL_STRING(payload, mqtt.lastPayload());
+    TEST_ASSERT_TRUE(mqtt.lastRetained());
+}
+
 void test_log_packet_published_as_is() {
     const char* envelope = "{\"level\":\"info\",\"event\":\"test\"}";
     EspNowPacket packet = {};
@@ -101,8 +136,8 @@ void test_unknown_source_mac_is_ignored() {
 }
 
 void test_mqtt_command_forwarded_as_esp_now_command() {
-    const char* command = "{\"state\":\"ON\"}";
-    bridge->onMessage("device/unitId2/saspik-senb001", command);
+    const char* command = "{\"channel\":\"свет\",\"value\":\"ON\"}";
+    bridge->onMessage("device/unitId2/saspik-senb001/command", command);
 
     TEST_ASSERT_EQUAL_UINT32(1, espNow.sendCount());
     TEST_ASSERT_EQUAL_UINT8_ARRAY(kNodeMac, espNow.lastMac(), 6);
@@ -121,13 +156,15 @@ void test_mqtt_command_forwarded_as_esp_now_command() {
 }
 
 void test_command_to_unknown_node_is_ignored() {
-    bridge->onMessage("device/unitId2/saspik-unknown", "{\"state\":\"ON\"}");
+    bridge->onMessage("device/unitId2/saspik-unknown/command",
+                      "{\"channel\":\"свет\",\"value\":\"ON\"}");
     TEST_ASSERT_EQUAL_UINT32(0, espNow.sendCount());
 }
 
 void test_command_to_gateway_itself_is_ignored() {
     // Свои команды шлюз обрабатывает сам (GatewayApp), мост их не трогает.
-    bridge->onMessage("device/unitId2/saspik-gwqm001", "{\"state\":\"ON\"}");
+    bridge->onMessage("device/unitId2/saspik-gwqm001/command",
+                      "{\"channel\":\"свет\",\"value\":\"ON\"}");
     TEST_ASSERT_EQUAL_UINT32(0, espNow.sendCount());
 }
 
@@ -136,6 +173,8 @@ int main(int argc, char** argv) {
     (void)argv;
     UNITY_BEGIN();
     RUN_TEST(test_data_packet_published_to_sensor_topic);
+    RUN_TEST(test_json_data_packet_published_as_is);
+    RUN_TEST(test_state_packet_published_retained);
     RUN_TEST(test_log_packet_published_as_is);
     RUN_TEST(test_unknown_source_mac_is_ignored);
     RUN_TEST(test_mqtt_command_forwarded_as_esp_now_command);

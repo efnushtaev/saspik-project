@@ -15,6 +15,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <string.h>
+#include <strings.h>
 
 #include "espnow/EspNowCodec.h"
 #include "net/TopicBuilder.h"
@@ -24,20 +25,6 @@ namespace {
 // адаптер приводит к контракту TimerRegistry, сохраняя 32-битную арифметику.
 uint32_t clockMillis() { return static_cast<uint32_t>(millis()); }
 
-// Добавляет валидное измерение в JSON-документ: fieldId → имя ключа
-// по FIELD_DICTIONARY (config.h). Невалидные измерения пропускаются.
-void addSampleToJson(StaticJsonDocument<MQTT_PAYLOAD_MAX>& doc,
-                     const SensorSample& sample) {
-    if (!sample.valid) {
-        return;
-    }
-    for (size_t i = 0; i < FIELD_DICTIONARY_SIZE; ++i) {
-        if (FIELD_DICTIONARY[i].id == sample.fieldId) {
-            doc[FIELD_DICTIONARY[i].key] = sample.value;
-            return;
-        }
-    }
-}
 }  // namespace
 
 GatewayApp::GatewayApp()
@@ -56,17 +43,10 @@ GatewayApp::GatewayApp()
       m_bridge(&m_mqtt, &m_espNow, &m_logger, m_info),
       m_timers(&clockMillis),
       m_cfg(),
+      m_channels(),
       m_interfaces(),
-#if USE_EXAMPLE_DHT22
-      m_dht22(PIN_GPIO_3),
-#endif
-#if USE_EXAMPLE_FLOAT
-      m_floatSensor(PIN_GPIO_4),
-#endif
-#if USE_EXAMPLE_RELAY
-      m_relay(PIN_GPIO_5),
-#endif
-      m_startupLogSent(false) {
+      m_startupLogSent(false),
+      m_ownStateSent(false) {
     m_clientId[0] = '\0';
     m_statusTopic[0] = '\0';
 }
@@ -127,6 +107,10 @@ void GatewayApp::update() {
         m_logger.publishStartup();
         m_startupLogSent = true;
     }
+    if (!m_ownStateSent && m_mqtt.isConnected()) {
+        publishOwnState();
+        m_ownStateSent = true;
+    }
 }
 
 void GatewayApp::onMessage(const char* topic, const char* payload) {
@@ -144,27 +128,37 @@ void GatewayApp::onDiagTimer(void* arg) {
 }
 
 void GatewayApp::publishOwnSensors() {
-    if (!m_mqtt.isConnected()) {
-        return;  // публиковать в никуда — только мусорить в лог
+    if (!m_mqtt.isConnected() || !m_channels.hasSensors()) {
+        return;
+    }
+    StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
+    m_channels.readSensors(doc);
+    if (doc.size() == 0) {
+        return;
     }
     char topic[MQTT_TOPIC_MAX_LEN];
     TopicBuilder::dataTopic(topic, sizeof(topic), m_info.unitId(),
                             m_info.objectId());
     char payload[MQTT_PAYLOAD_MAX];
-    StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
-
-#if USE_EXAMPLE_DHT22
-    addSampleToJson(doc, m_dht22.read());
-#endif
-#if USE_EXAMPLE_FLOAT
-    addSampleToJson(doc, m_floatSensor.read());
-#endif
-
-    if (doc.isNull()) {
-        return;  // ни одного валидного измерения — эфир/брокер не мусорим
-    }
     serializeJson(doc, payload, sizeof(payload));
     m_mqtt.publish(topic, payload, false);
+}
+
+void GatewayApp::publishOwnState() {
+    if (!m_mqtt.isConnected() || !m_channels.hasActuators()) {
+        return;
+    }
+    StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
+    m_channels.writeState(doc);
+    if (doc.size() == 0) {
+        return;
+    }
+    char topic[MQTT_TOPIC_MAX_LEN];
+    TopicBuilder::stateTopic(topic, sizeof(topic), m_info.unitId(),
+                             m_info.objectId());
+    char payload[MQTT_PAYLOAD_MAX];
+    serializeJson(doc, payload, sizeof(payload));
+    m_mqtt.publish(topic, payload, true);
 }
 
 void GatewayApp::publishDiag() {
@@ -176,35 +170,53 @@ void GatewayApp::publishDiag() {
 }
 
 void GatewayApp::applyOwnCommand(const char* payload) {
-    // Формат команды — из mqtt-topics.md: {"state":"ON"|"OFF"}.
     StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
     if (deserializeJson(doc, payload)) {
         m_logger.logWarn("cmd", "bad json");
         return;
     }
-    const char* state = doc["state"];
-    if (state == nullptr) {
-        m_logger.logWarn("cmd", "no state field");
+    // Новый контракт — value, legacy — state. Для legacy ниже выберем
+    // первый автомат.
+    const char* fieldValue = doc["value"] | "";
+    const char* legacyState = doc["state"] | "";
+    const char* value = fieldValue[0] != '\0' ? fieldValue : legacyState;
+    bool on = false;
+    if (strcasecmp(value, "ON") == 0 || strcmp(value, "1") == 0 ||
+        strcasecmp(value, "TRUE") == 0) {
+        on = true;
+    } else if (strcasecmp(value, "OFF") == 0 || strcmp(value, "0") == 0 ||
+               strcasecmp(value, "FALSE") == 0) {
+        on = false;
+    } else {
+        m_logger.logWarn("cmd", "bad value");
         return;
     }
-    const float level = (strcmp(state, "ON") == 0) ? 1.0f : 0.0f;
-#if USE_EXAMPLE_RELAY
-    m_relay.set(level);
-#endif
-    m_logger.logInfo("cmd", state);
+
+    const char* channel = doc["channel"] | "";
+    bool applied = false;
+    if (channel[0] != '\0') {
+        applied = m_channels.applyCommand(channel, on);
+        if (!applied) {
+            m_logger.logWarn("cmd", "unknown channel");
+            return;
+        }
+    } else if (legacyState[0] != '\0') {
+        applied = m_channels.applyFirst(strcasecmp(legacyState, "ON") == 0);
+        if (!applied) {
+            m_logger.logWarn("cmd", "unknown state");
+            return;
+        }
+    } else {
+        m_logger.logWarn("cmd", "no channel field");
+        return;
+    }
+    publishOwnState();
+    m_logger.logInfo("cmd", on ? "ON" : "OFF");
 }
 
 void GatewayApp::attachPeripherals() {
     m_interfaces.begin();
-#if USE_EXAMPLE_DHT22
-    m_dht22.begin();
-#endif
-#if USE_EXAMPLE_FLOAT
-    m_floatSensor.begin();
-#endif
-#if USE_EXAMPLE_RELAY
-    m_relay.begin();
-#endif
+    m_channels.begin();
 }
 
 MqttConfig GatewayApp::buildMqttConfig() {

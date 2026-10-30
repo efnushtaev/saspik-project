@@ -4,13 +4,13 @@
  *
  * Собирает полный граф шлюза: captive portal → конфиг → лог (UART+MQTT) →
  * WiFi → MQTT → ESP-NOW → мост ESP-NOW↔MQTT → свои датчики/исполнители
- * (опционально, флаги USE_EXAMPLE_*). Порядок begin() важен: ESP-NOW требует
+ * (CHANNELS[] в config.h). Порядок begin() важен: ESP-NOW требует
  * поднятого WiFi-радио, мост — живых MQTT/ESP-NOW клиентов.
  *
  * Свои данные шлюз публикует в sensor/{unitId}/{objectIdШлюза} напрямую в MQTT
  * (в отличие от узлов, чьи данные приходят по ESP-NOW и публикует мост).
- * Свои команды ({"state":"ON"|"OFF"}, см. mqtt-topics.md) шлюз принимает
- * на device/{unitId}/{objectIdШлюза} — для этого App реализует IMessageHandler.
+ * Свои команды ({"channel":"<имя>","value":"ON"|"OFF"} или legacy
+ * {"state":"ON"|"OFF"}) шлюз принимает на device/{unitId}/{objectIdШлюза}/command.
  *
  * Файл firmware-only: обёрнут в #ifdef ARDUINO (на хосте — пустой заголовок).
  */
@@ -26,13 +26,9 @@
 #include "core/DeviceInfo.h"
 #include "core/RuntimeConfig.h"
 #include "core/TimerRegistry.h"
+#include "app/examples/ChannelBank.h"
 #include "espnow/EspNowManager.h"
-#include "examples/Dht22Sensor.h"
-#include "examples/FloatSensor.h"
-#include "examples/RelayActuator.h"
-#include "interfaces/actuator/IActuator.h"
 #include "interfaces/bus/InterfaceManager.h"
-#include "interfaces/sensor/ISensor.h"
 #include "log/Logger.h"
 #include "log/MqttLogSink.h"
 #include "log/RebootCauseStore.h"
@@ -53,13 +49,14 @@ public:
     void update() override;
 
     // IMessageHandler: команды на собственные исполнители шлюза
-    // (device/{unitId}/{objectIdШлюза}, формат {"state":"ON"|"OFF"}).
+    // (device/{unitId}/{objectIdШлюза}/command, {"channel":"<имя>","value":"ON"}).
     void onMessage(const char* topic, const char* payload) override;
 
 private:
     static void onSensorTimer(void* arg);
     static void onDiagTimer(void* arg);
     void publishOwnSensors();
+    void publishOwnState();
     void publishDiag();
     void applyOwnCommand(const char* payload);
     void attachPeripherals();
@@ -82,23 +79,15 @@ private:
     EspNowMqttBridge m_bridge;
     TimerRegistry m_timers;
     RuntimeConfig m_cfg;
+    ChannelBank m_channels;
     InterfaceManager m_interfaces;
-
-#if USE_EXAMPLE_DHT22
-    Dht22Sensor m_dht22;
-#endif
-#if USE_EXAMPLE_FLOAT
-    FloatSensor m_floatSensor;
-#endif
-#if USE_EXAMPLE_RELAY
-    RelayActuator m_relay;
-#endif
 
     // Буферы MqttConfig: MqttConfig хранит const char* — строки должны жить
     // столько же, сколько живёт конфиг (весь цикл работы приложения).
     char m_clientId[32];
     char m_statusTopic[MQTT_TOPIC_MAX_LEN];
     bool m_startupLogSent;
+    bool m_ownStateSent;
 };
 
 #endif  // ARDUINO

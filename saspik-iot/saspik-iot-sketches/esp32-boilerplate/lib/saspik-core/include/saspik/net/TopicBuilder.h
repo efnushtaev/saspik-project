@@ -22,13 +22,17 @@ public:
     static void dataTopic(char* out, size_t cap, const char* unitId,
                           const char* objectId);
 
-    /** @brief Команды: device/{unitId}/{objectId} */
+    /** @brief Команды: device/{unitId}/{objectId}/command */
     static void commandTopic(char* out, size_t cap, const char* unitId,
                              const char* objectId);
 
-    /** @brief Подписка на команды всех узлов: device/{unitId}/+ */
+    /** @brief Подписка на команды всех узлов: device/{unitId}/+/command */
     static void commandWildcardTopic(char* out, size_t cap,
                                      const char* unitId);
+
+    /** @brief Состояние автоматов: device/{unitId}/{objectId}/state */
+    static void stateTopic(char* out, size_t cap, const char* unitId,
+                           const char* objectId);
 
     /** @brief Логи: device/{unitId}/{objectId}/log */
     static void logTopic(char* out, size_t cap, const char* unitId,

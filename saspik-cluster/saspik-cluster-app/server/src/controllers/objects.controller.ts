@@ -138,7 +138,12 @@ export class ObjectsController
     res: Response,
   ) {
     try {
-      await this.objectsService.callCommand(params.deviceId, body.value, body.unitId);
+      await this.objectsService.callCommand(
+        params.deviceId,
+        body.value,
+        body.unitId,
+        body.key,
+      );
       return this.ok<CommandResponse>(res, { success: true });
     } catch (error) {
       return this.send(res, 500, {

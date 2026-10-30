@@ -20,9 +20,10 @@ SOLID-база для прошивок ESP32 (Arduino framework, PlatformIO) с 
 | Лог: UART + ESP-NOW (через шлюз) | — | ✅ | ✅ |
 | Light sleep по таймеру | — | ✅ | — |
 | Шины I2C / OneWire / SPI / UART | ✅* | ✅ | ✅ |
-| Примеры ISensor/IActuator | ✅* | ✅ | ✅ |
+| Каналы `CHANNELS[]` (сенсоры/автоматы) | ✅ | ✅ | ✅ |
 
-\* — опционально, флаги `USE_EXAMPLE_*` в `include/config.h` (Gateway-как-Device).
+Каналы задаются в `include/config.h`: имя, пин, роль и модель. Один объект может
+содержать несколько автоматов и сенсоров; имена произвольные (UTF-8).
 
 ## Требования
 
@@ -90,7 +91,7 @@ esp32-boilerplate/
 │       ├── GatewayApp.*    # Composition Root шлюза
 │       ├── SensorApp.*     # Composition Root сенсора
 │       ├── DeviceApp.*     # Composition Root устройства
-│       └── examples/       # примеры ISensor/IActuator (DHT22, геркон, реле)
+│       └── examples/       # ChannelBank (CHANNELS[]), примеры ISensor/IActuator
 ├── lib/saspik-core/        # переиспользуемая SOLID-библиотека
 │   ├── include/saspik/     #   core, config, log, net, wifi, portal, mqtt,
 │   │                       #   espnow, bridge, sys, interfaces
@@ -119,9 +120,10 @@ pio test -e native
 
 ## Конфигурация
 
-- **Compile-time** — `include/config.h`: роль, unitId/objectId, пины, шины
-  (`BUS_*_ENABLED`/`PIN_*`), MQTT-дефолты и таймауты, ESP-NOW (канал, типы,
-  словарь полей, таблица узлов), интервалы, логирование, флаги примеров.
+- **Compile-time** — `include/config.h`: роль, unitId/objectId, каналы
+  (`CHANNELS[]`: имя, пин, роль, модель), шины (`BUS_*_ENABLED`/`PIN_*`),
+  MQTT-дефолты и таймауты, ESP-NOW (канал, типы, словарь полей, таблица
+  узлов), интервалы, логирование.
 - **Runtime** — NVS: WiFi/MQTT через captive portal (namespace `saspik`,
   shared/wifi-config), параметры приложения (интервалы, канал, пиры) через
   `ConfigManager` (namespace `saspik_app`). Правило merge: defaults ← NVS
@@ -133,11 +135,41 @@ pio test -e native
 [type(1)] [timestamp LE(4)] [fieldId(1)+len(1)+data]* [crc8(1)]
 ```
 
-- Типы: 1=DATA, 2=LOG, 3=COMMAND, 4=ACK.
-- Служебные поля: `0xFF` — JSON лога, `0xFE` — JSON команды.
+- Типы: 1=DATA, 2=LOG, 3=COMMAND, 4=ACK, 5=STATE.
+- Служебные поля: `0xFF` — JSON лога, `0xFE` — JSON команды,
+  `0xFD` — JSON данных, `0xFC` — JSON состояния.
+- Данные и состояние передаются JSON-картой с произвольными именами каналов:
+  `{"свет":1}` и `{"свет":"ON","полив":"OFF"}`; legacy float-поля
+  (`FIELD_DICTIONARY`) поддерживаются для совместимости.
 - CRC-8/MAXIM (полином 0x31 отражённый → 0x8C, init 0x00).
 - Лимит пакета — 250 байт (`ESP_NOW_PACKET_MAX`).
 - Несовместим с v1 (node-sensor-1); миграция узлов — отдельная задача.
+
+## Каналы и команды
+
+```cpp
+constexpr ChannelConfig CHANNELS[] = {
+    {"свет", nullptr, 13, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+    {"полив", nullptr, 26, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+};
+```
+
+- `key` — имя канала; должно совпадать с `spec.key` объекта в UI.
+- `key2` — второй ключ DHT22 (например, `влажность`), иначе `nullptr`.
+- `role` — `Sensor` или `Actuator`; `model` — `Dht22`, `Float`, `Relay`, `Led`.
+- `activeLow` — для LED/реле; `mock` — для сенсоров без железа.
+
+Топики:
+
+| Направление | Топик | Payload |
+| :--- | :--- | :--- |
+| Команда | `device/{unitId}/{objectId}/command` | `{"channel":"свет","value":"ON"}` |
+| Состояние | `device/{unitId}/{objectId}/state` retained | `{"свет":"ON","полив":"OFF"}` |
+| Данные | `sensor/{unitId}/{objectId}` | `{"температура":23.4}` |
+
+Шлюз подписан на `device/{unitId}/+/command`, упаковывает JSON в ESP-NOW
+COMMAND и не разбирает имена каналов. Узел после команды отправляет STATE;
+мост публикует его retained в MQTT.
 
 ## Лицензия
 

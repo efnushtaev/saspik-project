@@ -134,3 +134,51 @@
 .objects-card_actionable:hover {
   border-color: var(--tab-border-color--active);
 }
+
+.objects-card__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.objects-card__control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 26px;
+}
+
+.objects-card__control-key {
+  flex: 1;
+  overflow: hidden;
+  font-size: 13px;
+  color: #f2f0f0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.objects-card__control-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.objects-card__control-toggle {
+  min-width: 44px;
+  padding: 2px 8px;
+  border: 1px solid var(--border-color-2);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.15);
+  color: #ffffff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.objects-card__control-toggle:hover {
+  border-color: var(--tab-border-color--active);
+}
+
+.objects-card__control-toggle_on {
+  border-color: var(--tab-border-color--active);
+  background: rgba(249, 255, 141, 0.15);
+}

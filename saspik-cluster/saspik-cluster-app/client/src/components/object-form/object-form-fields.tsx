@@ -80,7 +80,7 @@ export const ObjectFormFields = ({
           onChange({ objectId: normalized });
         }
       }}
-      placeholder="Например, saspik.sa.wm.m003"
+      placeholder="Например, saspik-awqm001"
     />
   );
 
@@ -165,8 +165,8 @@ export const ObjectFormFields = ({
                     value={row.key}
                     disabled={disabled}
                     onChange={e => onSpecChange(index, { key: e.target.value })}
-                    placeholder="temperature"
-                    title="Ключ значения — имя поля в JSON-пейлоаде"
+                    placeholder="свет"
+                    title="Ключ канала — произвольное имя, должно совпадать с config.h"
                   />
                 </td>
                 <td>
@@ -175,7 +175,7 @@ export const ObjectFormFields = ({
                     value={row.model}
                     disabled={disabled}
                     onChange={e => onSpecChange(index, { model: e.target.value })}
-                    placeholder="dht22"
+                    placeholder="relay"
                     title="Модель датчика/устройства (dht22, relay, led…)"
                   />
                 </td>
@@ -218,8 +218,9 @@ export const ObjectFormFields = ({
           + Добавить замер
         </button>
         <span className={cn('table-hint')}>
-          Один объект может иметь несколько замеров — температура и влажность у одного DHT22.
-          Ключ — имя значения, модель — сенсор/устройство.
+          Один объект может иметь несколько замеров — температура и влажность у одного DHT22
+          или несколько автоматов у одного контроллера. Ключ канала должен совпадать с именем
+          в config.h прошивки; модель — сенсор/устройство.
         </span>
       </>
     );
@@ -259,8 +260,8 @@ export const ObjectFormFields = ({
                 value={row.key}
                 disabled={disabled}
                 onChange={e => onSpecChange(index, { key: e.target.value })}
-                placeholder="temperature"
-                title="Ключ значения — имя поля в JSON-пейлоаде"
+                placeholder="свет"
+                title="Ключ канала — произвольное имя, должно совпадать с config.h"
               />
             </label>
             <label className={cn('spec-col')}>
@@ -270,7 +271,7 @@ export const ObjectFormFields = ({
                 value={row.model}
                 disabled={disabled}
                 onChange={e => onSpecChange(index, { model: e.target.value })}
-                placeholder="dht22"
+                placeholder="relay"
                 title="Модель датчика/устройства (dht22, relay, led…)"
               />
             </label>
@@ -317,7 +318,8 @@ export const ObjectFormFields = ({
         </button>
         <span className={cn('spec-hint')}>
           Один объект может иметь несколько замеров — температура и влажность у одного
-          DHT22. Ключ — имя значения, модель — сенсор/устройство.
+          DHT22 или несколько автоматов у одного контроллера. Ключ канала должен совпадать
+          с именем в config.h прошивки; модель — сенсор/устройство.
         </span>
       </div>
 

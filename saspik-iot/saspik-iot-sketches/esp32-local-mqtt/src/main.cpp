@@ -1,10 +1,11 @@
 /*
- * ESP32 + DHT22 + MQTT — локальный мониторинг температуры/влажности
- * и управление встроенным светодиодом через MQTT.
+ * ESP32 + MQTT — конфигурируемые сенсоры и автоматы.
  *
  * Плата:      ESP32 DevKit (esp32dev)
- * Датчик:     DHT22 на GPIO 4
- * Светодиод:  встроенный, GPIO 2 (active low — LOW = вкл, HIGH = выкл)
+ * Каналы:     CHANNELS[] в config.h: имя, пин, роль, модель.
+ * Управление: device/{unitId}/{objectId}/command
+ *             {"channel":"<имя>","value":"ON"|"OFF"}
+ * Состояние:  retained device/{unitId}/{objectId}/state
  * Framework:  Arduino (PlatformIO)
  */
 
@@ -13,6 +14,8 @@
 #include <PubSubClient.h>
 #include <DHT.h>
 #include <ArduinoJson.h>
+#include <math.h>
+#include <strings.h>
 #include "config.h"
 #include "env_config.h"
 #include "WifiConfig.h"
@@ -22,7 +25,6 @@
 
 WiFiClient   wifiClient;
 PubSubClient mqttClient(wifiClient);
-DHT          dht(PIN_DHT, DHT_TYPE);
 
 // Рабочий конфиг (WiFi + MQTT) — заполняется через captive portal / NVS
 DeviceConfig config;
@@ -30,8 +32,19 @@ DeviceConfig config;
 // Неблокирующий таймер
 uint32_t lastSensorReadMs = 0;
 
-// Текущее состояние светодиода (публикуется retained в TOPIC_STATE)
-bool ledState = false;
+// Каналы, собранные из CHANNELS[] в config.h.
+struct SensorRuntime {
+    const ChannelConfig* cfg;
+    DHT* dht;  // только для ChannelModel::Dht22
+};
+struct ActuatorRuntime {
+    const ChannelConfig* cfg;
+    bool on;
+};
+SensorRuntime sensors[MAX_CHANNELS];
+size_t sensorCount = 0;
+ActuatorRuntime actuators[MAX_CHANNELS];
+size_t actuatorCount = 0;
 
 // ======================== ДИАГНОСТИКА / УСТОЙЧИВОСТЬ ========================
 // Параметры (таймауты, топик диагностики) заданы в config.h:
@@ -48,11 +61,14 @@ bool     startupLogSent = false;   // отправлен ли хвост лог�
 
 // ======================== ПРОТОТИПЫ ========================
 
+void initChannels();
 void connectMQTT();
 void callbackMQTT(char* topic, byte* payload, unsigned int length);
 void publishSensorData();
-void setLed(bool on);
-void publishLedState();
+void publishState();
+ActuatorRuntime* findActuator(const char* key);
+void setActuator(ActuatorRuntime& actuator, bool on);
+bool parseBoolValue(const char* value, bool& out);
 void handleWifiReconnect();
 void checkMqttTimeout();
 void publishStartupLog();
@@ -89,12 +105,7 @@ void setup() {
     Serial.printf("[main] started, причиной reboot: %s\n",
                   DeviceLog.rebootCause()[0] ? DeviceLog.rebootCause() : "none");
 
-    // Настройка пина светодиода (active low)
-    pinMode(PIN_LED, OUTPUT);
-    digitalWrite(PIN_LED, HIGH);  // HIGH = выключен (active low)
-
-    // Инициализация DHT
-    dht.begin();
+    initChannels();
 
     // Настройка MQTT из конфига
     mqttClient.setServer(config.mqttHost, config.mqttPort);
@@ -105,7 +116,7 @@ void setup() {
     mqttClient.setSocketTimeout(MQTT_CONNECT_TIMEOUT_MS / 1000);
 
     Serial.print("Client ID: ");
-    Serial.println("esp32-dht22-" + WiFi.macAddress());
+    Serial.println("esp32-device-" + WiFi.macAddress());
     Serial.printf("[main] setup: done at %lums, entering loop\n", (unsigned long)millis());
 }
 
@@ -162,7 +173,7 @@ void loop() {
 
 void connectMQTT() {
     // Формируем clientId на основе MAC
-    String clientId = "esp32-dht22-";
+    String clientId = "esp32-device-";
     clientId += WiFi.macAddress();
     clientId.replace(":", "");
 
@@ -177,13 +188,13 @@ void connectMQTT() {
         // Retained-статус online для сервера/UI (перезаписывает offline от LWT)
         mqttClient.publish(TOPIC_STATUS, "{\"status\":\"online\"}", true);
 
-        // Retained-состояние LED: после ребута актуализирует Influx/UI
-        // фактическим состоянием пина (LED стартует выключенным)
-        publishLedState();
+        // Retained-состояние всех автоматов: после ребута актуализирует
+        // Influx/UI фактическим состоянием пинов (стартуют выключенными).
+        publishState();
 
-        // Подписка на топик управления светодиодом
-        mqttClient.subscribe(TOPIC_SUBSCRIBE);
-        Serial.printf("mqtt connected, subscribed %s\n", TOPIC_SUBSCRIBE);
+        // Один /command на объект; имя канала передаётся в payload.
+        mqttClient.subscribe(TOPIC_COMMAND);
+        Serial.printf("mqtt connected, subscribed %s\n", TOPIC_COMMAND);
 
         // Событие восстановления после обрыва — до сброса таймера недоступности
         // (downSec — длительность обрыва, errors — число неудачных попыток).
@@ -211,22 +222,21 @@ void connectMQTT() {
 // ======================== CALLBACK MQTT ========================
 
 void callbackMQTT(char* topic, byte* payload, unsigned int length) {
-    // Игнорируем сообщения не из нашего топика
-    if (strcmp(topic, TOPIC_SUBSCRIBE) != 0) {
+    // Один командный топик на объект; имена каналов — в JSON.
+    if (strcmp(topic, TOPIC_COMMAND) != 0) {
         return;
     }
 
-    // Преобразуем payload в строку
     String message;
     for (unsigned int i = 0; i < length; i++) {
         message += (char)payload[i];
     }
 
-    Serial.print("Получена команда LED: ");
+    Serial.print("Получена команда: ");
     Serial.println(message);
 
-    // Парсим JSON: {"state":"ON"} или {"state":"OFF"}
-    StaticJsonDocument<32> doc;
+    // {"channel":"<любое имя>","value":"ON"|"OFF"}
+    StaticJsonDocument<256> doc;
     DeserializationError error = deserializeJson(doc, message);
     if (error) {
         Serial.print("Ошибка парсинга JSON: ");
@@ -234,77 +244,161 @@ void callbackMQTT(char* topic, byte* payload, unsigned int length) {
         return;
     }
 
-    const char* state = doc["state"];
-    if (state == nullptr) {
-        Serial.println("Команда без поля state — игнорируется");
+    const char* channel = doc["channel"] | "";
+    const char* value = doc["value"] | "";
+    if (channel[0] == '\0' || value[0] == '\0') {
+        Serial.println("Команда без channel/value — игнорируется");
         return;
     }
-    if (strcmp(state, "ON") == 0) {
-        setLed(true);
-    } else if (strcmp(state, "OFF") == 0) {
-        setLed(false);
-    } else {
-        Serial.print("Неизвестная команда: ");
-        Serial.println(state);
+
+    ActuatorRuntime* actuator = findActuator(channel);
+    if (actuator == nullptr) {
+        Serial.printf("Неизвестный канал: %s\n", channel);
+        return;
+    }
+
+    bool on = false;
+    if (!parseBoolValue(value, on)) {
+        Serial.printf("Неизвестное значение: %s\n", value);
+        return;
+    }
+    setActuator(*actuator, on);
+}
+
+// ======================== КАНАЛЫ ========================
+
+void initChannels() {
+    sensorCount = 0;
+    actuatorCount = 0;
+
+    for (size_t i = 0; i < CHANNEL_COUNT && i < MAX_CHANNELS; ++i) {
+        const ChannelConfig& cfg = CHANNELS[i];
+        if (cfg.role == ChannelRole::Sensor) {
+            SensorRuntime& runtime = sensors[sensorCount++];
+            runtime.cfg = &cfg;
+            runtime.dht = nullptr;
+            if (cfg.model == ChannelModel::Dht22) {
+                runtime.dht = new DHT(cfg.pin, DHT_TYPE);
+                if (runtime.dht != nullptr) {
+                    runtime.dht->begin();
+                }
+            } else if (cfg.model == ChannelModel::Float) {
+                pinMode(cfg.pin, INPUT_PULLUP);
+            }
+            Serial.printf("channel %s: sensor on GPIO %u\n", cfg.key, cfg.pin);
+        } else {
+            ActuatorRuntime& runtime = actuators[actuatorCount++];
+            runtime.cfg = &cfg;
+            runtime.on = false;
+            pinMode(cfg.pin, OUTPUT);
+            digitalWrite(cfg.pin, cfg.activeLow ? HIGH : LOW);
+            Serial.printf("channel %s: actuator on GPIO %u\n", cfg.key, cfg.pin);
+        }
     }
 }
 
-// ======================== УПРАВЛЕНИЕ СВЕТОДИОДОМ ========================
-
-void setLed(bool on) {
-    // Active low: LOW = включено, HIGH = выключено
-    digitalWrite(PIN_LED, on ? LOW : HIGH);
-    ledState = on;
-    Serial.print(on ? "Светодиод ВКЛЮЧЁН" : "Светодиод ВЫКЛЮЧЕН");
-    Serial.println(" (GPIO 2)");
-    // Retained-состояние в TOPIC_STATE — источник данных для telegraf → Influx → UI
-    publishLedState();
+ActuatorRuntime* findActuator(const char* key) {
+    for (size_t i = 0; i < actuatorCount; ++i) {
+        if (strcmp(actuators[i].cfg->key, key) == 0) {
+            return &actuators[i];
+        }
+    }
+    return nullptr;
 }
 
-// Публикует retained {"state":"ON"|"OFF"} в TOPIC_STATE.
-void publishLedState() {
+bool parseBoolValue(const char* value, bool& out) {
+    if (strcasecmp(value, "ON") == 0 || strcmp(value, "1") == 0 ||
+        strcasecmp(value, "TRUE") == 0) {
+        out = true;
+        return true;
+    }
+    if (strcasecmp(value, "OFF") == 0 || strcmp(value, "0") == 0 ||
+        strcasecmp(value, "FALSE") == 0) {
+        out = false;
+        return true;
+    }
+    return false;
+}
+
+void setActuator(ActuatorRuntime& actuator, bool on) {
+    actuator.on = on;
+    const ChannelConfig& cfg = *actuator.cfg;
+    if (cfg.activeLow) {
+        digitalWrite(cfg.pin, on ? LOW : HIGH);
+    } else {
+        digitalWrite(cfg.pin, on ? HIGH : LOW);
+    }
+    Serial.printf("channel %s: %s (GPIO %u)\n", cfg.key, on ? "ON" : "OFF",
+                  cfg.pin);
+    publishState();
+}
+
+// Retained-карта всех автоматов: {"канал":"ON","другой":"OFF"}.
+void publishState() {
     if (!mqttClient.connected()) {
         return;
     }
-    mqttClient.publish(TOPIC_STATE, ledState ? "{\"state\":\"ON\"}" : "{\"state\":\"OFF\"}", true);
+    StaticJsonDocument<512> doc;
+    for (size_t i = 0; i < actuatorCount; ++i) {
+        doc[actuators[i].cfg->key] = actuators[i].on ? "ON" : "OFF";
+    }
+    char jsonBuffer[512];
+    const size_t jsonLen = serializeJson(doc, jsonBuffer);
+    mqttClient.publish(TOPIC_STATE, reinterpret_cast<const uint8_t*>(jsonBuffer),
+                       jsonLen, true);
 }
 
 // ======================== ПУБЛИКАЦИЯ ДАННЫХ ДАТЧИКА ========================
 
 void publishSensorData() {
-    float humidity, temperature;
+    if (sensorCount == 0) {
+        return;
+    }
 
-    if (USE_MOCK_SENSOR) {
-        // Мок: плавно меняющиеся значения на основе millis() (нет физического датчика)
-        float t = (float)millis() / 1000.0f;
-        temperature = 23.0f + 3.0f * sinf(t * 0.1f);
-        humidity    = 45.0f + 8.0f * sinf(t * 0.07f + 2.0f);
-    } else {
-        // Реальный DHT22
-        humidity    = dht.readHumidity();
-        temperature = dht.readTemperature();  // °C
+    StaticJsonDocument<512> doc;
+    const float t = static_cast<float>(millis()) / 1000.0f;
 
-        // Проверка на ошибку чтения (nan)
-        if (isnan(humidity) || isnan(temperature)) {
-            Serial.println("Ошибка чтения DHT22: получены некорректные данные (nan)");
-            return;
+    for (size_t i = 0; i < sensorCount; ++i) {
+        const ChannelConfig& cfg = *sensors[i].cfg;
+        if (cfg.model == ChannelModel::Dht22) {
+            float temperature;
+            float humidity;
+            if (cfg.mock) {
+                temperature = 23.0f + 3.0f * sinf(t * 0.1f);
+                humidity = 45.0f + 8.0f * sinf(t * 0.07f + 2.0f);
+            } else {
+                if (sensors[i].dht == nullptr) {
+                    continue;
+                }
+                humidity = sensors[i].dht->readHumidity();
+                temperature = sensors[i].dht->readTemperature();
+                if (isnan(humidity) || isnan(temperature)) {
+                    Serial.printf("channel %s: DHT read failed\n", cfg.key);
+                    continue;
+                }
+            }
+            doc[cfg.key] = temperature;
+            if (cfg.key2 != nullptr) {
+                doc[cfg.key2] = humidity;
+            }
+        } else if (cfg.model == ChannelModel::Float) {
+            const bool on = cfg.mock
+                                ? (static_cast<uint32_t>(millis() / 5000) % 2 == 0)
+                                : (digitalRead(cfg.pin) == LOW);
+            doc[cfg.key] = on ? 1.0f : 0.0f;
         }
     }
 
-    // Формирование JSON с помощью ArduinoJson v6
-    StaticJsonDocument<128> doc;
-    doc["temperature"] = temperature;
-    doc["humidity"]    = humidity;
+    if (doc.size() == 0) {
+        return;
+    }
 
-    char jsonBuffer[128];
-    size_t jsonLen = serializeJson(doc, jsonBuffer);
-
-    // Полный топик: OBJECT_TYPE + UNIT_ID + OBJECT_ID
+    char jsonBuffer[512];
+    const size_t jsonLen = serializeJson(doc, jsonBuffer);
     String topic = String(OBJECT_TYPE) + '/' + String(UNIT_ID) + '/' + String(OBJECT_ID);
 
-    // Публикация в MQTT
-    bool published = mqttClient.publish(topic.c_str(), jsonBuffer, jsonLen);
-
+    const bool published = mqttClient.publish(
+        topic.c_str(), reinterpret_cast<const uint8_t*>(jsonBuffer), jsonLen, false);
     if (published) {
         Serial.print("Опубликовано в топик \"");
         Serial.print(topic);
@@ -385,7 +479,8 @@ void publishLogEvent(const char* level, const char* event, const char* msg) {
 
     char jsonBuffer[384];
     size_t jsonLen = serializeJson(doc, jsonBuffer);
-    mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
+    mqttClient.publish(TOPIC_DIAG, reinterpret_cast<const uint8_t*>(jsonBuffer),
+                       jsonLen, false);
 }
 
 // Событие восстановления MQTT после обрыва:
@@ -409,7 +504,8 @@ void publishReconnectLog(uint32_t downSec, uint32_t errors) {
 
     char jsonBuffer[384];
     size_t jsonLen = serializeJson(doc, jsonBuffer);
-    mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
+    mqttClient.publish(TOPIC_DIAG, reinterpret_cast<const uint8_t*>(jsonBuffer),
+                       jsonLen, false);
 }
 
 // ======================== СТАРТОВЫЙ КОНВЕРТ (ПРИЧИНА РЕБУТА) ========================
@@ -444,7 +540,8 @@ void publishStartupLog() {
 
     char jsonBuffer[384];
     size_t jsonLen = serializeJson(doc, jsonBuffer);
-    mqttClient.publish(TOPIC_DIAG, jsonBuffer, jsonLen);
+    mqttClient.publish(TOPIC_DIAG, reinterpret_cast<const uint8_t*>(jsonBuffer),
+                       jsonLen, false);
 
     // Конверт отправлен — стираем cause и prevUptime из NVS, иначе после
     // обычной (не авто-) перезагрузки startup повторно ушёл бы с ложным cause.

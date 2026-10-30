@@ -1,17 +1,41 @@
+#pragma once
+
+#include <stddef.h>
 #include <stdint.h>
 
 // --- Параметры объекта ---
-constexpr char OBJECT_ID[] = "saspik.sa.wm.m003";
-constexpr char UNIT_ID[] = "unitId3";
-constexpr char OBJECT_TYPE[] = "sensor";
+// Новое устройство автоматики. Старый saspik.sa.wm.m003 остаётся на своей
+// прошивке и в этом конфиге не участвует.
+constexpr char OBJECT_ID[] = "saspik-awqm001";
+constexpr char UNIT_ID[]   = "unitId3";
+constexpr char OBJECT_TYPE[] = "sensor";  // префикс топика данных
 
-// --- Пины ---
-constexpr uint8_t PIN_DHT       = 4;
-constexpr uint8_t PIN_LED       = 2;
+// --- Роли и модели пользовательских каналов ---
+// Пин выбирается здесь, имя канала — здесь и в UI (spec.key).
+enum class ChannelRole : uint8_t { Sensor, Actuator };
+enum class ChannelModel : uint8_t { Dht22, Float, Relay, Led };
 
-// --- Кнопка captive portal (внешняя, подтяжка к GND, INPUT_PULLUP, нажатие = LOW) ---
-// При зажатии при включении открывается портал конфигурации WiFi/MQTT
-// (даже если конфиг уже сохранён в NVS). Пин свободен: DHT=4, LED=2.
+struct ChannelConfig {
+    const char* key;       // произвольное имя канала
+    const char* key2;      // второй ключ DHT22, иначе nullptr
+    uint8_t pin;           // пользовательский GPIO
+    ChannelRole role;
+    ChannelModel model;
+    bool activeLow;        // для LED/реле
+    bool mock;             // для сенсоров: генерировать значения без железа
+};
+
+// Пример: два автомата на одном объекте. Имена и пины меняются пользователем.
+// 13 и 26 — пользовательские GPIO; 2/4/25 в этом примере не заняты.
+constexpr ChannelConfig CHANNELS[] = {
+    {"свет",  nullptr, 13, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+    {"полив", nullptr, 26, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+};
+constexpr size_t MAX_CHANNELS = 8;
+constexpr size_t CHANNEL_COUNT = sizeof(CHANNELS) / sizeof(CHANNELS[0]);
+
+// --- Системные пины ---
+// Кнопка captive portal (внешняя, подтяжка к GND, INPUT_PULLUP, нажатие = LOW).
 constexpr uint8_t CONFIG_BUTTON_PIN = 25;
 
 // --- MQTT ---
@@ -19,37 +43,21 @@ constexpr char MQTT_BROKER[]        = "192.168.0.118";
 constexpr uint16_t MQTT_PORT        = 1883;
 constexpr char MQTT_USER[]          = "admin";
 constexpr char MQTT_PASS[]          = "password123";
-constexpr char TOPIC_SUBSCRIBE[]    = "device/unitId3/saspik.sa.wm.m003";
+
+constexpr char TOPIC_COMMAND[]      = "device/unitId3/saspik-awqm001/command";
+constexpr char TOPIC_STATE[]        = "device/unitId3/saspik-awqm001/state";
+constexpr char TOPIC_STATUS[]       = "device/unitId3/saspik-awqm001/status";
+constexpr char TOPIC_DIAG[]         = "device/unitId3/saspik-awqm001/log";
 
 // --- Диагностика и устойчивость ---
-// Топик для публикации хвоста лога и диагностики (управляется через MQTT)
-constexpr char TOPIC_DIAG[]         = "device/unitId3/saspik.sa.wm.m003/log";
-// Retained-состояние светодиода: {"state":"ON"|"OFF"}, публикуется устройством
-// после каждой смены состояния и при подключении; читается telegraf → Influx → UI
-constexpr char TOPIC_STATE[]        = "device/unitId3/saspik.sa.wm.m003/state";
-// Retained-статус устройства: online публикуется при подключении,
-// offline — LWT (публикует брокер при обрыве соединения по таймауту)
-constexpr char TOPIC_STATUS[]       = "device/unitId3/saspik.sa.wm.m003/status";
-// Время непрерывной недоступности MQTT, после которого авто-ребут (мс)
 constexpr uint32_t MQTT_REBOOT_TIMEOUT_MS = 900000UL; // 15 минут
-// Время непрерывной недоступности WiFi, после которого авто-ребут (мс)
 constexpr uint32_t WIFI_REBOOT_TIMEOUT_MS = 300000UL; // 5 минут
-// Минимальный интервал между попытками восстановления WiFi (мс)
 constexpr uint32_t WIFI_RECONNECT_INTERVAL_MS = 10000UL;
-// Минимальный интервал между попытками подключения к MQTT (мс).
-// Предотвращает блокировку loop() на connect при недоступном брокере
-// (что иначе вызывает Task WDT reset, rst:0x8).
 constexpr uint32_t MQTT_RECONNECT_INTERVAL_MS = 3000UL;
-// Таймаут TCP-соединения к брокеру (мс) — чтобы connect не висел дольше WDT.
 constexpr uint32_t MQTT_CONNECT_TIMEOUT_MS   = 4000UL;
 
-// --- Интервал чтения датчика (мс) ---
+// --- Интервал чтения датчиков (мс) ---
 constexpr uint32_t SENSOR_INTERVAL_MS = 2000;
 
-// --- Тип датчика DHT (DHT22 = 22) ---
+// --- Тип DHT (DHT22 = 22) ---
 constexpr uint8_t DHT_TYPE = 22;
-
-// --- Мок датчика ---
-// true — генерировать данные псевдослучайно (физический DHT22 не подключён),
-// false — читать реальный датчик.
-constexpr bool USE_MOCK_SENSOR = true;

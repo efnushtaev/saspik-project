@@ -16,14 +16,19 @@ void TopicBuilder::dataTopic(char* out, size_t cap, const char* unitId,
 
 void TopicBuilder::commandTopic(char* out, size_t cap, const char* unitId,
                                 const char* objectId) {
-    build(out, cap, "device", unitId, objectId, nullptr);
+    build(out, cap, "device", unitId, objectId, "/command");
 }
 
 void TopicBuilder::commandWildcardTopic(char* out, size_t cap,
                                         const char* unitId) {
     // Шлюз подписывается на команды любых узлов своего юнита; objectId
     // конкретного узла мост извлекает из топика сообщения.
-    snprintf(out, cap, "device/%s/+", unitId);
+    snprintf(out, cap, "device/%s/+/command", unitId);
+}
+
+void TopicBuilder::stateTopic(char* out, size_t cap, const char* unitId,
+                              const char* objectId) {
+    build(out, cap, "device", unitId, objectId, "/state");
 }
 
 void TopicBuilder::logTopic(char* out, size_t cap, const char* unitId,

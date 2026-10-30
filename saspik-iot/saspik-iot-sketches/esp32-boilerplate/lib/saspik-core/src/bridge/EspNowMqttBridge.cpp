@@ -38,6 +38,9 @@ void EspNowMqttBridge::onEspNowPacket(const uint8_t* srcMac,
         case ESP_NOW_TYPE_LOG:
             forwardLog(srcMac, packet);
             break;
+        case ESP_NOW_TYPE_STATE:
+            forwardState(srcMac, packet);
+            break;
         default:
             // COMMAND/ACK узлы шлюзу в v1 не шлют — игнорируем молча.
             break;
@@ -58,6 +61,28 @@ void EspNowMqttBridge::forwardData(const uint8_t* srcMac,
         }
         return;
     }
+    char topic[MQTT_TOPIC_MAX_LEN];
+    TopicBuilder::dataTopic(topic, sizeof(topic), m_info.unitId(),
+                            node->objectId);
+
+    // Новый формат: JSON-карта с произвольными именами каналов. Публикуем
+    // as-is: мост не знает, какие поля есть у пользователя.
+    for (uint8_t i = 0; i < packet.fieldCount; ++i) {
+        const EspNowField& field = packet.fields[i];
+        if (field.id != ESP_NOW_FIELD_DATA_JSON || field.len == 0) {
+            continue;
+        }
+        char payload[LOG_ENVELOPE_MAX_LEN];
+        const size_t copyLen = field.len < sizeof(payload) - 1
+                                   ? field.len
+                                   : sizeof(payload) - 1;
+        memcpy(payload, field.data, copyLen);
+        payload[copyLen] = '\0';
+        m_mqtt->publish(topic, payload, false);
+        return;
+    }
+
+    // Legacy: float-поля по FIELD_DICTIONARY (старые узлы).
     StaticJsonDocument<MQTT_PAYLOAD_MAX> doc;
     for (uint8_t i = 0; i < packet.fieldCount; ++i) {
         const EspNowField& field = packet.fields[i];
@@ -73,12 +98,41 @@ void EspNowMqttBridge::forwardData(const uint8_t* srcMac,
     if (doc.isNull()) {
         return;  // ни одного известного поля — нечего публиковать
     }
-    char topic[MQTT_TOPIC_MAX_LEN];
     char payload[MQTT_PAYLOAD_MAX];
-    TopicBuilder::dataTopic(topic, sizeof(topic), m_info.unitId(),
-                            node->objectId);
     serializeJson(doc, payload, sizeof(payload));
     m_mqtt->publish(topic, payload, false);
+}
+
+void EspNowMqttBridge::forwardState(const uint8_t* srcMac,
+                                    const EspNowPacket& packet) {
+    if (m_mqtt == nullptr) {
+        return;
+    }
+    const NodeEntry* node = findNodeByMac(srcMac);
+    if (node == nullptr) {
+        if (m_logger != nullptr) {
+            m_logger->logWarn("espnow", "state from unknown mac");
+        }
+        return;
+    }
+    for (uint8_t i = 0; i < packet.fieldCount; ++i) {
+        const EspNowField& field = packet.fields[i];
+        if (field.id != ESP_NOW_FIELD_STATE_JSON || field.len == 0) {
+            continue;
+        }
+        char topic[MQTT_TOPIC_MAX_LEN];
+        TopicBuilder::stateTopic(topic, sizeof(topic), m_info.unitId(),
+                                 node->objectId);
+        char payload[LOG_ENVELOPE_MAX_LEN];
+        const size_t copyLen = field.len < sizeof(payload) - 1
+                                   ? field.len
+                                   : sizeof(payload) - 1;
+        memcpy(payload, field.data, copyLen);
+        payload[copyLen] = '\0';
+        // Retained: UI/Influx видят состояние сразу после подключения.
+        m_mqtt->publish(topic, payload, true);
+        return;
+    }
 }
 
 void EspNowMqttBridge::forwardLog(const uint8_t* srcMac,
@@ -192,9 +246,20 @@ const FieldEntry* EspNowMqttBridge::findField(uint8_t id) const {
 
 void EspNowMqttBridge::nodeObjectIdFromTopic(char* out, size_t cap,
                                              const char* topic) const {
+    // Ожидаем device/{unitId}/{objectId}/command; fallback — последний сегмент
+    // (legacy device/{unitId}/{objectId}).
     const char* lastSlash = strrchr(topic, '/');
-    const char* objectId = (lastSlash != nullptr) ? lastSlash + 1 : topic;
-    const size_t len = strlen(objectId);
+    const char* segment = (lastSlash != nullptr) ? lastSlash + 1 : topic;
+    const char* objectId = segment;
+    const char* end = topic + strlen(topic);
+    if (lastSlash != nullptr && strcmp(segment, "command") == 0) {
+        end = lastSlash;
+        objectId = lastSlash - 1;
+        while (objectId > topic && *(objectId - 1) != '/') {
+            --objectId;
+        }
+    }
+    const size_t len = static_cast<size_t>(end - objectId);
     const size_t copyLen = len < cap - 1 ? len : cap - 1;
     memcpy(out, objectId, copyLen);
     out[copyLen] = '\0';

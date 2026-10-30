@@ -483,7 +483,7 @@ mosquitto_passwd -b /mosquitto/config/passwordfile admin newpassword   # сме�
 <li><strong><code>sensor/#</code></strong> — publish/subscribe для сенсорных топиков.</li>
 <li><strong><code>led/#</code></strong> — управление LED.</li>
 <li><strong><code>units/#</code></strong> — publish/subscribe для топиков команд (управление реле, добавлено 2026-07-27).</li>
-<li><strong><code>device/#</code></strong> — команды <code>device/{unitId}/{objectId}</code>, retained-состояние <code>/state</code>, <code>/status</code> и лог <code>/log</code> (с 2026-10-29 вместо <code>device/+/+/log</code>).</li>
+<li><strong><code>device/#</code></strong> — команды <code>device/{unitId}/{objectId}/command</code>, retained-состояние <code>/state</code>, <code>/status</code> и лог <code>/log</code> (с 2026-10-29 вместо <code>device/+/+/log</code>).</li>
 <li><strong>Лог-топики backend</strong>: <code>server/+/log</code>, <code>rule-engine/+/log</code> (единый JSON-конверт, 2026-09-03).</li>
 </ol>
 <p>Сводная таблица паттернов — в <a href="#saspik-cluster-docs-mqtt-topics">docs/mqtt-topics</a>.</p>
@@ -1795,27 +1795,27 @@ npm run lint:fix      # ESLint с автофиксом
 <tbody><tr>
 <td align="left"><code>sensor/</code></td>
 <td align="left">device → broker (данные)</td>
-<td align="left"><code>sensor/unitId3/saspik.sa.wm.m003</code></td>
+<td align="left"><code>sensor/unitId3/saspik-awqm001</code></td>
 </tr>
 <tr>
-<td align="left"><code>device/</code></td>
+<td align="left"><code>device/.../command</code></td>
 <td align="left">broker → device (команды)</td>
-<td align="left"><code>device/unitId3/saspik.sa.wm.m003</code></td>
+<td align="left"><code>device/unitId3/saspik-awqm001/command</code></td>
 </tr>
 <tr>
 <td align="left"><code>device/.../state</code></td>
 <td align="left">device → broker (retained)</td>
-<td align="left"><code>device/unitId3/saspik.sa.wm.m003/state</code></td>
+<td align="left"><code>device/unitId3/saspik-awqm001/state</code></td>
 </tr>
 <tr>
 <td align="left"><code>device/.../status</code></td>
 <td align="left">device → broker (retained)</td>
-<td align="left"><code>device/unitId3/saspik.sa.wm.m003/status</code></td>
+<td align="left"><code>device/unitId3/saspik-awqm001/status</code></td>
 </tr>
 <tr>
 <td align="left"><code>device/.../log</code></td>
 <td align="left">device → broker (логи)</td>
-<td align="left"><code>device/unitId3/saspik.sa.wm.m003/log</code></td>
+<td align="left"><code>device/unitId3/saspik-awqm001/log</code></td>
 </tr>
 <tr>
 <td align="left"><code>units/{unitId}/commands/</code></td>
@@ -1891,16 +1891,28 @@ npm run lint:fix      # ESLint с автофиксом
 <li>сегмент <code>{objectId}</code> в топике — всегда <strong>база без постфикса</strong>: для объекта <code>saspik.sa.wm.m003-sensor</code> топик будет <code>sensor/unitId3/saspik.sa.wm.m003</code>;</li>
 <li>в прошивке <code>OBJECT_ID</code> задаётся базой без постфикса — публикация данных <code>sensor/{unitId}/{base}</code> и подписка на команды <code>device/{unitId}/{base}</code> совпадают с топиком объекта из UI;</li>
 <li>сервер при создании объекта сам дописывает постфикс по типу и строит топик от базы, поэтому поле ID в форме содержит итоговое значение, которое уйдёт в базу;</li>
-<li>объекты, созданные до постфиксов (например <code>saspik.sa.wm.m003</code>), совместимы: постфикс просто отсутствует, топики выводятся от того же базового идентификатора.</li>
+<li>объекты, созданные до постфиксов (например <code>saspik.sa.wm.m003</code>), совместимы: постфикс просто отсутствует, топики выводятся от того же базового идентификатора;</li>
+<li>новые устройства автоматики: <code>saspik-awqm001</code> (<code>unitId3</code>, local-mqtt) и <code>saspik-aenm001</code> (<code>unitId2</code>, boilerplate); UI создаёт объект с постфиксом <code>-device</code>, в прошивке <code>OBJECT_ID</code> — база без постфикса.</li>
 </ul>
 <h3 id="топики-публикации-device-→-broker">Топики публикации (device → broker)</h3>
 <p>Показания сенсоров публикуются в <code>sensor/{unitId}/{objectId}</code>. Объекты-сенсоры делятся по модели датчика; канал объекта отображается на поле payload (см. ObjectsService, <code>spec.key</code>).</p>
-<h4 id="sensorunitidobjectid-температуравлажность"><code>sensor/{unitId}/{objectId}</code> (температура/влажность)</h4>
-<p>Модель: DHT22, DS18B20, BMP280 и т.д.</p>
+<h4 id="sensorunitidobjectid"><code>sensor/{unitId}/{objectId}</code></h4>
+<p>Payload — JSON-карта с произвольными именами каналов. Имена задаются<br>пользователем в <code>config.h</code> прошивки и в UI (<code>spec.key</code>); автоматического<br>discovery нет.</p>
 <pre><code class="language-json">{
-  &quot;temperature&quot;: 24.5,
-  &quot;humidity&quot;: 65.0
+  &quot;температура&quot;: 24.5,
+  &quot;влажность&quot;: 65.0,
+  &quot;свет&quot;: 1
 }
+</code></pre>
+<p>Модель канала (DHT22, геркон и т.д.) определяет, какие ключи он публикует.<br>Двоичные сенсоры передаются как <code>0</code>/<code>1</code>.</p>
+<p>Топик формируется устройством из типа, юнита и id объекта:</p>
+<pre><code class="language-cpp">String topic = String(OBJECT_TYPE) + &#39;/&#39; + String(UNIT_ID) + &#39;/&#39; + String(OBJECT_ID);
+</code></pre>
+<h3 id="топики-команд-broker-→-device">Топики команд (broker → device)</h3>
+<h4 id="deviceunitidobjectidcommand"><code>device/{unitId}/{objectId}/command</code></h4>
+<p>Команды на объект-устройство. Один топик на объект; имя канала передаётся в<br>payload, поэтому на одном объекте может быть сколько угодно автоматов.</p>
+<pre><code class="language-json">{&quot;channel&quot;: &quot;свет&quot;, &quot;value&quot;: &quot;ON&quot;}
+{&quot;channel&quot;: &quot;полив&quot;, &quot;value&quot;: &quot;OFF&quot;}
 </code></pre>
 <h5 id="структура">Структура</h5>
 <table>
@@ -1912,45 +1924,24 @@ npm run lint:fix      # ESLint с автофиксом
 </tr>
 </thead>
 <tbody><tr>
-<td align="left"><code>temperature</code></td>
-<td align="left">number</td>
-<td align="left">Температура, °C</td>
+<td align="left"><code>channel</code></td>
+<td align="left">string</td>
+<td align="left">Имя канала (<code>spec.key</code> в UI)</td>
 </tr>
 <tr>
-<td align="left"><code>humidity</code></td>
-<td align="left">number</td>
-<td align="left">Влажность, %</td>
-</tr>
-</tbody></table>
-<p>Топик формируется устройством из типа, юнита и id объекта:</p>
-<pre><code class="language-cpp">String topic = String(OBJECT_TYPE) + &#39;/&#39; + String(UNIT_ID) + &#39;/&#39; + String(OBJECT_ID);
-</code></pre>
-<h3 id="топики-команд-broker-→-device">Топики команд (broker → device)</h3>
-<h4 id="deviceunitidobjectid"><code>device/{unitId}/{objectId}</code></h4>
-<p>Команды на объект-устройство.</p>
-<pre><code class="language-json">{&quot;state&quot;: &quot;ON&quot;}
-{&quot;state&quot;: &quot;OFF&quot;}
-</code></pre>
-<h5 id="структура-1">Структура</h5>
-<table>
-<thead>
-<tr>
-<th align="left">Поле</th>
-<th align="left">Тип</th>
-<th align="left">Описание</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>state</code></td>
+<td align="left"><code>value</code></td>
 <td align="left">string</td>
 <td align="left"><code>ON</code> — включить, <code>OFF</code> — выключить</td>
 </tr>
 </tbody></table>
+<p><code>value</code> также принимает <code>1</code>/<code>0</code> и <code>TRUE</code>/<code>FALSE</code>. Команда с неизвестным<br><code>channel</code> игнорируется устройством. Legacy <code>{&quot;state&quot;:&quot;ON&quot;}</code> без <code>channel</code><br>поддерживается для старых объектов и применяется к первому автомату.</p>
+<p>Старые объекты <code>saspik.sa.*</code> (например <code>m003</code>) сервер по-прежнему отправляет в<br>базовый топик <code>device/{unitId}/{objectId}</code> с payload <code>{&quot;state&quot;:&quot;ON&quot;|&quot;OFF&quot;}</code> —<br>их прошивка не знает <code>/command</code>. Новые объекты (<code>saspik-awqm001</code>,<br><code>saspik-aenm001</code>) используют <code>/command</code>.</p>
 <h3 id="состояние-и-статус-устройства">Состояние и статус устройства</h3>
 <h4 id="deviceunitidobjectidstate"><code>device/{unitId}/{objectId}/state</code></h4>
-<p>Retained-состояние исполнителя. Публикуется устройством при подключении и после каждой смены; telegraf подписан на <code>device/+/+/state</code> и складывает <code>state</code> в Influx, откуда его читает UI.</p>
-<pre><code class="language-json">{&quot;state&quot;: &quot;ON&quot;}
+<p>Retained-состояние всех автоматов объекта. Публикуется устройством при<br>подключении и после каждой смены; telegraf подписан на <code>device/+/+/state</code> и<br>складывает все строковые поля в Influx, откуда их читает UI.</p>
+<pre><code class="language-json">{&quot;свет&quot;: &quot;ON&quot;, &quot;полив&quot;: &quot;OFF&quot;}
 </code></pre>
+<p>Имена ключей совпадают с <code>channel</code> в командах и <code>spec.key</code> в UI.</p>
 <h4 id="deviceunitidobjectidstatus"><code>device/{unitId}/{objectId}/status</code></h4>
 <p>Retained-статус присутствия. <code>online</code> публикуется при подключении, <code>offline</code> — LWT-сообщение брокера при обрыве соединения.</p>
 <pre><code class="language-json">{&quot;status&quot;: &quot;online&quot;}
@@ -2947,11 +2938,11 @@ REUSED  : WifiConfigManager, DeviceLogManager (shared)
 <p>Платформа — <strong>ESP32 DOIT DevKit V1</strong>.<br>Фреймворк — <strong>Arduino</strong>.</p>
 <h3 id="что-внутри">Что внутри?</h3>
 <h4 id="esp32-boilerplate"><a href="#saspik-iot-saspik-iot-sketches-esp32-boilerplate"><em>esp32-boilerplate</em></a></h4>
-<p>SOLID-основа для новых прошивок: библиотека <code>saspik-core</code> + три шаблона (Gateway, Sensor, Device), выбираются build-флагом <code>-DDEVICE_ROLE</code>. DI без глобалов, captive portal, MQTT/ESP-NOW, light sleep, host-тесты (<code>pio test -e native</code>)</p>
+<p>SOLID-основа для новых прошивок: библиотека <code>saspik-core</code> + три шаблона (Gateway, Sensor, Device), выбираются build-флагом <code>-DDEVICE_ROLE</code>. DI без глобалов, конфигурируемые каналы <code>CHANNELS[]</code>, captive portal, MQTT/ESP-NOW, light sleep, host-тесты (<code>pio test -e native</code>)</p>
 <h4 id="esp32-controller"><a href="#saspik-iot-saspik-iot-sketches-esp32-controller"><em>esp32-controller</em></a></h4>
 <p>Приложение для работы ESP32 в качестве шлюза (<strong>gateway</strong>) в сети ESP-NOW. Собирает данные от узлов в ESP-NOW, и отправляет в MQTT-брокер по WiFi</p>
 <h4 id="esp32-local-mqtt"><a href="#saspik-iot-saspik-iot-sketches-esp32-local-mqtt"><em>esp32-local-mqtt</em></a></h4>
-<p>Локальный MQTT-сенсор (DHT22): публикует температуру/влажность, управление светодиодом. С повышенной устойчивостью: восстановление Wi-Fi, авто-ребут при сбоях и энергонезависимый лог с причиной перезапуска (<code>device-log</code>)</p>
+<p>Локальный MQTT-контроллер: конфигурируемые сенсоры и автоматы (<code>CHANNELS[]</code>), произвольные имена каналов, несколько реле на одном объекте. С повышенной устойчивостью: восстановление Wi-Fi, авто-ребут при сбоях и энергонезависимый лог с причиной перезапуска (<code>device-log</code>)</p>
 <h4 id="saspik-iot-node-sensor-1"><a href="#saspik-iot-saspik-iot-sketches-saspik-iot-node-sensor-1"><em>saspik-iot-node-sensor-1</em></a></h4>
 <p>Прошивка для ESP32 с датчиками DHT-22 и поплавковым датчиком (геркон). Данные отправляются по ESP-NOW на приёмник</p>
 <h3 id="рецепты-для-скетчей">Рецепты для скетчей</h3>
@@ -3113,13 +3104,13 @@ void loop()
 <td align="center">✅</td>
 </tr>
 <tr>
-<td align="left">Примеры ISensor/IActuator</td>
-<td align="center">✅*</td>
+<td align="left">Каналы <code>CHANNELS[]</code> (сенсоры/автоматы)</td>
+<td align="center">✅</td>
 <td align="center">✅</td>
 <td align="center">✅</td>
 </tr>
 </tbody></table>
-<p>* — опционально, флаги <code>USE_EXAMPLE_*</code> в <code>include/config.h</code> (Gateway-как-Device).</p>
+<p>Каналы задаются в <code>include/config.h</code>: имя, пин, роль и модель. Один объект может<br>содержать несколько автоматов и сенсоров; имена произвольные (UTF-8).</p>
 <h2 id="требования">Требования</h2>
 <ul>
 <li><a href="https://platformio.org/install">PlatformIO Core</a> (≥ 6.x)</li>
@@ -3165,7 +3156,7 @@ pio run -e device_c3
 │       ├── GatewayApp.*    # Composition Root шлюза
 │       ├── SensorApp.*     # Composition Root сенсора
 │       ├── DeviceApp.*     # Composition Root устройства
-│       └── examples/       # примеры ISensor/IActuator (DHT22, геркон, реле)
+│       └── examples/       # ChannelBank (CHANNELS[]), примеры ISensor/IActuator
 ├── lib/saspik-core/        # переиспользуемая SOLID-библиотека
 │   ├── include/saspik/     #   core, config, log, net, wifi, portal, mqtt,
 │   │                       #   espnow, bridge, sys, interfaces
@@ -3188,19 +3179,58 @@ pio run -e device_c3
 </code></pre>
 <h2 id="конфигурация">Конфигурация</h2>
 <ul>
-<li><strong>Compile-time</strong> — <code>include/config.h</code>: роль, unitId/objectId, пины, шины<br>(<code>BUS_*_ENABLED</code>/<code>PIN_*</code>), MQTT-дефолты и таймауты, ESP-NOW (канал, типы,<br>словарь полей, таблица узлов), интервалы, логирование, флаги примеров.</li>
+<li><strong>Compile-time</strong> — <code>include/config.h</code>: роль, unitId/objectId, каналы<br>(<code>CHANNELS[]</code>: имя, пин, роль, модель), шины (<code>BUS_*_ENABLED</code>/<code>PIN_*</code>),<br>MQTT-дефолты и таймауты, ESP-NOW (канал, типы, словарь полей, таблица<br>узлов), интервалы, логирование.</li>
 <li><strong>Runtime</strong> — NVS: WiFi/MQTT через captive portal (namespace <code>saspik</code>,<br>shared/wifi-config), параметры приложения (интервалы, канал, пиры) через<br><code>ConfigManager</code> (namespace <code>saspik_app</code>). Правило merge: defaults ← NVS<br>(NVS побеждает).</li>
 </ul>
 <h2 id="протокол-esp-now-v2">Протокол ESP-NOW (v2)</h2>
 <pre><code>[type(1)] [timestamp LE(4)] [fieldId(1)+len(1)+data]* [crc8(1)]
 </code></pre>
 <ul>
-<li>Типы: 1=DATA, 2=LOG, 3=COMMAND, 4=ACK.</li>
-<li>Служебные поля: <code>0xFF</code> — JSON лога, <code>0xFE</code> — JSON команды.</li>
+<li>Типы: 1=DATA, 2=LOG, 3=COMMAND, 4=ACK, 5=STATE.</li>
+<li>Служебные поля: <code>0xFF</code> — JSON лога, <code>0xFE</code> — JSON команды,<br><code>0xFD</code> — JSON данных, <code>0xFC</code> — JSON состояния.</li>
+<li>Данные и состояние передаются JSON-картой с произвольными именами каналов:<br><code>{&quot;свет&quot;:1}</code> и <code>{&quot;свет&quot;:&quot;ON&quot;,&quot;полив&quot;:&quot;OFF&quot;}</code>; legacy float-поля<br>(<code>FIELD_DICTIONARY</code>) поддерживаются для совместимости.</li>
 <li>CRC-8/MAXIM (полином 0x31 отражённый → 0x8C, init 0x00).</li>
 <li>Лимит пакета — 250 байт (<code>ESP_NOW_PACKET_MAX</code>).</li>
 <li>Несовместим с v1 (node-sensor-1); миграция узлов — отдельная задача.</li>
 </ul>
+<h2 id="каналы-и-команды">Каналы и команды</h2>
+<pre><code class="language-cpp">constexpr ChannelConfig CHANNELS[] = {
+    {&quot;свет&quot;, nullptr, 13, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+    {&quot;полив&quot;, nullptr, 26, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+};
+</code></pre>
+<ul>
+<li><code>key</code> — имя канала; должно совпадать с <code>spec.key</code> объекта в UI.</li>
+<li><code>key2</code> — второй ключ DHT22 (например, <code>влажность</code>), иначе <code>nullptr</code>.</li>
+<li><code>role</code> — <code>Sensor</code> или <code>Actuator</code>; <code>model</code> — <code>Dht22</code>, <code>Float</code>, <code>Relay</code>, <code>Led</code>.</li>
+<li><code>activeLow</code> — для LED/реле; <code>mock</code> — для сенсоров без железа.</li>
+</ul>
+<p>Топики:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Направление</th>
+<th align="left">Топик</th>
+<th align="left">Payload</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Команда</td>
+<td align="left"><code>device/{unitId}/{objectId}/command</code></td>
+<td align="left"><code>{&quot;channel&quot;:&quot;свет&quot;,&quot;value&quot;:&quot;ON&quot;}</code></td>
+</tr>
+<tr>
+<td align="left">Состояние</td>
+<td align="left"><code>device/{unitId}/{objectId}/state</code> retained</td>
+<td align="left"><code>{&quot;свет&quot;:&quot;ON&quot;,&quot;полив&quot;:&quot;OFF&quot;}</code></td>
+</tr>
+<tr>
+<td align="left">Данные</td>
+<td align="left"><code>sensor/{unitId}/{objectId}</code></td>
+<td align="left"><code>{&quot;температура&quot;:23.4}</code></td>
+</tr>
+</tbody></table>
+<p>Шлюз подписан на <code>device/{unitId}/+/command</code>, упаковывает JSON в ESP-NOW<br>COMMAND и не разбирает имена каналов. Узел после команды отправляет STATE;<br>мост публикует его retained в MQTT.</p>
 <h2 id="лицензия">Лицензия</h2>
 <p>MIT (см. <code>LICENSE</code>). Все файлы — с SPDX-заголовком.</p>
 
@@ -3242,23 +3272,105 @@ pio run -e device_c3
 <section id="saspik-iot-saspik-iot-sketches-esp32-local-mqtt">
 <p><a href="#saspik-iot-saspik-iot-sketches">↑ Saspik-iot-sketches</a></p>
 <h1 id="⧫-esp32-local-mqtt">⧫ esp32-local-mqtt</h1>
-<h4 id="esp32-doit-devkit-v1--dht22--mqtt-локальный-сенсор-с-устойчивостью-к-сбоям">ESP32 (DOIT DevKit V1) + DHT22 + MQTT: локальный сенсор с устойчивостью к сбоям</h4>
-<p>Скетч публикует температуру и влажность в MQTT-брокер, управляет светодиодом<br>по командам. Отличается <strong>повышенной устойчивостью</strong>: восстановление Wi-Fi,<br>авто-ребут при длительных сбоях и энергонезависимая причина последнего<br>перезапуска (NVS).</p>
+<h4 id="esp32-doit-devkit-v1--mqtt-конфигурируемые-сенсоры-и-автоматы">ESP32 (DOIT DevKit V1) + MQTT: конфигурируемые сенсоры и автоматы</h4>
+<p>Скетч публикует данные сенсоров и управляет автоматами по MQTT. Список каналов<br>задаётся в <a href="src/config.h"><code>src/config.h</code></a>: имя, пин, роль и модель. Один объект<br>может содержать несколько автоматов и/или сенсоров. Старый объект<br><code>saspik.sa.wm.m003</code> остаётся на своей прошивке — этот скетч создаёт новый объект<br><code>saspik-awqm001</code>.</p>
 <h3 id="возможности">Возможности</h3>
 <ul>
-<li>Чтение температуры/влажности с DHT22 (GPIO 4) с интервалом <code>SENSOR_INTERVAL_MS</code></li>
-<li>Публикация JSON в MQTT-топик <code>sensor/unitId3/saspik.sa.wm.m003</code></li>
-<li>Управление светодиодом (GPIO 2) по командам <code>{&quot;state&quot;:&quot;ON&quot;}</code>/<code>{&quot;state&quot;:&quot;OFF&quot;}</code> с подпиской <code>device/unitId3/saspik.sa.wm.m003</code></li>
-<li><strong>Retained-состояние LED</strong>: <code>{&quot;state&quot;:&quot;ON&quot;|&quot;OFF&quot;}</code> в <code>device/unitId3/saspik.sa.wm.m003/state</code> при подключении и каждой смене — источник для telegraf → Influx → UI</li>
-<li><strong>Retained-статус</strong>: <code>{&quot;status&quot;:&quot;online&quot;}</code> при подключении, <code>offline</code> — LWT брокера в <code>device/unitId3/saspik.sa.wm.m003/status</code></li>
+<li>Произвольные имена каналов (UTF-8), без хардкода <code>state</code>/<code>relay1</code>/<code>relay2</code></li>
+<li>Несколько каналов на одном <code>objectId</code>; имя передаётся в JSON команды</li>
+<li>Модели каналов: <code>Dht22</code> (два ключа), <code>Float</code> (дискретный вход), <code>Relay</code>/<code>Led</code></li>
+<li>Публикация сенсоров: JSON-карта в <code>sensor/unitId3/saspik-awqm001</code></li>
+<li>Управление: <code>device/unitId3/saspik-awqm001/command</code> с payload<br><code>{&quot;channel&quot;:&quot;свет&quot;,&quot;value&quot;:&quot;ON&quot;}</code></li>
+<li><strong>Retained-состояние</strong>: карта <code>{&quot;свет&quot;:&quot;ON&quot;,&quot;полив&quot;:&quot;OFF&quot;}</code> в<br><code>device/unitId3/saspik-awqm001/state</code> при подключении и каждой смене</li>
+<li><strong>Retained-статус</strong>: <code>{&quot;status&quot;:&quot;online&quot;}</code> при подключении, <code>offline</code> — LWT<br>брокера в <code>device/unitId3/saspik-awqm001/status</code></li>
 <li>Captive portal для настройки Wi-Fi/MQTT (<code>wifi-config</code>), кнопка на GPIO 25</li>
-<li><strong>Восстановление Wi-Fi</strong>: при обрыве <code>WiFi.disconnect()+WiFi.reconnect()</code> раз в <code>WIFI_RECONNECT_INTERVAL_MS</code></li>
-<li><strong>Авто-ребут</strong>: при непрерывной недоступности MQTT &gt; <code>MQTT_REBOOT_TIMEOUT_MS</code> или Wi-Fi &gt; <code>WIFI_REBOOT_TIMEOUT_MS</code></li>
-<li><strong>Энергонезависимая диагностика</strong> (<code>device-log</code>): причина ребута и длительность прошлой сессии (<code>prevUptime</code>) в NVS</li>
-<li><strong>Удалённая диагностика</strong>: при старте — конверт <code>startup</code> с <code>cause</code>/<code>prevUptime</code>, после обрыва MQTT — событие <code>reconnect</code> с <code>downSec</code>/<code>errors</code></li>
+<li><strong>Восстановление Wi-Fi</strong>: <code>WiFi.disconnect()+WiFi.reconnect()</code> раз в<br><code>WIFI_RECONNECT_INTERVAL_MS</code></li>
+<li><strong>Авто-ребут</strong>: при непрерывной недоступности MQTT &gt;<br><code>MQTT_REBOOT_TIMEOUT_MS</code> или Wi-Fi &gt; <code>WIFI_REBOOT_TIMEOUT_MS</code></li>
+<li><strong>Энергонезависимая диагностика</strong> (<code>device-log</code>): причина ребута и<br>длительность прошлой сессии (<code>prevUptime</code>) в NVS</li>
+<li><strong>Удалённая диагностика</strong>: конверт <code>startup</code> с <code>cause</code>/<code>prevUptime</code> и событие<br><code>reconnect</code> с <code>downSec</code>/<code>errors</code></li>
 </ul>
+<h3 id="каналы-configh">Каналы (config.h)</h3>
+<pre><code class="language-cpp">constexpr ChannelConfig CHANNELS[] = {
+    {&quot;свет&quot;,  nullptr, 13, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+    {&quot;полив&quot;, nullptr, 26, ChannelRole::Actuator, ChannelModel::Relay, false, false},
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th align="left">Поле</th>
+<th align="left">Описание</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>key</code></td>
+<td align="left">Имя канала; должно совпадать с <code>spec.key</code> объекта в UI</td>
+</tr>
+<tr>
+<td align="left"><code>key2</code></td>
+<td align="left">Второй ключ DHT22 (например, <code>влажность</code>), иначе <code>nullptr</code></td>
+</tr>
+<tr>
+<td align="left"><code>pin</code></td>
+<td align="left">Пользовательский GPIO</td>
+</tr>
+<tr>
+<td align="left"><code>role</code></td>
+<td align="left"><code>Sensor</code> или <code>Actuator</code></td>
+</tr>
+<tr>
+<td align="left"><code>model</code></td>
+<td align="left"><code>Dht22</code>, <code>Float</code>, <code>Relay</code>, <code>Led</code></td>
+</tr>
+<tr>
+<td align="left"><code>activeLow</code></td>
+<td align="left">Для LED/реле: <code>LOW</code> = включено</td>
+</tr>
+<tr>
+<td align="left"><code>mock</code></td>
+<td align="left">Для сенсоров: генерировать значения без железа</td>
+</tr>
+</tbody></table>
+<p>Пользовательские пины: <code>2</code>, <code>4</code>, <code>13</code>, <code>26</code> (и другие свободные GPIO). <code>25</code><br>занят кнопкой captive portal. Автоматического discovery нет: ключ в UI должен<br>совпадать с именем в <code>config.h</code>.</p>
+<h3 id="протокол">Протокол</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Направление</th>
+<th align="left">Топик</th>
+<th align="left">Payload</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Команда</td>
+<td align="left"><code>device/unitId3/saspik-awqm001/command</code></td>
+<td align="left"><code>{&quot;channel&quot;:&quot;свет&quot;,&quot;value&quot;:&quot;ON&quot;}</code></td>
+</tr>
+<tr>
+<td align="left">Состояние</td>
+<td align="left"><code>device/unitId3/saspik-awqm001/state</code> retained</td>
+<td align="left"><code>{&quot;свет&quot;:&quot;ON&quot;,&quot;полив&quot;:&quot;OFF&quot;}</code></td>
+</tr>
+<tr>
+<td align="left">Сенсоры</td>
+<td align="left"><code>sensor/unitId3/saspik-awqm001</code></td>
+<td align="left"><code>{&quot;температура&quot;:23.4,&quot;влажность&quot;:45.1}</code></td>
+</tr>
+<tr>
+<td align="left">Статус</td>
+<td align="left"><code>device/unitId3/saspik-awqm001/status</code> retained</td>
+<td align="left"><code>{&quot;status&quot;:&quot;online&quot;}</code></td>
+</tr>
+<tr>
+<td align="left">Диагностика</td>
+<td align="left"><code>device/unitId3/saspik-awqm001/log</code></td>
+<td align="left">JSON-конверт</td>
+</tr>
+</tbody></table>
+<p><code>value</code> принимает <code>ON</code>/<code>OFF</code> (регистр не важен), а также <code>1</code>/<code>0</code> и<br><code>TRUE</code>/<code>FALSE</code>. Команда с неизвестным <code>channel</code> игнорируется с записью в Serial.</p>
+<h3 id="объект-в-ui">Объект в UI</h3>
+<p>Создайте объект типа <code>device</code> с ID <code>saspik-awqm001-device</code> (сервер сам добавит<br>постфикс, в топик уйдёт база <code>saspik-awqm001</code>) и добавьте замеры с ключами<br><code>свет</code> и <code>полив</code> (модель <code>relay</code>). Ключи должны совпадать с <code>CHANNELS[].key</code>.<br>Тип <code>device</code> нужен, чтобы UI показывал кнопки управления.</p>
 <h3 id="параметры-configh">Параметры (config.h)</h3>
-<p>Все настраиваемые параметры вынесены в <a href="src/config.h"><code>src/config.h</code></a>:</p>
 <table>
 <thead>
 <tr>
@@ -3269,8 +3381,18 @@ pio run -e device_c3
 </thead>
 <tbody><tr>
 <td align="left"><code>OBJECT_ID</code> / <code>UNIT_ID</code> / <code>OBJECT_TYPE</code></td>
-<td align="left"><code>saspik.sa.wm.m003</code> / <code>unitId3</code> / <code>sensor</code></td>
+<td align="left"><code>saspik-awqm001</code> / <code>unitId3</code> / <code>sensor</code></td>
 <td align="left">Идентификация объекта</td>
+</tr>
+<tr>
+<td align="left"><code>CHANNELS[]</code></td>
+<td align="left">два реле на GPIO 13/26</td>
+<td align="left">Список каналов</td>
+</tr>
+<tr>
+<td align="left"><code>CONFIG_BUTTON_PIN</code></td>
+<td align="left"><code>25</code></td>
+<td align="left">Кнопка captive portal</td>
 </tr>
 <tr>
 <td align="left"><code>MQTT_BROKER</code> / <code>MQTT_PORT</code> / <code>MQTT_USER</code> / <code>MQTT_PASS</code></td>
@@ -3278,29 +3400,29 @@ pio run -e device_c3
 <td align="left">Параметры брокера</td>
 </tr>
 <tr>
-<td align="left"><code>TOPIC_SUBSCRIBE</code></td>
-<td align="left"><code>device/unitId3/saspik.sa.wm.m003</code></td>
-<td align="left">Топик управления (LED)</td>
+<td align="left"><code>TOPIC_COMMAND</code></td>
+<td align="left"><code>device/unitId3/saspik-awqm001/command</code></td>
+<td align="left">Команды автоматам</td>
 </tr>
 <tr>
 <td align="left"><code>TOPIC_STATE</code></td>
-<td align="left"><code>device/unitId3/saspik.sa.wm.m003/state</code></td>
-<td align="left">Retained-состояние LED (ON/OFF)</td>
+<td align="left"><code>device/unitId3/saspik-awqm001/state</code></td>
+<td align="left">Retained-состояние</td>
 </tr>
 <tr>
 <td align="left"><code>TOPIC_STATUS</code></td>
-<td align="left"><code>device/unitId3/saspik.sa.wm.m003/status</code></td>
-<td align="left">Retained-статус (online/LWT offline)</td>
+<td align="left"><code>device/unitId3/saspik-awqm001/status</code></td>
+<td align="left">Retained-статус</td>
 </tr>
 <tr>
 <td align="left"><code>TOPIC_DIAG</code></td>
-<td align="left"><code>device/unitId3/saspik.sa.wm.m003/log</code></td>
-<td align="left">Топик лога и диагностики</td>
+<td align="left"><code>device/unitId3/saspik-awqm001/log</code></td>
+<td align="left">Лог и диагностика</td>
 </tr>
 <tr>
 <td align="left"><code>MQTT_REBOOT_TIMEOUT_MS</code></td>
 <td align="left"><code>900000</code> (15 мин)</td>
-<td align="left">МQТТ недоступен → ребут</td>
+<td align="left">MQTT недоступен → ребут</td>
 </tr>
 <tr>
 <td align="left"><code>WIFI_REBOOT_TIMEOUT_MS</code></td>
@@ -3310,41 +3432,36 @@ pio run -e device_c3
 <tr>
 <td align="left"><code>WIFI_RECONNECT_INTERVAL_MS</code></td>
 <td align="left"><code>10000</code></td>
-<td align="left">Интервал попыток восстановления Wi-Fi</td>
+<td align="left">Интервал попыток Wi-Fi</td>
 </tr>
 <tr>
 <td align="left"><code>MQTT_RECONNECT_INTERVAL_MS</code></td>
 <td align="left"><code>3000</code></td>
-<td align="left">Интервал попыток подключения к MQTT</td>
+<td align="left">Интервал попыток MQTT</td>
 </tr>
 <tr>
 <td align="left"><code>MQTT_CONNECT_TIMEOUT_MS</code></td>
 <td align="left"><code>4000</code></td>
-<td align="left">Таймаут TCP-соединения с брокером</td>
+<td align="left">Таймаут TCP-соединения</td>
 </tr>
 <tr>
 <td align="left"><code>SENSOR_INTERVAL_MS</code></td>
 <td align="left"><code>2000</code></td>
-<td align="left">Период чтения датчика</td>
+<td align="left">Период чтения сенсоров</td>
 </tr>
 <tr>
 <td align="left"><code>DHT_TYPE</code></td>
 <td align="left"><code>22</code></td>
-<td align="left">Тип датчика DHT</td>
-</tr>
-<tr>
-<td align="left"><code>PIN_DHT</code> / <code>PIN_LED</code> / <code>CONFIG_BUTTON_PIN</code></td>
-<td align="left"><code>4</code> / <code>2</code> / <code>25</code></td>
-<td align="left">Пины</td>
+<td align="left">Тип DHT</td>
 </tr>
 </tbody></table>
 <blockquote>
-<p>Значения по умолчанию (SSID/пароль Wi-Fi) берутся из <code>env_config.h</code>, который генерируется <code>extra_script.py</code> из переменных окружения <code>.env</code>.</p>
+<p>Значения по умолчанию (SSID/пароль Wi-Fi) берутся из <code>env_config.h</code>, который<br>генерируется <code>extra_script.py</code> из переменных окружения <code>.env</code>.</p>
 </blockquote>
 <h3 id="диагностика">Диагностика</h3>
-<p>Топик <code>TOPIC_DIAG</code> (<code>device/unitId3/saspik.sa.wm.m003/log</code>):</p>
+<p>Топик <code>TOPIC_DIAG</code> (<code>device/unitId3/saspik-awqm001/log</code>):</p>
 <ul>
-<li><strong>При старте</strong> (если был зафиксирован авто-ребут): конверт <code>startup</code> с причиной<br>и длительностью прошлой сессии; после отправки <code>cause</code>/<code>prevUptime</code> стираются<br>из NVS, чтобы обычный (не авто-) перезагрузка не шлёт ложную причину:</li>
+<li><strong>При старте</strong> (если был зафиксирован авто-ребут): конверт <code>startup</code> с причиной<br>и длительностью прошлой сессии; после отправки <code>cause</code>/<code>prevUptime</code> стираются<br>из NVS:</li>
 </ul>
 <pre><code class="language-json">{&quot;level&quot;:&quot;info&quot;,&quot;src&quot;:&quot;device&quot;,&quot;event&quot;:&quot;startup&quot;,&quot;msg&quot;:&quot;startup after reboot&quot;,&quot;uptime&quot;:5,&quot;cause&quot;:&quot;mqtt-timeout&quot;,&quot;prevUptime&quot;:923}
 </code></pre>
@@ -3353,22 +3470,17 @@ pio run -e device_c3
 </ul>
 <pre><code class="language-json">{&quot;level&quot;:&quot;info&quot;,&quot;src&quot;:&quot;device&quot;,&quot;event&quot;:&quot;reconnect&quot;,&quot;msg&quot;:&quot;mqtt reconnected&quot;,&quot;uptime&quot;:1000,&quot;downSec&quot;:45,&quot;errors&quot;:15}
 </code></pre>
-<p>Причины ребута: <code>wifi-lost</code>, <code>mqtt-timeout</code>. Лог также доступен в Serial (<code>pio device monitor</code>).</p>
+<p>Причины ребута: <code>wifi-lost</code>, <code>mqtt-timeout</code>. Лог также доступен в Serial<br>(<code>pio device monitor</code>).</p>
 <h3 id="сборка-и-прошивка">Сборка и прошивка</h3>
-<pre><code class="language-bash"># Сборка
-pio run
-
-# Прошивка
+<pre><code class="language-bash">pio run
 pio run -t upload
-
-# Монитор Serial
 pio device monitor
 </code></pre>
 <h3 id="зависимости">Зависимости</h3>
 <ul>
 <li><code>knolleary/PubSubClient</code>, <code>adafruit/DHT sensor library</code>, <code>bblanchon/ArduinoJson</code></li>
 <li>Общие библиотеки из <code>../shared</code>: <code>wifi-config</code>, <code>device-log</code></li>
-<li>Файловая система не используется: причина ребута и лог-метаданные — в NVS (<code>Preferences</code>)</li>
+<li>Файловая система не используется: причина ребута и лог-метаданные — в NVS</li>
 </ul>
 <h3 id="структура">Структура</h3>
 <pre><code>esp32-local-mqtt/
@@ -3376,7 +3488,7 @@ pio device monitor
 ├── extra_script.py       # генерация env_config.h из .env
 └── src/
     ├── main.cpp
-    ├── config.h          # все параметры (топики, таймауты, пины)
+    ├── config.h          # каналы, топики, таймауты, пины
     └── env_config.h      # генерируется из .env (Wi-Fi по умолчанию)
 </code></pre>
 
