@@ -4,7 +4,7 @@ import { formatRelativeTime } from "./format-relative-time";
 export const transformObjectToCard = (obj: ObjectItem) => {
   const relative = formatRelativeTime(obj.updatedAt);
   const meta = relative
-    ? `Последнее сообщение: ${relative}${obj.status === 'offline' ? ' · offline' : ''}`
+    ? `Последнее событие: ${relative}${obj.status === 'offline' ? ' •offline• ' : ''}`
     : undefined;
 
   return {
