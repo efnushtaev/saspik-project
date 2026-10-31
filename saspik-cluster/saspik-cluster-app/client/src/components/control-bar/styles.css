@@ -1,10 +1,10 @@
 .control-bar__wrapper {
-  transform: translateY(-72px);
-  transition: transform 0.2s ease-out;
+  margin-top: -80px;
+  transition: margin-top 0.2s ease-out;
 }
 
 .control-bar__wrapper_tabs-visible {
-  transform: translateY(0px);
+  margin-top: 0;
 }
 
 .control-bar__mobile-wrapper {

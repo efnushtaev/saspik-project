@@ -1,7 +1,5 @@
 import { createCn } from 'bem-react-classname';
 import { Tabs } from './tabs';
-import { ActionField } from './action-field';
-import { useLocation } from 'react-router-dom';
 
 import './styles.css';
 
@@ -12,10 +10,6 @@ export const ControlBar = ({
 }: {
   showTabs?: boolean;
 }) => {
-  const { pathname } = useLocation();
-
-  const isMainPage = pathname === '/';
-
   return (
     <div
       className={cn('wrapper', {
@@ -23,7 +17,6 @@ export const ControlBar = ({
       })}
     >
       <Tabs isVisible={showTabs} />
-      <ActionField hideActionButton={isMainPage} />
     </div>
   );
 };

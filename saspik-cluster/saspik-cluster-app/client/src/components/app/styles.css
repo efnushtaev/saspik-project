@@ -4,6 +4,19 @@
   overflow: hidden;
 }
 
+@media (min-width: 801px) {
+  .app {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app > .top-bar,
+  .app > .control-bar__wrapper,
+  .app > .action-field {
+    flex: 0 0 auto;
+  }
+}
+
 /* Mobile-specific styles are handled in the ControlBar component */
 @media (max-width: 800px) {
   .app {

@@ -6,6 +6,7 @@ import { useMobileDetection, useShowTabs } from '../../hooks';
 import { TopBar } from '../top-bar';
 import { PageHeaderProvider } from '../top-bar/page-header-context';
 import { ControlBar, ControlBarMobile } from '../control-bar';
+import { ActionField } from '../control-bar/action-field';
 import { PagesRoutes } from '../pages-routes/pages-routes';
 
 import './styles.css';
@@ -40,6 +41,7 @@ const AppContentDesktop = () => {
       <TopBar />
       <ControlBar showTabs={showTabs} />
       <PagesRoutes showTabs={showTabs} />
+      <ActionField />
     </div>
   );
 };

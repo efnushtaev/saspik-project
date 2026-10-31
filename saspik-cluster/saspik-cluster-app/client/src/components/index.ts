@@ -1,4 +1,3 @@
-export * from './control-bar/action-field/action-button';
 export * from './control-bar/action-field';
 export * from './app';
 export * from './objects-card';

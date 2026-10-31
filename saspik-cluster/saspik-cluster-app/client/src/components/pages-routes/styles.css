@@ -6,6 +6,7 @@
 }
 
 .pages-routes {
+  padding: 40px 0;
   height: calc(100vh - 194px);
   overflow: scroll;
   transform: translateY(-72px);
@@ -17,12 +18,23 @@
   transform: translateY(0);
 }
 
+@media (min-width: 801px) {
+  .pages-routes,
+  .pages-routes_tabs-visible {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    transform: none;
+  }
+}
+
 @media (max-width: 800px) {
   .pages-routes {
-    height: calc(100vh - 128px);
+    padding: 0px;
+    height: calc(100vh - 150px);
     transform: translateY(0px);
   }
   .pages-routes_tabs-visible {
-    height: calc(100vh - 201px);
+    height: calc(100vh - 220px);
   }
 }

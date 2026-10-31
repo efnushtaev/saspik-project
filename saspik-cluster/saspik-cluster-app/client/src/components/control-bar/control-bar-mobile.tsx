@@ -22,7 +22,7 @@ export const ControlBarMobile = ({
         'tabs-visible': showTabs,
       })}
     >
-      <ActionField hideActionButton={isMainPage} />
+      <ActionField />
       {!isMainPage ? <Tabs isVisible={showTabs} /> : null}
     </div>
   );

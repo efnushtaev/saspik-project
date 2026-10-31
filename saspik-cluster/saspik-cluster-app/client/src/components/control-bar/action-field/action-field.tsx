@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { createCn } from 'bem-react-classname';
 
-import { ActionButton } from './action-button/action-button';
 import { CreateObjectModal } from '../../create-object-modal';
 import { CreateUnitModal } from '../../create-unit-modal';
 import { getUnitIdFromPathname, NAVIGATION_PATHS, withUnitPath } from '../../constants';
@@ -11,12 +10,7 @@ import './styles.css';
 
 const cn = createCn('action-field');
 
-type ActionFieldProps = {
-  hideActionButton?: boolean;
-};
-
-export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
-  const navigate = useNavigate();
+export const ActionField = () => {
   const location = useLocation();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isCreateUnitOpen, setIsCreateUnitOpen] = useState(false);
@@ -24,10 +18,6 @@ export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
   const unitId = getUnitIdFromPathname(location.pathname);
   const isMainPage = location.pathname === '/';
   const defaultType = location.pathname.includes('/automation') ? 'device' : 'sensor';
-
-  const handleClick = () => {
-    navigate('/');
-  };
 
   const handleObjectAdd = () => {
     setIsCreateOpen(true);
@@ -44,14 +34,15 @@ export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
   const isUnitListPage = [NAVIGATION_PATHS.sensor, NAVIGATION_PATHS.device].some(
     (path) => location.pathname === withUnitPath(path, unitId),
   );
-  const addHidden = hideActionButton || !unitId || !isUnitListPage;
+  const addHidden = !unitId || !isUnitListPage;
+
+  if (addHidden && !isMainPage) {
+    return null;
+  }
 
   return (
-    <div className={cn({ hidden: hideActionButton })}>
+    <div className={cn()}>
       <div className={cn('left')}>
-        <div className={cn('action-button', { hidden: hideActionButton })}>
-          {!addHidden && <ActionButton type="" onClick={handleClick} />}
-        </div>
         {!addHidden && (
           <button type="button" className={cn('add-object')} onClick={handleObjectAdd}>
             ＋ Добавить объект
