@@ -1,7 +1,7 @@
 .objects-card {
+  height: fit-content;
   display: flex;
   min-width: 200px;
-  height: 184px;
   box-sizing: border-box;
   border: 1px solid var(--border-color-2);
   border-radius: 16px;
@@ -11,7 +11,7 @@
 .objects-card__content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   padding: 16px 24px;
   box-sizing: border-box;
@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 24px;
   letter-spacing: 0.15px;
   color: var(--object-title-color-1);
@@ -71,7 +71,7 @@
 .objects-card__describe {
   text-align: left;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 13px;
   letter-spacing: 0.1px;
   padding-top: 4px;
@@ -86,10 +86,10 @@
 
 .objects-card__meta {
   text-align: left;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.1px;
-  padding-top: 4px;
+  padding: 4px 0px;
   color: #9ca3af;
 }
 
@@ -97,7 +97,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: 4px;
+      border-top: 1px dotted grey;
+  padding-top: 8px;
 }
 
 .objects-card__value {
@@ -105,9 +107,10 @@
   align-items: flex-start;
   justify-content: right;
   font-weight: 400;
-  font-size: 32px;
+  font-size: 24px;
   color: #ffffff;
-  line-height: 1.2;
+  line-height: 1.4;
+
 }
 
 .objects-card__value_loading {
@@ -118,8 +121,8 @@
 }
 
 .objects-card__value-frac {
-  font-weight: 100;
-  font-size: 32px;
+  font-weight: 300;
+  font-size: 24px;
   opacity: .5;
 }
 
@@ -139,6 +142,8 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  border-top: 1px dotted grey;
+  padding-top: 8px;
 }
 
 .objects-card__control {
@@ -149,6 +154,7 @@
 }
 
 .objects-card__control-key {
+  text-align: left;
   flex: 1;
   overflow: hidden;
   font-size: 13px;

@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { createCn } from 'bem-react-classname';
 
 import { UnitsCard } from '../units-card';
-import { CreateUnitModal } from '../create-unit-modal';
 import { mockApi, isMockMode } from '../mock-api';
 
 import './styles.css';
@@ -25,7 +24,6 @@ export const UnitsList = () => {
   const [units, setUnits] = useState<Unit[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const fetchUnits = useCallback(async () => {
     setLoading(true);
@@ -68,10 +66,6 @@ export const UnitsList = () => {
     };
   }, [fetchUnits]);
 
-  const handleCreated = () => {
-    window.dispatchEvent(new CustomEvent('units-updated'));
-  };
-
   if (loading) {
     return <div className={'rotate-scale-up'} />;
   }
@@ -82,13 +76,6 @@ export const UnitsList = () => {
 
   return (
     <div className={cn()}>
-      <button
-        type="button"
-        className={cn('add-unit')}
-        onClick={() => setIsCreateOpen(true)}
-      >
-        ＋ Добавить юнит
-      </button>
       {units.map((unit) => (
         <UnitsCard
           key={unit.id}
@@ -97,11 +84,6 @@ export const UnitsList = () => {
           describe={unit.description || ''}
         />
       ))}
-      <CreateUnitModal
-        open={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        onCreated={handleCreated}
-      />
     </div>
   );
 };

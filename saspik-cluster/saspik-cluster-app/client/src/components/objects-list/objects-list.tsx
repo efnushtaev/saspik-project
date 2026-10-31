@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { createCn } from 'bem-react-classname';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ObjectsCard } from '../objects-card';
-import { CreateObjectModal } from '../create-object-modal';
 import { useObjectsListFetching } from '../../hooks/use-objects-list-fetching';
 import { ObjectsListProps, ObjectItem } from './types';
 
@@ -36,7 +34,6 @@ export const ObjectsList = ({ type = 'sensor', unitId: unitIdProp }: ObjectsList
   const navigate = useNavigate();
   const location = useLocation();
   const unitId = unitIdProp || new URLSearchParams(location.search).get('id') || '';
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   if (loading) {
     return <div className={'rotate-scale-up'} />;
@@ -48,15 +45,6 @@ export const ObjectsList = ({ type = 'sensor', unitId: unitIdProp }: ObjectsList
 
   return (
     <div className={cn()}>
-      {unitId && (
-        <button
-          type="button"
-          className={cn('add-object')}
-          onClick={() => setIsCreateOpen(true)}
-        >
-          ＋ Добавить объект
-        </button>
-      )}
       {objects.map((obj, index) => {
         const cardProps = transformObjectToCard(obj);
         const isDevice = type === 'device';
@@ -81,13 +69,6 @@ export const ObjectsList = ({ type = 'sensor', unitId: unitIdProp }: ObjectsList
           />
         );
       })}
-      <CreateObjectModal
-        open={isCreateOpen}
-        unitId={unitId}
-        defaultType={type}
-        onClose={() => setIsCreateOpen(false)}
-        onCreated={() => window.dispatchEvent(new CustomEvent('objects-updated'))}
-      />
     </div>
   );
 };

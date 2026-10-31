@@ -8,11 +8,10 @@
 }
 
 .control-bar__mobile-wrapper {
-  transform: translateY(-77px);
 }
 
 @media (max-width: 800px) {
   .action-field {
-    transform: translateY(0px);
+    transform: translateY(4px);
   }
 }

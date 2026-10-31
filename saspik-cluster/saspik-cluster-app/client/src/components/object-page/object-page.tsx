@@ -217,48 +217,6 @@ export const ObjectPage = () => {
     <BasePage>
       <div className={cn()}>
         <div className={cn('section')}>
-          <div className={cn('section-title')}>Информация</div>
-
-          {editing ? (
-            <div className={cn('header')}>
-              <div className={cn('actions')}>
-                <button type="button" className={cn('button')} onClick={() => setEditing(false)}>
-                  Отмена
-                </button>
-                <button
-                  type="button"
-                  className={cn('button', { primary: true })}
-                  onClick={handleSave}
-                  disabled={saving}
-                >
-                  {saving ? 'Сохранение…' : 'Сохранить'}
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className={cn('header')}>
-              <div className={cn('actions')}>
-                <button type="button" className={cn('button')} onClick={handleBack}>
-                  Назад
-                </button>
-                <button
-                  type="button"
-                  className={cn('button', { primary: true })}
-                  onClick={startEdit}
-                >
-                  Редактировать
-                </button>
-                <button
-                  type="button"
-                  className={cn('button', { danger: true })}
-                  onClick={() => setConfirmOpen(true)}
-                >
-                  Удалить
-                </button>
-              </div>
-            </div>
-          )}
-
           {object.description && <div className={cn('description')}>{object.description}</div>}
 
           <table className={cn('spec')}>
@@ -322,7 +280,48 @@ export const ObjectPage = () => {
           )}
         </div>
 
+                  {editing ? (
+            <div className={cn('header')}>
+              <div className={cn('actions')}>
+                <button type="button" className={cn('button')} onClick={() => setEditing(false)}>
+                  Отмена
+                </button>
+                <button
+                  type="button"
+                  className={cn('button', { primary: true })}
+                  onClick={handleSave}
+                  disabled={saving}
+                >
+                  {saving ? 'Сохранение…' : 'Сохранить'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className={cn('header')}>
+              <div className={cn('actions')}>
+                <button type="button" className={cn('button')} onClick={handleBack}>
+                  Назад
+                </button>
+                <button
+                  type="button"
+                  className={cn('button', { primary: true })}
+                  onClick={startEdit}
+                >
+                  Редактировать
+                </button>
+                <button
+                  type="button"
+                  className={cn('button', { danger: true })}
+                  onClick={() => setConfirmOpen(true)}
+                >
+                  Удалить
+                </button>
+              </div>
+            </div>
+          )}
+
         {deleteError && <div className={cn('error')}>{deleteError}</div>}
+
 
         <ConfirmModal
           open={confirmOpen}

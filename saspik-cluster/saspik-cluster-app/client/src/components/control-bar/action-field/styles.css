@@ -11,6 +11,32 @@
   box-sizing: border-box;
 
   transition: 0.2s ease-out;
+
+}
+
+.action-field__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.action-field__add-object,
+.action-field__add-unit {
+  padding: 14px 20px;
+  border: 1px dashed var(--topbar-border-color);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--tab-font-color);
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.action-field__add-object:hover,
+.action-field__add-unit:hover {
+  color: var(--tab-font-color--active);
+  border-color: var(--actions-button-border-color--active);
 }
 
 .action-field__action-button {
@@ -32,5 +58,11 @@
     gap: 12px;
     padding: 12px 32px;
     background: #ffffff00;
+  }
+
+  .action-field__add-object,
+  .action-field__add-unit {
+    padding: 10px 14px;
+    font-size: 14px;
   }
 }

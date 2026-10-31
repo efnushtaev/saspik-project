@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  border-bottom: 1px solid var(--topbar-border-color);
+  border-top: 1px solid var(--topbar-border-color);
   cursor: pointer;
   text-decoration: none;
   color: inherit;
@@ -27,7 +27,7 @@
 }
 
 .tab-bar__tab_state_active {
-  border-bottom: 1px solid var(--tab-border-color--active);
+  border-top: 1px solid var(--tab-border-color--active);
 }
 
 .tab-bar__icon {

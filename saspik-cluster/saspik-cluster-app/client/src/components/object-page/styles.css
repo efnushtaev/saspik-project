@@ -61,8 +61,8 @@
 }
 
 .object-page__description {
-  padding: 12px 16px;
-  border: 1px solid var(--topbar-border-color);
+  text-align: left;
+  padding: 16px 24px;
   border-radius: 8px;
   background: var(--actions-search-background);
   color: var(--tab-font-color);

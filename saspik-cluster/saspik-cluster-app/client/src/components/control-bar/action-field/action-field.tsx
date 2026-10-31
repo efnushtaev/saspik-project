@@ -3,9 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { createCn } from 'bem-react-classname';
 
 import { ActionButton } from './action-button/action-button';
-import { SearchBar } from './search-bar';
 import { CreateObjectModal } from '../../create-object-modal';
-import { getUnitIdFromPathname } from '../../constants';
+import { CreateUnitModal } from '../../create-unit-modal';
+import { getUnitIdFromPathname, NAVIGATION_PATHS, withUnitPath } from '../../constants';
 
 import './styles.css';
 
@@ -19,8 +19,10 @@ export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isCreateUnitOpen, setIsCreateUnitOpen] = useState(false);
 
   const unitId = getUnitIdFromPathname(location.pathname);
+  const isMainPage = location.pathname === '/';
   const defaultType = location.pathname.includes('/automation') ? 'device' : 'sensor';
 
   const handleClick = () => {
@@ -35,16 +37,35 @@ export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
     window.dispatchEvent(new CustomEvent('objects-updated'));
   };
 
-  const addHidden = hideActionButton || !unitId;
+  const handleUnitCreated = () => {
+    window.dispatchEvent(new CustomEvent('units-updated'));
+  };
+
+  const isUnitListPage = [NAVIGATION_PATHS.sensor, NAVIGATION_PATHS.device].some(
+    (path) => location.pathname === withUnitPath(path, unitId),
+  );
+  const addHidden = hideActionButton || !unitId || !isUnitListPage;
 
   return (
     <div className={cn({ hidden: hideActionButton })}>
-      <div className={cn('action-button', { hidden: hideActionButton })}>
-        <ActionButton type="" onClick={handleClick} />
-      </div>
-      <SearchBar />
-      <div className={cn('action-button', { hidden: addHidden })}>
-        <ActionButton type="add" onClick={handleObjectAdd} />
+      <div className={cn('left')}>
+        <div className={cn('action-button', { hidden: hideActionButton })}>
+          {!addHidden && <ActionButton type="" onClick={handleClick} />}
+        </div>
+        {!addHidden && (
+          <button type="button" className={cn('add-object')} onClick={handleObjectAdd}>
+            ＋ Добавить объект
+          </button>
+        )}
+        {isMainPage && (
+          <button
+            type="button"
+            className={cn('add-unit')}
+            onClick={() => setIsCreateUnitOpen(true)}
+          >
+            ＋ Добавить юнит
+          </button>
+        )}
       </div>
       <CreateObjectModal
         open={isCreateOpen}
@@ -52,6 +73,11 @@ export const ActionField = ({ hideActionButton = false }: ActionFieldProps) => {
         defaultType={defaultType}
         onClose={() => setIsCreateOpen(false)}
         onCreated={handleCreated}
+      />
+      <CreateUnitModal
+        open={isCreateUnitOpen}
+        onClose={() => setIsCreateUnitOpen(false)}
+        onCreated={handleUnitCreated}
       />
     </div>
   );
