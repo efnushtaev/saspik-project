@@ -1,32 +1,21 @@
 Файл «хода работ» по проекту. Задачи ведутся единым списком: сверху — незавершённые (В работе → На доработку → Нужно взять в работу), ниже — Выполнено. Даты не пишутся.
 
-> Незавершённых задач: 4
+> Незавершённых задач: 1
 
 ## Ход работ
 
-- [В работе] Конфигурируемые каналы: server/UI/telegraf
-  Статус: код готов, сборки server/client успешны; end-to-end на железе — вручную.
-  - Команды переведены на `device/{unitId}/{objectId}/command` с payload `{"channel":"<key>","value":"ON"|"OFF"}`; имя канала больше не кодируется в топике. Server проверяет, что `key` есть в `device.spec`, иначе команду не публикует (раньше молча подставлял первый spec).
-  - UI: `sendCommand(..., key)`, mock-api, контролы на карточке устройства по каждому spec; для `device/` шлём `ON/OFF`, для legacy `units/` — `1/0`. В форме объекта подсказка: ключ канала должен совпадать с `config.h`.
-  - Telegraf: `json_string_fields = ["*"]` — имена каналов произвольные, поэтому нельзя перечислять только `state`.
-  - Influx: добавлено экранирование строк в Flux-запросах.
-  - Объекты: `saspik-awqm001` (`unitId3`, local-mqtt) и `saspik-aenm001` (`unitId2`, boilerplate); старый `m003` не трогаем.
-  - Проверено: `npm run build` server и client. `npm run lint` server падает на `Object.hasOwn` (старый Node/ESLint), к правкам не относится.
+- [Нужно взять в работу] Добавление сценариев через UI
+	- Добавление должно быть через текстовое поле в которое пользователь будте добавлять JSON с валидной схемой rules
 
-- [В работе] Рефакторинг документации
-  Статус: в работе — доработка и переименование.
-  - Переименование atsap → saspik (пакеты, нейминг).
-  - README для nginx/ (client/ — готово).
-  - Раскрыть разделы docs по конвейеру mosquitto→telegraf→influxdb.
 
-- [Нужно взять в работу] План доработки кластера: UI-фиксы и выравнивание m002
+- [Выполнено] План доработки кластера: UI-фиксы и выравнивание m002
   Статус: план согласован, реализация не начата. Графики истории — в бэклог.
   - Этап 0 (быстрые фиксы): единые кнопки «назад» — `navigate(-1)` с фолбэком (круглая кнопка ControlBar, unit-page, object-page; фолбэк `/` или канонический список); фикс битого роута `/object/:objectId` (objects-list всегда строит URL с unit); wildcard-матчинг в LocalMqttService (подписка `device/+/+/status` не срабатывает — статусы online/offline в UI мертвы).
   - Этап 3 (топики и m002): updateObject больше не пересчитывает topic при правке (сохранять существующий из Mongo — правка реле/LED через UI не рвёт команды/данные); unitId2.config.ts на эталон m002 (dht22 → `sensor/unitId2/saspik.sa.wm.m002`, LED → id `led`, `device/unitId2/saspik.sa.wm.m002`); telegraf подписка данных `led/#` → `device/+/+`; миграция Mongo (m001 не удалять) — зависит от доступности docker, при недоступности откладывается.
   - Верификация: сборки server/client, ручные сценарии (назад с диплинка, правка объекта без смены топика, online/offline статусы).
   - Вне плана: графики истории (бэклог TODO, разведка API/UI готова), логи в UI (открытая задача IN_PROGRESS).
 
-- [Нужно взять в работу] Доработка кнопок возврата на предыдущие страницы (frontend)
+- [Выполнено] Доработка кнопок возврата на предыдущие страницы (frontend)
   - Нужна доработка фронта в части кнопок, которые делают возврат на предыдущие страницы.
 
 - [Выполнено] ACL device/# и состояние LED в UI
@@ -60,3 +49,18 @@
   - Единый JSON-конверт `{level,src,event,msg,topic,unitId,objectId,uptime,cause}` для device/server/rule-engine; лог-топики `device/+/+/log`, `server/+/log`, `rule-engine/+/log`; отдельный measurement `logs` (бакет `logs`, retention 7 дней).
   - Исправлены три healthcheck'и в docker-compose: mosquitto (учётки при `allow_anonymous=false`), server (curl → wget в node:18-alpine), nginx (localhost IPv6 → 127.0.0.1).
   - Коммиты 268dd72 (unified logging), 7cebe4c (healthcheck fixes).
+
+- [Выполнено] Конфигурируемые каналы: server/UI/telegraf
+  Статус: выполнено.
+  - Команды переведены на `device/{unitId}/{objectId}/command` с payload `{"channel":"<key>","value":"ON"|"OFF"}`; имя канала больше не кодируется в топике. Server проверяет, что `key` есть в `device.spec`, иначе команду не публикует (раньше молча подставлял первый spec).
+  - UI: `sendCommand(..., key)`, mock-api, контролы на карточке устройства по каждому spec; для `device/` шлём `ON/OFF`, для legacy `units/` — `1/0`. В форме объекта подсказка: ключ канала должен совпадать с `config.h`.
+  - Telegraf: `json_string_fields = ["*"]` — имена каналов произвольные, поэтому нельзя перечислять только `state`.
+  - Influx: добавлено экранирование строк в Flux-запросах.
+  - Объекты: `saspik-awqm001` (`unitId3`, local-mqtt) и `saspik-aenm001` (`unitId2`, boilerplate); старый `m003` не трогаем.
+  - Проверено: `npm run build` server и client. `npm run lint` server падает на `Object.hasOwn` (старый Node/ESLint), к правкам не относится.
+
+- [Выполнено] Рефакторинг документации
+  Статус: выполнено.
+  - Переименование atsap → saspik (пакеты, нейминг).
+  - README для nginx/ (client/ — готово).
+  - Раскрыть разделы docs по конвейеру mosquitto→telegraf→influxdb.

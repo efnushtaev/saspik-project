@@ -216,6 +216,44 @@
           }
         }
       ]
+    },
+    {
+      "id": "m003_led_on_temp_high",
+      "name": "m003: LED ON при T > 23 °C",
+      "unitId": "unitId3",
+      "trigger": { "topic": "sensor/unitId3/saspik.sa.wm.m003", "qos": 0 },
+      "when": { "jsonpath": "$.temperature > 23" },
+      "then": [
+        {
+          "action": "publish",
+          "params": {
+            "topic": "device/unitId3/saspik.sa.wm.m003",
+            "payload": "{\"state\":\"ON\"}",
+            "qos": 1,
+            "retain": false
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "m003_led_off_temp_low",
+      "name": "m003: LED OFF при T < 22.5 °C",
+      "unitId": "unitId3",
+      "trigger": { "topic": "sensor/unitId3/saspik.sa.wm.m003", "qos": 0 },
+      "when": { "jsonpath": "$.temperature < 22.5" },
+      "then": [
+        {
+          "action": "publish",
+          "params": {
+            "topic": "device/unitId3/saspik.sa.wm.m003",
+            "payload": "{\"state\":\"OFF\"}",
+            "qos": 1,
+            "retain": false
+          }
+        }
+      ],
+      "enabled": true
     }
   ]
 }

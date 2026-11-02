@@ -80,4 +80,4 @@ npm run start:mock
 
 В production-режиме (`docker compose up`) фронтенд собирается внутри образа nginx (multi-stage), сервер использует InfluxDB для значений Объектов.
 
-Юниты, Объекты и правила хранятся в MongoDB: при первом запуске (пустая БД) они заполняются сидами из `server/src/data/*.config.ts` и `server/data/rules.json` (см. `SeedService`).
+Юниты, Объекты и правила хранятся в MongoDB: при первом запуске (пустая БД) они заполняются сидами из `server/src/data/*.config.ts` и `server/data/rules.json` (см. `SeedService`). Отсутствующие правила из `server/data/rules.json` добавляются по `id` при каждом старте backend; существующие правила не перезаписываются.

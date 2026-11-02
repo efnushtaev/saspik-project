@@ -51,17 +51,22 @@ export class SeedService {
 
   private async seedRules(db: Db): Promise<void> {
     const collection = db.collection("rules");
-    const count = await collection.countDocuments();
-    if (count > 0) return;
-
     const rules = this.loadRulesSeed();
     if (rules.length === 0) {
       this.logger.warn("[SeedService] Rules seed file not found or empty, skipping");
       return;
     }
 
-    await collection.insertMany(rules);
-    this.logger.log(`[SeedService] Seeded ${rules.length} rules`);
+    const existing = await collection
+      .find({}, { projection: { _id: 0, id: 1 } })
+      .toArray();
+    const existingIds = new Set(existing.map((rule) => rule.id));
+    const missing = rules.filter((rule) => !existingIds.has(rule.id));
+
+    if (missing.length === 0) return;
+
+    await collection.insertMany(missing);
+    this.logger.log(`[SeedService] Seeded ${missing.length} missing rules`);
   }
 
   private loadRulesSeed(): RuleEntity[] {
