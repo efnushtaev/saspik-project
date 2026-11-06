@@ -220,7 +220,7 @@ pio run -e esp32-s3-devkitc-1   # framework = espidf; альтернатива �
 - Backend без автотестов; e2e-проверок с Mongo/Influx нет — регрессии ловятся вручную.
 - `ClimateControlService` отключён (вызов в `app.ts` закомментирован), но `CLIMATE_*` env используются правилами rule-engine — дублирование логики.
 - Rightech-интеграция (`RIGHTECH_API_TOKEN`, `MQTT_BROCKER_API_URL`) — мёртвый код.
-- CLAUDE/AGENT-правила и скиллы живут в `saspik-private/` (вне git): `session_log.md`, `skills/`, генератор `docs.html`. Если папки нет — просто не ссылаться на неё.
+- Скиллы и правила агента — в `.dsh/skills/` и `SKILLS.md` (в git); в `saspik-private/opencode/` остаётся приватная копия скиллов и `session_log.md`. Если приватной папки нет — работать по `.dsh/skills/`.
 - Прод-инфраструктура (брокер `185.72.145.19`) обслуживается вручную; способ деплоя и миграций вне репозитория.
 - `npm run lint` сервера может падать на `Object.hasOwn` из-за старой связки Node/ESLint — не связано с правками.
 
@@ -232,7 +232,7 @@ pio run -e esp32-s3-devkitc-1   # framework = espidf; альтернатива �
 - **`IN_PROGRESS.md`**: единый список задач, сверху незавершённые (`В работе` → `На доработку` → `Нужно взять в работу`), ниже `Выполнено`; даты не пишутся, статусы — в записи.
 - **Коммиты**: Conventional Commits — `feat|fix|style|docs|refactor|chore(scope): описание`, scope — `cluster`, `iot`, `meshrover`, `greenhouse` (можно перечисление: `fix(cluster,iot): …`).
 - **Логи**: единый JSON-конверт во всех компонентах кластера.
-- **Документы**: при изменении контрактов (топики, API, env) обновлять `saspik-cluster/docs/`; `docs.html` перегенерировать скиллом `docs-gen` (живёт вне git, в `saspik-private/`).
+- **Документы**: при изменении контрактов (топики, API, env) обновлять `saspik-cluster/docs/`; `docs.html` перегенерировать скиллом `docs-gen` (`.dsh/skills/docs-gen/`).
 
 ## Чего не делать
 
@@ -243,6 +243,13 @@ pio run -e esp32-s3-devkitc-1   # framework = espidf; альтернатива �
 - Не коммитить секреты и не печатать содержимое токенов в логах/ответах.
 - Не добавлять зависимости, если задача решается стандартными средствами.
 - Не «чинить» отсутствующие тесты backend и не считать `npm test` сервера показателем.
+
+## Скиллы
+
+- Проектные скиллы живут в `.dsh/skills/<name>/SKILL.md` — DSH подхватывает их автоматически; индекс и фразы-триггеры — [`SKILLS.md`](SKILLS.md).
+- Состав: `add-task` (TODO.md), `in-progress` (IN_PROGRESS.md), `project-status` (сводка по проектам), `session-log` (журнал сессий), `docs-template` + `docs-gen` (оформление и сборка `docs.html`), `firmware-gen` (новый скетч), `schematic-gen` (схемы и диаграммы), `md-render` (показ markdown).
+- Рабочая версия правил — в `.dsh/skills/`; копия в `saspik-private/opencode/skills/` не синхронизируется автоматически, правь рабочую.
+- `TODO.md`, `IN_PROGRESS.md` подпроектов — в публичном git; `session_log.md` живёт в `saspik-private` (вне публичного git), его правки не коммитятся.
 
 ## Открытые вопросы
 
