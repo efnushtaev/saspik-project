@@ -1,0 +1,33 @@
+classDiagram
+    class Client {
+    }
+
+    class Abstraction {
+        <<abstract>>
+        -implementor
+        +Operation()
+    }
+
+    class RefinedAbstraction {
+        +Operation()
+    }
+
+    class Implementor {
+        <<interface>>
+        +OperationImp()
+    }
+
+    class ConcreteImplementorA {
+        +OperationImp()
+    }
+
+    class ConcreteImplementorB {
+        +OperationImp()
+    }
+
+    Client --> Abstraction : uses
+    Abstraction *-- Implementor : implementor
+    RefinedAbstraction --|> Abstraction
+    ConcreteImplementorA --|> Implementor
+    ConcreteImplementorB --|> Implementor
+    Abstraction ..> Implementor : implementor.OperationImp()

@@ -1,0 +1,24672 @@
+  0
+SECTION
+  2
+HEADER
+  9
+$ACADVER
+  1
+AC1024
+  9
+$ACADMAINTVER
+ 70
+6
+  9
+$DWGCODEPAGE
+  3
+ANSI_1252
+  9
+$LASTSAVEDBY
+  1
+ezdxf
+  9
+$INSBASE
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$EXTMIN
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$EXTMAX
+ 10
+860.0
+ 20
+297.0
+ 30
+0.0
+  9
+$LIMMIN
+ 10
+0.0
+ 20
+0.0
+  9
+$LIMMAX
+ 10
+420.0
+ 20
+297.0
+  9
+$ORTHOMODE
+ 70
+0
+  9
+$REGENMODE
+ 70
+1
+  9
+$FILLMODE
+ 70
+1
+  9
+$QTEXTMODE
+ 70
+0
+  9
+$MIRRTEXT
+ 70
+1
+  9
+$LTSCALE
+ 40
+1.0
+  9
+$ATTMODE
+ 70
+1
+  9
+$TEXTSIZE
+ 40
+2.5
+  9
+$TRACEWID
+ 40
+1.0
+  9
+$TEXTSTYLE
+  7
+Standard
+  9
+$CLAYER
+  8
+0
+  9
+$CELTYPE
+  6
+ByLayer
+  9
+$CECOLOR
+ 62
+256
+  9
+$CELTSCALE
+ 40
+1.0
+  9
+$DISPSILH
+ 70
+0
+  9
+$DIMSCALE
+ 40
+1.0
+  9
+$DIMASZ
+ 40
+2.5
+  9
+$DIMEXO
+ 40
+0.625
+  9
+$DIMDLI
+ 40
+3.75
+  9
+$DIMRND
+ 40
+0.0
+  9
+$DIMDLE
+ 40
+0.0
+  9
+$DIMEXE
+ 40
+1.25
+  9
+$DIMTP
+ 40
+0.0
+  9
+$DIMTM
+ 40
+0.0
+  9
+$DIMTXT
+ 40
+2.5
+  9
+$DIMCEN
+ 40
+2.5
+  9
+$DIMTSZ
+ 40
+0.0
+  9
+$DIMTOL
+ 70
+0
+  9
+$DIMLIM
+ 70
+0
+  9
+$DIMTIH
+ 70
+0
+  9
+$DIMTOH
+ 70
+0
+  9
+$DIMSE1
+ 70
+0
+  9
+$DIMSE2
+ 70
+0
+  9
+$DIMTAD
+ 70
+1
+  9
+$DIMZIN
+ 70
+8
+  9
+$DIMBLK
+  1
+
+  9
+$DIMASO
+ 70
+1
+  9
+$DIMSHO
+ 70
+1
+  9
+$DIMPOST
+  1
+
+  9
+$DIMAPOST
+  1
+
+  9
+$DIMALT
+ 70
+0
+  9
+$DIMALTD
+ 70
+3
+  9
+$DIMALTF
+ 40
+0.03937007874
+  9
+$DIMLFAC
+ 40
+1.0
+  9
+$DIMTOFL
+ 70
+1
+  9
+$DIMTVP
+ 40
+0.0
+  9
+$DIMTIX
+ 70
+0
+  9
+$DIMSOXD
+ 70
+0
+  9
+$DIMSAH
+ 70
+0
+  9
+$DIMBLK1
+  1
+
+  9
+$DIMBLK2
+  1
+
+  9
+$DIMSTYLE
+  2
+ISO-25
+  9
+$DIMCLRD
+ 70
+0
+  9
+$DIMCLRE
+ 70
+0
+  9
+$DIMCLRT
+ 70
+0
+  9
+$DIMTFAC
+ 40
+1.0
+  9
+$DIMGAP
+ 40
+0.625
+  9
+$DIMJUST
+ 70
+0
+  9
+$DIMSD1
+ 70
+0
+  9
+$DIMSD2
+ 70
+0
+  9
+$DIMTOLJ
+ 70
+0
+  9
+$DIMTZIN
+ 70
+8
+  9
+$DIMALTZ
+ 70
+0
+  9
+$DIMALTTZ
+ 70
+0
+  9
+$DIMUPT
+ 70
+0
+  9
+$DIMDEC
+ 70
+2
+  9
+$DIMTDEC
+ 70
+2
+  9
+$DIMALTU
+ 70
+2
+  9
+$DIMALTTD
+ 70
+3
+  9
+$DIMTXSTY
+  7
+Standard
+  9
+$DIMAUNIT
+ 70
+0
+  9
+$DIMADEC
+ 70
+0
+  9
+$DIMALTRND
+ 40
+0.0
+  9
+$DIMAZIN
+ 70
+0
+  9
+$DIMDSEP
+ 70
+44
+  9
+$DIMATFIT
+ 70
+3
+  9
+$DIMFRAC
+ 70
+0
+  9
+$DIMLDRBLK
+  1
+
+  9
+$DIMLUNIT
+ 70
+2
+  9
+$DIMLWD
+ 70
+-2
+  9
+$DIMLWE
+ 70
+-2
+  9
+$DIMTMOVE
+ 70
+0
+  9
+$DIMFXL
+ 40
+1.0
+  9
+$DIMFXLON
+ 70
+0
+  9
+$DIMJOGANG
+ 40
+0.785398163397
+  9
+$DIMTFILL
+ 70
+0
+  9
+$DIMTFILLCLR
+ 70
+0
+  9
+$DIMARCSYM
+ 70
+0
+  9
+$DIMLTYPE
+  6
+
+  9
+$DIMLTEX1
+  6
+
+  9
+$DIMLTEX2
+  6
+
+  9
+$DIMTXTDIRECTION
+ 70
+0
+  9
+$LUNITS
+ 70
+2
+  9
+$LUPREC
+ 70
+4
+  9
+$SKETCHINC
+ 40
+1.0
+  9
+$FILLETRAD
+ 40
+10.0
+  9
+$AUNITS
+ 70
+0
+  9
+$AUPREC
+ 70
+2
+  9
+$MENU
+  1
+.
+  9
+$ELEVATION
+ 40
+0.0
+  9
+$PELEVATION
+ 40
+0.0
+  9
+$THICKNESS
+ 40
+0.0
+  9
+$LIMCHECK
+ 70
+0
+  9
+$CHAMFERA
+ 40
+0.0
+  9
+$CHAMFERB
+ 40
+0.0
+  9
+$CHAMFERC
+ 40
+0.0
+  9
+$CHAMFERD
+ 40
+0.0
+  9
+$SKPOLY
+ 70
+0
+  9
+$TDCREATE
+ 40
+2461350.56306713
+  9
+$TDUCREATE
+ 40
+2458532.153996898
+  9
+$TDUPDATE
+ 40
+2461350.56306713
+  9
+$TDUUPDATE
+ 40
+2458532.1544311
+  9
+$TDINDWG
+ 40
+0.0
+  9
+$TDUSRTIMER
+ 40
+0.0
+  9
+$USRTIMER
+ 70
+1
+  9
+$ANGBASE
+ 50
+0.0
+  9
+$ANGDIR
+ 70
+0
+  9
+$PDMODE
+ 70
+0
+  9
+$PDSIZE
+ 40
+0.0
+  9
+$PLINEWID
+ 40
+0.0
+  9
+$SPLFRAME
+ 70
+0
+  9
+$SPLINETYPE
+ 70
+6
+  9
+$SPLINESEGS
+ 70
+8
+  9
+$HANDSEED
+  5
+337
+  9
+$SURFTAB1
+ 70
+6
+  9
+$SURFTAB2
+ 70
+6
+  9
+$SURFTYPE
+ 70
+6
+  9
+$SURFU
+ 70
+6
+  9
+$SURFV
+ 70
+6
+  9
+$UCSBASE
+  2
+
+  9
+$UCSNAME
+  2
+
+  9
+$UCSORG
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSXDIR
+ 10
+1.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSYDIR
+ 10
+0.0
+ 20
+1.0
+ 30
+0.0
+  9
+$UCSORTHOREF
+  2
+
+  9
+$UCSORTHOVIEW
+ 70
+0
+  9
+$UCSORGTOP
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGBOTTOM
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGLEFT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGRIGHT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGFRONT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$UCSORGBACK
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSBASE
+  2
+
+  9
+$PUCSNAME
+  2
+
+  9
+$PUCSORG
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSXDIR
+ 10
+1.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSYDIR
+ 10
+0.0
+ 20
+1.0
+ 30
+0.0
+  9
+$PUCSORTHOREF
+  2
+
+  9
+$PUCSORTHOVIEW
+ 70
+0
+  9
+$PUCSORGTOP
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGBOTTOM
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGLEFT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGRIGHT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGFRONT
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PUCSORGBACK
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$USERI1
+ 70
+0
+  9
+$USERI2
+ 70
+0
+  9
+$USERI3
+ 70
+0
+  9
+$USERI4
+ 70
+0
+  9
+$USERI5
+ 70
+0
+  9
+$USERR1
+ 40
+0.0
+  9
+$USERR2
+ 40
+0.0
+  9
+$USERR3
+ 40
+0.0
+  9
+$USERR4
+ 40
+0.0
+  9
+$USERR5
+ 40
+0.0
+  9
+$WORLDVIEW
+ 70
+1
+  9
+$SHADEDGE
+ 70
+3
+  9
+$SHADEDIF
+ 70
+70
+  9
+$TILEMODE
+ 70
+1
+  9
+$MAXACTVP
+ 70
+64
+  9
+$PINSBASE
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  9
+$PLIMCHECK
+ 70
+0
+  9
+$PEXTMIN
+ 10
+1e+20
+ 20
+1e+20
+ 30
+1e+20
+  9
+$PEXTMAX
+ 10
+-1e+20
+ 20
+-1e+20
+ 30
+-1e+20
+  9
+$PLIMMIN
+ 10
+0.0
+ 20
+0.0
+  9
+$PLIMMAX
+ 10
+420.0
+ 20
+297.0
+  9
+$UNITMODE
+ 70
+0
+  9
+$VISRETAIN
+ 70
+1
+  9
+$PLINEGEN
+ 70
+0
+  9
+$PSLTSCALE
+ 70
+1
+  9
+$TREEDEPTH
+ 70
+3020
+  9
+$CMLSTYLE
+  2
+Standard
+  9
+$CMLJUST
+ 70
+0
+  9
+$CMLSCALE
+ 40
+20.0
+  9
+$PROXYGRAPHICS
+ 70
+1
+  9
+$MEASUREMENT
+ 70
+1
+  9
+$CELWEIGHT
+370
+-1
+  9
+$ENDCAPS
+280
+0
+  9
+$JOINSTYLE
+280
+0
+  9
+$LWDISPLAY
+290
+0
+  9
+$INSUNITS
+ 70
+4
+  9
+$HYPERLINKBASE
+  1
+
+  9
+$STYLESHEET
+  1
+
+  9
+$XEDIT
+290
+1
+  9
+$CEPSNTYPE
+380
+0
+  9
+$PSTYLEMODE
+290
+1
+  9
+$FINGERPRINTGUID
+  2
+{E61C3C43-EA08-43C6-BCA6-3CE95B109450}
+  9
+$VERSIONGUID
+  2
+{8051FA36-7A48-4AAC-B42A-F316CD5149F1}
+  9
+$EXTNAMES
+290
+1
+  9
+$PSVPSCALE
+ 40
+0.0
+  9
+$OLESTARTUP
+290
+0
+  9
+$SORTENTS
+280
+127
+  9
+$INDEXCTL
+280
+0
+  9
+$HIDETEXT
+280
+1
+  9
+$XCLIPFRAME
+280
+1
+  9
+$HALOGAP
+280
+0
+  9
+$OBSCOLOR
+ 70
+257
+  9
+$OBSLTYPE
+280
+0
+  9
+$INTERSECTIONDISPLAY
+280
+0
+  9
+$INTERSECTIONCOLOR
+ 70
+257
+  9
+$DIMASSOC
+280
+2
+  9
+$PROJECTNAME
+  1
+
+  9
+$CAMERADISPLAY
+290
+0
+  9
+$LENSLENGTH
+ 40
+50.0
+  9
+$CAMERAHEIGHT
+ 40
+0.0
+  9
+$STEPSPERSEC
+ 40
+24.0
+  9
+$STEPSIZE
+ 40
+100.0
+  9
+$3DDWFPREC
+ 40
+2.0
+  9
+$PSOLWIDTH
+ 40
+0.005
+  9
+$PSOLHEIGHT
+ 40
+0.08
+  9
+$LOFTANG1
+ 40
+1.570796326795
+  9
+$LOFTANG2
+ 40
+1.570796326795
+  9
+$LOFTMAG1
+ 40
+0.0
+  9
+$LOFTMAG2
+ 40
+0.0
+  9
+$LOFTPARAM
+ 70
+7
+  9
+$LOFTNORMALS
+280
+1
+  9
+$LATITUDE
+ 40
+37.795
+  9
+$LONGITUDE
+ 40
+-122.394
+  9
+$NORTHDIRECTION
+ 40
+0.0
+  9
+$TIMEZONE
+ 70
+-8000
+  9
+$LIGHTGLYPHDISPLAY
+280
+1
+  9
+$TILEMODELIGHTSYNCH
+280
+1
+  9
+$CMATERIAL
+347
+20
+  9
+$SOLIDHIST
+280
+0
+  9
+$SHOWHIST
+280
+1
+  9
+$DWFFRAME
+280
+2
+  9
+$DGNFRAME
+280
+2
+  9
+$REALWORLDSCALE
+290
+1
+  9
+$INTERFERECOLOR
+ 62
+256
+  9
+$CSHADOW
+280
+0
+  9
+$SHADOWPLANELOCATION
+ 40
+0.0
+  0
+ENDSEC
+  0
+SECTION
+  2
+CLASSES
+  0
+CLASS
+  1
+ACDBDICTIONARYWDFLT
+  2
+AcDbDictionaryWithDefault
+  3
+ObjectDBX Classes
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+SUN
+  2
+AcDbSun
+  3
+SCENEOE
+ 90
+1153
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+VISUALSTYLE
+  2
+AcDbVisualStyle
+  3
+ObjectDBX Classes
+ 90
+4095
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+MATERIAL
+  2
+AcDbMaterial
+  3
+ObjectDBX Classes
+ 90
+1153
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+SCALE
+  2
+AcDbScale
+  3
+ObjectDBX Classes
+ 90
+1153
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+TABLESTYLE
+  2
+AcDbTableStyle
+  3
+ObjectDBX Classes
+ 90
+4095
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+MLEADERSTYLE
+  2
+AcDbMLeaderStyle
+  3
+ACDB_MLEADERSTYLE_CLASS
+ 90
+4095
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+DICTIONARYVAR
+  2
+AcDbDictionaryVar
+  3
+ObjectDBX Classes
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+CELLSTYLEMAP
+  2
+AcDbCellStyleMap
+  3
+ObjectDBX Classes
+ 90
+1152
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+MENTALRAYRENDERSETTINGS
+  2
+AcDbMentalRayRenderSettings
+  3
+SCENEOE
+ 90
+1024
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+ACDBDETAILVIEWSTYLE
+  2
+AcDbDetailViewStyle
+  3
+ObjectDBX Classes
+ 90
+1025
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+ACDBSECTIONVIEWSTYLE
+  2
+AcDbSectionViewStyle
+  3
+ObjectDBX Classes
+ 90
+1025
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+RASTERVARIABLES
+  2
+AcDbRasterVariables
+  3
+ISM
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+ACDBPLACEHOLDER
+  2
+AcDbPlaceHolder
+  3
+ObjectDBX Classes
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+CLASS
+  1
+LAYOUT
+  2
+AcDbLayout
+  3
+ObjectDBX Classes
+ 90
+0
+ 91
+0
+280
+0
+281
+0
+  0
+ENDSEC
+  0
+SECTION
+  2
+TABLES
+  0
+TABLE
+  2
+VPORT
+  5
+8
+330
+0
+100
+AcDbSymbolTable
+ 70
+1
+  0
+VPORT
+  5
+23
+330
+8
+100
+AcDbSymbolTableRecord
+100
+AcDbViewportTableRecord
+  2
+*Active
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 11
+1.0
+ 21
+1.0
+ 12
+0.0
+ 22
+0.0
+ 13
+0.0
+ 23
+0.0
+ 14
+0.5
+ 24
+0.5
+ 15
+0.5
+ 25
+0.5
+ 16
+0.0
+ 26
+0.0
+ 36
+1.0
+ 17
+0.0
+ 27
+0.0
+ 37
+0.0
+ 40
+1000.0
+ 41
+1.34
+ 42
+50.0
+ 43
+0.0
+ 44
+0.0
+ 50
+0.0
+ 51
+0.0
+ 71
+0
+ 72
+1000
+ 73
+1
+ 74
+3
+ 75
+0
+ 76
+0
+ 77
+0
+ 78
+0
+281
+0
+ 65
+0
+146
+0.0
+  0
+ENDTAB
+  0
+TABLE
+  2
+LTYPE
+  5
+2
+330
+0
+100
+AcDbSymbolTable
+ 70
+4
+  0
+LTYPE
+  5
+24
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+ByBlock
+ 70
+0
+  3
+
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  5
+25
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+ByLayer
+ 70
+0
+  3
+
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  5
+26
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+Continuous
+ 70
+0
+  3
+
+ 72
+65
+ 73
+0
+ 40
+0.0
+  0
+LTYPE
+  5
+2F
+330
+2
+100
+AcDbSymbolTableRecord
+100
+AcDbLinetypeTableRecord
+  2
+DASHED
+ 70
+0
+  3
+Dashed __ __ __
+ 72
+65
+ 73
+2
+ 40
+0.6
+ 49
+0.3
+ 74
+0
+ 49
+-0.3
+ 74
+0
+  0
+ENDTAB
+  0
+TABLE
+  2
+LAYER
+  5
+1
+330
+0
+100
+AcDbSymbolTable
+ 70
+17
+  0
+LAYER
+  5
+27
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+0
+ 70
+0
+ 62
+7
+  6
+Continuous
+370
+-3
+390
+13
+347
+21
+  0
+LAYER
+  5
+28
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+Defpoints
+ 70
+0
+ 62
+7
+  6
+Continuous
+290
+0
+370
+-3
+390
+13
+347
+21
+  0
+LAYER
+  5
+32
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+РАМКА
+ 70
+0
+ 62
+7
+  6
+CONTINUOUS
+370
+50
+390
+13
+347
+21
+  0
+LAYER
+  5
+33
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ШИНА_12В
+ 70
+0
+ 62
+1
+  6
+CONTINUOUS
+370
+40
+390
+13
+347
+21
+  0
+LAYER
+  5
+34
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ШИНА_3В3
+ 70
+0
+ 62
+5
+  6
+CONTINUOUS
+370
+40
+390
+13
+347
+21
+  0
+LAYER
+  5
+35
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ЗЕМЛЯ
+ 70
+0
+ 62
+3
+  6
+CONTINUOUS
+370
+40
+390
+13
+347
+21
+  0
+LAYER
+  5
+36
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+СИГНАЛЫ
+ 70
+0
+ 62
+7
+  6
+CONTINUOUS
+370
+30
+390
+13
+347
+21
+  0
+LAYER
+  5
+37
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+СИМВОЛЫ
+ 70
+0
+ 62
+7
+  6
+CONTINUOUS
+370
+35
+390
+13
+347
+21
+  0
+LAYER
+  5
+38
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ТЕКСТ
+ 70
+0
+ 62
+7
+  6
+CONTINUOUS
+370
+18
+390
+13
+347
+21
+  0
+LAYER
+  5
+39
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ПОЯСНЕНИЯ
+ 70
+0
+ 62
+6
+  6
+CONTINUOUS
+370
+18
+390
+13
+347
+21
+  0
+LAYER
+  5
+3A
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ПЛАТА_КОНТУР
+ 70
+0
+ 62
+7
+  6
+CONTINUOUS
+370
+60
+390
+13
+347
+21
+  0
+LAYER
+  5
+3B
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ПЛАТА_ДЕТАЛИ
+ 70
+0
+ 62
+4
+  6
+CONTINUOUS
+370
+25
+390
+13
+347
+21
+  0
+LAYER
+  5
+3C
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ДОРОЖКИ
+ 70
+0
+ 62
+1
+  6
+CONTINUOUS
+370
+100
+390
+13
+347
+21
+  0
+LAYER
+  5
+3D
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ПЛАТА_ПАДЫ
+ 70
+0
+ 62
+7
+  6
+CONTINUOUS
+370
+30
+390
+13
+347
+21
+  0
+LAYER
+  5
+3E
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+РАЗМЕРЫ
+ 70
+0
+ 62
+3
+  6
+CONTINUOUS
+370
+18
+390
+13
+347
+21
+  0
+LAYER
+  5
+3F
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ТАБЛИЦЫ
+ 70
+0
+ 62
+7
+  6
+CONTINUOUS
+370
+18
+390
+13
+347
+21
+  0
+LAYER
+  5
+40
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+ОСЕВЫЕ
+ 70
+0
+ 62
+8
+  6
+DASHED
+370
+13
+390
+13
+347
+21
+  0
+ENDTAB
+  0
+TABLE
+  2
+STYLE
+  5
+5
+330
+0
+100
+AcDbSymbolTable
+ 70
+3
+  0
+STYLE
+  5
+29
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+Standard
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+txt
+  4
+
+  0
+STYLE
+  5
+30
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+RU
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+arial.ttf
+  4
+
+  0
+STYLE
+  5
+31
+330
+5
+100
+AcDbSymbolTableRecord
+100
+AcDbTextStyleTableRecord
+  2
+RU_B
+ 70
+0
+ 40
+0.0
+ 41
+1.0
+ 50
+0.0
+ 71
+0
+ 42
+2.5
+  3
+arialbd.ttf
+  4
+
+  0
+ENDTAB
+  0
+TABLE
+  2
+VIEW
+  5
+7
+330
+0
+100
+AcDbSymbolTable
+ 70
+0
+  0
+ENDTAB
+  0
+TABLE
+  2
+UCS
+  5
+6
+330
+0
+100
+AcDbSymbolTable
+ 70
+0
+  0
+ENDTAB
+  0
+TABLE
+  2
+APPID
+  5
+3
+330
+0
+100
+AcDbSymbolTable
+ 70
+3
+  0
+APPID
+  5
+2A
+330
+3
+100
+AcDbSymbolTableRecord
+100
+AcDbRegAppTableRecord
+  2
+ACAD
+ 70
+0
+  0
+APPID
+  5
+334
+330
+3
+100
+AcDbSymbolTableRecord
+100
+AcDbRegAppTableRecord
+  2
+HATCHBACKGROUNDCOLOR
+ 70
+0
+  0
+APPID
+  5
+335
+330
+3
+100
+AcDbSymbolTableRecord
+100
+AcDbRegAppTableRecord
+  2
+EZDXF
+ 70
+0
+  0
+ENDTAB
+  0
+TABLE
+  2
+DIMSTYLE
+  5
+4
+330
+0
+100
+AcDbSymbolTable
+ 70
+1
+100
+AcDbDimStyleTable
+  0
+DIMSTYLE
+105
+2B
+330
+4
+100
+AcDbSymbolTableRecord
+100
+AcDbDimStyleTableRecord
+  2
+Standard
+ 70
+0
+ 40
+1.0
+ 41
+2.5
+ 42
+0.625
+ 43
+3.75
+ 44
+1.25
+ 45
+0.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+2.5
+140
+2.5
+141
+2.5
+142
+0.0
+143
+0.03937007874
+144
+1.0
+145
+0.0
+146
+1.0
+147
+0.625
+148
+0.0
+ 69
+0
+ 70
+0
+ 71
+0
+ 72
+0
+ 73
+0
+ 74
+0
+ 75
+0
+ 76
+0
+ 77
+1
+ 78
+8
+ 79
+3
+170
+0
+171
+3
+172
+1
+173
+0
+174
+0
+175
+0
+176
+0
+177
+0
+178
+0
+179
+2
+271
+2
+272
+2
+273
+2
+274
+3
+275
+0
+276
+0
+277
+2
+278
+44
+279
+0
+280
+0
+281
+0
+282
+0
+283
+0
+284
+8
+285
+0
+286
+0
+288
+0
+289
+3
+290
+0
+371
+-2
+372
+-2
+  0
+ENDTAB
+  0
+TABLE
+  2
+BLOCK_RECORD
+  5
+9
+330
+0
+100
+AcDbSymbolTable
+ 70
+2
+  0
+BLOCK_RECORD
+  5
+17
+330
+9
+100
+AcDbSymbolTableRecord
+100
+AcDbBlockTableRecord
+  2
+*Model_Space
+340
+1A
+ 70
+0
+280
+1
+281
+0
+  0
+BLOCK_RECORD
+  5
+1B
+330
+9
+100
+AcDbSymbolTableRecord
+100
+AcDbBlockTableRecord
+  2
+*Paper_Space
+340
+1E
+ 70
+0
+280
+1
+281
+0
+  0
+ENDTAB
+  0
+ENDSEC
+  0
+SECTION
+  2
+BLOCKS
+  0
+BLOCK
+  5
+18
+330
+17
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockBegin
+  2
+*Model_Space
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  3
+*Model_Space
+  1
+
+  0
+ENDBLK
+  5
+19
+330
+17
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockEnd
+  0
+BLOCK
+  5
+1C
+330
+1B
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockBegin
+  2
+*Paper_Space
+ 70
+0
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+  3
+*Paper_Space
+  1
+
+  0
+ENDBLK
+  5
+1D
+330
+1B
+100
+AcDbEntity
+  8
+0
+100
+AcDbBlockEnd
+  0
+ENDSEC
+  0
+SECTION
+  2
+ENTITIES
+  0
+LINE
+  5
+41
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbLine
+ 10
+0.0
+ 20
+0.0
+ 30
+0.0
+ 11
+420.0
+ 21
+0.0
+ 31
+0.0
+  0
+LINE
+  5
+42
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbLine
+ 10
+420.0
+ 20
+0.0
+ 30
+0.0
+ 11
+420.0
+ 21
+297.0
+ 31
+0.0
+  0
+LINE
+  5
+43
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbLine
+ 10
+420.0
+ 20
+297.0
+ 30
+0.0
+ 11
+0.0
+ 21
+297.0
+ 31
+0.0
+  0
+LINE
+  5
+44
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbLine
+ 10
+0.0
+ 20
+297.0
+ 30
+0.0
+ 11
+0.0
+ 21
+0.0
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+45
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+5.0
+ 20
+5.0
+ 10
+415.0
+ 20
+5.0
+ 10
+415.0
+ 20
+292.0
+ 10
+5.0
+ 20
+292.0
+  0
+LWPOLYLINE
+  5
+46
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+230.0
+ 20
+5.0
+ 10
+415.0
+ 20
+5.0
+ 10
+415.0
+ 20
+60.0
+ 10
+230.0
+ 20
+60.0
+  0
+LINE
+  5
+47
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+230.0
+ 20
+35.0
+ 30
+0.0
+ 11
+415.0
+ 21
+35.0
+ 31
+0.0
+  0
+LINE
+  5
+48
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+334.0
+ 20
+5.0
+ 30
+0.0
+ 11
+334.0
+ 21
+60.0
+ 31
+0.0
+  0
+LINE
+  5
+49
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+370.0
+ 20
+35.0
+ 30
+0.0
+ 11
+370.0
+ 21
+60.0
+ 31
+0.0
+  0
+LINE
+  5
+4A
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+390.0
+ 20
+35.0
+ 30
+0.0
+ 11
+390.0
+ 21
+60.0
+ 31
+0.0
+  0
+LINE
+  5
+4B
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+370.0
+ 20
+5.0
+ 30
+0.0
+ 11
+370.0
+ 21
+35.0
+ 31
+0.0
+  0
+LINE
+  5
+4C
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+390.0
+ 20
+5.0
+ 30
+0.0
+ 11
+390.0
+ 21
+35.0
+ 31
+0.0
+  0
+LINE
+  5
+4D
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+230.0
+ 20
+21.0
+ 30
+0.0
+ 11
+334.0
+ 21
+21.0
+ 31
+0.0
+  0
+LINE
+  5
+4E
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+230.0
+ 20
+28.0
+ 30
+0.0
+ 11
+334.0
+ 21
+28.0
+ 31
+0.0
+  0
+LINE
+  5
+4F
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+280.0
+ 20
+5.0
+ 30
+0.0
+ 11
+280.0
+ 21
+35.0
+ 31
+0.0
+  0
+TEXT
+  5
+50
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+233.0
+ 20
+50.5
+ 30
+0.0
+ 40
+4.2
+  1
+Плата питания 12 В → 3,3 В
+  7
+RU_B
+ 11
+233.0
+ 21
+50.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+51
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+233.0
+ 20
+42.5
+ 30
+0.0
+ 40
+2.4
+  1
+Схема электрическая принципиальная
+  7
+RU
+ 11
+233.0
+ 21
+42.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+52
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+233.0
+ 20
+38.4
+ 30
+0.0
+ 40
+2.0
+  1
+с модулем ESP32
+  7
+RU
+ 11
+233.0
+ 21
+38.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+53
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+336.0
+ 20
+56.5
+ 30
+0.0
+ 40
+1.8
+  1
+Лит.
+  7
+RU
+ 11
+336.0
+ 21
+56.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+54
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+371.0
+ 20
+56.5
+ 30
+0.0
+ 40
+1.8
+  1
+Масса
+  7
+RU
+ 11
+371.0
+ 21
+56.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+55
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+391.0
+ 20
+56.5
+ 30
+0.0
+ 40
+1.8
+  1
+Масштаб
+  7
+RU
+ 11
+391.0
+ 21
+56.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+56
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+402.0
+ 20
+47.0
+ 30
+0.0
+ 40
+2.6
+  1
+1 : 1
+  7
+RU_B
+ 72
+1
+ 11
+402.0
+ 21
+47.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+57
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+336.0
+ 20
+32.0
+ 30
+0.0
+ 40
+1.8
+  1
+Лист
+  7
+RU
+ 11
+336.0
+ 21
+32.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+58
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+352.0
+ 20
+19.0
+ 30
+0.0
+ 40
+3.6
+  1
+1
+  7
+RU_B
+ 72
+1
+ 11
+352.0
+ 21
+19.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+59
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+371.0
+ 20
+32.0
+ 30
+0.0
+ 40
+1.8
+  1
+Листов
+  7
+RU
+ 11
+371.0
+ 21
+32.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+5A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+380.0
+ 20
+19.0
+ 30
+0.0
+ 40
+3.6
+  1
+2
+  7
+RU_B
+ 72
+1
+ 11
+380.0
+ 21
+19.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+5B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+391.0
+ 20
+32.0
+ 30
+0.0
+ 40
+1.8
+  1
+Формат
+  7
+RU
+ 11
+391.0
+ 21
+32.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+5C
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+402.0
+ 20
+19.0
+ 30
+0.0
+ 40
+3.6
+  1
+A3
+  7
+RU_B
+ 72
+1
+ 11
+402.0
+ 21
+19.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+5D
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+232.0
+ 20
+30.4
+ 30
+0.0
+ 40
+1.8
+  1
+Разраб.
+  7
+RU
+ 11
+232.0
+ 21
+30.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+5E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+232.0
+ 20
+23.4
+ 30
+0.0
+ 40
+1.8
+  1
+Пров.
+  7
+RU
+ 11
+232.0
+ 21
+23.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+5F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+232.0
+ 20
+16.4
+ 30
+0.0
+ 40
+1.8
+  1
+Утв.
+  7
+RU
+ 11
+232.0
+ 21
+16.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+60
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+282.0
+ 20
+30.4
+ 30
+0.0
+ 40
+1.8
+  1
+Дата
+  7
+RU
+ 11
+282.0
+ 21
+30.4
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+61
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+14.0
+ 20
+232.0
+ 10
+26.0
+ 20
+232.0
+ 10
+26.0
+ 20
+252.0
+ 10
+14.0
+ 20
+252.0
+  0
+LINE
+  5
+62
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+26.0
+ 20
+248.0
+ 30
+0.0
+ 11
+32.0
+ 21
+248.0
+ 31
+0.0
+  0
+LINE
+  5
+63
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+26.0
+ 20
+240.0
+ 30
+0.0
+ 11
+32.0
+ 21
+240.0
+ 31
+0.0
+  0
+TEXT
+  5
+64
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+29.2
+ 20
+249.6
+ 30
+0.0
+ 40
+1.8
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+29.2
+ 21
+249.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+65
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+29.2
+ 20
+241.6
+ 30
+0.0
+ 40
+1.8
+  1
+2
+  7
+RU
+ 72
+1
+ 11
+29.2
+ 21
+241.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+66
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+13.0
+ 20
+256.5
+ 30
+0.0
+ 40
+2.6
+  1
+J1
+  7
+RU_B
+ 11
+13.0
+ 21
+256.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+67
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+13.0
+ 20
+228.5
+ 30
+0.0
+ 40
+1.9
+  1
+клеммник
+  7
+RU
+ 11
+13.0
+ 21
+228.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+68
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+13.0
+ 20
+225.2
+ 30
+0.0
+ 40
+1.9
+  1
+12 В вход
+  7
+RU
+ 11
+13.0
+ 21
+225.2
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+69
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+32.0
+ 20
+240.0
+ 30
+0.0
+ 11
+34.5
+ 21
+240.0
+ 31
+0.0
+  0
+LINE
+  5
+6A
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+34.5
+ 20
+240.0
+ 30
+0.0
+ 11
+34.5
+ 21
+237.0
+ 31
+0.0
+  0
+LINE
+  5
+6B
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+30.0
+ 20
+237.0
+ 30
+0.0
+ 11
+39.0
+ 21
+237.0
+ 31
+0.0
+  0
+LINE
+  5
+6C
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+31.5
+ 20
+235.4
+ 30
+0.0
+ 11
+37.5
+ 21
+235.4
+ 31
+0.0
+  0
+LINE
+  5
+6D
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+33.0
+ 20
+233.8
+ 30
+0.0
+ 11
+36.0
+ 21
+233.8
+ 31
+0.0
+  0
+LINE
+  5
+6E
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+32.0
+ 20
+248.0
+ 30
+0.0
+ 11
+40.0
+ 21
+248.0
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+6F
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+40.0
+ 20
+245.0
+ 10
+54.0
+ 20
+245.0
+ 10
+54.0
+ 20
+251.0
+ 10
+40.0
+ 20
+251.0
+  0
+LINE
+  5
+70
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+40.0
+ 20
+248.0
+ 30
+0.0
+ 11
+54.0
+ 21
+248.0
+ 31
+0.0
+  0
+LINE
+  5
+71
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+54.0
+ 20
+248.0
+ 30
+0.0
+ 11
+62.0
+ 21
+248.0
+ 31
+0.0
+  0
+TEXT
+  5
+72
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+47.0
+ 20
+257.0
+ 30
+0.0
+ 40
+2.2
+  1
+F1
+  7
+RU_B
+ 72
+1
+ 11
+47.0
+ 21
+257.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+73
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+47.0
+ 20
+241.0
+ 30
+0.0
+ 40
+1.9
+  1
+1 А
+  7
+RU
+ 72
+1
+ 11
+47.0
+ 21
+241.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LWPOLYLINE
+  5
+74
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+62.0
+ 20
+251.5
+ 10
+62.0
+ 20
+244.5
+ 10
+70.0
+ 20
+248.0
+  0
+LINE
+  5
+75
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+70.0
+ 20
+244.5
+ 30
+0.0
+ 11
+70.0
+ 21
+251.5
+ 31
+0.0
+  0
+LINE
+  5
+76
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+70.0
+ 20
+248.0
+ 30
+0.0
+ 11
+78.0
+ 21
+248.0
+ 31
+0.0
+  0
+TEXT
+  5
+77
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+66.0
+ 20
+257.0
+ 30
+0.0
+ 40
+2.2
+  1
+D1
+  7
+RU_B
+ 72
+1
+ 11
+66.0
+ 21
+257.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+78
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+66.0
+ 20
+241.0
+ 30
+0.0
+ 40
+1.9
+  1
+SS34
+  7
+RU
+ 72
+1
+ 11
+66.0
+ 21
+241.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+79
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+66.0
+ 20
+236.4
+ 30
+0.0
+ 40
+1.7
+  1
+защита от
+  7
+RU
+ 72
+1
+ 11
+66.0
+ 21
+236.4
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+7A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+66.0
+ 20
+233.6
+ 30
+0.0
+ 40
+1.7
+  1
+переполюсовки
+  7
+RU
+ 72
+1
+ 11
+66.0
+ 21
+233.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+CIRCLE
+  5
+7B
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+80
+100
+AcDbCircle
+ 10
+78.0
+ 20
+248.0
+ 30
+0.0
+ 40
+0.5
+  0
+TEXT
+  5
+7C
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbText
+ 10
+80.0
+ 20
+245.6
+ 30
+0.0
+ 40
+2.0
+  1
++12 В
+  7
+RU
+ 72
+1
+ 11
+80.0
+ 21
+245.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+7D
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+78.0
+ 20
+248.0
+ 30
+0.0
+ 11
+92.0
+ 21
+248.0
+ 31
+0.0
+  0
+CIRCLE
+  5
+7E
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+80
+100
+AcDbCircle
+ 10
+92.0
+ 20
+248.0
+ 30
+0.0
+ 40
+0.5
+  0
+LINE
+  5
+7F
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+92.0
+ 20
+248.0
+ 30
+0.0
+ 11
+92.0
+ 21
+242.6
+ 31
+0.0
+  0
+LINE
+  5
+80
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+87.5
+ 20
+242.60000000000002
+ 30
+0.0
+ 11
+96.5
+ 21
+242.60000000000002
+ 31
+0.0
+  0
+ARC
+  5
+81
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbCircle
+ 10
+92.0
+ 20
+237.4
+ 30
+0.0
+ 40
+4.5
+100
+AcDbArc
+ 50
+25.0
+ 51
+155.0
+  0
+TEXT
+  5
+82
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbText
+ 10
+97.7
+ 20
+241.60000000000002
+ 30
+0.0
+ 40
+2.0
+  1
++
+  7
+RU
+ 11
+97.7
+ 21
+241.60000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+83
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+92.0
+ 20
+240.0
+ 30
+0.0
+ 11
+92.0
+ 21
+222.0
+ 31
+0.0
+  0
+LINE
+  5
+84
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+92.0
+ 20
+222.0
+ 30
+0.0
+ 11
+92.0
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+85
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+87.5
+ 20
+219.0
+ 30
+0.0
+ 11
+96.5
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+86
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+89.0
+ 20
+217.4
+ 30
+0.0
+ 11
+95.0
+ 21
+217.4
+ 31
+0.0
+  0
+LINE
+  5
+87
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+90.5
+ 20
+215.8
+ 30
+0.0
+ 11
+93.5
+ 21
+215.8
+ 31
+0.0
+  0
+TEXT
+  5
+88
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+92.0
+ 20
+257.0
+ 30
+0.0
+ 40
+2.2
+  1
+C1
+  7
+RU_B
+ 72
+1
+ 11
+92.0
+ 21
+257.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+89
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+92.0
+ 20
+252.8
+ 30
+0.0
+ 40
+1.85
+  1
+220 мкФ / 25 В
+  7
+RU
+ 72
+1
+ 11
+92.0
+ 21
+252.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+8A
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+92.0
+ 20
+248.0
+ 30
+0.0
+ 11
+116.0
+ 21
+248.0
+ 31
+0.0
+  0
+CIRCLE
+  5
+8B
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+80
+100
+AcDbCircle
+ 10
+116.0
+ 20
+248.0
+ 30
+0.0
+ 40
+0.5
+  0
+LINE
+  5
+8C
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+116.0
+ 20
+248.0
+ 30
+0.0
+ 11
+116.0
+ 21
+242.6
+ 31
+0.0
+  0
+LINE
+  5
+8D
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+111.5
+ 20
+242.60000000000002
+ 30
+0.0
+ 11
+120.5
+ 21
+242.60000000000002
+ 31
+0.0
+  0
+LINE
+  5
+8E
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+111.5
+ 20
+240.0
+ 30
+0.0
+ 11
+120.5
+ 21
+240.0
+ 31
+0.0
+  0
+LINE
+  5
+8F
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+116.0
+ 20
+240.0
+ 30
+0.0
+ 11
+116.0
+ 21
+222.0
+ 31
+0.0
+  0
+LINE
+  5
+90
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+116.0
+ 20
+222.0
+ 30
+0.0
+ 11
+116.0
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+91
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+111.5
+ 20
+219.0
+ 30
+0.0
+ 11
+120.5
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+92
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+113.0
+ 20
+217.4
+ 30
+0.0
+ 11
+119.0
+ 21
+217.4
+ 31
+0.0
+  0
+LINE
+  5
+93
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+114.5
+ 20
+215.8
+ 30
+0.0
+ 11
+117.5
+ 21
+215.8
+ 31
+0.0
+  0
+TEXT
+  5
+94
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+116.0
+ 20
+257.0
+ 30
+0.0
+ 40
+2.2
+  1
+C2
+  7
+RU_B
+ 72
+1
+ 11
+116.0
+ 21
+257.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+95
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+116.0
+ 20
+252.8
+ 30
+0.0
+ 40
+1.85
+  1
+10 мкФ
+  7
+RU
+ 72
+1
+ 11
+116.0
+ 21
+252.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+96
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+116.0
+ 20
+248.0
+ 30
+0.0
+ 11
+140.0
+ 21
+248.0
+ 31
+0.0
+  0
+CIRCLE
+  5
+97
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+80
+100
+AcDbCircle
+ 10
+140.0
+ 20
+248.0
+ 30
+0.0
+ 40
+0.5
+  0
+LWPOLYLINE
+  5
+98
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+138.0
+ 20
+237.0
+ 10
+142.0
+ 20
+237.0
+ 10
+142.0
+ 20
+247.0
+ 10
+138.0
+ 20
+247.0
+  0
+LINE
+  5
+99
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+140.0
+ 20
+237.0
+ 30
+0.0
+ 11
+140.0
+ 21
+233.5
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+9A
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+136.0
+ 20
+233.5
+ 10
+144.0
+ 20
+233.5
+ 10
+140.0
+ 20
+226.5
+  0
+LINE
+  5
+9B
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+136.0
+ 20
+226.5
+ 30
+0.0
+ 11
+144.0
+ 21
+226.5
+ 31
+0.0
+  0
+LINE
+  5
+9C
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+135.2
+ 20
+230.4
+ 30
+0.0
+ 11
+132.2
+ 21
+232.8
+ 31
+0.0
+  0
+LINE
+  5
+9D
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+132.2
+ 20
+232.8
+ 30
+0.0
+ 11
+134.0
+ 21
+232.6
+ 31
+0.0
+  0
+LINE
+  5
+9E
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+132.2
+ 20
+232.8
+ 30
+0.0
+ 11
+132.39999999999998
+ 21
+231.0
+ 31
+0.0
+  0
+LINE
+  5
+9F
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+136.79999999999998
+ 20
+227.20000000000002
+ 30
+0.0
+ 11
+133.79999999999998
+ 21
+229.60000000000002
+ 31
+0.0
+  0
+LINE
+  5
+A0
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+133.79999999999998
+ 20
+229.60000000000002
+ 30
+0.0
+ 11
+135.6
+ 21
+229.4
+ 31
+0.0
+  0
+LINE
+  5
+A1
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+133.79999999999998
+ 20
+229.60000000000002
+ 30
+0.0
+ 11
+133.99999999999997
+ 21
+227.8
+ 31
+0.0
+  0
+LINE
+  5
+A2
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+140.0
+ 20
+226.5
+ 30
+0.0
+ 11
+140.0
+ 21
+222.0
+ 31
+0.0
+  0
+LINE
+  5
+A3
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+140.0
+ 20
+222.0
+ 30
+0.0
+ 11
+140.0
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+A4
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+135.5
+ 20
+219.0
+ 30
+0.0
+ 11
+144.5
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+A5
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+137.0
+ 20
+217.4
+ 30
+0.0
+ 11
+143.0
+ 21
+217.4
+ 31
+0.0
+  0
+LINE
+  5
+A6
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+138.5
+ 20
+215.8
+ 30
+0.0
+ 11
+141.5
+ 21
+215.8
+ 31
+0.0
+  0
+TEXT
+  5
+A7
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+140.0
+ 20
+257.0
+ 30
+0.0
+ 40
+2.2
+  1
+R1
+  7
+RU_B
+ 72
+1
+ 11
+140.0
+ 21
+257.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+A8
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+140.0
+ 20
+252.8
+ 30
+0.0
+ 40
+1.85
+  1
+1,2 кОм
+  7
+RU
+ 72
+1
+ 11
+140.0
+ 21
+252.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+A9
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+146.5
+ 20
+231.0
+ 30
+0.0
+ 40
+1.9
+  1
+LED1
+  7
+RU_B
+ 11
+146.5
+ 21
+231.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+AA
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+146.5
+ 20
+227.6
+ 30
+0.0
+ 40
+1.7
+  1
+зелёный
+  7
+RU
+ 11
+146.5
+ 21
+227.6
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+AB
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+140.0
+ 20
+248.0
+ 30
+0.0
+ 11
+156.0
+ 21
+248.0
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+AC
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+162.0
+ 20
+232.0
+ 10
+196.0
+ 20
+232.0
+ 10
+196.0
+ 20
+256.0
+ 10
+162.0
+ 20
+256.0
+  0
+LINE
+  5
+AD
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+100
+AcDbLine
+ 10
+156.0
+ 20
+248.0
+ 30
+0.0
+ 11
+162.0
+ 21
+248.0
+ 31
+0.0
+  0
+TEXT
+  5
+AE
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+159.0
+ 20
+249.6
+ 30
+0.0
+ 40
+1.8
+  1
+3
+  7
+RU
+ 72
+1
+ 11
+159.0
+ 21
+249.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+AF
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbLine
+ 10
+196.0
+ 20
+248.0
+ 30
+0.0
+ 11
+200.0
+ 21
+248.0
+ 31
+0.0
+  0
+TEXT
+  5
+B0
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+198.0
+ 20
+249.6
+ 30
+0.0
+ 40
+1.8
+  1
+2
+  7
+RU
+ 72
+1
+ 11
+198.0
+ 21
+249.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+B1
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+179.0
+ 20
+232.0
+ 30
+0.0
+ 11
+179.0
+ 21
+226.0
+ 31
+0.0
+  0
+TEXT
+  5
+B2
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+181.4
+ 20
+229.6
+ 30
+0.0
+ 40
+1.8
+  1
+1
+  7
+RU
+ 11
+181.4
+ 21
+229.6
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+B3
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+179.0
+ 20
+226.0
+ 30
+0.0
+ 11
+179.0
+ 21
+222.0
+ 31
+0.0
+  0
+LINE
+  5
+B4
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+179.0
+ 20
+222.0
+ 30
+0.0
+ 11
+179.0
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+B5
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+174.5
+ 20
+219.0
+ 30
+0.0
+ 11
+183.5
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+B6
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+176.0
+ 20
+217.4
+ 30
+0.0
+ 11
+182.0
+ 21
+217.4
+ 31
+0.0
+  0
+LINE
+  5
+B7
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+177.5
+ 20
+215.8
+ 30
+0.0
+ 11
+180.5
+ 21
+215.8
+ 31
+0.0
+  0
+TEXT
+  5
+B8
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+162.0
+ 20
+259.5
+ 30
+0.0
+ 40
+2.6
+  1
+U1
+  7
+RU_B
+ 11
+162.0
+ 21
+259.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+B9
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+179.0
+ 20
+250.0
+ 30
+0.0
+ 40
+2.3
+  1
+AMS1117-3.3
+  7
+RU_B
+ 72
+1
+ 11
+179.0
+ 21
+250.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+BA
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+179.0
+ 20
+245.4
+ 30
+0.0
+ 40
+1.85
+  1
+стабилизатор 3,3 В
+  7
+RU
+ 72
+1
+ 11
+179.0
+ 21
+245.4
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+BB
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+179.0
+ 20
+242.0
+ 30
+0.0
+ 40
+1.85
+  1
+(линейный, LDO)
+  7
+RU
+ 72
+1
+ 11
+179.0
+ 21
+242.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+BC
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbLine
+ 10
+200.0
+ 20
+248.0
+ 30
+0.0
+ 11
+285.0
+ 21
+248.0
+ 31
+0.0
+  0
+TEXT
+  5
+BD
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbText
+ 10
+204.0
+ 20
+245.6
+ 30
+0.0
+ 40
+2.0
+  1
++3,3 В
+  7
+RU
+ 72
+1
+ 11
+204.0
+ 21
+245.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+CIRCLE
+  5
+BE
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+80
+100
+AcDbCircle
+ 10
+212.0
+ 20
+248.0
+ 30
+0.0
+ 40
+0.5
+  0
+LINE
+  5
+BF
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbLine
+ 10
+212.0
+ 20
+248.0
+ 30
+0.0
+ 11
+212.0
+ 21
+242.6
+ 31
+0.0
+  0
+LINE
+  5
+C0
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+207.5
+ 20
+242.60000000000002
+ 30
+0.0
+ 11
+216.5
+ 21
+242.60000000000002
+ 31
+0.0
+  0
+LINE
+  5
+C1
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+207.5
+ 20
+240.0
+ 30
+0.0
+ 11
+216.5
+ 21
+240.0
+ 31
+0.0
+  0
+LINE
+  5
+C2
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+212.0
+ 20
+240.0
+ 30
+0.0
+ 11
+212.0
+ 21
+222.0
+ 31
+0.0
+  0
+LINE
+  5
+C3
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+212.0
+ 20
+222.0
+ 30
+0.0
+ 11
+212.0
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+C4
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+207.5
+ 20
+219.0
+ 30
+0.0
+ 11
+216.5
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+C5
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+209.0
+ 20
+217.4
+ 30
+0.0
+ 11
+215.0
+ 21
+217.4
+ 31
+0.0
+  0
+LINE
+  5
+C6
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+210.5
+ 20
+215.8
+ 30
+0.0
+ 11
+213.5
+ 21
+215.8
+ 31
+0.0
+  0
+TEXT
+  5
+C7
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+212.0
+ 20
+257.0
+ 30
+0.0
+ 40
+2.2
+  1
+C3
+  7
+RU_B
+ 72
+1
+ 11
+212.0
+ 21
+257.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+C8
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+212.0
+ 20
+252.8
+ 30
+0.0
+ 40
+1.85
+  1
+22 мкФ
+  7
+RU
+ 72
+1
+ 11
+212.0
+ 21
+252.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+CIRCLE
+  5
+C9
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+80
+100
+AcDbCircle
+ 10
+236.0
+ 20
+248.0
+ 30
+0.0
+ 40
+0.5
+  0
+LINE
+  5
+CA
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbLine
+ 10
+236.0
+ 20
+248.0
+ 30
+0.0
+ 11
+236.0
+ 21
+242.6
+ 31
+0.0
+  0
+LINE
+  5
+CB
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+231.5
+ 20
+242.60000000000002
+ 30
+0.0
+ 11
+240.5
+ 21
+242.60000000000002
+ 31
+0.0
+  0
+LINE
+  5
+CC
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+231.5
+ 20
+240.0
+ 30
+0.0
+ 11
+240.5
+ 21
+240.0
+ 31
+0.0
+  0
+LINE
+  5
+CD
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+236.0
+ 20
+240.0
+ 30
+0.0
+ 11
+236.0
+ 21
+222.0
+ 31
+0.0
+  0
+LINE
+  5
+CE
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+236.0
+ 20
+222.0
+ 30
+0.0
+ 11
+236.0
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+CF
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+231.5
+ 20
+219.0
+ 30
+0.0
+ 11
+240.5
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+D0
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+233.0
+ 20
+217.4
+ 30
+0.0
+ 11
+239.0
+ 21
+217.4
+ 31
+0.0
+  0
+LINE
+  5
+D1
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+234.5
+ 20
+215.8
+ 30
+0.0
+ 11
+237.5
+ 21
+215.8
+ 31
+0.0
+  0
+TEXT
+  5
+D2
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+236.0
+ 20
+257.0
+ 30
+0.0
+ 40
+2.2
+  1
+C4
+  7
+RU_B
+ 72
+1
+ 11
+236.0
+ 21
+257.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+D3
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+236.0
+ 20
+252.8
+ 30
+0.0
+ 40
+1.85
+  1
+100 нФ
+  7
+RU
+ 72
+1
+ 11
+236.0
+ 21
+252.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+CIRCLE
+  5
+D4
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+80
+100
+AcDbCircle
+ 10
+260.0
+ 20
+248.0
+ 30
+0.0
+ 40
+0.5
+  0
+LWPOLYLINE
+  5
+D5
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+258.0
+ 20
+237.0
+ 10
+262.0
+ 20
+237.0
+ 10
+262.0
+ 20
+247.0
+ 10
+258.0
+ 20
+247.0
+  0
+LINE
+  5
+D6
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbLine
+ 10
+260.0
+ 20
+237.0
+ 30
+0.0
+ 11
+260.0
+ 21
+233.5
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+D7
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+256.0
+ 20
+233.5
+ 10
+264.0
+ 20
+233.5
+ 10
+260.0
+ 20
+226.5
+  0
+LINE
+  5
+D8
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+256.0
+ 20
+226.5
+ 30
+0.0
+ 11
+264.0
+ 21
+226.5
+ 31
+0.0
+  0
+LINE
+  5
+D9
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+255.2
+ 20
+230.4
+ 30
+0.0
+ 11
+252.2
+ 21
+232.8
+ 31
+0.0
+  0
+LINE
+  5
+DA
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+252.2
+ 20
+232.8
+ 30
+0.0
+ 11
+254.0
+ 21
+232.6
+ 31
+0.0
+  0
+LINE
+  5
+DB
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+252.2
+ 20
+232.8
+ 30
+0.0
+ 11
+252.39999999999998
+ 21
+231.0
+ 31
+0.0
+  0
+LINE
+  5
+DC
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+256.8
+ 20
+227.20000000000002
+ 30
+0.0
+ 11
+253.8
+ 21
+229.60000000000002
+ 31
+0.0
+  0
+LINE
+  5
+DD
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+253.8
+ 20
+229.60000000000002
+ 30
+0.0
+ 11
+255.60000000000002
+ 21
+229.4
+ 31
+0.0
+  0
+LINE
+  5
+DE
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+13
+100
+AcDbLine
+ 10
+253.8
+ 20
+229.60000000000002
+ 30
+0.0
+ 11
+254.0
+ 21
+227.8
+ 31
+0.0
+  0
+LINE
+  5
+DF
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+260.0
+ 20
+226.5
+ 30
+0.0
+ 11
+260.0
+ 21
+222.0
+ 31
+0.0
+  0
+LINE
+  5
+E0
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+260.0
+ 20
+222.0
+ 30
+0.0
+ 11
+260.0
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+E1
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+255.5
+ 20
+219.0
+ 30
+0.0
+ 11
+264.5
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+E2
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+257.0
+ 20
+217.4
+ 30
+0.0
+ 11
+263.0
+ 21
+217.4
+ 31
+0.0
+  0
+LINE
+  5
+E3
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+258.5
+ 20
+215.8
+ 30
+0.0
+ 11
+261.5
+ 21
+215.8
+ 31
+0.0
+  0
+TEXT
+  5
+E4
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+260.0
+ 20
+257.0
+ 30
+0.0
+ 40
+2.2
+  1
+R2
+  7
+RU_B
+ 72
+1
+ 11
+260.0
+ 21
+257.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+E5
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+260.0
+ 20
+252.8
+ 30
+0.0
+ 40
+1.85
+  1
+330 Ом
+  7
+RU
+ 72
+1
+ 11
+260.0
+ 21
+252.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+E6
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+266.5
+ 20
+231.0
+ 30
+0.0
+ 40
+1.9
+  1
+LED2
+  7
+RU_B
+ 11
+266.5
+ 21
+231.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+E7
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+266.5
+ 20
+227.6
+ 30
+0.0
+ 40
+1.7
+  1
+зелёный
+  7
+RU
+ 11
+266.5
+ 21
+227.6
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+E8
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+285.0
+ 20
+136.0
+ 10
+368.0
+ 20
+136.0
+ 10
+368.0
+ 20
+258.0
+ 10
+285.0
+ 20
+258.0
+  0
+TEXT
+  5
+E9
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+285.0
+ 20
+262.0
+ 30
+0.0
+ 40
+3.0
+  1
+J2
+  7
+RU_B
+ 11
+285.0
+ 21
+262.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+EA
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.0
+ 20
+254.0
+ 30
+0.0
+ 40
+2.6
+  1
+РОЗЕТКА 2x19
+  7
+RU_B
+ 11
+289.0
+ 21
+254.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+EB
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.0
+ 20
+170.0
+ 30
+0.0
+ 40
+1.85
+  1
+сюда вставляется плата
+  7
+RU
+ 11
+289.0
+ 21
+170.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+EC
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.0
+ 20
+166.2
+ 30
+0.0
+ 40
+1.85
+  1
+ESP32 DevKit V1
+  7
+RU_B
+ 11
+289.0
+ 21
+166.2
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+ED
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.0
+ 20
+162.4
+ 30
+0.0
+ 40
+1.7
+  1
+(38 выводов, шаг 2,54 мм)
+  7
+RU
+ 11
+289.0
+ 21
+162.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+EE
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.0
+ 20
+192.5
+ 30
+0.0
+ 40
+1.7
+  1
+остальные выводы
+  7
+RU
+ 11
+289.0
+ 21
+192.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+EF
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.0
+ 20
+189.3
+ 30
+0.0
+ 40
+1.7
+  1
+не подключаются
+  7
+RU
+ 11
+289.0
+ 21
+189.3
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+F0
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbLine
+ 10
+278.0
+ 20
+248.0
+ 30
+0.0
+ 11
+285.0
+ 21
+248.0
+ 31
+0.0
+  0
+CIRCLE
+  5
+F1
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+370
+80
+100
+AcDbCircle
+ 10
+285.0
+ 20
+248.0
+ 30
+0.0
+ 40
+0.5
+  0
+TEXT
+  5
+F2
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.0
+ 20
+249.4
+ 30
+0.0
+ 40
+1.9
+  1
+3V3
+  7
+RU
+ 11
+289.0
+ 21
+249.4
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+F3
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+285.0
+ 20
+236.0
+ 30
+0.0
+ 11
+278.0
+ 21
+236.0
+ 31
+0.0
+  0
+LINE
+  5
+F4
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+278.0
+ 20
+236.0
+ 30
+0.0
+ 11
+278.0
+ 21
+222.0
+ 31
+0.0
+  0
+LINE
+  5
+F5
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+278.0
+ 20
+222.0
+ 30
+0.0
+ 11
+278.0
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+F6
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+273.5
+ 20
+219.0
+ 30
+0.0
+ 11
+282.5
+ 21
+219.0
+ 31
+0.0
+  0
+LINE
+  5
+F7
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+275.0
+ 20
+217.4
+ 30
+0.0
+ 11
+281.0
+ 21
+217.4
+ 31
+0.0
+  0
+LINE
+  5
+F8
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+276.5
+ 20
+215.8
+ 30
+0.0
+ 11
+279.5
+ 21
+215.8
+ 31
+0.0
+  0
+TEXT
+  5
+F9
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.0
+ 20
+237.4
+ 30
+0.0
+ 40
+1.9
+  1
+GND
+  7
+RU
+ 11
+289.0
+ 21
+237.4
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+FA
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+240.0
+ 30
+0.0
+ 11
+386.0
+ 21
+240.0
+ 31
+0.0
+  0
+TEXT
+  5
+FB
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+241.1
+ 30
+0.0
+ 40
+1.9
+  1
+36
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+241.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+FC
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+234.0
+ 30
+0.0
+ 11
+386.0
+ 21
+234.0
+ 31
+0.0
+  0
+TEXT
+  5
+FD
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+235.1
+ 30
+0.0
+ 40
+1.9
+  1
+39
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+235.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+FE
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+228.0
+ 30
+0.0
+ 11
+386.0
+ 21
+228.0
+ 31
+0.0
+  0
+TEXT
+  5
+FF
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+229.1
+ 30
+0.0
+ 40
+1.9
+  1
+34
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+229.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+100
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+222.0
+ 30
+0.0
+ 11
+386.0
+ 21
+222.0
+ 31
+0.0
+  0
+TEXT
+  5
+101
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+223.1
+ 30
+0.0
+ 40
+1.9
+  1
+35
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+223.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+102
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+216.0
+ 30
+0.0
+ 11
+386.0
+ 21
+216.0
+ 31
+0.0
+  0
+TEXT
+  5
+103
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+217.1
+ 30
+0.0
+ 40
+1.9
+  1
+32
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+217.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+104
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+210.0
+ 30
+0.0
+ 11
+386.0
+ 21
+210.0
+ 31
+0.0
+  0
+TEXT
+  5
+105
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+211.1
+ 30
+0.0
+ 40
+1.9
+  1
+33
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+211.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+106
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+186.0
+ 30
+0.0
+ 11
+386.0
+ 21
+186.0
+ 31
+0.0
+  0
+TEXT
+  5
+107
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+187.1
+ 30
+0.0
+ 40
+1.9
+  1
+25
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+187.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+108
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+180.0
+ 30
+0.0
+ 11
+386.0
+ 21
+180.0
+ 31
+0.0
+  0
+TEXT
+  5
+109
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+181.1
+ 30
+0.0
+ 40
+1.9
+  1
+26
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+181.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+10A
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+174.0
+ 30
+0.0
+ 11
+386.0
+ 21
+174.0
+ 31
+0.0
+  0
+TEXT
+  5
+10B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+175.1
+ 30
+0.0
+ 40
+1.9
+  1
+27
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+175.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+10C
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+168.0
+ 30
+0.0
+ 11
+386.0
+ 21
+168.0
+ 31
+0.0
+  0
+TEXT
+  5
+10D
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+169.1
+ 30
+0.0
+ 40
+1.9
+  1
+14
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+169.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+10E
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+162.0
+ 30
+0.0
+ 11
+386.0
+ 21
+162.0
+ 31
+0.0
+  0
+TEXT
+  5
+10F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+163.1
+ 30
+0.0
+ 40
+1.9
+  1
+12
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+163.1
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+110
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+100
+AcDbLine
+ 10
+368.0
+ 20
+156.0
+ 30
+0.0
+ 11
+386.0
+ 21
+156.0
+ 31
+0.0
+  0
+TEXT
+  5
+111
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+382.0
+ 20
+157.1
+ 30
+0.0
+ 40
+1.9
+  1
+13
+  7
+RU
+ 72
+2
+ 11
+382.0
+ 21
+157.1
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+112
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+386.0
+ 20
+206.0
+ 10
+390.0
+ 20
+206.0
+ 10
+390.0
+ 20
+256.0
+ 10
+386.0
+ 20
+256.0
+  0
+TEXT
+  5
+113
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+383.5
+ 20
+259.0
+ 30
+0.0
+ 40
+2.6
+  1
+J3
+  7
+RU_B
+ 72
+2
+ 11
+383.5
+ 21
+259.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+114
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+252.8
+ 30
+0.0
+ 40
+1.5
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+252.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+115
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+246.8
+ 30
+0.0
+ 40
+1.5
+  1
+2
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+246.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+116
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+240.8
+ 30
+0.0
+ 40
+1.5
+  1
+3
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+240.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+117
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+234.8
+ 30
+0.0
+ 40
+1.5
+  1
+4
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+234.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+118
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+228.8
+ 30
+0.0
+ 40
+1.5
+  1
+5
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+228.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+119
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+222.8
+ 30
+0.0
+ 40
+1.5
+  1
+6
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+222.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+11A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+216.8
+ 30
+0.0
+ 40
+1.5
+  1
+7
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+216.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+11B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+210.8
+ 30
+0.0
+ 40
+1.5
+  1
+8
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+210.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+11C
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbLine
+ 10
+390.0
+ 20
+252.0
+ 30
+0.0
+ 11
+394.0
+ 21
+252.0
+ 31
+0.0
+  0
+LINE
+  5
+11D
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+40
+100
+AcDbLine
+ 10
+394.0
+ 20
+252.0
+ 30
+0.0
+ 11
+394.0
+ 21
+255.4
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+11E
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+40
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+392.4
+ 20
+254.2
+ 10
+394.0
+ 20
+256.2
+ 10
+395.6
+ 20
+254.2
+  0
+TEXT
+  5
+11F
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbText
+ 10
+394.0
+ 20
+257.6
+ 30
+0.0
+ 40
+1.9
+  1
+3,3 В
+  7
+RU
+ 72
+1
+ 11
+394.0
+ 21
+257.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+120
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+390.0
+ 20
+246.0
+ 30
+0.0
+ 11
+396.0
+ 21
+246.0
+ 31
+0.0
+  0
+LINE
+  5
+121
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+396.0
+ 20
+246.0
+ 30
+0.0
+ 11
+399.0
+ 21
+246.0
+ 31
+0.0
+  0
+LINE
+  5
+122
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+399.0
+ 20
+241.5
+ 30
+0.0
+ 11
+399.0
+ 21
+250.5
+ 31
+0.0
+  0
+LINE
+  5
+123
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+400.6
+ 20
+243.0
+ 30
+0.0
+ 11
+400.6
+ 21
+249.0
+ 31
+0.0
+  0
+LINE
+  5
+124
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+402.2
+ 20
+244.5
+ 30
+0.0
+ 11
+402.2
+ 21
+247.5
+ 31
+0.0
+  0
+TEXT
+  5
+125
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+383.5
+ 20
+253.0
+ 30
+0.0
+ 40
+1.7
+  1
+3V3
+  7
+RU
+ 72
+2
+ 11
+383.5
+ 21
+253.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+126
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+383.5
+ 20
+247.0
+ 30
+0.0
+ 40
+1.7
+  1
+GND
+  7
+RU
+ 72
+2
+ 11
+383.5
+ 21
+247.0
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+127
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+386.0
+ 20
+140.0
+ 10
+390.0
+ 20
+140.0
+ 10
+390.0
+ 20
+190.0
+ 10
+386.0
+ 20
+190.0
+  0
+TEXT
+  5
+128
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+383.5
+ 20
+193.0
+ 30
+0.0
+ 40
+2.6
+  1
+J4
+  7
+RU_B
+ 72
+2
+ 11
+383.5
+ 21
+193.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+129
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+186.8
+ 30
+0.0
+ 40
+1.5
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+186.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+12A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+180.8
+ 30
+0.0
+ 40
+1.5
+  1
+2
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+180.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+12B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+174.8
+ 30
+0.0
+ 40
+1.5
+  1
+3
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+174.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+12C
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+168.8
+ 30
+0.0
+ 40
+1.5
+  1
+4
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+168.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+12D
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+162.8
+ 30
+0.0
+ 40
+1.5
+  1
+5
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+162.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+12E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+156.8
+ 30
+0.0
+ 40
+1.5
+  1
+6
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+156.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+12F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+150.8
+ 30
+0.0
+ 40
+1.5
+  1
+7
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+150.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+130
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+388.0
+ 20
+144.8
+ 30
+0.0
+ 40
+1.5
+  1
+8
+  7
+RU
+ 72
+1
+ 11
+388.0
+ 21
+144.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+131
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+100
+AcDbLine
+ 10
+390.0
+ 20
+150.0
+ 30
+0.0
+ 11
+396.0
+ 21
+150.0
+ 31
+0.0
+  0
+LINE
+  5
+132
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+396.0
+ 20
+150.0
+ 30
+0.0
+ 11
+399.0
+ 21
+150.0
+ 31
+0.0
+  0
+LINE
+  5
+133
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+399.0
+ 20
+145.5
+ 30
+0.0
+ 11
+399.0
+ 21
+154.5
+ 31
+0.0
+  0
+LINE
+  5
+134
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+400.6
+ 20
+147.0
+ 30
+0.0
+ 11
+400.6
+ 21
+153.0
+ 31
+0.0
+  0
+LINE
+  5
+135
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+402.2
+ 20
+148.5
+ 30
+0.0
+ 11
+402.2
+ 21
+151.5
+ 31
+0.0
+  0
+LINE
+  5
+136
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbLine
+ 10
+390.0
+ 20
+144.0
+ 30
+0.0
+ 11
+394.0
+ 21
+144.0
+ 31
+0.0
+  0
+LINE
+  5
+137
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+40
+100
+AcDbLine
+ 10
+394.0
+ 20
+144.0
+ 30
+0.0
+ 11
+394.0
+ 21
+140.6
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+138
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+40
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+392.4
+ 20
+141.8
+ 10
+394.0
+ 20
+139.8
+ 10
+395.6
+ 20
+141.8
+  0
+TEXT
+  5
+139
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+100
+AcDbText
+ 10
+394.0
+ 20
+138.4
+ 30
+0.0
+ 40
+1.9
+  1
+3,3 В
+  7
+RU
+ 72
+1
+ 11
+394.0
+ 21
+138.4
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+13A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+383.5
+ 20
+151.0
+ 30
+0.0
+ 40
+1.7
+  1
+GND
+  7
+RU
+ 72
+2
+ 11
+383.5
+ 21
+151.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+13B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+383.5
+ 20
+145.0
+ 30
+0.0
+ 40
+1.7
+  1
+3V3
+  7
+RU
+ 72
+2
+ 11
+383.5
+ 21
+145.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+13C
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+14.0
+ 20
+276.0
+ 30
+0.0
+ 40
+2.6
+  1
+1.  ВХОД И ЗАЩИТА
+  7
+RU_B
+ 11
+14.0
+ 21
+276.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+13D
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+13
+100
+AcDbLine
+ 10
+14.0
+ 20
+273.6
+ 30
+0.0
+ 11
+64.15
+ 21
+273.6
+ 31
+0.0
+  0
+TEXT
+  5
+13E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+84.0
+ 20
+276.0
+ 30
+0.0
+ 40
+2.6
+  1
+2.  ФИЛЬТР 12 В
+  7
+RU_B
+ 11
+84.0
+ 21
+276.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+13F
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+13
+100
+AcDbLine
+ 10
+84.0
+ 20
+273.6
+ 30
+0.0
+ 11
+128.25
+ 21
+273.6
+ 31
+0.0
+  0
+TEXT
+  5
+140
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+156.0
+ 20
+276.0
+ 30
+0.0
+ 40
+2.6
+  1
+3.  СТАБИЛИЗАТОР
+  7
+RU_B
+ 11
+156.0
+ 21
+276.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+141
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+13
+100
+AcDbLine
+ 10
+156.0
+ 20
+273.6
+ 30
+0.0
+ 11
+203.2
+ 21
+273.6
+ 31
+0.0
+  0
+TEXT
+  5
+142
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+206.0
+ 20
+276.0
+ 30
+0.0
+ 40
+2.6
+  1
+4.  КОНТРОЛЬ 3,3 В
+  7
+RU_B
+ 11
+206.0
+ 21
+276.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+143
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+13
+100
+AcDbLine
+ 10
+206.0
+ 20
+273.6
+ 30
+0.0
+ 11
+259.1
+ 21
+273.6
+ 31
+0.0
+  0
+TEXT
+  5
+144
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+285.0
+ 20
+276.0
+ 30
+0.0
+ 40
+2.6
+  1
+5.  ESP32
+  7
+RU_B
+ 11
+285.0
+ 21
+276.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+145
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+13
+100
+AcDbLine
+ 10
+285.0
+ 20
+273.6
+ 30
+0.0
+ 11
+311.55
+ 21
+273.6
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+146
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+12.0
+ 20
+12.0
+ 10
+218.0
+ 20
+12.0
+ 10
+218.0
+ 20
+82.0
+ 10
+12.0
+ 20
+82.0
+  0
+TEXT
+  5
+147
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+77.0
+ 30
+0.0
+ 40
+3.0
+  1
+ПРИМЕЧАНИЯ
+  7
+RU_B
+ 11
+15.0
+ 21
+77.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+148
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbLine
+ 10
+15.0
+ 20
+75.4
+ 30
+0.0
+ 11
+44.0
+ 21
+75.4
+ 31
+0.0
+  0
+TEXT
+  5
+149
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+70.5
+ 30
+0.0
+ 40
+2.05
+  1
+1. Вход: 12 В постоянного тока (допустимо 9...15 В), ток до 1 А. Плюс — на контакт 1 клеммника J1. При переполюсовке диод D1 закроется
+  7
+RU
+ 11
+15.0
+ 21
+70.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+14A
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+67.2
+ 30
+0.0
+ 40
+2.05
+  1
+и плата останется целой.
+  7
+RU
+ 11
+15.0
+ 21
+67.2
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+14B
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+63.00000000000001
+ 30
+0.0
+ 40
+2.05
+  1
+2. Выход: 3,3 В (не 3,0 В). ESP32 работает при 3,0...3,6 В, номинал — 3,3 В. Длительный ток нагрузки — до 300 мА, см. тепловой расчёт
+  7
+RU
+ 11
+15.0
+ 21
+63.00000000000001
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+14C
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+59.70000000000001
+ 30
+0.0
+ 40
+2.05
+  1
+ниже.
+  7
+RU
+ 11
+15.0
+ 21
+59.70000000000001
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+14D
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+55.500000000000014
+ 30
+0.0
+ 40
+2.05
+  1
+3. U1 — линейный стабилизатор, лишнее напряжение он превращает в тепло: P = (12 - 3,3) x I. Под корпусом SOT-223 нужен медный полигон
+  7
+RU
+ 11
+15.0
+ 21
+55.500000000000014
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+14E
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+52.20000000000002
+ 30
+0.0
+ 40
+2.05
+  1
+не менее 2 см2.
+  7
+RU
+ 11
+15.0
+ 21
+52.20000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+14F
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+48.00000000000002
+ 30
+0.0
+ 40
+2.05
+  1
+4. Никогда не подавайте 12 В на выводы 3V3, GPIO, EN модуля ESP32 — он выйдет из строя.
+  7
+RU
+ 11
+15.0
+ 21
+48.00000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+150
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+43.800000000000026
+ 30
+0.0
+ 40
+2.05
+  1
+5. Не подключайте USB к плате ESP32 одновременно с питанием 12 В: источники будут мешать друг другу. Питание — либо от USB, либо от 12
+  7
+RU
+ 11
+15.0
+ 21
+43.800000000000026
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+151
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+40.50000000000003
+ 30
+0.0
+ 40
+2.05
+  1
+В.
+  7
+RU
+ 11
+15.0
+ 21
+40.50000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+152
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+36.30000000000003
+ 30
+0.0
+ 40
+2.05
+  1
+6. Импульсы Wi-Fi (до 500 мА) вызывают просадку 3,3 В. Для стабильной работы с Wi-Fi замените U1 на импульсный модуль (MP1584, LM2596)
+  7
+RU
+ 11
+15.0
+ 21
+36.30000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+153
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+33.000000000000036
+ 30
+0.0
+ 40
+2.05
+  1
+— схема подключения та же.
+  7
+RU
+ 11
+15.0
+ 21
+33.000000000000036
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+154
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+28.800000000000036
+ 30
+0.0
+ 40
+2.05
+  1
+7. Если будете часто прошивать плату по USB, впаяйте дополнительный диод Шоттки (SS14) между выходом и входом U1, катодом к входу — он
+  7
+RU
+ 11
+15.0
+ 21
+28.800000000000036
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+155
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+25.500000000000036
+ 30
+0.0
+ 40
+2.05
+  1
+защитит стабилизатор от обратного напряжения.
+  7
+RU
+ 11
+15.0
+ 21
+25.500000000000036
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+156
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+21.300000000000036
+ 30
+0.0
+ 40
+2.05
+  1
+8. Цвет линии на схеме: красный — 12 В, синий — 3,3 В, зелёный — земля (GND), чёрный — сигналы.
+  7
+RU
+ 11
+15.0
+ 21
+21.300000000000036
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+157
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+12.0
+ 20
+86.0
+ 10
+218.0
+ 20
+86.0
+ 10
+218.0
+ 20
+140.0
+ 10
+12.0
+ 20
+140.0
+  0
+TEXT
+  5
+158
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+134.8
+ 30
+0.0
+ 40
+2.6
+  1
+ТЕПЛОВОЙ РАСЧЁТ U1  (P = (12 В - 3,3 В) x I = 8,7 В x I)
+  7
+RU_B
+ 11
+15.0
+ 21
+134.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+159
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+128.0
+ 30
+0.0
+ 40
+2.2
+  1
+Ток нагрузки
+  7
+RU_B
+ 11
+15.0
+ 21
+128.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+15A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+74.0
+ 20
+128.0
+ 30
+0.0
+ 40
+2.2
+  1
+Мощность на U1
+  7
+RU_B
+ 11
+74.0
+ 21
+128.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+15B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+120.0
+ 20
+128.0
+ 30
+0.0
+ 40
+2.2
+  1
+Что будет на практике
+  7
+RU_B
+ 11
+120.0
+ 21
+128.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+15C
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbLine
+ 10
+14.0
+ 20
+125.6
+ 30
+0.0
+ 11
+216.0
+ 21
+125.6
+ 31
+0.0
+  0
+TEXT
+  5
+15D
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+122.0
+ 30
+0.0
+ 40
+2.1
+  1
+100 мА
+  7
+RU
+ 11
+15.0
+ 21
+122.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+15E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+74.0
+ 20
+122.0
+ 30
+0.0
+ 40
+2.1
+  1
+0,87 Вт
+  7
+RU
+ 11
+74.0
+ 21
+122.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+15F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+120.0
+ 20
+122.0
+ 30
+0.0
+ 40
+2.1
+  1
+нормально, корпус тёплый
+  7
+RU
+ 11
+120.0
+ 21
+122.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+160
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+14.0
+ 20
+119.8
+ 30
+0.0
+ 11
+216.0
+ 21
+119.8
+ 31
+0.0
+  0
+TEXT
+  5
+161
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+114.8
+ 30
+0.0
+ 40
+2.1
+  1
+200 мА
+  7
+RU
+ 11
+15.0
+ 21
+114.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+162
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+74.0
+ 20
+114.8
+ 30
+0.0
+ 40
+2.1
+  1
+1,74 Вт
+  7
+RU
+ 11
+74.0
+ 21
+114.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+163
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+120.0
+ 20
+114.8
+ 30
+0.0
+ 40
+2.1
+  1
+горячо; обязателен полигон 2 см2
+  7
+RU
+ 11
+120.0
+ 21
+114.8
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+164
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+14.0
+ 20
+112.6
+ 30
+0.0
+ 11
+216.0
+ 21
+112.6
+ 31
+0.0
+  0
+TEXT
+  5
+165
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+107.6
+ 30
+0.0
+ 40
+2.1
+  1
+300 мА
+  7
+RU
+ 11
+15.0
+ 21
+107.6
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+166
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+74.0
+ 20
+107.6
+ 30
+0.0
+ 40
+2.1
+  1
+2,61 Вт
+  7
+RU
+ 11
+74.0
+ 21
+107.6
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+167
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+120.0
+ 20
+107.6
+ 30
+0.0
+ 40
+2.1
+  1
+предел для SOT-223, нужен радиатор
+  7
+RU
+ 11
+120.0
+ 21
+107.6
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+168
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+14.0
+ 20
+105.39999999999999
+ 30
+0.0
+ 11
+216.0
+ 21
+105.39999999999999
+ 31
+0.0
+  0
+TEXT
+  5
+169
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+100.39999999999999
+ 30
+0.0
+ 40
+2.1
+  1
+500 мА (Wi-Fi)
+  7
+RU
+ 11
+15.0
+ 21
+100.39999999999999
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+16A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+74.0
+ 20
+100.39999999999999
+ 30
+0.0
+ 40
+2.1
+  1
+4,35 Вт
+  7
+RU
+ 11
+74.0
+ 21
+100.39999999999999
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+16B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+120.0
+ 20
+100.39999999999999
+ 30
+0.0
+ 40
+2.1
+  1
+перегрев, просадка 3,3 В, перезагрузка
+  7
+RU
+ 11
+120.0
+ 21
+100.39999999999999
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+16C
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+14.0
+ 20
+98.19999999999999
+ 30
+0.0
+ 11
+216.0
+ 21
+98.19999999999999
+ 31
+0.0
+  0
+TEXT
+  5
+16D
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+15.0
+ 20
+89.5
+ 30
+0.0
+ 40
+2.0
+  1
+Вывод: для одного ESP32 без Wi-Fi и нескольких датчиков 200...250 мА — рабочий режим.
+  7
+RU
+ 11
+15.0
+ 21
+89.5
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+16E
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+12.0
+ 20
+146.0
+ 10
+265.0
+ 20
+146.0
+ 10
+265.0
+ 20
+202.0
+ 10
+12.0
+ 20
+202.0
+  0
+TEXT
+  5
+16F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+196.8
+ 30
+0.0
+ 40
+2.8
+  1
+КАК ЭТО РАБОТАЕТ — ПО ШАГАМ
+  7
+RU_B
+ 11
+15.0
+ 21
+196.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+170
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+191.0
+ 30
+0.0
+ 40
+2.1
+  1
+1.  12 В приходит на клеммник J1 (плюс — контакт 1, минус — контакт 2).
+  7
+RU
+ 11
+15.0
+ 21
+191.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+171
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+186.4
+ 30
+0.0
+ 40
+2.1
+  1
+2.  F1 отключает плату, если ток превысит 1 А (короткое замыкание, ошибка монтажа).
+  7
+RU
+ 11
+15.0
+ 21
+186.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+172
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+181.8
+ 30
+0.0
+ 40
+2.1
+  1
+3.  D1 пропускает ток только в одну сторону: перепутали плюс и минус — плата цела.
+  7
+RU
+ 11
+15.0
+ 21
+181.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+173
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+177.20000000000002
+ 30
+0.0
+ 40
+2.1
+  1
+4.  C1 (220 мкФ) и C2 (10 мкФ) сглаживают пульсации и помехи входного напряжения.
+  7
+RU
+ 11
+15.0
+ 21
+177.20000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+174
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+172.60000000000002
+ 30
+0.0
+ 40
+2.1
+  1
+5.  U1 (AMS1117-3.3) понижает 12 В до 3,3 В; разница напряжений уходит в тепло.
+  7
+RU
+ 11
+15.0
+ 21
+172.60000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+175
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+168.00000000000003
+ 30
+0.0
+ 40
+2.1
+  1
+6.  C3 и C4 фильтруют выход и не дают U1 самовозбуждаться.
+  7
+RU
+ 11
+15.0
+ 21
+168.00000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+176
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+163.40000000000003
+ 30
+0.0
+ 40
+2.1
+  1
+7.  R1+LED1 сигналят о наличии 12 В, R2+LED2 — о наличии 3,3 В.
+  7
+RU
+ 11
+15.0
+ 21
+163.40000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+177
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+15.0
+ 20
+158.80000000000004
+ 30
+0.0
+ 40
+2.1
+  1
+8.  Плата ESP32 вставляется в розетку J2 и получает 3,3 В; её выводы выведены на J3 и J4.
+  7
+RU
+ 11
+15.0
+ 21
+158.80000000000004
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+178
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+275.0
+ 20
+90.0
+ 10
+408.0
+ 20
+90.0
+ 10
+408.0
+ 20
+132.0
+ 10
+275.0
+ 20
+132.0
+  0
+TEXT
+  5
+179
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+278.0
+ 20
+127.6
+ 30
+0.0
+ 40
+2.4
+  1
+УСЛОВНЫЕ ОБОЗНАЧЕНИЯ
+  7
+RU_B
+ 11
+278.0
+ 21
+127.6
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+17A
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+277.0
+ 20
+119.4
+ 10
+285.0
+ 20
+119.4
+ 10
+285.0
+ 20
+122.6
+ 10
+277.0
+ 20
+122.6
+  0
+TEXT
+  5
+17B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+288.0
+ 20
+120.2
+ 30
+0.0
+ 40
+1.9
+  1
+резистор
+  7
+RU
+ 11
+288.0
+ 21
+120.2
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+17C
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+277.0
+ 20
+116.3
+ 30
+0.0
+ 11
+285.0
+ 21
+116.3
+ 31
+0.0
+  0
+LINE
+  5
+17D
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+277.0
+ 20
+113.7
+ 30
+0.0
+ 11
+285.0
+ 21
+113.7
+ 31
+0.0
+  0
+TEXT
+  5
+17E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+288.0
+ 20
+114.2
+ 30
+0.0
+ 40
+1.9
+  1
+конденсатор
+  7
+RU
+ 11
+288.0
+ 21
+114.2
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+17F
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+277.75
+ 20
+110.89999999999999
+ 10
+277.75
+ 20
+106.3
+ 10
+284.25
+ 20
+108.6
+  0
+LINE
+  5
+180
+330
+17
+100
+AcDbEntity
+  8
+СИМВОЛЫ
+100
+AcDbLine
+ 10
+284.25
+ 20
+106.3
+ 30
+0.0
+ 11
+284.25
+ 21
+110.89999999999999
+ 31
+0.0
+  0
+TEXT
+  5
+181
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+288.0
+ 20
+107.8
+ 30
+0.0
+ 40
+1.9
+  1
+диод
+  7
+RU
+ 11
+288.0
+ 21
+107.8
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+182
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+281.0
+ 20
+106.4
+ 30
+0.0
+ 11
+281.0
+ 21
+103.4
+ 31
+0.0
+  0
+LINE
+  5
+183
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+276.5
+ 20
+103.4
+ 30
+0.0
+ 11
+285.5
+ 21
+103.4
+ 31
+0.0
+  0
+LINE
+  5
+184
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+278.0
+ 20
+101.80000000000001
+ 30
+0.0
+ 11
+284.0
+ 21
+101.80000000000001
+ 31
+0.0
+  0
+LINE
+  5
+185
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+279.5
+ 20
+100.2
+ 30
+0.0
+ 11
+282.5
+ 21
+100.2
+ 31
+0.0
+  0
+TEXT
+  5
+186
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+289.5
+ 20
+102.4
+ 30
+0.0
+ 40
+1.9
+  1
+земля (GND)
+  7
+RU
+ 11
+289.5
+ 21
+102.4
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+187
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+370
+40
+100
+AcDbLine
+ 10
+337.0
+ 20
+121.0
+ 30
+0.0
+ 11
+348.0
+ 21
+121.0
+ 31
+0.0
+  0
+TEXT
+  5
+188
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+350.0
+ 20
+120.2
+ 30
+0.0
+ 40
+1.9
+  1
+12 В
+  7
+RU
+ 11
+350.0
+ 21
+120.2
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+189
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+40
+100
+AcDbLine
+ 10
+337.0
+ 20
+115.0
+ 30
+0.0
+ 11
+348.0
+ 21
+115.0
+ 31
+0.0
+  0
+TEXT
+  5
+18A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+350.0
+ 20
+114.2
+ 30
+0.0
+ 40
+1.9
+  1
+3,3 В
+  7
+RU
+ 11
+350.0
+ 21
+114.2
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+18B
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+40
+100
+AcDbLine
+ 10
+337.0
+ 20
+109.0
+ 30
+0.0
+ 11
+348.0
+ 21
+109.0
+ 31
+0.0
+  0
+TEXT
+  5
+18C
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+350.0
+ 20
+108.2
+ 30
+0.0
+ 40
+1.9
+  1
+земля
+  7
+RU
+ 11
+350.0
+ 21
+108.2
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+18D
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+40
+100
+AcDbLine
+ 10
+337.0
+ 20
+103.0
+ 30
+0.0
+ 11
+348.0
+ 21
+103.0
+ 31
+0.0
+  0
+TEXT
+  5
+18E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+350.0
+ 20
+102.2
+ 30
+0.0
+ 40
+1.9
+  1
+сигналы
+  7
+RU
+ 11
+350.0
+ 21
+102.2
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+18F
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+370
+35
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+270.0
+ 20
+66.0
+ 10
+408.0
+ 20
+66.0
+ 10
+408.0
+ 20
+88.0
+ 10
+270.0
+ 20
+88.0
+  0
+TEXT
+  5
+190
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+273.0
+ 20
+83.4
+ 30
+0.0
+ 40
+2.8
+  1
+ВНИМАНИЕ!
+  7
+RU_B
+ 11
+273.0
+ 21
+83.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+191
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+273.0
+ 20
+78.4
+ 30
+0.0
+ 40
+2.2
+  1
+Не подавайте 12 В на выводы 3V3 и GPIO модуля ESP32 — он сгорит. Перед включением
+  7
+RU
+ 11
+273.0
+ 21
+78.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+192
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+273.0
+ 20
+74.4
+ 30
+0.0
+ 40
+2.2
+  1
+проверьте полярность на клеммнике J1.
+  7
+RU
+ 11
+273.0
+ 21
+74.4
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+193
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbLine
+ 10
+440.0
+ 20
+0.0
+ 30
+0.0
+ 11
+860.0
+ 21
+0.0
+ 31
+0.0
+  0
+LINE
+  5
+194
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbLine
+ 10
+860.0
+ 20
+0.0
+ 30
+0.0
+ 11
+860.0
+ 21
+297.0
+ 31
+0.0
+  0
+LINE
+  5
+195
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbLine
+ 10
+860.0
+ 20
+297.0
+ 30
+0.0
+ 11
+440.0
+ 21
+297.0
+ 31
+0.0
+  0
+LINE
+  5
+196
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbLine
+ 10
+440.0
+ 20
+297.0
+ 30
+0.0
+ 11
+440.0
+ 21
+0.0
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+197
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+445.0
+ 20
+5.0
+ 10
+855.0
+ 20
+5.0
+ 10
+855.0
+ 20
+292.0
+ 10
+445.0
+ 20
+292.0
+  0
+LWPOLYLINE
+  5
+198
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+50
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+670.0
+ 20
+5.0
+ 10
+855.0
+ 20
+5.0
+ 10
+855.0
+ 20
+60.0
+ 10
+670.0
+ 20
+60.0
+  0
+LINE
+  5
+199
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+670.0
+ 20
+35.0
+ 30
+0.0
+ 11
+855.0
+ 21
+35.0
+ 31
+0.0
+  0
+LINE
+  5
+19A
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+774.0
+ 20
+5.0
+ 30
+0.0
+ 11
+774.0
+ 21
+60.0
+ 31
+0.0
+  0
+LINE
+  5
+19B
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+810.0
+ 20
+35.0
+ 30
+0.0
+ 11
+810.0
+ 21
+60.0
+ 31
+0.0
+  0
+LINE
+  5
+19C
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+830.0
+ 20
+35.0
+ 30
+0.0
+ 11
+830.0
+ 21
+60.0
+ 31
+0.0
+  0
+LINE
+  5
+19D
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+810.0
+ 20
+5.0
+ 30
+0.0
+ 11
+810.0
+ 21
+35.0
+ 31
+0.0
+  0
+LINE
+  5
+19E
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+830.0
+ 20
+5.0
+ 30
+0.0
+ 11
+830.0
+ 21
+35.0
+ 31
+0.0
+  0
+LINE
+  5
+19F
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+670.0
+ 20
+21.0
+ 30
+0.0
+ 11
+774.0
+ 21
+21.0
+ 31
+0.0
+  0
+LINE
+  5
+1A0
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+670.0
+ 20
+28.0
+ 30
+0.0
+ 11
+774.0
+ 21
+28.0
+ 31
+0.0
+  0
+LINE
+  5
+1A1
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+100
+AcDbLine
+ 10
+720.0
+ 20
+5.0
+ 30
+0.0
+ 11
+720.0
+ 21
+35.0
+ 31
+0.0
+  0
+TEXT
+  5
+1A2
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+673.0
+ 20
+50.5
+ 30
+0.0
+ 40
+4.2
+  1
+Плата питания 12 В → 3,3 В
+  7
+RU_B
+ 11
+673.0
+ 21
+50.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1A3
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+673.0
+ 20
+42.5
+ 30
+0.0
+ 40
+2.4
+  1
+Топология печатной платы (1 слой)
+  7
+RU
+ 11
+673.0
+ 21
+42.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1A4
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+673.0
+ 20
+38.4
+ 30
+0.0
+ 40
+2.0
+  1
+с модулем ESP32
+  7
+RU
+ 11
+673.0
+ 21
+38.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1A5
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+776.0
+ 20
+56.5
+ 30
+0.0
+ 40
+1.8
+  1
+Лит.
+  7
+RU
+ 11
+776.0
+ 21
+56.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1A6
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+811.0
+ 20
+56.5
+ 30
+0.0
+ 40
+1.8
+  1
+Масса
+  7
+RU
+ 11
+811.0
+ 21
+56.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1A7
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+831.0
+ 20
+56.5
+ 30
+0.0
+ 40
+1.8
+  1
+Масштаб
+  7
+RU
+ 11
+831.0
+ 21
+56.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1A8
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+842.0
+ 20
+47.0
+ 30
+0.0
+ 40
+2.6
+  1
+2 : 1
+  7
+RU_B
+ 72
+1
+ 11
+842.0
+ 21
+47.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+1A9
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+776.0
+ 20
+32.0
+ 30
+0.0
+ 40
+1.8
+  1
+Лист
+  7
+RU
+ 11
+776.0
+ 21
+32.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1AA
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+792.0
+ 20
+19.0
+ 30
+0.0
+ 40
+3.6
+  1
+2
+  7
+RU_B
+ 72
+1
+ 11
+792.0
+ 21
+19.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+1AB
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+811.0
+ 20
+32.0
+ 30
+0.0
+ 40
+1.8
+  1
+Листов
+  7
+RU
+ 11
+811.0
+ 21
+32.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1AC
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+820.0
+ 20
+19.0
+ 30
+0.0
+ 40
+3.6
+  1
+2
+  7
+RU_B
+ 72
+1
+ 11
+820.0
+ 21
+19.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+1AD
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+831.0
+ 20
+32.0
+ 30
+0.0
+ 40
+1.8
+  1
+Формат
+  7
+RU
+ 11
+831.0
+ 21
+32.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1AE
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+842.0
+ 20
+19.0
+ 30
+0.0
+ 40
+3.6
+  1
+A3
+  7
+RU_B
+ 72
+1
+ 11
+842.0
+ 21
+19.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+1AF
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+30.4
+ 30
+0.0
+ 40
+1.8
+  1
+Разраб.
+  7
+RU
+ 11
+672.0
+ 21
+30.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1B0
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+23.4
+ 30
+0.0
+ 40
+1.8
+  1
+Пров.
+  7
+RU
+ 11
+672.0
+ 21
+23.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1B1
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+16.4
+ 30
+0.0
+ 40
+1.8
+  1
+Утв.
+  7
+RU
+ 11
+672.0
+ 21
+16.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+1B2
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+722.0
+ 20
+30.4
+ 30
+0.0
+ 40
+1.8
+  1
+Дата
+  7
+RU
+ 11
+722.0
+ 21
+30.4
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+1B3
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+370
+60
+100
+AcDbLine
+ 10
+461.0
+ 20
+105.0
+ 30
+0.0
+ 11
+649.0
+ 21
+105.0
+ 31
+0.0
+  0
+LINE
+  5
+1B4
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+370
+60
+100
+AcDbLine
+ 10
+655.0
+ 20
+111.0
+ 30
+0.0
+ 11
+655.0
+ 21
+239.0
+ 31
+0.0
+  0
+LINE
+  5
+1B5
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+370
+60
+100
+AcDbLine
+ 10
+649.0
+ 20
+245.0
+ 30
+0.0
+ 11
+461.0
+ 21
+245.0
+ 31
+0.0
+  0
+LINE
+  5
+1B6
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+370
+60
+100
+AcDbLine
+ 10
+455.0
+ 20
+239.0
+ 30
+0.0
+ 11
+455.0
+ 21
+111.0
+ 31
+0.0
+  0
+ARC
+  5
+1B7
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+370
+60
+100
+AcDbCircle
+ 10
+649.0
+ 20
+111.0
+ 30
+0.0
+ 40
+6.0
+100
+AcDbArc
+ 50
+270.0
+ 51
+360.0
+  0
+ARC
+  5
+1B8
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+370
+60
+100
+AcDbCircle
+ 10
+649.0
+ 20
+239.0
+ 30
+0.0
+ 40
+6.0
+100
+AcDbArc
+ 50
+0.0
+ 51
+90.0
+  0
+ARC
+  5
+1B9
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+370
+60
+100
+AcDbCircle
+ 10
+461.0
+ 20
+239.0
+ 30
+0.0
+ 40
+6.0
+100
+AcDbArc
+ 50
+90.0
+ 51
+180.0
+  0
+ARC
+  5
+1BA
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+370
+60
+100
+AcDbCircle
+ 10
+461.0
+ 20
+111.0
+ 30
+0.0
+ 40
+6.0
+100
+AcDbArc
+ 50
+180.0
+ 51
+270.0
+  0
+CIRCLE
+  5
+1BB
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+100
+AcDbCircle
+ 10
+463.0
+ 20
+113.0
+ 30
+0.0
+ 40
+3.2
+  0
+CIRCLE
+  5
+1BC
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+100
+AcDbCircle
+ 10
+463.0
+ 20
+113.0
+ 30
+0.0
+ 40
+1.6
+  0
+LINE
+  5
+1BD
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbLine
+ 10
+458.5
+ 20
+113.0
+ 30
+0.0
+ 11
+467.5
+ 21
+113.0
+ 31
+0.0
+  0
+LINE
+  5
+1BE
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbLine
+ 10
+463.0
+ 20
+108.5
+ 30
+0.0
+ 11
+463.0
+ 21
+117.5
+ 31
+0.0
+  0
+CIRCLE
+  5
+1BF
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+100
+AcDbCircle
+ 10
+647.0
+ 20
+113.0
+ 30
+0.0
+ 40
+3.2
+  0
+CIRCLE
+  5
+1C0
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+100
+AcDbCircle
+ 10
+647.0
+ 20
+113.0
+ 30
+0.0
+ 40
+1.6
+  0
+LINE
+  5
+1C1
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbLine
+ 10
+642.5
+ 20
+113.0
+ 30
+0.0
+ 11
+651.5
+ 21
+113.0
+ 31
+0.0
+  0
+LINE
+  5
+1C2
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbLine
+ 10
+647.0
+ 20
+108.5
+ 30
+0.0
+ 11
+647.0
+ 21
+117.5
+ 31
+0.0
+  0
+CIRCLE
+  5
+1C3
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+100
+AcDbCircle
+ 10
+463.0
+ 20
+237.0
+ 30
+0.0
+ 40
+3.2
+  0
+CIRCLE
+  5
+1C4
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+100
+AcDbCircle
+ 10
+463.0
+ 20
+237.0
+ 30
+0.0
+ 40
+1.6
+  0
+LINE
+  5
+1C5
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbLine
+ 10
+458.5
+ 20
+237.0
+ 30
+0.0
+ 11
+467.5
+ 21
+237.0
+ 31
+0.0
+  0
+LINE
+  5
+1C6
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbLine
+ 10
+463.0
+ 20
+232.5
+ 30
+0.0
+ 11
+463.0
+ 21
+241.5
+ 31
+0.0
+  0
+CIRCLE
+  5
+1C7
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+100
+AcDbCircle
+ 10
+647.0
+ 20
+237.0
+ 30
+0.0
+ 40
+3.2
+  0
+CIRCLE
+  5
+1C8
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_КОНТУР
+100
+AcDbCircle
+ 10
+647.0
+ 20
+237.0
+ 30
+0.0
+ 40
+1.6
+  0
+LINE
+  5
+1C9
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbLine
+ 10
+642.5
+ 20
+237.0
+ 30
+0.0
+ 11
+651.5
+ 21
+237.0
+ 31
+0.0
+  0
+LINE
+  5
+1CA
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbLine
+ 10
+647.0
+ 20
+232.5
+ 30
+0.0
+ 11
+647.0
+ 21
+241.5
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+1CB
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+370
+100
+100
+AcDbPolyline
+ 90
+4
+ 70
+0
+ 10
+471.0
+ 20
+180.0
+ 10
+475.0
+ 20
+180.0
+ 10
+477.6
+ 20
+177.4
+ 10
+485.4
+ 20
+177.4
+  0
+LWPOLYLINE
+  5
+1CC
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+489.0
+ 20
+177.4
+ 10
+495.6
+ 20
+177.4
+  0
+LWPOLYLINE
+  5
+1CD
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+501.4
+ 20
+177.4
+ 10
+509.0
+ 20
+177.4
+  0
+LWPOLYLINE
+  5
+1CE
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+370
+100
+100
+AcDbPolyline
+ 90
+4
+ 70
+0
+ 10
+509.0
+ 20
+177.4
+ 10
+515.0
+ 20
+177.4
+ 10
+515.0
+ 20
+169.0
+ 10
+519.0
+ 20
+169.0
+  0
+LWPOLYLINE
+  5
+1CF
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+481.0
+ 20
+177.4
+ 10
+481.0
+ 20
+160.0
+  0
+LWPOLYLINE
+  5
+1D0
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+492.0
+ 20
+177.4
+ 10
+492.0
+ 20
+133.0
+  0
+LWPOLYLINE
+  5
+1D1
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+50
+100
+AcDbPolyline
+ 90
+3
+ 70
+0
+ 10
+523.0
+ 20
+176.0
+ 10
+523.0
+ 20
+221.0
+ 10
+540.0
+ 20
+221.0
+  0
+LWPOLYLINE
+  5
+1D2
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+50
+100
+AcDbPolyline
+ 90
+3
+ 70
+0
+ 10
+546.0
+ 20
+221.0
+ 10
+551.0
+ 20
+221.0
+ 10
+551.0
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1D3
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+50
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+551.0
+ 20
+221.0
+ 10
+551.0
+ 20
+197.86
+  0
+LWPOLYLINE
+  5
+1D4
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+50
+100
+AcDbPolyline
+ 90
+4
+ 70
+0
+ 10
+540.0
+ 20
+221.0
+ 10
+540.0
+ 20
+238.0
+ 10
+627.2
+ 20
+238.0
+ 10
+627.2
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1D5
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+546.0
+ 20
+221.0
+ 10
+546.0
+ 20
+133.0
+  0
+LWPOLYLINE
+  5
+1D6
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+471.0
+ 20
+117.0
+ 10
+558.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1D7
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+471.0
+ 20
+170.0
+ 10
+471.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1D8
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+481.0
+ 20
+146.0
+ 10
+481.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1D9
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+509.0
+ 20
+172.6
+ 10
+509.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1DA
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+528.0
+ 20
+169.0
+ 10
+528.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1DB
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+532.0
+ 20
+216.6
+ 10
+532.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1DC
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+537.0
+ 20
+216.6
+ 10
+537.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1DD
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+543.0
+ 20
+232.6
+ 10
+543.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1DE
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+504.0
+ 20
+133.0
+ 10
+504.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1DF
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+557.0
+ 20
+133.0
+ 10
+557.0
+ 20
+117.0
+  0
+LWPOLYLINE
+  5
+1E0
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+543.0
+ 20
+232.6
+ 10
+622.12
+ 20
+232.6
+  0
+LWPOLYLINE
+  5
+1E1
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+556.08
+ 20
+229.0
+ 10
+556.08
+ 20
+232.6
+  0
+LWPOLYLINE
+  5
+1E2
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+622.12
+ 20
+229.0
+ 10
+622.12
+ 20
+232.6
+  0
+LWPOLYLINE
+  5
+1E3
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+100
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+622.12
+ 20
+197.86
+ 10
+622.12
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1E4
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+496.0
+ 20
+133.0
+ 10
+500.0
+ 20
+133.0
+  0
+LWPOLYLINE
+  5
+1E5
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+550.0
+ 20
+133.0
+ 10
+553.0
+ 20
+133.0
+  0
+LWPOLYLINE
+  5
+1E6
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+561.16
+ 20
+197.86
+ 10
+561.16
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1E7
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+566.24
+ 20
+197.86
+ 10
+566.24
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1E8
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+571.3199999999999
+ 20
+197.86
+ 10
+571.3199999999999
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1E9
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+576.4
+ 20
+197.86
+ 10
+576.4
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1EA
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+581.48
+ 20
+197.86
+ 10
+581.48
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1EB
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+586.56
+ 20
+197.86
+ 10
+586.56
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1EC
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+591.64
+ 20
+197.86
+ 10
+591.64
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1ED
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+596.72
+ 20
+197.86
+ 10
+596.72
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1EE
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+601.8
+ 20
+197.86
+ 10
+601.8
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1EF
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+606.88
+ 20
+197.86
+ 10
+606.88
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1F0
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+611.96
+ 20
+197.86
+ 10
+611.96
+ 20
+229.0
+  0
+LWPOLYLINE
+  5
+1F1
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+30
+100
+AcDbPolyline
+ 90
+2
+ 70
+0
+ 10
+617.04
+ 20
+197.86
+ 10
+617.04
+ 20
+229.0
+  0
+CIRCLE
+  5
+1F2
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+471.0
+ 20
+180.0
+ 30
+0.0
+ 40
+2.0
+  0
+CIRCLE
+  5
+1F3
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+471.0
+ 20
+180.0
+ 30
+0.0
+ 40
+1.1
+  0
+CIRCLE
+  5
+1F4
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+471.0
+ 20
+170.0
+ 30
+0.0
+ 40
+2.0
+  0
+CIRCLE
+  5
+1F5
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+471.0
+ 20
+170.0
+ 30
+0.0
+ 40
+1.1
+  0
+CIRCLE
+  5
+1F6
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+551.0
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+1F7
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+551.0
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+1F8
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+556.08
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+1F9
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+556.08
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+1FA
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+561.16
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+1FB
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+561.16
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+1FC
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+566.24
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+1FD
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+566.24
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+1FE
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+571.3199999999999
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+1FF
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+571.3199999999999
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+200
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+576.4
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+201
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+576.4
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+202
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+581.48
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+203
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+581.48
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+204
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+586.56
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+205
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+586.56
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+206
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+591.64
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+207
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+591.64
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+208
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+596.72
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+209
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+596.72
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+20A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+601.8
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+20B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+601.8
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+20C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+606.88
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+20D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+606.88
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+20E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+611.96
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+20F
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+611.96
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+210
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+617.04
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+211
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+617.04
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+212
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+622.12
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+213
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+622.12
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+214
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+627.2
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+215
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+627.2
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+216
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+632.28
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+217
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+632.28
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+218
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+637.36
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+219
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+637.36
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+21A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+642.44
+ 20
+197.86
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+21B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+642.44
+ 20
+197.86
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+21C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+551.0
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+21D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+551.0
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+21E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+556.08
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+21F
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+556.08
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+220
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+561.16
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+221
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+561.16
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+222
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+566.24
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+223
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+566.24
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+224
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+571.3199999999999
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+225
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+571.3199999999999
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+226
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+576.4
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+227
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+576.4
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+228
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+581.48
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+229
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+581.48
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+22A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+586.56
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+22B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+586.56
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+22C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+591.64
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+22D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+591.64
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+22E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+596.72
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+22F
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+596.72
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+230
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+601.8
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+231
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+601.8
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+232
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+606.88
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+233
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+606.88
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+234
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+611.96
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+235
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+611.96
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+236
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+617.04
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+237
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+617.04
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+238
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+622.12
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+239
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+622.12
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+23A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+627.2
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+23B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+627.2
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+23C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+632.28
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+23D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+632.28
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+23E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+637.36
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+23F
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+637.36
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+240
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+642.44
+ 20
+152.14
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+241
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+642.44
+ 20
+152.14
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+242
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+551.0
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+243
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+551.0
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+244
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+556.08
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+245
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+556.08
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+246
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+561.16
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+247
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+561.16
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+248
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+566.24
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+249
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+566.24
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+24A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+571.3199999999999
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+24B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+571.3199999999999
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+24C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+576.4
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+24D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+576.4
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+24E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+581.48
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+24F
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+581.48
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+250
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+586.56
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+251
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+586.56
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+252
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+591.64
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+253
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+591.64
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+254
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+596.72
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+255
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+596.72
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+256
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+601.8
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+257
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+601.8
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+258
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+606.88
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+259
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+606.88
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+25A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+611.96
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+25B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+611.96
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+25C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+617.04
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+25D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+617.04
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+25E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+622.12
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+25F
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+622.12
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+CIRCLE
+  5
+260
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+627.2
+ 20
+229.0
+ 30
+0.0
+ 40
+1.8
+  0
+CIRCLE
+  5
+261
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+627.2
+ 20
+229.0
+ 30
+0.0
+ 40
+1.0
+  0
+LWPOLYLINE
+  5
+262
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+483.8
+ 20
+175.60000000000002
+ 10
+487.0
+ 20
+175.60000000000002
+ 10
+487.0
+ 20
+179.2
+ 10
+483.8
+ 20
+179.2
+  0
+LWPOLYLINE
+  5
+263
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+487.4
+ 20
+175.60000000000002
+ 10
+490.6
+ 20
+175.60000000000002
+ 10
+490.6
+ 20
+179.2
+ 10
+487.4
+ 20
+179.2
+  0
+LWPOLYLINE
+  5
+264
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+493.4
+ 20
+175.0
+ 10
+497.8
+ 20
+175.0
+ 10
+497.8
+ 20
+179.8
+ 10
+493.4
+ 20
+179.8
+  0
+LWPOLYLINE
+  5
+265
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+499.2
+ 20
+175.0
+ 10
+503.6
+ 20
+175.0
+ 10
+503.6
+ 20
+179.8
+ 10
+499.2
+ 20
+179.8
+  0
+LWPOLYLINE
+  5
+266
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+507.7
+ 20
+175.9
+ 10
+510.3
+ 20
+175.9
+ 10
+510.3
+ 20
+178.9
+ 10
+507.7
+ 20
+178.9
+  0
+LWPOLYLINE
+  5
+267
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+507.7
+ 20
+171.1
+ 10
+510.3
+ 20
+171.1
+ 10
+510.3
+ 20
+174.1
+ 10
+507.7
+ 20
+174.1
+  0
+LWPOLYLINE
+  5
+268
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+530.7
+ 20
+219.9
+ 10
+533.3
+ 20
+219.9
+ 10
+533.3
+ 20
+222.9
+ 10
+530.7
+ 20
+222.9
+  0
+LWPOLYLINE
+  5
+269
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+530.7
+ 20
+215.1
+ 10
+533.3
+ 20
+215.1
+ 10
+533.3
+ 20
+218.1
+ 10
+530.7
+ 20
+218.1
+  0
+LWPOLYLINE
+  5
+26A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+535.7
+ 20
+219.9
+ 10
+538.3
+ 20
+219.9
+ 10
+538.3
+ 20
+222.9
+ 10
+535.7
+ 20
+222.9
+  0
+LWPOLYLINE
+  5
+26B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+535.7
+ 20
+215.1
+ 10
+538.3
+ 20
+215.1
+ 10
+538.3
+ 20
+218.1
+ 10
+535.7
+ 20
+218.1
+  0
+LWPOLYLINE
+  5
+26C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+518.0
+ 20
+167.0
+ 10
+520.0
+ 20
+167.0
+ 10
+520.0
+ 20
+171.0
+ 10
+518.0
+ 20
+171.0
+  0
+LWPOLYLINE
+  5
+26D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+522.5
+ 20
+167.0
+ 10
+524.5
+ 20
+167.0
+ 10
+524.5
+ 20
+171.0
+ 10
+522.5
+ 20
+171.0
+  0
+LWPOLYLINE
+  5
+26E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+527.0
+ 20
+167.0
+ 10
+529.0
+ 20
+167.0
+ 10
+529.0
+ 20
+171.0
+ 10
+527.0
+ 20
+171.0
+  0
+LWPOLYLINE
+  5
+26F
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+519.6
+ 20
+173.8
+ 10
+526.4
+ 20
+173.8
+ 10
+526.4
+ 20
+178.2
+ 10
+519.6
+ 20
+178.2
+  0
+LWPOLYLINE
+  5
+270
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+490.7
+ 20
+131.5
+ 10
+493.3
+ 20
+131.5
+ 10
+493.3
+ 20
+134.5
+ 10
+490.7
+ 20
+134.5
+  0
+LWPOLYLINE
+  5
+271
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+494.7
+ 20
+131.5
+ 10
+497.3
+ 20
+131.5
+ 10
+497.3
+ 20
+134.5
+ 10
+494.7
+ 20
+134.5
+  0
+LWPOLYLINE
+  5
+272
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+498.4
+ 20
+131.2
+ 10
+501.6
+ 20
+131.2
+ 10
+501.6
+ 20
+134.8
+ 10
+498.4
+ 20
+134.8
+  0
+LWPOLYLINE
+  5
+273
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+502.4
+ 20
+131.2
+ 10
+505.6
+ 20
+131.2
+ 10
+505.6
+ 20
+134.8
+ 10
+502.4
+ 20
+134.8
+  0
+LWPOLYLINE
+  5
+274
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+544.7
+ 20
+131.5
+ 10
+547.3
+ 20
+131.5
+ 10
+547.3
+ 20
+134.5
+ 10
+544.7
+ 20
+134.5
+  0
+LWPOLYLINE
+  5
+275
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+548.7
+ 20
+131.5
+ 10
+551.3
+ 20
+131.5
+ 10
+551.3
+ 20
+134.5
+ 10
+548.7
+ 20
+134.5
+  0
+LWPOLYLINE
+  5
+276
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+551.4
+ 20
+131.2
+ 10
+554.6
+ 20
+131.2
+ 10
+554.6
+ 20
+134.8
+ 10
+551.4
+ 20
+134.8
+  0
+LWPOLYLINE
+  5
+277
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+555.4
+ 20
+131.2
+ 10
+558.6
+ 20
+131.2
+ 10
+558.6
+ 20
+134.8
+ 10
+555.4
+ 20
+134.8
+  0
+CIRCLE
+  5
+278
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+481.0
+ 20
+160.0
+ 30
+0.0
+ 40
+2.6
+  0
+CIRCLE
+  5
+279
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+481.0
+ 20
+160.0
+ 30
+0.0
+ 40
+1.1
+  0
+CIRCLE
+  5
+27A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+481.0
+ 20
+146.0
+ 30
+0.0
+ 40
+2.6
+  0
+CIRCLE
+  5
+27B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+481.0
+ 20
+146.0
+ 30
+0.0
+ 40
+1.1
+  0
+CIRCLE
+  5
+27C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+540.0
+ 20
+221.0
+ 30
+0.0
+ 40
+1.6
+  0
+CIRCLE
+  5
+27D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+540.0
+ 20
+221.0
+ 30
+0.0
+ 40
+0.9
+  0
+CIRCLE
+  5
+27E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+546.0
+ 20
+221.0
+ 30
+0.0
+ 40
+1.6
+  0
+CIRCLE
+  5
+27F
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ПАДЫ
+100
+AcDbCircle
+ 10
+546.0
+ 20
+221.0
+ 30
+0.0
+ 40
+0.9
+  0
+ARC
+  5
+280
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+370
+30
+100
+AcDbCircle
+ 10
+543.0
+ 20
+222.2
+ 30
+0.0
+ 40
+2.6
+100
+AcDbArc
+ 50
+0.0
+ 51
+180.0
+  0
+TEXT
+  5
+281
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+541.4
+ 20
+227.0
+ 30
+0.0
+ 40
+1.7
+  1
+JP1
+  7
+RU_B
+ 11
+541.4
+ 21
+227.0
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+282
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+459.0
+ 20
+167.0
+ 10
+479.0
+ 20
+167.0
+ 10
+479.0
+ 20
+183.0
+ 10
+459.0
+ 20
+183.0
+  0
+LWPOLYLINE
+  5
+283
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+482.8
+ 20
+175.2
+ 10
+491.2
+ 20
+175.2
+ 10
+491.2
+ 20
+179.6
+ 10
+482.8
+ 20
+179.6
+  0
+LWPOLYLINE
+  5
+284
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+493.4
+ 20
+173.6
+ 10
+503.6
+ 20
+173.6
+ 10
+503.6
+ 20
+181.2
+ 10
+493.4
+ 20
+181.2
+  0
+CIRCLE
+  5
+285
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbCircle
+ 10
+481.0
+ 20
+153.0
+ 30
+0.0
+ 40
+8.0
+  0
+TEXT
+  5
+286
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+488.2
+ 20
+159.0
+ 30
+0.0
+ 40
+2.4
+  1
++
+  7
+RU_B
+ 11
+488.2
+ 21
+159.0
+ 31
+0.0
+100
+AcDbText
+  0
+LWPOLYLINE
+  5
+287
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+507.4
+ 20
+171.0
+ 10
+510.6
+ 20
+171.0
+ 10
+510.6
+ 20
+179.0
+ 10
+507.4
+ 20
+179.0
+  0
+LWPOLYLINE
+  5
+288
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+530.4
+ 20
+215.0
+ 10
+533.6
+ 20
+215.0
+ 10
+533.6
+ 20
+223.0
+ 10
+530.4
+ 20
+223.0
+  0
+LWPOLYLINE
+  5
+289
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+535.4
+ 20
+215.0
+ 10
+538.6
+ 20
+215.0
+ 10
+538.6
+ 20
+223.0
+ 10
+535.4
+ 20
+223.0
+  0
+LWPOLYLINE
+  5
+28A
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+517.0
+ 20
+169.0
+ 10
+530.0
+ 20
+169.0
+ 10
+530.0
+ 20
+176.0
+ 10
+517.0
+ 20
+176.0
+  0
+LWPOLYLINE
+  5
+28B
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+490.6
+ 20
+131.4
+ 10
+497.4
+ 20
+131.4
+ 10
+497.4
+ 20
+134.6
+ 10
+490.6
+ 20
+134.6
+  0
+LWPOLYLINE
+  5
+28C
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+498.4
+ 20
+131.0
+ 10
+505.6
+ 20
+131.0
+ 10
+505.6
+ 20
+135.0
+ 10
+498.4
+ 20
+135.0
+  0
+LWPOLYLINE
+  5
+28D
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+544.6
+ 20
+131.4
+ 10
+551.4
+ 20
+131.4
+ 10
+551.4
+ 20
+134.6
+ 10
+544.6
+ 20
+134.6
+  0
+LWPOLYLINE
+  5
+28E
+330
+17
+100
+AcDbEntity
+  8
+ПЛАТА_ДЕТАЛИ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+551.4
+ 20
+131.0
+ 10
+558.6
+ 20
+131.0
+ 10
+558.6
+ 20
+135.0
+ 10
+551.4
+ 20
+135.0
+  0
+LWPOLYLINE
+  5
+28F
+330
+17
+100
+AcDbEntity
+  8
+ОСЕВЫЕ
+100
+AcDbPolyline
+ 90
+4
+ 70
+1
+ 10
+544.0
+ 20
+147.0
+ 10
+654.0
+ 20
+147.0
+ 10
+654.0
+ 20
+203.0
+ 10
+544.0
+ 20
+203.0
+  0
+TEXT
+  5
+290
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+463.0
+ 20
+188.0
+ 30
+0.0
+ 40
+2.0
+  1
+J1
+  7
+RU_B
+ 11
+463.0
+ 21
+188.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+291
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+485.0
+ 20
+172.2
+ 30
+0.0
+ 40
+1.8
+  1
+F1
+  7
+RU
+ 72
+1
+ 11
+485.0
+ 21
+172.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+292
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+498.4
+ 20
+170.6
+ 30
+0.0
+ 40
+1.8
+  1
+D1
+  7
+RU
+ 72
+1
+ 11
+498.4
+ 21
+170.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+293
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+472.2
+ 20
+154.6
+ 30
+0.0
+ 40
+1.8
+  1
+C1
+  7
+RU_B
+ 11
+472.2
+ 21
+154.6
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+294
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+512.2
+ 20
+183.8
+ 30
+0.0
+ 40
+1.8
+  1
+C2
+  7
+RU
+ 72
+1
+ 11
+512.2
+ 21
+183.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+295
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+532.0
+ 20
+226.2
+ 30
+0.0
+ 40
+1.8
+  1
+C3
+  7
+RU
+ 72
+1
+ 11
+532.0
+ 21
+226.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+296
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+537.0
+ 20
+226.2
+ 30
+0.0
+ 40
+1.8
+  1
+C4
+  7
+RU
+ 72
+1
+ 11
+537.0
+ 21
+226.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+297
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+517.4
+ 20
+165.8
+ 30
+0.0
+ 40
+1.8
+  1
+U1
+  7
+RU_B
+ 11
+517.4
+ 21
+165.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+298
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+490.0
+ 20
+128.2
+ 30
+0.0
+ 40
+1.8
+  1
+R1
+  7
+RU
+ 72
+1
+ 11
+490.0
+ 21
+128.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+299
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+498.0
+ 20
+128.2
+ 30
+0.0
+ 40
+1.8
+  1
+LED1
+  7
+RU
+ 72
+1
+ 11
+498.0
+ 21
+128.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+29A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+544.0
+ 20
+128.2
+ 30
+0.0
+ 40
+1.8
+  1
+R2
+  7
+RU
+ 72
+1
+ 11
+544.0
+ 21
+128.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+29B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+551.0
+ 20
+128.2
+ 30
+0.0
+ 40
+1.8
+  1
+LED2
+  7
+RU
+ 72
+1
+ 11
+551.0
+ 21
+128.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+29C
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+551.0
+ 20
+209.8
+ 30
+0.0
+ 40
+2.0
+  1
+J2  (розетка 2×19)
+  7
+RU_B
+ 11
+551.0
+ 21
+209.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+29D
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+547.0
+ 20
+234.2
+ 30
+0.0
+ 40
+1.8
+  1
+J3
+  7
+RU_B
+ 72
+2
+ 11
+547.0
+ 21
+234.2
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+29E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+587.64
+ 20
+234.2
+ 30
+0.0
+ 40
+1.8
+  1
+J4
+  7
+RU_B
+ 72
+2
+ 11
+587.64
+ 21
+234.2
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+29F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+595.0
+ 20
+173.0
+ 30
+0.0
+ 40
+2.6
+  1
+ESP32
+  7
+RU_B
+ 72
+1
+ 11
+595.0
+ 21
+173.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+2A0
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+595.0
+ 20
+144.2
+ 30
+0.0
+ 40
+1.7
+  1
+габарит платы модуля
+  7
+RU
+ 72
+1
+ 11
+595.0
+ 21
+144.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+2A1
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbLine
+ 10
+455.0
+ 20
+97.0
+ 30
+0.0
+ 11
+655.0
+ 21
+97.0
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+2A2
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+455.0
+ 20
+97.0
+ 10
+458.6
+ 20
+98.1
+ 10
+458.6
+ 20
+95.9
+  0
+LWPOLYLINE
+  5
+2A3
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+655.0
+ 20
+97.0
+ 10
+651.4
+ 20
+98.1
+ 10
+651.4
+ 20
+95.9
+  0
+TEXT
+  5
+2A4
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+555.0
+ 20
+99.0
+ 30
+0.0
+ 40
+2.4
+  1
+100
+  7
+RU
+ 72
+1
+ 11
+555.0
+ 21
+99.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+2A5
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+370
+13
+100
+AcDbLine
+ 10
+455.0
+ 20
+105.0
+ 30
+0.0
+ 11
+455.0
+ 21
+95.0
+ 31
+0.0
+  0
+LINE
+  5
+2A6
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+370
+13
+100
+AcDbLine
+ 10
+655.0
+ 20
+105.0
+ 30
+0.0
+ 11
+655.0
+ 21
+95.0
+ 31
+0.0
+  0
+LINE
+  5
+2A7
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbLine
+ 10
+447.0
+ 20
+105.0
+ 30
+0.0
+ 11
+447.0
+ 21
+245.0
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+2A8
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+447.0
+ 20
+105.0
+ 10
+448.1
+ 20
+108.6
+ 10
+445.9
+ 20
+108.6
+  0
+LWPOLYLINE
+  5
+2A9
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+447.0
+ 20
+245.0
+ 10
+448.1
+ 20
+241.4
+ 10
+445.9
+ 20
+241.4
+  0
+TEXT
+  5
+2AA
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+444.8
+ 20
+175.0
+ 30
+0.0
+ 40
+2.4
+  1
+70
+ 50
+90.0
+  7
+RU
+ 72
+1
+ 11
+444.8
+ 21
+175.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+2AB
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+370
+13
+100
+AcDbLine
+ 10
+455.0
+ 20
+105.0
+ 30
+0.0
+ 11
+445.0
+ 21
+105.0
+ 31
+0.0
+  0
+LINE
+  5
+2AC
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+370
+13
+100
+AcDbLine
+ 10
+455.0
+ 20
+245.0
+ 30
+0.0
+ 11
+445.0
+ 21
+245.0
+ 31
+0.0
+  0
+LINE
+  5
+2AD
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbLine
+ 10
+463.0
+ 20
+252.0
+ 30
+0.0
+ 11
+647.0
+ 21
+252.0
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+2AE
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+463.0
+ 20
+252.0
+ 10
+466.6
+ 20
+253.1
+ 10
+466.6
+ 20
+250.9
+  0
+LWPOLYLINE
+  5
+2AF
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+647.0
+ 20
+252.0
+ 10
+643.4
+ 20
+253.1
+ 10
+643.4
+ 20
+250.9
+  0
+TEXT
+  5
+2B0
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+555.0
+ 20
+254.0
+ 30
+0.0
+ 40
+2.0
+  1
+92 (межцентровое)
+  7
+RU
+ 72
+1
+ 11
+555.0
+ 21
+254.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+2B1
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbLine
+ 10
+663.0
+ 20
+113.0
+ 30
+0.0
+ 11
+663.0
+ 21
+237.0
+ 31
+0.0
+  0
+LWPOLYLINE
+  5
+2B2
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+663.0
+ 20
+113.0
+ 10
+664.1
+ 20
+116.6
+ 10
+661.9
+ 20
+116.6
+  0
+LWPOLYLINE
+  5
+2B3
+330
+17
+100
+AcDbEntity
+  8
+РАЗМЕРЫ
+100
+AcDbPolyline
+ 90
+3
+ 70
+1
+ 10
+663.0
+ 20
+237.0
+ 10
+664.1
+ 20
+233.4
+ 10
+661.9
+ 20
+233.4
+  0
+TEXT
+  5
+2B4
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+665.4
+ 20
+175.0
+ 30
+0.0
+ 40
+2.0
+  1
+62
+ 50
+90.0
+  7
+RU
+ 72
+1
+ 11
+665.4
+ 21
+175.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+TEXT
+  5
+2B5
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+455.0
+ 20
+259.0
+ 30
+0.0
+ 40
+3.0
+  1
+ТОПОЛОГИЯ ПЛАТЫ.  ВИД СВЕРХУ.  МАСШТАБ 2:1
+  7
+RU_B
+ 11
+455.0
+ 21
+259.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2B6
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+455.0
+ 20
+90.0
+ 30
+0.0
+ 40
+2.1
+  1
+Плата 100 × 70 мм, 1 слой, 4 отверстия M3
+  7
+RU
+ 11
+455.0
+ 21
+90.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2B7
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+455.0
+ 20
+82.0
+ 30
+0.0
+ 40
+2.4
+  1
+ОБОЗНАЧЕНИЯ
+  7
+RU_B
+ 11
+455.0
+ 21
+82.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2B8
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+455.0
+ 20
+77.0
+ 30
+0.0
+ 40
+1.7
+  1
+Плата односторонняя: вся медь на одном слое,
+  7
+RU
+ 11
+455.0
+ 21
+77.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2B9
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+455.0
+ 20
+74.4
+ 30
+0.0
+ 40
+1.7
+  1
+переходных отверстий нет.
+  7
+RU
+ 11
+455.0
+ 21
+74.4
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2BA
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_12В
+370
+50
+100
+AcDbLine
+ 10
+455.0
+ 20
+69.8
+ 30
+0.0
+ 11
+467.0
+ 21
+69.8
+ 31
+0.0
+  0
+TEXT
+  5
+2BB
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+470.0
+ 20
+69.0
+ 30
+0.0
+ 40
+1.9
+  1
+цепь +12 В
+  7
+RU
+ 11
+470.0
+ 21
+69.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2BC
+330
+17
+100
+AcDbEntity
+  8
+ШИНА_3В3
+370
+50
+100
+AcDbLine
+ 10
+455.0
+ 20
+65.2
+ 30
+0.0
+ 11
+467.0
+ 21
+65.2
+ 31
+0.0
+  0
+TEXT
+  5
+2BD
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+470.0
+ 20
+64.4
+ 30
+0.0
+ 40
+1.9
+  1
+цепь +3,3 В
+  7
+RU
+ 11
+470.0
+ 21
+64.4
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2BE
+330
+17
+100
+AcDbEntity
+  8
+ЗЕМЛЯ
+370
+50
+100
+AcDbLine
+ 10
+455.0
+ 20
+60.6
+ 30
+0.0
+ 11
+467.0
+ 21
+60.6
+ 31
+0.0
+  0
+TEXT
+  5
+2BF
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+470.0
+ 20
+59.800000000000004
+ 30
+0.0
+ 40
+1.9
+  1
+цепь GND
+  7
+RU
+ 11
+470.0
+ 21
+59.800000000000004
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2C0
+330
+17
+100
+AcDbEntity
+  8
+СИГНАЛЫ
+370
+50
+100
+AcDbLine
+ 10
+455.0
+ 20
+56.0
+ 30
+0.0
+ 11
+467.0
+ 21
+56.0
+ 31
+0.0
+  0
+TEXT
+  5
+2C1
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+470.0
+ 20
+55.2
+ 30
+0.0
+ 40
+1.9
+  1
+сигналы GPIO, светодиоды
+  7
+RU
+ 11
+470.0
+ 21
+55.2
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2C2
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+455.0
+ 20
+48.0
+ 30
+0.0
+ 40
+2.4
+  1
+УКАЗАНИЯ ПО МОНТАЖУ
+  7
+RU_B
+ 11
+455.0
+ 21
+48.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2C3
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+455.0
+ 20
+43.0
+ 30
+0.0
+ 40
+1.8
+  1
+1. Плата односторонняя: все дорожки на слое «ДОРОЖКИ», второй слой не нужен.
+  7
+RU
+ 11
+455.0
+ 21
+43.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2C4
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+455.0
+ 20
+39.0
+ 30
+0.0
+ 40
+1.8
+  1
+2. 12 В и GND — 1,0 мм; 3,3 В — 0,5 мм; сигналы — 0,3 мм; зазор 0,2 мм.
+  7
+RU
+ 11
+455.0
+ 21
+39.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2C5
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+455.0
+ 20
+35.0
+ 30
+0.0
+ 40
+1.8
+  1
+3. JP1 — единственное пересечение (3,3 В через шину GND):
+  7
+RU
+ 11
+455.0
+ 21
+35.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2C6
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+455.0
+ 20
+31.0
+ 30
+0.0
+ 40
+1.8
+  1
+    провод 0,5 мм или резистор 0 Ом в корпусе 0805, ставится последним.
+  7
+RU
+ 11
+455.0
+ 21
+31.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2C7
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+455.0
+ 20
+27.0
+ 30
+0.0
+ 40
+1.8
+  1
+4. U1: вывод 2 (VOUT) не паяется — он соединён с табом внутри корпуса, ток идёт через таб.
+  7
+RU
+ 11
+455.0
+ 21
+27.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2C8
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+455.0
+ 20
+23.0
+ 30
+0.0
+ 40
+1.8
+  1
+5. Разводка учебная: сверьте цоколёвку вашей платы ESP32 DevKit.
+  7
+RU
+ 11
+455.0
+ 21
+23.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2C9
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+164.0
+ 30
+0.0
+ 40
+2.8
+  1
+ШИРИНА ДОРОЖЕК
+  7
+RU_B
+ 11
+672.0
+ 21
+164.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2CA
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+159.5
+ 30
+0.0
+ 40
+1.9
+  1
+Медь 35 мкм (1 oz), внешний слой
+  7
+RU
+ 11
+672.0
+ 21
+159.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2CB
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+154.0
+ 30
+0.0
+ 40
+1.9
+  1
+Цепь
+  7
+RU_B
+ 11
+672.0
+ 21
+154.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2CC
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+734.0
+ 20
+154.0
+ 30
+0.0
+ 40
+1.9
+  1
+Ток
+  7
+RU_B
+ 11
+734.0
+ 21
+154.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2CD
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+780.0
+ 20
+154.0
+ 30
+0.0
+ 40
+1.9
+  1
+Ширина
+  7
+RU_B
+ 11
+780.0
+ 21
+154.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2CE
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbLine
+ 10
+672.0
+ 20
+151.6
+ 30
+0.0
+ 11
+845.0
+ 21
+151.6
+ 31
+0.0
+  0
+TEXT
+  5
+2CF
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+147.6
+ 30
+0.0
+ 40
+1.9
+  1
+12 В (J1 → U1)
+  7
+RU
+ 11
+672.0
+ 21
+147.6
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2D0
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+734.0
+ 20
+147.6
+ 30
+0.0
+ 40
+1.9
+  1
+до 1 А
+  7
+RU
+ 11
+734.0
+ 21
+147.6
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2D1
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+780.0
+ 20
+147.6
+ 30
+0.0
+ 40
+1.9
+  1
+1,0 мм
+  7
+RU_B
+ 11
+780.0
+ 21
+147.6
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2D2
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+145.2
+ 30
+0.0
+ 11
+845.0
+ 21
+145.2
+ 31
+0.0
+  0
+TEXT
+  5
+2D3
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+141.4
+ 30
+0.0
+ 40
+1.9
+  1
+Земля GND
+  7
+RU
+ 11
+672.0
+ 21
+141.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2D4
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+734.0
+ 20
+141.4
+ 30
+0.0
+ 40
+1.9
+  1
+до 1 А
+  7
+RU
+ 11
+734.0
+ 21
+141.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2D5
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+780.0
+ 20
+141.4
+ 30
+0.0
+ 40
+1.9
+  1
+1,0 мм
+  7
+RU_B
+ 11
+780.0
+ 21
+141.4
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2D6
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+139.0
+ 30
+0.0
+ 11
+845.0
+ 21
+139.0
+ 31
+0.0
+  0
+TEXT
+  5
+2D7
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+135.20000000000002
+ 30
+0.0
+ 40
+1.9
+  1
+3,3 В
+  7
+RU
+ 11
+672.0
+ 21
+135.20000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2D8
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+734.0
+ 20
+135.20000000000002
+ 30
+0.0
+ 40
+1.9
+  1
+до 0,5 А
+  7
+RU
+ 11
+734.0
+ 21
+135.20000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2D9
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+780.0
+ 20
+135.20000000000002
+ 30
+0.0
+ 40
+1.9
+  1
+0,5 мм
+  7
+RU_B
+ 11
+780.0
+ 21
+135.20000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2DA
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+132.8
+ 30
+0.0
+ 11
+845.0
+ 21
+132.8
+ 31
+0.0
+  0
+TEXT
+  5
+2DB
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+129.00000000000003
+ 30
+0.0
+ 40
+1.9
+  1
+Сигналы GPIO
+  7
+RU
+ 11
+672.0
+ 21
+129.00000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2DC
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+734.0
+ 20
+129.00000000000003
+ 30
+0.0
+ 40
+1.9
+  1
+до 20 мА
+  7
+RU
+ 11
+734.0
+ 21
+129.00000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2DD
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+780.0
+ 20
+129.00000000000003
+ 30
+0.0
+ 40
+1.9
+  1
+0,3 мм
+  7
+RU_B
+ 11
+780.0
+ 21
+129.00000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2DE
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+126.60000000000002
+ 30
+0.0
+ 11
+845.0
+ 21
+126.60000000000002
+ 31
+0.0
+  0
+TEXT
+  5
+2DF
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+122.80000000000003
+ 30
+0.0
+ 40
+1.9
+  1
+Светодиоды
+  7
+RU
+ 11
+672.0
+ 21
+122.80000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2E0
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+734.0
+ 20
+122.80000000000003
+ 30
+0.0
+ 40
+1.9
+  1
+до 10 мА
+  7
+RU
+ 11
+734.0
+ 21
+122.80000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2E1
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+780.0
+ 20
+122.80000000000003
+ 30
+0.0
+ 40
+1.9
+  1
+0,3 мм
+  7
+RU_B
+ 11
+780.0
+ 21
+122.80000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2E2
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+120.40000000000002
+ 30
+0.0
+ 11
+845.0
+ 21
+120.40000000000002
+ 31
+0.0
+  0
+TEXT
+  5
+2E3
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+114.60000000000002
+ 30
+0.0
+ 40
+2.4
+  1
+ОБОСНОВАНИЕ (IPC-2221)
+  7
+RU_B
+ 11
+672.0
+ 21
+114.60000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2E4
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+109.60000000000002
+ 30
+0.0
+ 40
+1.8
+  1
+A = ( I / (k · ΔT^0,44) )^(1/0,725),  k = 0,048
+  7
+RU
+ 11
+672.0
+ 21
+109.60000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2E5
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+106.00000000000003
+ 30
+0.0
+ 40
+1.8
+  1
+Для 1 А при ΔT = 10 °C: A = 16 мил², ширина 0,30 мм.
+  7
+RU
+ 11
+672.0
+ 21
+106.00000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2E6
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+102.40000000000003
+ 30
+0.0
+ 40
+1.8
+  1
+На практике берут запас ×3 (тепло, падение напряжения,
+  7
+RU
+ 11
+672.0
+ 21
+102.40000000000003
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2E7
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+98.80000000000004
+ 30
+0.0
+ 40
+1.8
+  1
+технология ЛУТ/заказ) — отсюда 1,0 мм для 12 В и GND.
+  7
+RU
+ 11
+672.0
+ 21
+98.80000000000004
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2E8
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+95.20000000000005
+ 30
+0.0
+ 40
+1.8
+  1
+Дорожка 1 мм держит 2,3 А при ΔT = 10 °C.
+  7
+RU
+ 11
+672.0
+ 21
+95.20000000000005
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2E9
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+91.60000000000005
+ 30
+0.0
+ 40
+1.8
+  1
+
+  7
+RU
+ 11
+672.0
+ 21
+91.60000000000005
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2EA
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+88.00000000000006
+ 30
+0.0
+ 40
+1.8
+  1
+Зазор между дорожками — не менее 0,2 мм.
+  7
+RU
+ 11
+672.0
+ 21
+88.00000000000006
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2EB
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+84.40000000000006
+ 30
+0.0
+ 40
+1.8
+  1
+Плата односторонняя — переходных отверстий нет.
+  7
+RU
+ 11
+672.0
+ 21
+84.40000000000006
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2EC
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+80.80000000000007
+ 30
+0.0
+ 40
+1.8
+  1
+Перемычка JP1 — 1 шт. (пересечение 3,3 В и шины GND).
+  7
+RU
+ 11
+672.0
+ 21
+80.80000000000007
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2ED
+330
+17
+100
+AcDbEntity
+  8
+ПОЯСНЕНИЯ
+100
+AcDbText
+ 10
+672.0
+ 20
+77.20000000000007
+ 30
+0.0
+ 40
+1.8
+  1
+Свободные места залить полигоном GND (один слой).
+  7
+RU
+ 11
+672.0
+ 21
+77.20000000000007
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2EE
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+672.0
+ 20
+271.0
+ 30
+0.0
+ 40
+2.8
+  1
+ПЕРЕЧЕНЬ ЭЛЕМЕНТОВ
+  7
+RU_B
+ 11
+672.0
+ 21
+271.0
+ 31
+0.0
+100
+AcDbText
+  0
+LINE
+  5
+2EF
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+35
+100
+AcDbLine
+ 10
+672.0
+ 20
+267.2
+ 30
+0.0
+ 11
+845.0
+ 21
+267.2
+ 31
+0.0
+  0
+LINE
+  5
+2F0
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+35
+100
+AcDbLine
+ 10
+672.0
+ 20
+169.3
+ 30
+0.0
+ 11
+845.0
+ 21
+169.3
+ 31
+0.0
+  0
+LINE
+  5
+2F1
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbLine
+ 10
+672.0
+ 20
+267.2
+ 30
+0.0
+ 11
+672.0
+ 21
+169.3
+ 31
+0.0
+  0
+LINE
+  5
+2F2
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbLine
+ 10
+845.0
+ 20
+267.2
+ 30
+0.0
+ 11
+845.0
+ 21
+169.3
+ 31
+0.0
+  0
+LINE
+  5
+2F3
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbLine
+ 10
+696.0
+ 20
+267.2
+ 30
+0.0
+ 11
+696.0
+ 21
+169.3
+ 31
+0.0
+  0
+LINE
+  5
+2F4
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbLine
+ 10
+822.0
+ 20
+267.2
+ 30
+0.0
+ 11
+822.0
+ 21
+169.3
+ 31
+0.0
+  0
+TEXT
+  5
+2F5
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+264.0
+ 30
+0.0
+ 40
+1.85
+  1
+Поз.
+  7
+RU_B
+ 11
+674.0
+ 21
+264.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2F6
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+264.0
+ 30
+0.0
+ 40
+1.85
+  1
+Наименование
+  7
+RU_B
+ 11
+698.0
+ 21
+264.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2F7
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+264.0
+ 30
+0.0
+ 40
+1.85
+  1
+Кол.
+  7
+RU_B
+ 72
+1
+ 11
+830.5
+ 21
+264.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+2F8
+330
+17
+100
+AcDbEntity
+  8
+РАМКА
+370
+25
+100
+AcDbLine
+ 10
+672.0
+ 20
+261.4
+ 30
+0.0
+ 11
+845.0
+ 21
+261.4
+ 31
+0.0
+  0
+TEXT
+  5
+2F9
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+257.9
+ 30
+0.0
+ 40
+1.85
+  1
+J1
+  7
+RU
+ 11
+674.0
+ 21
+257.9
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2FA
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+257.9
+ 30
+0.0
+ 40
+1.85
+  1
+Клеммник 2 контакта, шаг 5,08 мм
+  7
+RU
+ 11
+698.0
+ 21
+257.9
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2FB
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+257.9
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+257.9
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+2FC
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+255.29999999999998
+ 30
+0.0
+ 11
+845.0
+ 21
+255.29999999999998
+ 31
+0.0
+  0
+TEXT
+  5
+2FD
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+251.8
+ 30
+0.0
+ 40
+1.85
+  1
+J2
+  7
+RU
+ 11
+674.0
+ 21
+251.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2FE
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+251.8
+ 30
+0.0
+ 40
+1.85
+  1
+Розетка 2x19, шаг 2,54 мм (под ESP32 DevKit)
+  7
+RU
+ 11
+698.0
+ 21
+251.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+2FF
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+251.8
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+251.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+300
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+249.20000000000002
+ 30
+0.0
+ 11
+845.0
+ 21
+249.20000000000002
+ 31
+0.0
+  0
+TEXT
+  5
+301
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+245.7
+ 30
+0.0
+ 40
+1.85
+  1
+J3, J4
+  7
+RU
+ 11
+674.0
+ 21
+245.7
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+302
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+245.7
+ 30
+0.0
+ 40
+1.85
+  1
+Гребёнка 1x8, шаг 2,54 мм
+  7
+RU
+ 11
+698.0
+ 21
+245.7
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+303
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+245.7
+ 30
+0.0
+ 40
+1.85
+  1
+2
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+245.7
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+304
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+243.1
+ 30
+0.0
+ 11
+845.0
+ 21
+243.1
+ 31
+0.0
+  0
+TEXT
+  5
+305
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+239.6
+ 30
+0.0
+ 40
+1.85
+  1
+JP1
+  7
+RU
+ 11
+674.0
+ 21
+239.6
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+306
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+239.6
+ 30
+0.0
+ 40
+1.85
+  1
+Перемычка проволочная или резистор 0 Ом
+  7
+RU
+ 11
+698.0
+ 21
+239.6
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+307
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+239.6
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+239.6
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+308
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+237.0
+ 30
+0.0
+ 11
+845.0
+ 21
+237.0
+ 31
+0.0
+  0
+TEXT
+  5
+309
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+233.5
+ 30
+0.0
+ 40
+1.85
+  1
+F1
+  7
+RU
+ 11
+674.0
+ 21
+233.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+30A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+233.5
+ 30
+0.0
+ 40
+1.85
+  1
+Предохранитель 1 А (вставка или самовосст.)
+  7
+RU
+ 11
+698.0
+ 21
+233.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+30B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+233.5
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+233.5
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+30C
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+230.9
+ 30
+0.0
+ 11
+845.0
+ 21
+230.9
+ 31
+0.0
+  0
+TEXT
+  5
+30D
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+227.4
+ 30
+0.0
+ 40
+1.85
+  1
+D1
+  7
+RU
+ 11
+674.0
+ 21
+227.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+30E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+227.4
+ 30
+0.0
+ 40
+1.85
+  1
+Диод Шоттки SS34 (3 А, 40 В)
+  7
+RU
+ 11
+698.0
+ 21
+227.4
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+30F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+227.4
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+227.4
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+310
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+224.8
+ 30
+0.0
+ 11
+845.0
+ 21
+224.8
+ 31
+0.0
+  0
+TEXT
+  5
+311
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+221.3
+ 30
+0.0
+ 40
+1.85
+  1
+U1
+  7
+RU
+ 11
+674.0
+ 21
+221.3
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+312
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+221.3
+ 30
+0.0
+ 40
+1.85
+  1
+AMS1117-3.3, корпус SOT-223
+  7
+RU
+ 11
+698.0
+ 21
+221.3
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+313
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+221.3
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+221.3
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+314
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+218.70000000000002
+ 30
+0.0
+ 11
+845.0
+ 21
+218.70000000000002
+ 31
+0.0
+  0
+TEXT
+  5
+315
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+215.2
+ 30
+0.0
+ 40
+1.85
+  1
+C1
+  7
+RU
+ 11
+674.0
+ 21
+215.2
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+316
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+215.2
+ 30
+0.0
+ 40
+1.85
+  1
+Конденсатор 220 мкФ, 25 В, электролит
+  7
+RU
+ 11
+698.0
+ 21
+215.2
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+317
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+215.2
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+215.2
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+318
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+212.6
+ 30
+0.0
+ 11
+845.0
+ 21
+212.6
+ 31
+0.0
+  0
+TEXT
+  5
+319
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+209.1
+ 30
+0.0
+ 40
+1.85
+  1
+C2
+  7
+RU
+ 11
+674.0
+ 21
+209.1
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+31A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+209.1
+ 30
+0.0
+ 40
+1.85
+  1
+Конденсатор 10 мкФ, 25 В, керамика
+  7
+RU
+ 11
+698.0
+ 21
+209.1
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+31B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+209.1
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+209.1
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+31C
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+206.5
+ 30
+0.0
+ 11
+845.0
+ 21
+206.5
+ 31
+0.0
+  0
+TEXT
+  5
+31D
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+203.0
+ 30
+0.0
+ 40
+1.85
+  1
+C3
+  7
+RU
+ 11
+674.0
+ 21
+203.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+31E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+203.0
+ 30
+0.0
+ 40
+1.85
+  1
+Конденсатор 22 мкФ, 10 В, керамика
+  7
+RU
+ 11
+698.0
+ 21
+203.0
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+31F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+203.0
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+203.0
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+320
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+200.4
+ 30
+0.0
+ 11
+845.0
+ 21
+200.4
+ 31
+0.0
+  0
+TEXT
+  5
+321
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+196.9
+ 30
+0.0
+ 40
+1.85
+  1
+C4
+  7
+RU
+ 11
+674.0
+ 21
+196.9
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+322
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+196.9
+ 30
+0.0
+ 40
+1.85
+  1
+Конденсатор 100 нФ, 50 В, керамика
+  7
+RU
+ 11
+698.0
+ 21
+196.9
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+323
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+196.9
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+196.9
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+324
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+194.3
+ 30
+0.0
+ 11
+845.0
+ 21
+194.3
+ 31
+0.0
+  0
+TEXT
+  5
+325
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+190.8
+ 30
+0.0
+ 40
+1.85
+  1
+R1
+  7
+RU
+ 11
+674.0
+ 21
+190.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+326
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+190.8
+ 30
+0.0
+ 40
+1.85
+  1
+Резистор 1,2 кОм, 0,25 Вт
+  7
+RU
+ 11
+698.0
+ 21
+190.8
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+327
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+190.8
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+190.8
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+328
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+188.20000000000002
+ 30
+0.0
+ 11
+845.0
+ 21
+188.20000000000002
+ 31
+0.0
+  0
+TEXT
+  5
+329
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+184.7
+ 30
+0.0
+ 40
+1.85
+  1
+R2
+  7
+RU
+ 11
+674.0
+ 21
+184.7
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+32A
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+184.7
+ 30
+0.0
+ 40
+1.85
+  1
+Резистор 330 Ом, 0,25 Вт
+  7
+RU
+ 11
+698.0
+ 21
+184.7
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+32B
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+184.7
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+184.7
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+32C
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+182.1
+ 30
+0.0
+ 11
+845.0
+ 21
+182.1
+ 31
+0.0
+  0
+TEXT
+  5
+32D
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+178.60000000000002
+ 30
+0.0
+ 40
+1.85
+  1
+LED1, LED2
+  7
+RU
+ 11
+674.0
+ 21
+178.60000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+32E
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+178.60000000000002
+ 30
+0.0
+ 40
+1.85
+  1
+Светодиод 3 мм, зелёный
+  7
+RU
+ 11
+698.0
+ 21
+178.60000000000002
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+32F
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+178.60000000000002
+ 30
+0.0
+ 40
+1.85
+  1
+2
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+178.60000000000002
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+LINE
+  5
+330
+330
+17
+100
+AcDbEntity
+  8
+ТАБЛИЦЫ
+370
+13
+100
+AcDbLine
+ 10
+672.0
+ 20
+176.00000000000003
+ 30
+0.0
+ 11
+845.0
+ 21
+176.00000000000003
+ 31
+0.0
+  0
+TEXT
+  5
+331
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+674.0
+ 20
+172.5
+ 30
+0.0
+ 40
+1.85
+  1
+-
+  7
+RU
+ 11
+674.0
+ 21
+172.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+332
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+698.0
+ 20
+172.5
+ 30
+0.0
+ 40
+1.85
+  1
+Плата ESP32 DevKit V1 (вставляется в J2)
+  7
+RU
+ 11
+698.0
+ 21
+172.5
+ 31
+0.0
+100
+AcDbText
+  0
+TEXT
+  5
+333
+330
+17
+100
+AcDbEntity
+  8
+ТЕКСТ
+100
+AcDbText
+ 10
+830.5
+ 20
+172.5
+ 30
+0.0
+ 40
+1.85
+  1
+1
+  7
+RU
+ 72
+1
+ 11
+830.5
+ 21
+172.5
+ 31
+0.0
+100
+AcDbText
+ 73
+2
+  0
+ENDSEC
+  0
+SECTION
+  2
+OBJECTS
+  0
+DICTIONARY
+  5
+A
+330
+0
+100
+AcDbDictionary
+281
+1
+  3
+ACAD_COLOR
+350
+B
+  3
+ACAD_GROUP
+350
+C
+  3
+ACAD_LAYOUT
+350
+D
+  3
+ACAD_MATERIAL
+350
+E
+  3
+ACAD_MLEADERSTYLE
+350
+F
+  3
+ACAD_MLINESTYLE
+350
+10
+  3
+ACAD_PLOTSETTINGS
+350
+11
+  3
+ACAD_PLOTSTYLENAME
+350
+12
+  3
+ACAD_SCALELIST
+350
+14
+  3
+ACAD_TABLESTYLE
+350
+15
+  3
+ACAD_VISUALSTYLE
+350
+16
+  3
+EZDXF_META
+350
+2D
+  0
+DICTIONARY
+  5
+B
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+DICTIONARY
+  5
+C
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+DICTIONARY
+  5
+D
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+Model
+350
+1A
+  3
+Layout1
+350
+1E
+  0
+DICTIONARY
+  5
+E
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+ByBlock
+350
+1F
+  3
+ByLayer
+350
+20
+  3
+Global
+350
+21
+  0
+DICTIONARY
+  5
+F
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+Standard
+350
+2C
+  0
+DICTIONARY
+  5
+10
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+Standard
+350
+22
+  0
+DICTIONARY
+  5
+11
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+ACDBDICTIONARYWDFLT
+  5
+12
+330
+A
+100
+AcDbDictionary
+281
+1
+  3
+Normal
+350
+13
+100
+AcDbDictionaryWithDefault
+340
+13
+  0
+ACDBPLACEHOLDER
+  5
+13
+330
+12
+  0
+DICTIONARY
+  5
+14
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+DICTIONARY
+  5
+15
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+DICTIONARY
+  5
+16
+330
+A
+100
+AcDbDictionary
+281
+1
+  0
+LAYOUT
+  5
+1A
+330
+D
+100
+AcDbPlotSettings
+  1
+
+  4
+A3
+  6
+
+ 40
+7.5
+ 41
+20.0
+ 42
+7.5
+ 43
+20.0
+ 44
+420.0
+ 45
+297.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+0.0
+140
+0.0
+141
+0.0
+142
+1.0
+143
+1.0
+ 70
+1024
+ 72
+1
+ 73
+0
+ 74
+5
+  7
+
+ 75
+16
+ 76
+0
+ 77
+2
+ 78
+300
+147
+1.0
+148
+0.0
+149
+0.0
+100
+AcDbLayout
+  1
+Model
+ 70
+1
+ 71
+0
+ 10
+0.0
+ 20
+0.0
+ 11
+420.0
+ 21
+297.0
+ 12
+0.0
+ 22
+0.0
+ 32
+0.0
+ 14
+0.0
+ 24
+0.0
+ 34
+0.0
+ 15
+860.0
+ 25
+297.0
+ 35
+0.0
+146
+0.0
+ 13
+0.0
+ 23
+0.0
+ 33
+0.0
+ 16
+1.0
+ 26
+0.0
+ 36
+0.0
+ 17
+0.0
+ 27
+1.0
+ 37
+0.0
+ 76
+1
+330
+17
+  0
+LAYOUT
+  5
+1E
+330
+D
+100
+AcDbPlotSettings
+  1
+
+  4
+A3
+  6
+
+ 40
+7.5
+ 41
+20.0
+ 42
+7.5
+ 43
+20.0
+ 44
+420.0
+ 45
+297.0
+ 46
+0.0
+ 47
+0.0
+ 48
+0.0
+ 49
+0.0
+140
+0.0
+141
+0.0
+142
+1.0
+143
+1.0
+ 70
+0
+ 72
+1
+ 73
+0
+ 74
+5
+  7
+
+ 75
+16
+ 76
+0
+ 77
+2
+ 78
+300
+147
+1.0
+148
+0.0
+149
+0.0
+100
+AcDbLayout
+  1
+Layout1
+ 70
+1
+ 71
+1
+ 10
+0.0
+ 20
+0.0
+ 11
+420.0
+ 21
+297.0
+ 12
+0.0
+ 22
+0.0
+ 32
+0.0
+ 14
+1e+20
+ 24
+1e+20
+ 34
+1e+20
+ 15
+-1e+20
+ 25
+-1e+20
+ 35
+-1e+20
+146
+0.0
+ 13
+0.0
+ 23
+0.0
+ 33
+0.0
+ 16
+1.0
+ 26
+0.0
+ 36
+0.0
+ 17
+0.0
+ 27
+1.0
+ 37
+0.0
+ 76
+1
+330
+1B
+  0
+MATERIAL
+  5
+1F
+102
+{ACAD_REACTORS
+330
+E
+102
+}
+330
+E
+100
+AcDbMaterial
+  1
+ByBlock
+  2
+
+ 70
+0
+ 40
+1.0
+ 71
+1
+ 41
+1.0
+ 91
+-1023410177
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 44
+0.5
+ 73
+0
+ 45
+1.0
+ 46
+1.0
+ 77
+1
+  4
+
+ 78
+1
+ 79
+1
+170
+1
+ 48
+1.0
+171
+1
+  6
+
+172
+1
+173
+1
+174
+1
+140
+1.0
+141
+1.0
+175
+1
+  7
+
+176
+1
+177
+1
+178
+1
+143
+1.0
+179
+1
+  8
+
+270
+1
+271
+1
+272
+1
+145
+1.0
+146
+1.0
+273
+1
+  9
+
+274
+1
+275
+1
+276
+1
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 94
+63
+  0
+MATERIAL
+  5
+20
+102
+{ACAD_REACTORS
+330
+E
+102
+}
+330
+E
+100
+AcDbMaterial
+  1
+ByLayer
+  2
+
+ 70
+0
+ 40
+1.0
+ 71
+1
+ 41
+1.0
+ 91
+-1023410177
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 44
+0.5
+ 73
+0
+ 45
+1.0
+ 46
+1.0
+ 77
+1
+  4
+
+ 78
+1
+ 79
+1
+170
+1
+ 48
+1.0
+171
+1
+  6
+
+172
+1
+173
+1
+174
+1
+140
+1.0
+141
+1.0
+175
+1
+  7
+
+176
+1
+177
+1
+178
+1
+143
+1.0
+179
+1
+  8
+
+270
+1
+271
+1
+272
+1
+145
+1.0
+146
+1.0
+273
+1
+  9
+
+274
+1
+275
+1
+276
+1
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 94
+63
+  0
+MATERIAL
+  5
+21
+102
+{ACAD_REACTORS
+330
+E
+102
+}
+330
+E
+100
+AcDbMaterial
+  1
+Global
+  2
+
+ 70
+0
+ 40
+1.0
+ 71
+1
+ 41
+1.0
+ 91
+-1023410177
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 44
+0.5
+ 73
+0
+ 45
+1.0
+ 46
+1.0
+ 77
+1
+  4
+
+ 78
+1
+ 79
+1
+170
+1
+ 48
+1.0
+171
+1
+  6
+
+172
+1
+173
+1
+174
+1
+140
+1.0
+141
+1.0
+175
+1
+  7
+
+176
+1
+177
+1
+178
+1
+143
+1.0
+179
+1
+  8
+
+270
+1
+271
+1
+272
+1
+145
+1.0
+146
+1.0
+273
+1
+  9
+
+274
+1
+275
+1
+276
+1
+ 42
+1.0
+ 72
+1
+  3
+
+ 73
+1
+ 74
+1
+ 75
+1
+ 94
+63
+  0
+MLINESTYLE
+  5
+22
+102
+{ACAD_REACTORS
+330
+10
+102
+}
+330
+10
+100
+AcDbMlineStyle
+  2
+Standard
+ 70
+0
+  3
+
+ 62
+256
+ 51
+90.0
+ 52
+90.0
+ 71
+2
+ 49
+0.5
+ 62
+256
+  6
+BYLAYER
+ 49
+-0.5
+ 62
+256
+  6
+BYLAYER
+  0
+MLEADERSTYLE
+  5
+2C
+102
+{ACAD_REACTORS
+330
+F
+102
+}
+330
+F
+100
+AcDbMLeaderStyle
+179
+2
+170
+2
+171
+1
+172
+0
+ 90
+2
+ 40
+0.0
+ 41
+0.0
+173
+1
+ 91
+-1056964608
+ 92
+-2
+290
+1
+ 42
+2.0
+291
+1
+ 43
+8.0
+  3
+Standard
+ 44
+4.0
+300
+
+342
+29
+174
+1
+175
+1
+176
+0
+178
+1
+ 93
+-1056964608
+ 45
+4.0
+292
+0
+297
+0
+ 46
+4.0
+ 94
+-1056964608
+ 47
+1.0
+ 49
+1.0
+140
+1.0
+294
+1
+141
+0.0
+177
+0
+142
+1.0
+295
+0
+296
+0
+143
+3.75
+271
+0
+272
+9
+273
+9
+  0
+DICTIONARY
+  5
+2D
+330
+A
+100
+AcDbDictionary
+280
+1
+281
+1
+  3
+CREATED_BY_EZDXF
+350
+2E
+  3
+WRITTEN_BY_EZDXF
+350
+336
+  0
+DICTIONARYVAR
+  5
+2E
+330
+2D
+100
+DictionaryVariables
+280
+0
+  1
+1.4.5 @ 2026-11-05T10:30:49.451854+00:00
+  0
+DICTIONARYVAR
+  5
+336
+330
+2D
+100
+DictionaryVariables
+280
+0
+  1
+1.4.5 @ 2026-11-05T10:30:49.610415+00:00
+  0
+ENDSEC
+  0
+EOF
