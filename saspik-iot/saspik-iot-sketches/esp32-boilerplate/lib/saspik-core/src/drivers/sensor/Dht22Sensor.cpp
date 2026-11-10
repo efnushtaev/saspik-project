@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 /*
- * Dht22Sensor.cpp — реализация примера DHT22.
+ * Dht22Sensor.cpp — реализация DHT22 через ISensor.
  */
 
-#include "app/examples/Dht22Sensor.h"
+#include "drivers/sensor/Dht22Sensor.h"
 
 #ifdef ARDUINO
 
 #include <Arduino.h>
 #include <math.h>
 
-Dht22Sensor::Dht22Sensor(uint8_t pin)
-    : m_dht(pin, DHT_TYPE), m_pin(pin), m_alternate(true) {}
+Dht22Sensor::Dht22Sensor(uint8_t pin, bool mock)
+    : m_dht(pin, DHT_TYPE), m_mock(mock), m_alternate(true) {}
 
 bool Dht22Sensor::begin() {
     m_dht.begin();
@@ -19,24 +19,23 @@ bool Dht22Sensor::begin() {
 }
 
 SensorSample Dht22Sensor::read() {
-    if (USE_MOCK_SENSOR) {
+    if (m_mock) {
         return readMock();
     }
     return readReal();
 }
 
 SensorSample Dht22Sensor::readMock() {
-    // Мок повторяет esp32-local-mqtt: синусоиды от millis() — значения
-    // «живые», но предсказуемые, удобно проверять конвейер глазами.
-    const float t = static_cast<float>(millis()) / 1000.0f;
+    // Псевдозначения для отладки конвейера без датчика.
+    const float now = static_cast<float>(millis()) / 1000.0f;
     SensorSample sample = {};
     sample.valid = true;
     if (m_alternate) {
         sample.fieldId = FIELD_ID_TEMPERATURE;
-        sample.value = 23.0f + 3.0f * sinf(t * 0.1f);
+        sample.value = 23.0f + 3.0f * sinf(now * 0.1f);
     } else {
         sample.fieldId = FIELD_ID_HUMIDITY;
-        sample.value = 45.0f + 8.0f * sinf(t * 0.07f + 2.0f);
+        sample.value = 45.0f + 8.0f * sinf(now * 0.07f + 2.0f);
     }
     m_alternate = !m_alternate;
     return sample;
@@ -48,8 +47,7 @@ SensorSample Dht22Sensor::readReal() {
     const float humidity = m_dht.readHumidity();
     if (isnan(temperature) || isnan(humidity)) {
         // Датчик не готов (первые секунды после begin или обрыв линии):
-        // возвращаем valid=false — приложение пропустит измерение, а не
-        // опубликует мусор (nan в JSON не сериализуется корректно).
+        // valid=false — приложение пропустит измерение, а не опубликует nan.
         return sample;
     }
     sample.valid = true;

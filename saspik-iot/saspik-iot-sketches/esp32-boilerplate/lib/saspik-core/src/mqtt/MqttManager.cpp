@@ -26,8 +26,10 @@
 #include "log/ILogger.h"  // заголовок даёт только forward-declaration
 
 namespace {
-constexpr char LWT_ONLINE[] = "online";
-constexpr char LWT_OFFLINE[] = "offline";
+// Контракт mqtt-topics.md: retained-статус — JSON {"status":"online"|"offline"}.
+// Голые строки сервер не парсит и статус в UI остаётся прежним (обычно offline).
+constexpr char LWT_ONLINE[] = "{\"status\":\"online\"}";
+constexpr char LWT_OFFLINE[] = "{\"status\":\"offline\"}";
 }  // namespace
 
 // PIMPL-транспорт: единственное место с Arduino-типами менеджера.

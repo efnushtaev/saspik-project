@@ -1,0 +1,29 @@
+graph TB
+  classDef ui fill:#f3e5f5,stroke:#7b1fa2,color:#000
+  classDef topic fill:#e3f2fd,stroke:#1565c0,color:#000
+  classDef mqttdev fill:#e8f5e9,stroke:#2e7d32,color:#000
+  classDef gateway fill:#fff3e0,stroke:#e65100,color:#000
+  classDef node fill:#fce4ec,stroke:#c62828,color:#000
+  classDef no fill:#ffebee,stroke:#b71c1c,color:#000
+
+  UI["UI / сервер публикует команды"]:::ui
+
+  subgraph T["MQTT broker: опубликованные топики unitId2"]
+    T1["device/unitId2/saspik-sawqm001/command"]:::topic
+    T2["device/unitId2/saspik-aenm001/command"]:::topic
+  end
+
+  UI --> T1
+  UI --> T2
+
+  M["MqttDeviceApp<br/>objectId = saspik-sawqm001<br/>подписка: device/unitId2/saspik-sawqm001/command"]:::mqttdev
+  G["GatewayApp<br/>objectId = saspik-sawqm001<br/>подписка 1: device/unitId2/saspik-sawqm001/command<br/>подписка 2: device/unitId2/+/command"]:::gateway
+
+  T1 -->|"✓ точное совпадение"| M
+  T1 -->|"✓ точное совпадение (приоритет)"| G
+  T2 -.->|"✗ не совпало: другой objectId"| M
+  T2 -->|"✓ + подставил saspik-aenm001"| G
+
+  G -->|"мост ищет objectId в NODE_TABLE"| R{"objectId есть<br/>в NODE_TABLE?"}
+  R -->|"да"| N["команда уходит ESP-NOW-узлу"]:::node
+  R -->|"нет"| W["warning: command to unknown node"]:::no

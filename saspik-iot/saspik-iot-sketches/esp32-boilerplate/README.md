@@ -91,10 +91,10 @@ esp32-boilerplate/
 │       ├── GatewayApp.*    # Composition Root шлюза
 │       ├── SensorApp.*     # Composition Root сенсора
 │       ├── DeviceApp.*     # Composition Root устройства
-│       └── examples/       # ChannelBank (CHANNELS[]), примеры ISensor/IActuator
+│       └── examples/       # ChannelBank (CHANNELS[]), FloatSensor, RelayActuator
 ├── lib/saspik-core/        # переиспользуемая SOLID-библиотека
 │   ├── include/saspik/     #   core, config, log, net, wifi, portal, mqtt,
-│   │                       #   espnow, bridge, sys, interfaces
+│   │                       #   espnow, bridge, sys, interfaces, drivers
 │   └── src/                #   реализации (firmware-only — под #ifdef ARDUINO)
 └── test/
     ├── mocks/              # моки интерфейсов (MockMqttClient, MockEspNowClient,

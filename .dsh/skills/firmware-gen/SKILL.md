@@ -1,12 +1,24 @@
 ---
 name: firmware-gen
-description: Создаёт новый скетч IoT-устройства в saspik-iot-sketches — objectId по классификатору, структура на базе esp32-boilerplate, README по шаблону ⧫, регистрация в devices.md и сборка pio run.
+description: Создаёт новый скетч IoT-устройства в saspik-iot-sketches — только на базе esp32-boilerplate, с приоритетом готовых классов saspik-core, objectId по классификатору, README по шаблону ⧫, регистрация в devices.md и сборка pio run.
 whenToUse: Запрос «создай прошивку», «создай скетч», «добавь iot-устройство».
 ---
 
 # Firmware Generator
 
 Новый скетч в `saspik-iot/saspik-iot-sketches/<название>/`.
+
+## 0. Принципы
+
+- **База — только `esp32-boilerplate`.** Не копируй `esp32-local-mqtt` или другой
+  скетч как основу новой прошивки.
+- **Сначала `saspik-core` и шаблоны boilerplate.** Максимально используй
+  готовые классы и реализации ядра; не дублируй их в скетче.
+- **Потом `esp32-boilerplate/src/app/examples`.** Если реализации нет в core
+  (например, `Dht22Sensor`, `FloatSensor`, `RelayActuator`), бери её оттуда.
+  Если класс нужен нескольким прошивкам — вынеси его в `saspik-core` отдельным
+  решением, не плоди копии.
+- **Новый код — последним.** Только если готового класса действительно нет.
 
 ## 1. Параметры устройства
 
@@ -15,6 +27,12 @@ whenToUse: Запрос «создай прошивку», «создай ске
 - **Роль**: `g` (gateway) / `s` (sensor) / `a` (actuator), можно комбинировать.
 - **Протокол**: `wq` (WiFi+MQTT) / `en` (ESP-NOW) / `lr` (LoRa).
 - **Питание**: `m` (mains) / `b` (battery).
+- **Модули**: какие датчики, исполнители и шины будут реально использоваться
+  (DHT22, LED, реле, геркон, I2C/SPI/UART, …). Если пользователь сам не
+  перечислил — спроси; без этого нельзя подобрать готовый драйвер.
+- **Подбор драйвера**: проверь `saspik-core/drivers`; если готового нет —
+  `src/app/examples`; если модуль переиспользуемый — добавь драйвер в
+  `saspik-core`, а не копируй в скетч.
 - **Название папки** и краткое описание для таблицы и README.
 - **Железо**: пины, периферия — для `config.h` и README.
 
@@ -27,35 +45,72 @@ whenToUse: Запрос «создай прошивку», «создай ске
 
 ## 3. База
 
-- **WiFi+MQTT (`wq`)** — на базе `esp32-boilerplate` (`saspik-core`, DI, captive portal, MQTT, watchdog):
-  - `platformio.ini`: отдельный env, `lib_extra_dirs = ../shared` и `../esp32-boilerplate/lib` (`multiple = true` для PIO ≥ 6), `lib_ldf_mode = deep+`, `-Iinclude`, `board_build.partitions = partitions.csv`, `extra_scripts = extra_script.py` (генерация `env_config.h` из `.env`);
-  - `include/config.h` — суперсет конфига boilerplate (ядро компилируется против него).
-- **ESP-NOW (`en`)** — ролевой шаблон boilerplate (`-DDEVICE_ROLE`) или ближайший существующий ESP-NOW-скетч как образец.
-- Общие библиотеки — `../shared` (`wifi-config`, `device-log`).
+Новая прошивка создаётся **только из `esp32-boilerplate`** — не копированием
+`esp32-local-mqtt` или другого скетча. Сначала максимально переиспользуй
+готовые классы:
+
+- **`saspik-core`**: `ISensor` / `IActuator`, `SensorSample`, `MqttManager`,
+  `Logger` / `MqttLogSink`, `ConfigManager`, `TimerRegistry`,
+  `InterfaceManager`, `EspNowMqttBridge`;
+- **`saspik-core/drivers`**: готовые драйверы периферии (`Dht22Sensor` и
+  будущие). Это пополняемая библиотека — новые переиспользуемые драйверы
+  добавляй сюда;
+- **`esp32-boilerplate`**: `GatewayApp` / `SensorApp` / `DeviceApp`
+  (composition roots), `ChannelBank`;
+- **`esp32-boilerplate/src/app/examples`**: `FloatSensor`, `RelayActuator` —
+  только если драйвера нет в core. Постоянные/переиспользуемые драйверы держи
+  в `saspik-core/drivers`, а не в examples.
+
+Если класс нужен нескольким прошивкам — вынеси его в `saspik-core` отдельным
+решением, не плоди копии.
+
+- **WiFi+MQTT (`wq`)** — `GatewayApp` boilerplate (WiFi+MQTT+ESP-NOW+свои каналы)
+  или новый role-шаблон в boilerplate, если готовой роли не хватает. Не делай
+  standalone-прошивку в стиле `esp32-local-mqtt`.
+- **ESP-NOW (`en`)** — `SensorApp`/`DeviceApp` boilerplate (`-DDEVICE_ROLE`) или
+  ближайший boilerplate-role; не копируй старые скетчи.
+- `platformio.ini`: env, `lib_extra_dirs = ../shared` и
+  `../esp32-boilerplate/lib`, `lib_ldf_mode = deep+`, `-Iinclude`,
+  `board_build.partitions = partitions.csv`.
+- `extra_script.py`/`.env` — только если это осознанно нужно; по умолчанию
+  дефолты в `config.h` + captive portal/NVS (как в boilerplate).
+- `include/config.h` — суперсет конфига boilerplate (ядро компилируется против него).
 
 ## 4. Структура
 
 ```
 <название>/
 ├── platformio.ini
-├── extra_script.py        # копия из esp32-local-mqtt
-├── partitions.csv         # 4MB, раздел "spiffs" (из boilerplate/local-mqtt)
+├── partitions.csv         # 4MB, раздел "spiffs" (из boilerplate)
+├── include/
+│   └── config.h           # UNIT_ID, OBJECT_ID, CHANNELS[], NODE_TABLE, пины, таймауты
 └── src/
-    ├── config.h           # OBJECT_ID, UNIT_ID, топики, таймауты, пины
-    └── main.cpp
+    ├── main.cpp           # создание IApp (GatewayApp/SensorApp/DeviceApp)
+    └── app/               # composition root и примеры из boilerplate, если нужны
 ```
+
+Драйверы периферии — в `saspik-core/{include,src}/drivers/<класс>/<Модуль>`;
+скетч подключает их, а не копирует.
 
 Обязательно в `config.h`:
 
-- `OBJECT_ID`, `UNIT_ID`, `OBJECT_TYPE` (префикс data-топика);
-- топики `device/<unitId>/<objectId>/command`, `.../state`, `.../status`, `.../log`;
-- таймауты и интервалы как в boilerplate/local-mqtt: `MQTT_REBOOT_TIMEOUT_MS`, `WIFI_REBOOT_TIMEOUT_MS`, интервалы попыток.
+- `UNIT_ID`, `OBJECT_ID`, `CHANNELS[]`, `NODE_TABLE`;
+- `DEVICE_ROLE` — build-флаг `-DDEVICE_ROLE=...`, если прошивка поддерживает
+  несколько ролей; для dedicated-прошивки допустимо зафиксировать один `IApp`
+  в `main.cpp`;
+- таймауты и интервалы boilerplate: `MQTT_REBOOT_TIMEOUT_MS`,
+  `WIFI_REBOOT_TIMEOUT_MS`, `SENSOR_INTERVAL_MS` и т.д.
 
 Обязательно в коде:
 
-- LWT: retained `{"status":"offline"}` при connect, `{"status":"online"}` после подключения;
-- лог-конверт `{level,src,event,msg,topic,unitId,objectId,uptime[,cause]}` — telegraf подхватывает подпиской `device/+/+/log` без правок;
-- неблокирующий MQTT-connect и авто-ребуты при недоступности брокера (как в boilerplate).
+- использовать `MqttManager`/`Logger` boilerplate: LWT, лог-конверт,
+  неблокирующий MQTT-connect и авто-ребуты уже реализованы там — не дублируй;
+- retained-статус — JSON `{"status":"online"|"offline"}`; `MqttManager` из
+  core уже публикует его так. Не публикуй голые строки — сервер их не парсит;
+- `main.cpp` создаёт `IApp`; логика — в composition root (`src/app/`);
+- каналы — через `ChannelBank`, датчики — через `ISensor`/`Dht22Sensor` и т.п.,
+  исполнители — через `IActuator`, если готовой реализации хватает (иначе —
+  минимальная реализация интерфейса).
 
 ## 5. README скетча
 
@@ -70,11 +125,29 @@ whenToUse: Запрос «создай прошивку», «создай ске
 ## 7. Верификация
 
 - `pio run -e <env>` — сборка успешна (из папки скетча).
-- Сверка `grep`: `objectId` и топики согласованы в `config.h`, README, `devices.md`.
-- Новые топики — в `saspik-cluster/docs/mqtt-topics.md`; новый домен — ещё и в `mqtt/mosquitto.acl` + `telegraf.conf` (пересборка образа mosquitto).
+- Проверь базу: прошивка собрана из `esp32-boilerplate`, а не копия
+  `esp32-local-mqtt`; готовые классы `saspik-core` переиспользованы, а не
+  продублированы.
+- Проверь модули: для каждого датчика/исполнителя выбран готовый драйвер
+  `saspik-core/drivers`; если драйвер новый и переиспользуемый — он добавлен
+  в core, а не оставлен в скетче или `examples`.
+- Проверь retained-статус: payload — JSON `{"status":"online"|"offline"}`, а не
+  голая строка; иначе сервер молча игнорирует статус и UI остаётся offline.
+- Сверка `grep`: `OBJECT_ID`/`UNIT_ID`, ключи `CHANNELS[]` и `NODE_TABLE`
+  согласованы в `config.h`, README и `devices.md`.
+- Новые топики — в `saspik-cluster/docs/mqtt-topics.md`; новый домен — ещё и в
+  `mqtt/mosquitto.acl` + `telegraf.conf` (пересборка образа mosquitto).
 - Итог — в `saspik-iot/IN_PROGRESS.md` (скилл `in-progress`).
 
 ## Ограничения
 
-- Не выдавай прошивку без сборки, если PlatformIO доступен; недоступен — скажи прямо и отметь, что проверка на железе остаётся пользователю.
-- Не дублируй существующий objectId: сначала проверь реестр и `config.h` соседних скетчей.
+- Не выдавай прошивку без сборки, если PlatformIO доступен; недоступен — скажи
+  прямо и отметь, что проверка на железе остаётся пользователю.
+- Не дублируй существующий objectId: сначала проверь реестр и `config.h`
+  соседних скетчей.
+- Не копируй `esp32-local-mqtt` или другой старый скетч как основу — только
+  `esp32-boilerplate`.
+- Не дублируй реализации `saspik-core`: сначала core, затем
+  `src/app/examples`, и только потом новый код в скетче.
+- Не оставляй переиспользуемый драйвер в `src/app/examples` — его место в
+  `saspik-core/drivers`.

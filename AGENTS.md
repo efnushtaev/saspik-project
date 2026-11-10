@@ -208,7 +208,7 @@ pio run -e esp32-s3-devkitc-1   # framework = espidf; альтернатива �
 | Новый MQTT-домен | `mqtt/mosquitto.acl` + `telegraf/telegraf.conf` + `docs/mqtt-topics.md` | Default-deny; JSON в telegraf; пересборка образа mosquitto |
 | Правило автоматизации | `server/data/rules.json` (сид) и/или Mongo | Дублировать на unitId; `${VAR}`/`${expr:...}` |
 | Новое условие/действие rule-engine | `mqtt-rule-engine/src/{conditions,actions}` + `constants.ts` + `config/builder.ts` | Тест в `test/test-runner.ts` на мок-адаптере |
-| Новая прошивка ESP32 | Копия `esp32-boilerplate` или скетч по шаблону | objectId — в `devices.md`; топики — в `docs/mqtt-topics.md` |
+| Новая прошивка ESP32 | Только `esp32-boilerplate`; сначала `saspik-core` (включая `drivers`), затем `src/app/examples`; уточнять модули устройства | objectId — в `devices.md`; топики — в `docs/mqtt-topics.md` |
 | Показания «застыли» в UI | `influxDbStateStore.service.ts`, `telegraf.conf`, бакеты | Проверять `hostname`, серии, `group()` перед `last()` |
 | Отладка логов устройства | `docs/logs.md`, бакет `logs`, `influxdb/queries/logs-view.flux` | `_time` — граница окна агрегации, не время события |
 | Миграция Mongo | Прямые команды в Mongo | `SeedService` не перезапишет существующие коллекции |

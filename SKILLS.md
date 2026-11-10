@@ -19,7 +19,7 @@
 | [session-log](.dsh/skills/session-log/SKILL.md) | дописать итог сессии в `opencode/session_log.md` | автоматически: конец сессии, компакция, веха |
 | [docs-template](.dsh/skills/docs-template/SKILL.md) | создать или оформить ⧫-документ (README, `docs/*.md`) | «оформи документ», «сделай README» |
 | [docs-gen](.dsh/skills/docs-gen/SKILL.md) | пересобрать `docs.html` | «перегенерируй docs», «обнови документацию» |
-| [firmware-gen](.dsh/skills/firmware-gen/SKILL.md) | новый скетч IoT-устройства | «создай прошивку», «создай скетч», «добавь iot-устройство» |
+| [firmware-gen](.dsh/skills/firmware-gen/SKILL.md) | новый скетч IoT-устройства: boilerplate + драйверы saspik-core | «создай прошивку», «создай скетч», «добавь iot-устройство» |
 | [schematic-gen](.dsh/skills/schematic-gen/SKILL.md) | схема (DXF + PNG), Mermaid-диаграмма, KiCad | «нарисуй схему», «сделай диаграмму» |
 | [md-render](.dsh/skills/md-render/SKILL.md) | показать markdown прямо в ответе | «покажи файл», «отрендерь md» |
 

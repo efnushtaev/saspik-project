@@ -38,10 +38,10 @@ esp32-boilerplate/
 │       ├── GatewayApp.*        # Composition Root шлюза
 │       ├── SensorApp.*         # Composition Root сенсора
 │       ├── DeviceApp.*         # Composition Root устройства
-│       └── examples/           # Dht22Sensor, FloatSensor, RelayActuator (не в библиотеке)
+│       └── examples/           # FloatSensor, RelayActuator (Dht22Sensor — в saspik-core/drivers)
 ├── lib/saspik-core/            # переиспользуемая SOLID-библиотека
 │   ├── include/saspik/         #   core, config, log, net, wifi, portal, mqtt,
-│   │                           #   espnow, bridge, sys, interfaces
+│   │                           #   espnow, bridge, sys, interfaces, drivers
 │   └── src/                    #   реализации (firmware-only — под #ifdef ARDUINO)
 └── test/
     ├── mocks/                  # MockMqttClient, MockEspNowClient, MockWifiManager,

@@ -144,7 +144,7 @@ https://github.com/efnushtaev/saspik-project/tree/main/saspik-iot/saspik-iot-ske
 2. Шины: `interfaces/bus/IBus.h`, `I2cBus.h/.cpp`, `OneWireBus.h/.cpp`, `SpiBus.h/.cpp`, `UartBus.h/.cpp`, `InterfaceManager.h/.cpp` (BusConfig из config.h: `BUS_*_ENABLED`, `PIN_*`; неиспользуемые шины не создаются).
 3. Интерфейсы периферии: `interfaces/sensor/ISensor.h` + `SensorSample.h`, `interfaces/actuator/IActuator.h`.
 4. Приложения: `app/IApp.h`, `src/main.cpp` (диспетчеризация по `DEVICE_ROLE`), `GatewayApp`/`SensorApp`/`DeviceApp` (.h/.cpp) — Composition Root: DI-сборка модулей, Logger + sink'и, таймеры через `TimerRegistry`, неблокирующий loop, авто-ребут по таймаутам (кроме Sensor).
-5. Примеры периферии (`src/app/examples/`): `Dht22Sensor` (`PIN_GPIO_3`, `USE_MOCK_SENSOR`), `FloatSensor` (`PIN_GPIO_4`, `FIELD_ID_FLOAT`), `RelayActuator` (`PIN_GPIO_5`) — реализуют `ISensor`/`IActuator`.
+5. Драйверы периферии: `Dht22Sensor` — в `saspik-core/drivers/sensor` (`PIN_GPIO_3`, `mock`); примеры `FloatSensor` (`PIN_GPIO_4`, `FIELD_ID_FLOAT`) и `RelayActuator` (`PIN_GPIO_5`) — в `src/app/examples/`, реализуют `ISensor`/`IActuator`.
 6. Тесты native: `test/native/mocks/` (`MockMqttClient`, `MockEspNowClient`, `MockWifiManager`, `MockConfigStore`, `MockLogSink`) + `test_*.cpp` (Unity): TopicBuilder, EspNowCodec (включая known-answer тест CRC-8/MAXIM), EspNowMqttBridge, ConfigManager, TimerRegistry.
 7. Документы: `README.md` (сборка/загрузка/монитор, выбор шаблона, структура), `TODO.md` (по списку из ПРОМПТ 2), `library.json` для saspik-core.
 8. Проверка: `pio test -e native` — зелёный; сборка `env:gateway_esp32` (далее s2/s3/c3) — без ошибок; исправить найденное.

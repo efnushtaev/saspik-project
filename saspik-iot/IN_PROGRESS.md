@@ -1,24 +1,8 @@
 Файл «хода работ» по проекту. Задачи ведутся единым списком: сверху — незавершённые (В работе → На доработку → Нужно взять в работу), ниже — Выполнено. Даты не пишутся.
 
-> Незавершённых задач: 4
+> Незавершённых задач: 2
 
 ## Ход работ
-
-- [В работе] Конфигурируемые каналы: local-mqtt и boilerplate
-  Статус: код готов, сборки и host-тесты успешны; прошивка/ручные сценарии — вручную.
-  - `esp32-local-mqtt` переведён на новый объект `saspik-awqm001` (`unitId3`): `CHANNELS[]` в `config.h` (имя, пин, роль, модель), два реле на GPIO 13/26. Команда — `device/.../command` `{"channel":"свет","value":"ON"}`, состояние — retained JSON-карта `{"свет":"ON","полив":"OFF"}`; сенсоры — JSON-карта с произвольными именами. GPIO 25 остаётся кнопкой портала.
-  - `esp32-boilerplate`: добавлен `ChannelBank` (сборка из `CHANNELS[]`), каналы `свет`/`полив` на 13/26. Device шлёт ESP-NOW DATA/STATE JSON, шлюз публикует DATA as-is в `sensor/...`, STATE — retained в `device/.../state`; команды маршрутизируются на `device/{unitId}/+/command`. Legacy float-поля и `{"state":"ON"}` сохранены для совместимости.
-  - Проверено: `pio test -e native` (29 тестов), `pio run -e device_esp32`, `-e gateway_esp32`, `-e sensor_esp32`; `pio run` local-mqtt.
-  - Старые `m003`-объекты и прошивка не менялись (вариант A: новое физическое устройство). ID `saspik-awqm001`/`saspik-aenm001` — принятые дефолты.
-
-- [В работе] Пост-мортем логирования esp32-local-mqtt
-  Статус: код готов, сборка `pio run -e esp32dev` успешна (RAM 14%, Flash 62.4%); перешивка и ручные сценарии — вручную.
-  - Удалены недостижимые `publishLogEvent("error", ...)` (reboot ×2, connect-error) и `sendDiagnostics()` + `DIAG_PUBLISH_INTERVAL_MS` (main.cpp, config.h).
-  - Вместо них — событие `reconnect` с полями `downSec`/`errors` в success-ветке `connectMQTT()` до сброса `mqttLostSinceMs`; счётчик `mqttConnectErrors` в fail-ветке, сброс после успеха; при первом подключении — прежний `event="connect"`.
-  - `prevUptime` сохраняется в NVS (`DeviceLog.savePrevUptime()` перед `wifi-lost`/`mqtt-timeout` рестартами) и добавлен в startup-конверт; после отправки `DeviceLog.clearRebootData()` стирает cause и prevUptime — обычная перезагрузка больше не шлёт ложный `cause=mqtt-timeout`.
-  - Дополнительно (найдено при аудите): null-проверка поля `state` в `callbackMQTT()` — мусорный payload без `state` раньше ронял устройство (`strcmp(nullptr)`).
-  - Кластер под эти правки не дорабатывается: telegraf принимает новые числовые поля автоматически, rule-engine на логи не завязан.
-  - Ручные сценарии после прошивки: (1) старт после авто-ребута — `startup` с `cause`/`prevUptime`, обычный рестарт — без ложного cause; (2) остановить брокер ~на минуту — `reconnect` с `downSec`/`errors`; (3) команда `{"foo":1}` — игнор без краша.
 
 - [На доработку] Состояние LED в MQTT: прошивка и retained-публикации
   Статус: состояние LED работает на проде; доработки зафиксированы, не реализованы.
@@ -37,6 +21,24 @@
   - Состав: `platformio.ini` (env `relay_x8_esp32`, `lib_extra_dirs = ../shared` + `../esp32-boilerplate/lib`, `lib_ldf_mode = deep+`, `-Iinclude`), `include/config.h` (суперсет boilerplate-конфига), `src/RelayBank`, `src/RelayCommandHandler`, `src/RelayX8App`, `src/main.cpp`, README по шаблону ⧫.
   - Верификация: `pio run -e relay_x8_esp32`; прошивка и ручной тест (mosquitto_pub на relay1..8, retained после ребута, логи в telegraf) — вручную пользователем.
   - Документация: запись в README скетчей, новые топики в `saspik-cluster/docs/mqtt-topics.md`, регенерация docs.html. Вне скоупа (follow-up): регистрация unitId3/объекта в Mongo для UI, production-ACL mosquitto, интеграция climate-control с unitId3.
+
+- [Выполнено] Новое устройство unitId2: шлюз DHT22 + LED (esp32-dht22-led)
+  Статус: код готов; `pio run` скетча (RAM 13.9%, Flash 63.7%), `gateway_esp32` и `pio test -e native` (29 тестов) успешны; после фикса статуса нужно перепрошить и проверить UI вручную.
+  - Скетч `saspik-iot-sketches/esp32-dht22-led` на базе `esp32-boilerplate` (шаблон `GatewayApp`, ядро `saspik-core`): objectId `saspik-sawqm001`, `unitId2`, каналы `temp`/`humi` (DHT22, GPIO4) и `led` (встроенный GPIO2, active low: LOW = вкл). Устройство — единственный шлюз своего юнита, поэтому wildcard-подписка не дублируется.
+  - `GatewayApp` даёт WiFi+MQTT+ESP-NOW-мост: своя команда `device/unitId2/saspik-sawqm001/command`, свои данные `sensor/unitId2/saspik-sawqm001`, retained state/status/LWT, лог; команды узлам — подписка `device/unitId2/+/command` и маршрутизация по `NODE_TABLE` (`saspik-aenm001`, MAC заменить).
+  - Исправлен баг `saspik-core/MqttManager`: LWT и online публиковались как `online`/`offline`, а сервер ждёт JSON `{"status":"..."}`; из-за этого UI показывал `offline` при живых данных. Теперь payload JSON — проверено по `strings` в прошивке (`{"status":"online"}` / `{"status":"offline"}`).
+  - `NODE_TABLE` в `include/config.h`; `ESP_NOW_CHANNEL=1` должен совпадать с каналом Wi-Fi. Без `.env`/`env_config.h`: дефолты в `config.h`, Wi-Fi/MQTT через captive portal в NVS.
+  - `src/app/GatewayApp.*` и `app/examples/ChannelBank.*` скопированы из boilerplate; `Dht22Sensor` — драйвер `saspik-core/drivers/sensor`, подключён через `lib_extra_dirs`; дубль из `esp32-boilerplate/src/app/examples` удалён.
+  - DHT22 читается через `Dht22Sensor` (реализует `ISensor`): `ChannelBank` вызывает `read()` дважды за интервал — первый вызов отдаёт температуру, второй влажность; DHT-библиотека кэширует физическое чтение на ~2 с, поэтому `temp`/`humi` уходят в одном JSON. `saspik-core/drivers` — пополняемая библиотека драйверов: новые переиспользуемые драйверы добавляются туда, а не в examples/скетч.
+  - Регистрация: строка в `devices.md` и `README` скетчей; объект `saspik-sawqm001-device` в Mongo/UI создаётся вручную (в сид не добавлялся).
+  - Ручные сценарии: прошить, заменить MAC `saspik-aenm001` в `NODE_TABLE`, подключить DHT22 (GPIO4) и светодиод (GPIO2), проверить `temp`/`humi`, ON/OFF по команде, retained state после перезагрузки, маршрутизацию команд узлу и логи в telegraf.
+
+- [Выполнено] Конфигурируемые каналы: local-mqtt и boilerplate
+  Статус: код готов, сборки и host-тесты успешны; прошивка/ручные сценарии — вручную.
+  - `esp32-local-mqtt` переведён на новый объект `saspik-awqm001` (`unitId3`): `CHANNELS[]` в `config.h` (имя, пин, роль, модель), два реле на GPIO 13/26. Команда — `device/.../command` `{"channel":"свет","value":"ON"}`, состояние — retained JSON-карта `{"свет":"ON","полив":"OFF"}`; сенсоры — JSON-карта с произвольными именами. GPIO 25 остаётся кнопкой портала.
+  - `esp32-boilerplate`: добавлен `ChannelBank` (сборка из `CHANNELS[]`), каналы `свет`/`полив` на 13/26. Device шлёт ESP-NOW DATA/STATE JSON, шлюз публикует DATA as-is в `sensor/...`, STATE — retained в `device/.../state`; команды маршрутизируются на `device/{unitId}/+/command`. Legacy float-поля и `{"state":"ON"}` сохранены для совместимости.
+  - Проверено: `pio test -e native` (29 тестов), `pio run -e device_esp32`, `-e gateway_esp32`, `-e sensor_esp32`; `pio run` local-mqtt.
+  - Старые `m003`-объекты и прошивка не менялись (вариант A: новое физическое устройство). ID `saspik-awqm001`/`saspik-aenm001` — принятые дефолты.
 
 - [Выполнено] Закрытие пунктов бэклога и коммит boilerplate
   Статус: boilerplate закоммичен; пост-мортем вынесен отдельной задачей.
@@ -68,3 +70,11 @@
   - Восстановление WiFi в `loop()`, авто-ребут при долгой недоступности MQTT (15 мин) и WiFi (5 мин), публикация диагностики в `TOPIC_DIAG`.
   - Модуль `shared/device-log`: кольцевой лог на LittleFS + NVS-причина ребута (позже сокращён до NVS — см. задачу выше).
   - Единый конверт `{level,src,event,msg,topic,unitId,objectId,uptime,cause}` для device/server/rule-engine, лог-топики `device/+/+/log` и т.д.
+
+- [Выполнено] Пост-мортем логирования esp32-local-mqtt
+  Статус: выполнено — код закоммичен (`b1c6872`), сборка `pio run -e esp32dev` успешна (RAM 14%, Flash 62.4%).
+  - Удалены недостижимые `publishLogEvent("error", ...)` (reboot ×2, connect-error) и `sendDiagnostics()` + `DIAG_PUBLISH_INTERVAL_MS` (main.cpp, config.h).
+  - Вместо них — событие `reconnect` с полями `downSec`/`errors` в success-ветке `connectMQTT()` до сброса `mqttLostSinceMs`; счётчик `mqttConnectErrors` в fail-ветке, сброс после успеха; при первом подключении — прежний `event="connect"`.
+  - `prevUptime` сохраняется в NVS (`DeviceLog.savePrevUptime()` перед `wifi-lost`/`mqtt-timeout` рестартами) и добавлен в startup-конверт; после отправки `DeviceLog.clearRebootData()` стирает cause и prevUptime — обычная перезагрузка больше не шлёт ложный `cause=mqtt-timeout`.
+  - Кластер под эти правки не дорабатывается: telegraf принимает новые числовые поля автоматически, rule-engine на логи не завязан.
+  - Проверка на железе после прошивки: (1) старт после авто-ребута — `startup` с `cause`/`prevUptime`, обычный рестарт — без ложного cause; (2) остановить брокер ~на минуту — `reconnect` с `downSec`/`errors`; (3) команда `{"foo":1}` — игнор без краша.
