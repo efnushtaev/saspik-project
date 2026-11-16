@@ -95,6 +95,9 @@ void Logger::publishStartup() {
     }
     sendToSinks("info", "startup", "startup after reboot",
                 m_rebootCause.rebootCause());
+    // Причина одноразовая: сбрасываем сразу после отправки, иначе обычный
+    // старт после выключения питания повторял бы last cause бесконечно.
+    m_rebootCause.clearRebootCause();
 }
 
 void Logger::update() {

@@ -168,6 +168,7 @@ bool WifiConfigManager::begin(DeviceConfig& out, int8_t buttonPin, const DeviceC
 
 void WifiConfigManager::startPortal() {
     apSsid = apNameFromMac();
+    lastPortalRequestMs = millis();
 
     WiFi.mode(WIFI_AP);
     WiFi.softAP(apSsid.c_str());
@@ -203,6 +204,21 @@ void WifiConfigManager::handlePortal() {
     if (!portalMode) return;
     dnsServer.processNextRequest();
     if (httpServer) httpServer->handleClient();
+
+    // Выход из портала по бездействию: иначе неудачный Wi-Fi на старте
+    // оставляет плату в AP навсегда (MQTT не стартует, данных и логов нет).
+    // Перезагрузка повторяет попытку STA — устройство само вернётся в строй,
+    // когда сеть появится, без физического доступа к кнопке.
+    const uint32_t now = millis();
+    const bool clientAttached = WiFi.softAPgetStationNum() > 0;
+    if (clientAttached ||
+        (lastPortalRequestMs != 0 &&
+         now - lastPortalRequestMs < WIFI_CONFIG_PORTAL_TIMEOUT_MS)) {
+        return;
+    }
+    Serial.println("[wifi-config] portal idle timeout, reboot to retry WiFi");
+    delay(100);
+    ESP.restart();
 }
 
 // ---------------------------------------------------------------------------
@@ -210,11 +226,13 @@ void WifiConfigManager::handlePortal() {
 // ---------------------------------------------------------------------------
 
 void WifiConfigManager::handleRoot() {
+    lastPortalRequestMs = millis();
     httpServer->sendHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     httpServer->send(200, "text/html", INDEX_HTML);
 }
 
 void WifiConfigManager::handleScan() {
+    lastPortalRequestMs = millis();
     int n = WiFi.scanNetworks();
     String json = "[";
     for (int i = 0; i < n; i++) {
@@ -233,6 +251,7 @@ void WifiConfigManager::handleScan() {
 }
 
 void WifiConfigManager::handleSave() {
+    lastPortalRequestMs = millis();
     DeviceConfig cfg;
     memset(&cfg, 0, sizeof(cfg));
 
@@ -272,6 +291,7 @@ void WifiConfigManager::handleSave() {
 }
 
 void WifiConfigManager::handleReset() {
+    lastPortalRequestMs = millis();
     resetConfig();
     httpServer->send(200, "text/html",
         "<html><body><h3>Config cleared. Rebooting...</h3></body></html>");

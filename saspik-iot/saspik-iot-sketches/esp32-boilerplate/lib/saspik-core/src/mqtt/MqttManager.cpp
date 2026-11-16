@@ -24,6 +24,7 @@
 #include <string.h>
 
 #include "log/ILogger.h"  // заголовок даёт только forward-declaration
+#include "log/IRebootCauseStore.h"
 
 namespace {
 // Контракт mqtt-topics.md: retained-статус — JSON {"status":"online"|"offline"}.
@@ -40,13 +41,15 @@ struct MqttManager::Impl {
 
 MqttManager* MqttManager::s_instance = nullptr;
 
-MqttManager::MqttManager(ILogger* logger)
+MqttManager::MqttManager(ILogger* logger, IRebootCauseStore* rebootCause)
     : m_logger(logger),
+      m_rebootCause(rebootCause),
       m_cfg{},
       m_impl(nullptr),
       m_configured(false),
       m_lastConnectAttemptMs(0),
       m_brokerLostSinceMs(0),
+      m_lastOnlinePublishMs(0),
       m_subscriptionCount(0) {
     for (auto& sub : m_subscriptions) {
         sub.handler = nullptr;
@@ -74,6 +77,7 @@ bool MqttManager::begin(const MqttConfig& cfg) {
     s_instance = this;
     m_lastConnectAttemptMs = 0;
     m_brokerLostSinceMs = 0;
+    m_lastOnlinePublishMs = 0;
 
     m_impl->mqtt.setServer(cfg.host, cfg.port);
     m_impl->mqtt.setCallback(&MqttManager::onMessageCallback);
@@ -96,6 +100,7 @@ void MqttManager::update() {
     if (m_impl->mqtt.connected()) {
         m_brokerLostSinceMs = 0;
         m_impl->mqtt.loop();  // чтение входящих + поддержание keepalive
+        republishOnlineIfDue(now);
         return;
     }
     if (m_brokerLostSinceMs == 0) {
@@ -136,7 +141,22 @@ void MqttManager::tryConnect(uint32_t now) {
     }
     // Retained "online": подписчики статуса сразу узнают о нашем присутствии.
     m_impl->mqtt.publish(willTopic, LWT_ONLINE, true);
+    m_lastOnlinePublishMs = millis();
     resubscribeAll();
+}
+
+void MqttManager::republishOnlineIfDue(uint32_t now) {
+    // Страховка от «залипшего» offline: retained-сообщение могло потеряться,
+    // а брокер — пересоздаться без volume. Повторяем retained online, чтобы
+    // UI восстановился сам, без перепрошивки и перезапуска платы.
+    if (m_cfg.onlineRepublishMs == 0) {
+        return;
+    }
+    if (now - m_lastOnlinePublishMs < m_cfg.onlineRepublishMs) {
+        return;
+    }
+    m_lastOnlinePublishMs = now;
+    m_impl->mqtt.publish(m_cfg.statusTopic, LWT_ONLINE, true);
 }
 
 void MqttManager::resubscribeAll() {
@@ -249,6 +269,11 @@ void MqttManager::tryRebootIfBrokerLost(uint32_t now) {
     // retry уже недостаточно (поведение esp32-local-mqtt).
     if (m_logger != nullptr) {
         m_logger->logError("reboot", "mqtt-lost");
+    }
+    // Причина живёт в NVS: следующий старт отправит startup-конверт с cause
+    // (без записи причина всегда терялась, и ребут был неотличим от пропажи питания).
+    if (m_rebootCause != nullptr) {
+        m_rebootCause->setRebootCause("mqtt-lost");
     }
     delay(100);  // дать уйти конверту в UART/очередь перед рестартом
     ESP.restart();

@@ -12,9 +12,13 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
+#include "log/IRebootCauseStore.h"
+
 WifiManager::WifiManager(ILogger* logger, uint32_t reconnectIntervalMs,
-                         uint32_t rebootTimeoutMs, bool enableRebootWatchdog)
+                         uint32_t rebootTimeoutMs, bool enableRebootWatchdog,
+                         IRebootCauseStore* rebootCause)
     : m_logger(logger),
+      m_rebootCause(rebootCause),
       m_reconnectIntervalMs(reconnectIntervalMs),
       m_rebootTimeoutMs(rebootTimeoutMs),
       m_enableRebootWatchdog(enableRebootWatchdog),
@@ -63,6 +67,10 @@ void WifiManager::tryRebootIfLost(uint32_t now) {
     // повторного connect недостаточно (поведение esp32-local-mqtt).
     if (m_logger != nullptr) {
         m_logger->logError("reboot", "wifi-lost");
+    }
+    // Причина в NVS → следующий старт отправит startup с cause="wifi-lost".
+    if (m_rebootCause != nullptr) {
+        m_rebootCause->setRebootCause("wifi-lost");
     }
     delay(100);  // дать уйти конверту в UART/очередь перед рестартом
     ESP.restart();

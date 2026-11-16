@@ -22,6 +22,16 @@
   - Верификация: `pio run -e relay_x8_esp32`; прошивка и ручной тест (mosquitto_pub на relay1..8, retained после ребута, логи в telegraf) — вручную пользователем.
   - Документация: запись в README скетчей, новые топики в `saspik-cluster/docs/mqtt-topics.md`, регенерация docs.html. Вне скоупа (follow-up): регистрация unitId3/объекта в Mongo для UI, production-ACL mosquitto, интеграция climate-control с unitId3.
 
+- [Выполнено] Устойчивость шлюза к сбою связи: портал, статус, индикация
+  Статус: код готов, сборки и host-тесты успешны; проверка на железе — вручную после перепрошивки.
+  - Повод: плата `saspik-sawqm001` после переноса в другую сеть ушла в captive portal и провисела там несколько суток. В портале `GatewayApp::update()` выходит до запуска WiFi/MQTT, поэтому ни данных, ни логов, ни статуса нет, а ребут возвращает в тот же портал. Снаружи устройство выглядит мёртвым, хотя железо и прошивка целы.
+  - Выход из портала: `WifiConfig` считает простой (нет подключённых клиентов AP и HTTP-запросов) и через `WIFI_CONFIG_PORTAL_TIMEOUT_MS` (10 мин) делает `ESP.restart()` — повторная попытка STA без физического доступа.
+  - Индикация связи: `STATUS_LED_PIN` в `config.h` (в `esp32-dht22-led` — тот же GPIO 2, что канал `led`); мигает, пока MQTT не поднят или активен портал, после подключения пин возвращается каналу через новый `ChannelBank::refreshActuators()`.
+  - `saspik-core/MqttManager`: периодический republish retained `online` (`MqttConfig::onlineRepublishMs`, в шлюзе 5 мин) — страховка от залипшего `offline` при потере пакета или пересоздании брокера без volume.
+  - `startup` с причиной ребута наконец работает: `MqttManager`/`WifiManager` пишут `mqtt-lost`/`wifi-lost` в `IRebootCauseStore` перед `ESP.restart()` (раньше `setRebootCause` не вызывался ниоткуда), `Logger::publishStartup()` очищает причину после отправки — обычное выключение питания не наследует старую.
+  - `GatewayApp` перепубликует retained `state` на каждом переподключении (было: один раз за загрузку).
+  - Сборки: `pio run` (`esp32-dht22-led`, RAM 13.9% / Flash 63.8%), `pio run -e gateway_esp32`, `pio test -e native` (29/29).
+
 - [Выполнено] Новое устройство unitId2: шлюз DHT22 + LED (esp32-dht22-led)
   Статус: код готов; `pio run` скетча (RAM 13.9%, Flash 63.7%), `gateway_esp32` и `pio test -e native` (29 тестов) успешны; после фикса статуса нужно перепрошить и проверить UI вручную.
   - Скетч `saspik-iot-sketches/esp32-dht22-led` на базе `esp32-boilerplate` (шаблон `GatewayApp`, ядро `saspik-core`): objectId `saspik-sawqm001`, `unitId2`, каналы `temp`/`humi` (DHT22, GPIO4) и `led` (встроенный GPIO2, active low: LOW = вкл). Устройство — единственный шлюз своего юнита, поэтому wildcard-подписка не дублируется.

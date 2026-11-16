@@ -13,6 +13,12 @@
 
 #define WIFI_CONFIG_AP_TIMEOUT_MS 2000
 
+// Сколько портал ждёт настройки, прежде чем перезагрузиться и повторить
+// попытку STA. Без таймаута неудачный Wi-Fi на старте = вечный AP: MQTT не
+// поднимается, данных и логов нет, и снаружи устройство выглядит мёртвым.
+// Отсчёт сбрасывается любым HTTP-запросом и наличием подключённого клиента.
+#define WIFI_CONFIG_PORTAL_TIMEOUT_MS 600000UL  // 10 минут
+
 struct DeviceConfig {
     char wifiSsid[WIFI_CONFIG_SSID_LEN];
     char wifiPass[WIFI_CONFIG_PASS_LEN];
@@ -73,6 +79,8 @@ private:
 
     bool portalMode = false;
     String apSsid;
+    // Время последнего HTTP-запроса к порталу (0 — страницу ещё не открывали).
+    uint32_t lastPortalRequestMs = 0;
 };
 
 extern WifiConfigManager WifiConfig;

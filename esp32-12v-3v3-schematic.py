@@ -31,8 +31,29 @@ import sys
 import ezdxf
 from ezdxf.enums import TextEntityAlignment as TA
 
+SPEC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "board.yaml")
+
+
+def load_spec(path=SPEC_PATH):
+    """Читает board.yaml: геометрия и данные платы живут отдельно от кода."""
+    import yaml
+
+    with open(path, encoding="utf-8") as f:
+        spec = yaml.safe_load(f)
+    for key in ("board", "nets", "wires"):          # обязательные разделы
+        if key not in spec:
+            raise ValueError(f"board.yaml: нет обязательного раздела {key!r}")
+    for key, empty in (("module", {}), ("headers", []), ("smd", []), ("bom", []),
+                       ("pour", {"enabled": False})):
+        spec.setdefault(key, empty)                  # остальное — по желанию
+    return spec
+
+
+SPEC = load_spec()
+
 OUT_DXF = "esp32-12v-3v3-schematic.dxf"
 OUT_PNG = "esp32-12v-3v3-schematic-preview.png"
+OUT_BOARD = "esp32-12v-3v3-schematic-board.png"
 
 # ----------------------------------------------------------------------------
 # Документ
@@ -293,7 +314,7 @@ def sheet_frame(x0, y0, w, h):
     rect(x0 + m, y0 + m, x0 + w - m, y0 + h - m, CFRAME)
     title_block(x0 + w - m - 185, y0 + m,
                 "Плата питания 12 В → 3,3 В", "Схема электрическая принципиальная",
-                "с модулем ESP32", 1, 2, "A3", "1 : 1")
+                "с модулем ESP32", 1, 3, "A3", "1 : 1")
 
 
 # ----------------------------------------------------------------------------
@@ -435,17 +456,37 @@ def draw_filter_and_indicator_33():
     txt("зелёный", 266.5, 227.6, 1.7)
 
 
+def draw_header(x, y_top, entries, name, pitch=6.6):
+    """Гребёнка: entries = [(номер, подпись, тип)], тип: sig / gnd / 3v3."""
+    n = len(entries)
+    y_bot = y_top - (n - 1) * pitch
+    rect(x, y_bot - 4, x + 4, y_top + 4, CSYM)
+    txt(name, x - 1.5, y_top + 7, 2.5, bold=True, align=TA.RIGHT)
+    for i, (num, lab, kind) in enumerate(entries):
+        y = y_top - i * pitch
+        txt(str(num), x + 2, y + 0.8, 1.5, align=TA.MIDDLE_CENTER)
+        txt(lab, x - 3.0, y + 0.9, 1.8, align=TA.RIGHT)
+        if kind == "gnd":
+            ln((x + 4, y), (x + 9, y), CGND)
+            sym_gnd(x + 9, y, rot=90)
+        elif kind == "3v3":
+            ln((x + 4, y), (x + 9, y), C3V3)
+            txt("3,3 В", x + 9.6, y + 0.7, 1.8, C3V3)
+
+
 def draw_esp32_block():
-    """J2 - розетка под плату ESP32 DevKit + гребёнки J3, J4."""
+    """J2 - розетка под плату ESP32-DevKitC + гребёнки J3, J4."""
     x0, y0, x1, y1 = 285, 136, 368, 258
     rect(x0, y0, x1, y1, CSYM)
     txt("J2", x0, 262.0, 3.0, bold=True)
-    txt("РОЗЕТКА 2x19", x0 + 4, 254.0, 2.6, bold=True)
-    txt("сюда вставляется плата", x0 + 4, 170.0, 1.85)
-    txt("ESP32 DevKit V1", x0 + 4, 166.2, 1.85, bold=True)
-    txt("(38 выводов, шаг 2,54 мм)", x0 + 4, 162.4, 1.7)
-    txt("остальные выводы", x0 + 4, 192.5, 1.7)
-    txt("не подключаются", x0 + 4, 189.3, 1.7)
+    txt("РОЗЕТКА 2x19", x0 + 12, 254.0, 2.6, bold=True)
+    txt("ESP32-DevKitC, 38 выводов", x0 + 12, 249.2, 1.8, bold=True)
+    txt("шаг 2,54 мм, ряды 22,86 мм", x0 + 12, 245.4, 1.7)
+    txt("питание: 1 = 3V3, 14 = GND", x0 + 12, 241.4, 1.7)
+    txt("ключ — контакт 1 у антенны", x0 + 12, 237.6, 1.7)
+    txt("GPIO разведены на J3 и J4", x0 + 12, 230.0, 1.7)
+    txt("(нумерация — как на плате)", x0 + 12, 226.4, 1.7)
+    txt("ВНИМАНИЕ: 12 В на GPIO не подавать", x0 + 4, 160.0, 1.8, CNOTE)
 
     # левые выводы питания
     ln((278, 248), (285, 248), C3V3)
@@ -456,36 +497,17 @@ def draw_esp32_block():
     sym_gnd(278, GND_CONN)
     txt("GND", 289, 237.4, 1.9)
 
-    # правые выводы GPIO
-    pins = [("36", 240), ("39", 234), ("34", 228), ("35", 222), ("32", 216), ("33", 210),
-            ("25", 186), ("26", 180), ("27", 174), ("14", 168), ("12", 162), ("13", 156)]
-    for name, y in pins:
-        ln((x1, y), (386, y), CSIG)
-        txt(name, 382.0, y + 1.1, 1.9, align=TA.RIGHT)
+    # J3: 36,39,34,35,32,33,GND,3V3
+    draw_header(386, 256, [
+        (1, "36", "sig"), (2, "39", "sig"), (3, "34", "sig"), (4, "35", "sig"),
+        (5, "32", "sig"), (6, "33", "sig"), (7, "GND", "gnd"), (8, "3V3", "3v3"),
+    ], "J3")
 
-    # --- J3 ---
-    rect(386, 206, 390, 256, CSYM)
-    txt("J3", 383.5, 259.0, 2.6, bold=True, align=TA.RIGHT)
-    for i, y in enumerate([252, 246, 240, 234, 228, 222, 216, 210], start=1):
-        txt(str(i), 388, y + 0.8, 1.5, align=TA.MIDDLE_CENTER)
-    ln((390, 252), (394, 252), C3V3)
-    sym_flag(394, 252, "3,3 В", C3V3, h=1.9)
-    ln((390, 246), (396, 246), CGND)
-    sym_gnd(396, 246, rot=90)
-    txt("3V3", 383.5, 253.0, 1.7, align=TA.RIGHT)
-    txt("GND", 383.5, 247.0, 1.7, align=TA.RIGHT)
-
-    # --- J4 ---
-    rect(386, 140, 390, 190, CSYM)
-    txt("J4", 383.5, 193.0, 2.6, bold=True, align=TA.RIGHT)
-    for i, y in enumerate([186, 180, 174, 168, 162, 156, 150, 144], start=1):
-        txt(str(i), 388, y + 0.8, 1.5, align=TA.MIDDLE_CENTER)
-    ln((390, 150), (396, 150), CGND)
-    sym_gnd(396, 150, rot=90)
-    ln((390, 144), (394, 144), C3V3)
-    sym_flag(394, 144, "3,3 В", C3V3, up=False, h=1.9)
-    txt("GND", 383.5, 151.0, 1.7, align=TA.RIGHT)
-    txt("3V3", 383.5, 145.0, 1.7, align=TA.RIGHT)
+    # J4: 13,GND,12,14,27,26,25
+    draw_header(386, 198, [
+        (1, "13", "sig"), (2, "GND", "gnd"), (3, "12", "sig"), (4, "14", "sig"),
+        (5, "27", "sig"), (6, "26", "sig"), (7, "25", "sig"),
+    ], "J4")
 
 
 def draw_section_titles():
@@ -651,22 +673,15 @@ def draw_warning():
 # ----------------------------------------------------------------------------
 # Лист 2. Топология платы (разводка) + перечень элементов
 # ----------------------------------------------------------------------------
-SHEET2_X = 440.0
-BW, BH = 100.0, 70.0        # размеры платы, мм
+# ─── раскладка листов: вертикально, сверху вниз ─────────────────────────────
+SHEET_GAP = 23.0
+SHEET3_Y = 0.0                        # лист 3 — внизу
+SHEET2_Y = 297.0 + SHEET_GAP          # 320 — посередине
+SHEET1_Y = SHEET2_Y + 297.0 + SHEET_GAP  # 640 — сверху
+
 BSCALE = 2.0
-BX0, BY0 = 455.0, 105.0     # левый нижний угол платы на листе
-
-PITCH = 2.54
-J2X = 48.0                  # первый контакт розетки J2
-J2_TOP = 46.43              # верхний ряд (столбец A платы ESP32)
-J2_BOT = 23.57              # нижний ряд
-J3_Y = 62.0                 # ряд контактов гребёнок J3/J4
-J4X = 68.32
-
-# Ширина дорожек, мм (используется и как вес линии в DXF)
-W_PWR = 1.0
-W_33 = 0.5
-W_SIG = 0.3
+BX0, BY0 = 15.0, SHEET2_Y + 105.0     # левый нижний угол платы на листе 2
+ART_X, ART_Y = 60.0, SHEET3_Y + 105.0  # плата на листе 3 (1:1)
 
 
 def bx(x):
@@ -707,74 +722,97 @@ def silk_rect(x0, y0, x1, y1):
 # Данные платы
 # ----------------------------------------------------------------------------
 # гребёнки и розетка
-J3_PADS = [(J2X + i * PITCH, J3_Y) for i in range(8)]
-J4_PADS = [(J4X + i * PITCH, J3_Y) for i in range(8)]
-J2_TOP_PADS = [(J2X + i * PITCH, J2_TOP) for i in range(19)]
-J2_BOT_PADS = [(J2X + i * PITCH, J2_BOT) for i in range(19)]
+# ─── данные платы (источник — board.yaml) ───────────────────────────────────
+BW = float(SPEC["board"]["width"])
+BH = float(SPEC["board"]["height"])
+BOARD_HOLES = [(float(h["x"]), float(h["y"]), float(h["d"])) for h in SPEC["board"]["holes"]]
 
-# SMD-контакты: (x, y, w, h)
-SMD = [
-    (15.2, 36.2, 1.6, 1.8), (17.0, 36.2, 1.6, 1.8),        # F1
-    (20.3, 36.2, 2.2, 2.4), (23.2, 36.2, 2.2, 2.4),        # D1
-    (27.0, 36.2, 1.3, 1.5), (27.0, 33.8, 1.3, 1.5),        # C2
-    (38.5, 58.2, 1.3, 1.5), (38.5, 55.8, 1.3, 1.5),        # C3
-    (41.0, 58.2, 1.3, 1.5), (41.0, 55.8, 1.3, 1.5),        # C4
-    (32.0, 32.0, 1.0, 2.0), (34.25, 32.0, 1.0, 2.0),       # U1 pin1, pin2
-    (36.5, 32.0, 1.0, 2.0), (34.0, 35.5, 3.4, 2.2),        # U1 pin3, tab
-    (18.5, 14.0, 1.3, 1.5), (20.5, 14.0, 1.3, 1.5),        # R1
-    (22.5, 14.0, 1.6, 1.8), (24.5, 14.0, 1.6, 1.8),        # LED1
-    (45.5, 14.0, 1.3, 1.5), (47.5, 14.0, 1.3, 1.5),        # R2
-    (49.0, 14.0, 1.6, 1.8), (51.0, 14.0, 1.6, 1.8),        # LED2
-]
+NETS = SPEC["nets"]
+W_PWR = float(NETS["12V"]["width"])
+W_33 = float(NETS["3V3"]["width"])
+W_SIG = float(NETS["SIG"]["width"])
 
-# Один слой меди; цвет дорожки = цепь (как на листе 1).
-TRACES = [
-    # --- +12 В ---
-    (W_PWR, [(8.0, 37.5), (10.0, 37.5), (11.3, 36.2), (15.2, 36.2)], "ШИНА_12В"),
-    (W_PWR, [(17.0, 36.2), (20.3, 36.2)], "ШИНА_12В"),
-    (W_PWR, [(23.2, 36.2), (27.0, 36.2)], "ШИНА_12В"),
-    (W_PWR, [(27.0, 36.2), (30.0, 36.2), (30.0, 32.0), (32.0, 32.0)], "ШИНА_12В"),
-    (W_PWR, [(13.0, 36.2), (13.0, 27.5)], "ШИНА_12В"),
-    (W_SIG, [(18.5, 36.2), (18.5, 14.0)], "ШИНА_12В"),
-    # --- +3,3 В ---
-    (W_33, [(34.0, 35.5), (34.0, 58.0), (42.5, 58.0)], "ШИНА_3В3"),
-    (W_33, [(45.5, 58.0), (48.0, 58.0), (48.0, 62.0)], "ШИНА_3В3"),
-    (W_33, [(48.0, 58.0), (48.0, 46.43)], "ШИНА_3В3"),
-    (W_33, [(42.5, 58.0), (42.5, 66.5), (86.1, 66.5), (86.1, 62.0)], "ШИНА_3В3"),
-    (W_SIG, [(45.5, 58.0), (45.5, 14.0)], "ШИНА_3В3"),
-    # --- GND ---
-    (W_PWR, [(8.0, 6.0), (51.5, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(8.0, 32.5), (8.0, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(13.0, 20.5), (13.0, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(27.0, 33.8), (27.0, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(36.5, 32.0), (36.5, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(38.5, 55.8), (38.5, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(41.0, 55.8), (41.0, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(44.0, 63.8), (44.0, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(24.5, 14.0), (24.5, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(51.0, 14.0), (51.0, 6.0)], "ЗЕМЛЯ"),
-    (W_PWR, [(44.0, 63.8), (83.56, 63.8)], "ЗЕМЛЯ"),
-    (W_PWR, [(50.54, 62.0), (50.54, 63.8)], "ЗЕМЛЯ"),
-    (W_PWR, [(83.56, 62.0), (83.56, 63.8)], "ЗЕМЛЯ"),
-    (W_PWR, [(83.56, 46.43), (83.56, 62.0)], "ЗЕМЛЯ"),
-    # --- связи светодиодов ---
-    (W_SIG, [(20.5, 14.0), (22.5, 14.0)], "СИГНАЛЫ"),
-    (W_SIG, [(47.5, 14.0), (49.0, 14.0)], "СИГНАЛЫ"),
-]
+MODULE = SPEC["module"]
+PITCH = float(MODULE["pitch"])
+J2X = float(MODULE["x"])
+J2_TOP = float(MODULE["row_top_y"])
+J2_BOT = float(MODULE["row_bottom_y"])
+J2_PINS = {int(k): str(v) for k, v in MODULE["pins"].items()}
+J2_N = len(J2_PINS)
+# контакт 1 справа -> x убывает с номером
+J2_PIN_X = {i: (J2X + (i - 1) * PITCH if MODULE.get("pin1") == "left"
+                else J2X + (J2_N - i) * PITCH) for i in range(1, J2_N + 1)}
 
-# Сигнальные дорожки J2 -> J3/J4
-for i in range(6):
-    x = J2X + (i + 2) * PITCH
-    TRACES.append((W_SIG, [(x, J2_TOP), (x, J3_Y)], "СИГНАЛЫ"))
-for i in range(6):
-    x = J4X + i * PITCH
-    TRACES.append((W_SIG, [(x, J2_TOP), (x, J3_Y)], "СИГНАЛЫ"))
+HEADERS = SPEC["headers"]
+J3_Y = float(HEADERS[0]["y"])
+J4X = float(HEADERS[1]["x"])
+J3_PADS = [(float(HEADERS[0]["x"]) + i * PITCH, J3_Y) for i in range(len(HEADERS[0]["functions"]))]
+J4_PADS = [(float(HEADERS[1]["x"]) + i * PITCH, J3_Y) for i in range(len(HEADERS[1]["functions"]))]
+J2_TOP_PADS = [(J2_PIN_X[i], J2_TOP) for i in range(1, J2_N + 1)]
+J2_BOT_PADS = [(J2_PIN_X[i], J2_BOT) for i in range(1, J2_N + 1)]
 
-JP1 = (42.5, 58.0, 45.5, 58.0)   # перемычка через шину GND
+SMD = [tuple(s[:4]) for s in SPEC["smd"]]
+BOM_ROWS = [tuple(r) for r in SPEC["bom"]]
+
+
+def _chamfer(pts, d):
+    """Срезает прямые углы на 45° — так разводят платы, без «ступенек»."""
+    if len(pts) < 3:
+        return list(pts)
+    out = [pts[0]]
+    for i in range(1, len(pts) - 1):
+        p0, p1, p2 = pts[i - 1], pts[i], pts[i + 1]
+        v1 = (p1[0] - p0[0], p1[1] - p0[1])
+        v2 = (p2[0] - p1[0], p2[1] - p1[1])
+        l1 = math.hypot(*v1)
+        l2 = math.hypot(*v2)
+        if l1 < 1e-9 or l2 < 1e-9:
+            continue
+        u1 = (v1[0] / l1, v1[1] / l1)
+        u2 = (v2[0] / l2, v2[1] / l2)
+        if u1[0] * u2[0] + u1[1] * u2[1] > 0.999:
+            continue
+        dd = min(d, l1 / 2.0, l2 / 2.0)
+        out.append((p1[0] - u1[0] * dd, p1[1] - u1[1] * dd))
+        out.append((p1[0] + u2[0] * dd, p1[1] + u2[1] * dd))
+    out.append(pts[-1])
+    return out
+
+
+# заранее проложенные участки из спеки
+TRACES = []
+for wire in SPEC["wires"]:
+    net = wire["net"]
+    TRACES.append((float(NETS[net]["width"]),
+                   [(float(x), float(y)) for x, y in wire["points"]],
+                   NETS[net]["layer"]))
+
+# веер сигналов: каждый GPIO-контакт гребёнки соединяется с одноимённым контактом модуля
+_PIN_BY_FUNC = {f: n for n, f in J2_PINS.items() if f.startswith("GPIO")}
+for header, pads in ((HEADERS[0], J3_PADS), (HEADERS[1], J4_PADS)):
+    for func, (px, py) in zip(header["functions"], pads):
+        pin = _PIN_BY_FUNC.get(str(func))
+        if pin is None:
+            continue
+        x = J2_PIN_X[pin]
+        TRACES.append((W_SIG, [(x, J2_TOP), (x, py)], NETS["SIG"]["layer"]))
+
+# скругление углов 45°
+TRACES = [(w, _chamfer(pts, max(0.45, w * 1.1)), lay) for w, pts, lay in TRACES]
+
+# сквозные площадки земли -> терморельефы
+TH_GND = [(8.0, 32.5, 1.0)]                                   # J1.2
+for header, pads in ((HEADERS[0], J3_PADS), (HEADERS[1], J4_PADS)):
+    for func, (px, py) in zip(header["functions"], pads):
+        if str(func).upper() == "GND":
+            TH_GND.append((px, py, 0.9))
+for n, func in J2_PINS.items():
+    if func.upper() == "GND":
+        TH_GND.append((J2_PIN_X[n], J2_TOP, 0.9))
 
 
 def board_sheet_frame():
-    x0, y0, w, h = SHEET2_X, 0.0, 420.0, 297.0
+    x0, y0, w, h = 0.0, SHEET2_Y, 420.0, 297.0
     m = 5.0
     for a, b in (((x0, y0), (x0 + w, y0)), ((x0 + w, y0), (x0 + w, y0 + h)),
                  ((x0 + w, y0 + h), (x0, y0 + h)), ((x0, y0 + h), (x0, y0))):
@@ -782,47 +820,235 @@ def board_sheet_frame():
     rect(x0 + m, y0 + m, x0 + w - m, y0 + h - m, CFRAME)
     title_block(x0 + w - m - 185, y0 + m,
                 "Плата питания 12 В → 3,3 В", "Топология печатной платы (1 слой)",
-                "с модулем ESP32", 2, 2, "A3", "2 : 1")
+                "с модулем ESP32", 2, 3, "A3", "2 : 1")
+
+
+# ----------------------------------------------------------------------------
+# Медь как реальная геометрия: контуры дорожек = результат травления
+# ----------------------------------------------------------------------------
+def _polys(g):
+    if g is None or g.is_empty:
+        return []
+    if g.geom_type == "Polygon":
+        return [g]
+    return [p for p in g.geoms if not p.is_empty]
+
+
+# Параметры полигона земли
+POUR_CLR = 0.4        # зазор полигона до чужих цепей и края платы, мм
+POUR_EDGE = 0.4
+TH_GND = [(8.0, 32.5, 1.0), (91.18, J3_Y, 0.9),
+          (60.7, J3_Y, 0.9), (60.7, 46.43, 0.9)]
+
+
+def _rounded(w, h, r, n=8):
+    from shapely.geometry import Polygon
+    pts = []
+    for cx, cy, a0 in ((w - r, r, -90), (w - r, h - r, 0), (r, h - r, 90), (r, r, 180)):
+        for i in range(n + 1):
+            a = math.radians(a0 + 90.0 * i / n)
+            pts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+    return Polygon(pts)
+
+
+def _thermal(x, y, r_pad, gap=POUR_CLR, w=0.7):
+    """Кольцо зазора и четыре спицы — чтобы паять паяльником, а не греть полигон."""
+    from shapely.geometry import Point, box
+    from shapely.affinity import rotate
+    ring = Point(x, y).buffer(r_pad + gap, quad_segs=24).difference(
+        Point(x, y).buffer(r_pad + 0.02, quad_segs=24))
+    # спицы под 45° — уходят от соседних выводов на сетке 2,54 мм
+    sp = box(x - w / 2, y + r_pad - 0.05, x + w / 2, y + r_pad + gap + 0.2)
+    sp = rotate(sp, 45, origin=(x, y))
+    spokes = [rotate(sp, a, origin=(x, y)) for a in (0, 90, 180, 270)]
+    return ring, spokes
+
+
+def build_copper():
+    """Строит {слой: shapely-геометрия} в миллиметрах платы.
+
+    Дорожка = буфер центральной линии на половину ширины (круглые торцы и стыки),
+    пад = реальная площадка, из отверстий вычитается сверловка. Результат — именно
+    та медь, что останется на плате после травления.
+    """
+    from shapely.geometry import LineString, Point, box as sbox
+    from shapely.ops import unary_union
+
+    by_layer, drills = {}, {}
+
+    for w, pts, lay in TRACES:
+        g = LineString([(float(x), float(y)) for x, y in pts]).buffer(
+            w / 2.0, quad_segs=16, cap_style="round", join_style="round")
+        by_layer.setdefault(lay, []).append(g)
+
+    pads = []
+    th = [(8.0, 37.5, 2.0, 1.1), (8.0, 32.5, 2.0, 1.1),
+          (13.0, 27.5, 2.6, 1.1), (13.0, 20.5, 2.6, 1.1),
+          ]
+    for x, y in J2_TOP_PADS + J2_BOT_PADS + J3_PADS + J4_PADS:
+        th.append((x, y, 1.8, 1.0))
+    for x, y, d, hole in th:
+        pads.append((Point(x, y).buffer(d / 2.0, quad_segs=24), Point(x, y), hole / 2.0))
+    for x, y, w, h in SMD:
+        pads.append((sbox(x - w / 2, y - h / 2, x + w / 2, y + h / 2), Point(x, y), 0.0))
+
+    for pgeom, centre, drill in pads:
+        target = None
+        for lay, shapes in by_layer.items():
+            if any(sh.buffer(0.05).intersects(pgeom) for sh in shapes):
+                target = lay
+                break
+        lay = target or "ПЛАТА_ПАДЫ"
+        by_layer.setdefault(lay, []).append(pgeom)
+        if drill:
+            drills.setdefault(lay, []).append(centre.buffer(drill, quad_segs=20))
+
+    copper = {}
+    for lay, shapes in by_layer.items():
+        g = unary_union(shapes)
+        if lay in drills:
+            g = g.difference(unary_union(drills[lay]))
+        copper[lay] = g
+
+    # --- полигон земли ---
+    gnd = copper.get("ЗЕМЛЯ")
+    if gnd is not None:
+        others = [g for lay, g in copper.items() if lay != "ЗЕМЛЯ"]
+        board = _rounded(BW, BH, 3.0).buffer(-POUR_EDGE, join_style=1)
+        pour = board.difference(unary_union(others).buffer(POUR_CLR)) if others else board
+
+        rings, spokes = [], []
+        for x, y, r in TH_GND:
+            ring, sp = _thermal(x, y, r)
+            rings.append(ring)
+            spokes.extend(sp)
+        rings = unary_union(rings)
+        spokes = unary_union(spokes)
+
+        gnd = gnd.difference(rings)          # разрываем подводку у отверстий
+        pour = pour.difference(rings)
+        keep = gnd.buffer(0.02).union(spokes.buffer(0.02))
+        parts = [p for p in _polys(pour) if p.intersects(keep)]
+        copper["ЗЕМЛЯ"] = unary_union([gnd, unary_union(parts) if parts else gnd, spokes])
+    return copper
+
+
+COPPER = None
+
+
+def emit_copper(ox, oy, s, hatch=True, lw=13):
+    """Выводит медь: замкнутые контуры + сплошная заливка. (ox, oy, s) — размещение."""
+    from ezdxf.lldxf import const
+
+    for lay, geom in COPPER.items():
+        try:
+            aci = doc.layers.get(lay).color
+        except Exception:
+            aci = 7
+        for poly in _polys(geom):
+            ext = [(ox + x * s, oy + y * s) for x, y in poly.exterior.coords[:-1]]
+            holes = [[(ox + x * s, oy + y * s) for x, y in r.coords[:-1]]
+                     for r in poly.interiors]
+            msp.add_lwpolyline(ext, close=True,
+                               dxfattribs={"layer": lay, "lineweight": lw})
+            for ring in holes:
+                msp.add_lwpolyline(ring, close=True,
+                                   dxfattribs={"layer": lay, "lineweight": lw})
+            if not hatch:
+                continue
+            h = msp.add_hatch(dxfattribs={"layer": lay})
+            h.set_solid_fill(color=aci, style=0)
+            h.paths.add_polyline_path(ext, is_closed=True,
+                                      flags=const.BOUNDARY_PATH_EXTERNAL)
+            for ring in holes:
+                h.paths.add_polyline_path(ring, is_closed=True,
+                                          flags=const.BOUNDARY_PATH_DEFAULT)
+
+
+def emit_outline(ox, oy, sc, lw=60):
+    """Контур платы и крепёж в произвольном масштабе."""
+    def T(x, y):
+        return (ox + x * sc, oy + y * sc)
+
+    r = 3.0
+    ln(T(r, 0), T(BW - r, 0), "ПЛАТА_КОНТУР", lw=lw)
+    ln(T(BW, r), T(BW, BH - r), "ПЛАТА_КОНТУР", lw=lw)
+    ln(T(BW - r, BH), T(r, BH), "ПЛАТА_КОНТУР", lw=lw)
+    ln(T(0, BH - r), T(0, r), "ПЛАТА_КОНТУР", lw=lw)
+    arc(T(BW - r, r)[0], T(BW - r, r)[1], r * sc, 270, 360, "ПЛАТА_КОНТУР", lw=lw)
+    arc(T(BW - r, BH - r)[0], T(BW - r, BH - r)[1], r * sc, 0, 90, "ПЛАТА_КОНТУР", lw=lw)
+    arc(T(r, BH - r)[0], T(r, BH - r)[1], r * sc, 90, 180, "ПЛАТА_КОНТУР", lw=lw)
+    arc(T(r, r)[0], T(r, r)[1], r * sc, 180, 270, "ПЛАТА_КОНТУР", lw=lw)
+
+    for hx, hy, hd in BOARD_HOLES:
+        circle(T(hx, hy)[0], T(hx, hy)[1], hd * sc / 2, "ПЛАТА_КОНТУР")
+        circle(T(hx, hy)[0], T(hx, hy)[1], 1.6 * sc / 2, "ПЛАТА_КОНТУР")
+        ln((T(hx, hy)[0] - 4.5, T(hx, hy)[1]), (T(hx, hy)[0] + 4.5, T(hx, hy)[1]), "ОСЕВЫЕ")
+        ln((T(hx, hy)[0], T(hx, hy)[1] - 4.5), (T(hx, hy)[0], T(hx, hy)[1] + 4.5), "ОСЕВЫЕ")
 
 
 def draw_board_outline():
-    r = 3.0
-    ln((bx(r), by(0)), (bx(BW - r), by(0)), "ПЛАТА_КОНТУР", lw=60)
-    ln((bx(BW), by(r)), (bx(BW), by(BH - r)), "ПЛАТА_КОНТУР", lw=60)
-    ln((bx(BW - r), by(BH)), (bx(r), by(BH)), "ПЛАТА_КОНТУР", lw=60)
-    ln((bx(0), by(BH - r)), (bx(0), by(r)), "ПЛАТА_КОНТУР", lw=60)
-    arc(bx(BW - r), by(r), r * BSCALE, 270, 360, "ПЛАТА_КОНТУР", lw=60)
-    arc(bx(BW - r), by(BH - r), r * BSCALE, 0, 90, "ПЛАТА_КОНТУР", lw=60)
-    arc(bx(r), by(BH - r), r * BSCALE, 90, 180, "ПЛАТА_КОНТУР", lw=60)
-    arc(bx(r), by(r), r * BSCALE, 180, 270, "ПЛАТА_КОНТУР", lw=60)
+    emit_outline(BX0, BY0, BSCALE)
 
-    for hx, hy in ((4, 4), (96, 4), (4, 66), (96, 66)):
-        circle(bx(hx), by(hy), 3.2, "ПЛАТА_КОНТУР")
-        circle(bx(hx), by(hy), 1.6, "ПЛАТА_КОНТУР")
-        ln((bx(hx) - 4.5, by(hy)), (bx(hx) + 4.5, by(hy)), "ОСЕВЫЕ")
-        ln((bx(hx), by(hy) - 4.5), (bx(hx), by(hy) + 4.5), "ОСЕВЫЕ")
+
+def board_artwork_sheet():
+    """Лист 3: медь 1:1 — рисунок для травления."""
+    x0, y0, w, h = 0.0, SHEET3_Y, 420.0, 297.0
+    m = 5.0
+    for a, b in (((x0, y0), (x0 + w, y0)), ((x0 + w, y0), (x0 + w, y0 + h)),
+                 ((x0 + w, y0 + h), (x0, y0 + h)), ((x0, y0 + h), (x0, y0))):
+        ln(a, b, CFRAME, lw=50)
+    rect(x0 + m, y0 + m, x0 + w - m, y0 + h - m, CFRAME)
+    title_block(x0 + w - m - 185, y0 + m,
+                "Плата питания 12 В → 3,3 В", "Слой меди. Рисунок для травления",
+                "с модулем ESP32", 3, 3, "A3", "1 : 1")
+
+    ox, oy = ART_X, ART_Y
+    emit_outline(ox, oy, 1.0, lw=50)
+    emit_copper(ox, oy, 1.0, hatch=True, lw=0)
+
+    # размеры
+    arrow_h(ox, ox + BW, oy - 8.0)
+    txt("100", ox + BW / 2, oy - 6.0, 2.4, align=TA.MIDDLE_CENTER)
+    ln((ox, oy), (ox, oy - 10), "РАЗМЕРЫ", lw=13)
+    ln((ox + BW, oy), (ox + BW, oy - 10), "РАЗМЕРЫ", lw=13)
+    arrow_v(oy, oy + BH, ox - 8.0)
+    txt("70", ox - 10.2, oy + BH / 2, 2.4, align=TA.MIDDLE_CENTER, rot=90)
+    ln((ox, oy), (ox - 10, oy), "РАЗМЕРЫ", lw=13)
+    ln((ox, oy + BH), (ox - 10, oy + BH), "РАЗМЕРЫ", lw=13)
+
+    txt("МЕДЬ, 1:1 — КОНТУРЫ СООТВЕТСТВУЮТ ГРАНИЦАМ ДОРОЖЕК ПОСЛЕ ТРАВЛЕНИЯ",
+        ox - 15, oy + BH + 18, 3.0, bold=True)
+    txt("Печать на прозрачной плёнке (ЛУТ/фоторезист) или экспорт в CAM — масштаб 1:1, без правок.",
+        ox - 15, oy + BH + 12, 2.0, CNOTE)
+    txt("Полигон GND с зазором 0,4 мм и терморельефами; сверловка вычтена. Сторона установки компонентов.",
+        ox - 15, oy + BH + 8, 2.0, CNOTE)
+
+    # линейка-масштаб
+    sx, sy = ox - 15, oy - 22
+    for i in range(10):
+        ln((sx + i * 10, sy), (sx + i * 10, sy + (3 if i % 5 == 0 else 1.8)), "РАЗМЕРЫ", lw=18)
+    ln((sx, sy), (sx + 100, sy), "РАЗМЕРЫ", lw=18)
+    txt("0", sx, sy - 3.0, 1.8, align=TA.MIDDLE_CENTER)
+    txt("50", sx + 50, sy - 3.0, 1.8, align=TA.MIDDLE_CENTER)
+    txt("100 мм", sx + 100, sy - 3.0, 1.8, align=TA.MIDDLE_CENTER)
+
+    # легенда
+    ly = oy + BH - 8
+    txt("ЦВЕТ = ЦЕПЬ", x0 + 300, oy + BH + 18, 2.4, bold=True)
+    for i, (lay, name) in enumerate((("ШИНА_12В", "+12 В"), ("ШИНА_3В3", "+3,3 В"),
+                                     ("ЗЕМЛЯ", "GND"), ("СИГНАЛЫ", "сигналы"))):
+        xx = x0 + 300
+        yy = ly - i * 6
+        rect(xx, yy - 1.2, xx + 8, yy + 1.2, lay, lw=9)
+        txt(name, xx + 11, yy - 1.2, 2.0)
+    txt("ПЛАТА_ПАДЫ — контакты без цепи", x0 + 300, ly - 26, 1.8, CNOTE)
+    txt("Цвет — только для наглядности: это один слой меди.", x0 + 300, ly - 30, 1.8, CNOTE)
 
 
 def draw_board_traces():
-    for w, pts, lay in TRACES:
-        bpath(pts, lay, w)
-
-    # контактные площадки
-    pad_th(8.0, 37.5, d=2.0, hole=1.1)
-    pad_th(8.0, 32.5, d=2.0, hole=1.1)
-    for x, y in J2_TOP_PADS + J2_BOT_PADS + J3_PADS + J4_PADS:
-        pad_th(x, y)
-    for x, y, w, h in SMD:
-        pad_smd(x, y, w, h)
-    pad_th(13.0, 27.5, d=2.6, hole=1.1)
-    pad_th(13.0, 20.5, d=2.6, hole=1.1)
-
-    # перемычка JP1
-    pad_th(JP1[0], JP1[1], d=1.6, hole=0.9)
-    pad_th(JP1[2], JP1[3], d=1.6, hole=0.9)
-    arc(bx((JP1[0] + JP1[2]) / 2), by(JP1[1]) + 0.6 * BSCALE, 1.3 * BSCALE,
-        0, 180, "ПЛАТА_ДЕТАЛИ", lw=30)
-    txt("JP1", bx(43.2), by(61.0), 1.7, bold=True)
+    # медь настоящими контурами (2:1)
+    emit_copper(BX0, BY0, BSCALE, hatch=True, lw=0)
 
     # шелкография
     silk_rect(2.0, 31.0, 12.0, 39.0)                      # J1
@@ -831,13 +1057,13 @@ def draw_board_traces():
     circle(bx(13.0), by(24.0), 4.0 * BSCALE, "ПЛАТА_ДЕТАЛИ")
     txt("+", bx(16.6), by(27.0), 2.4, bold=True)
     silk_rect(26.2, 33.0, 27.8, 37.0)                     # C2
-    silk_rect(37.7, 55.0, 39.3, 59.0)                     # C3
-    silk_rect(40.2, 55.0, 41.8, 59.0)                     # C4
+    silk_rect(37.7, 41.4, 39.3, 45.0)                     # C3
+    silk_rect(40.2, 41.4, 41.8, 45.0)                     # C4
     silk_rect(31.0, 32.0, 37.5, 35.5)                     # U1
     silk_rect(17.8, 13.2, 21.2, 14.8)                     # R1
     silk_rect(21.7, 13.0, 25.3, 15.0)                     # LED1
-    silk_rect(44.8, 13.2, 48.2, 14.8)                     # R2
-    silk_rect(48.2, 13.0, 51.8, 15.0)                     # LED2
+    silk_rect(34.3, 51.2, 37.7, 52.8)                     # R2
+    silk_rect(37.7, 51.0, 40.3, 53.0)                      # LED2
     rect(bx(44.5), by(21.0), bx(99.5), by(49.0), "ОСЕВЫЕ")
 
     txt("J1", bx(4.0), by(41.5), 2.0, bold=True)
@@ -845,16 +1071,18 @@ def draw_board_traces():
     txt("D1", bx(21.7), by(32.8), 1.8, align=TA.MIDDLE_CENTER)
     txt("C1", bx(8.6), by(24.8), 1.8, bold=True)
     txt("C2", bx(28.6), by(39.4), 1.8, align=TA.MIDDLE_CENTER)
-    txt("C3", bx(38.5), by(60.6), 1.8, align=TA.MIDDLE_CENTER)
-    txt("C4", bx(41.0), by(60.6), 1.8, align=TA.MIDDLE_CENTER)
+    txt("C3", bx(37.2), by(46.4), 1.8, align=TA.MIDDLE_CENTER)
+    txt("C4", bx(40.0), by(46.4), 1.8, align=TA.MIDDLE_CENTER)
     txt("U1", bx(31.2), by(30.4), 1.8, bold=True)
     txt("R1", bx(17.5), by(11.6), 1.8, align=TA.MIDDLE_CENTER)
     txt("LED1", bx(21.5), by(11.6), 1.8, align=TA.MIDDLE_CENTER)
-    txt("R2", bx(44.5), by(11.6), 1.8, align=TA.MIDDLE_CENTER)
-    txt("LED2", bx(48.0), by(11.6), 1.8, align=TA.MIDDLE_CENTER)
-    txt("J2  (розетка 2×19)", bx(48.0), by(52.4), 2.0, bold=True)
-    txt("J3", bx(J2X - 2.0), by(64.6), 1.8, align=TA.RIGHT, bold=True)
-    txt("J4", bx(J4X - 2.0), by(64.6), 1.8, align=TA.RIGHT, bold=True)
+    txt("R2", bx(35.8), by(50.0), 1.6, align=TA.MIDDLE_CENTER)
+    txt("LED2", bx(38.6), by(50.0), 1.6, align=TA.MIDDLE_CENTER)
+    txt("J2  (розетка 2×19)", bx(48.0), by(37.0), 2.0, bold=True)
+    txt("1", bx(92.3), by(44.8), 2.4, bold=True, align=TA.MIDDLE_CENTER)
+    txt("антенна", bx(94.6), by(44.8), 1.7, CNOTE)
+    txt("J3", bx(75.94), by(59.0), 1.8, bold=True)
+    txt("J4", bx(58.16), by(59.0), 1.8, bold=True)
     txt("ESP32", bx(70.0), by(34.0), 2.6, bold=True, align=TA.MIDDLE_CENTER)
     txt("габарит платы модуля", bx(70.0), by(19.6), 1.7, align=TA.MIDDLE_CENTER)
 
@@ -888,7 +1116,7 @@ def draw_board_legend():
     x0, y0 = bx(0), by(0) - 23
     txt("ОБОЗНАЧЕНИЯ", x0, y0, 2.4, bold=True)
     txt("Плата односторонняя: вся медь на одном слое,", x0, y0 - 5.0, 1.7, CNOTE)
-    txt("переходных отверстий нет.", x0, y0 - 7.6, 1.7, CNOTE)
+    txt("переходных отверстий нет. Свободная площадь — полигон GND.", x0, y0 - 7.6, 1.7, CNOTE)
     rows = [
         ("ШИНА_12В", "цепь +12 В"),
         ("ШИНА_3В3", "цепь +3,3 В"),
@@ -897,19 +1125,15 @@ def draw_board_legend():
     ]
     yy = y0 - 13.0
     for lay, desc in rows:
-        if lay == "JP1":
-            circle(x0 + 3.0, yy + 0.6, 1.1, "ПЛАТА_ПАДЫ")
-            arc(x0 + 3.0, yy + 1.2, 1.1, 0, 180, "ПЛАТА_ДЕТАЛИ")
-        else:
-            ln((x0, yy + 0.8), (x0 + 12, yy + 0.8), lay, lw=45)
+        ln((x0, yy + 0.8), (x0 + 12, yy + 0.8), lay, lw=45)
         txt(desc, x0 + 15, yy, 1.9, CNOTE)
         yy -= 4.6
 
 
 def draw_trace_table():
     """Таблица рекомендуемых ширин дорожек."""
-    x0, x1 = 672.0, 845.0
-    top = 148.0
+    x0, x1 = 232.0, 405.0
+    top = 148.0 + SHEET2_Y
     txt("ШИРИНА ДОРОЖЕК", x0, top + 16, 2.8, bold=True)
     txt("Медь 35 мкм (1 oz), внешний слой", x0, top + 11.5, 1.9, CNOTE)
 
@@ -947,8 +1171,8 @@ def draw_trace_table():
         "",
         "Зазор между дорожками — не менее 0,2 мм.",
         "Плата односторонняя — переходных отверстий нет.",
-        "Перемычка JP1 — 1 шт. (пересечение 3,3 В и шины GND).",
-        "Свободные места залить полигоном GND (один слой).",
+
+        "Свободные места залиты полигоном GND: зазор 0,4 мм, терморельефы на отверстиях.",
     ]
     for s in lines:
         txt(s, x0, yy, 1.8, CNOTE)
@@ -962,10 +1186,11 @@ def draw_board_notes():
     lines = [
         "1. Плата односторонняя: все дорожки на слое «ДОРОЖКИ», второй слой не нужен.",
         "2. 12 В и GND — 1,0 мм; 3,3 В — 0,5 мм; сигналы — 0,3 мм; зазор 0,2 мм.",
-        "3. JP1 — единственное пересечение (3,3 В через шину GND):",
-        "    провод 0,5 мм или резистор 0 Ом в корпусе 0805, ставится последним.",
         "4. U1: вывод 2 (VOUT) не паяется — он соединён с табом внутри корпуса, ток идёт через таб.",
-        "5. Разводка учебная: сверьте цоколёвку вашей платы ESP32 DevKit.",
+        "5. Полигон GND — 0,4 мм до чужих цепей; отверстия GND с 4 спицами (терморельеф).",
+        "6. J2 — DevKitC, 38 конт. (таблица Espressif); контакт 1 — у антенны, справа:",
+        "    1=3V3, 2=EN, 3..8 = 36, 39, 34, 35, 32, 33;  9..13 = 25, 26, 27, 14, 12;",
+        "    14=GND, 15=13, 16..19 = D2, D3, CMD, 5V (не задействованы).",
     ]
     yy = y0 - 5.0
     for s_ in lines:
@@ -974,28 +1199,11 @@ def draw_board_notes():
 
 
 def draw_bom():
-    x0, w = 672.0, 173.0
+    x0, w = 232.0, 173.0
     c1, c2, c3 = 24.0, 126.0, 17.0
-    rows = [
-        ("Поз.", "Наименование", "Кол."),
-        ("J1", "Клеммник 2 контакта, шаг 5,08 мм", "1"),
-        ("J2", "Розетка 2x19, шаг 2,54 мм (под ESP32 DevKit)", "1"),
-        ("J3, J4", "Гребёнка 1x8, шаг 2,54 мм", "2"),
-        ("JP1", "Перемычка проволочная или резистор 0 Ом", "1"),
-        ("F1", "Предохранитель 1 А (вставка или самовосст.)", "1"),
-        ("D1", "Диод Шоттки SS34 (3 А, 40 В)", "1"),
-        ("U1", "AMS1117-3.3, корпус SOT-223", "1"),
-        ("C1", "Конденсатор 220 мкФ, 25 В, электролит", "1"),
-        ("C2", "Конденсатор 10 мкФ, 25 В, керамика", "1"),
-        ("C3", "Конденсатор 22 мкФ, 10 В, керамика", "1"),
-        ("C4", "Конденсатор 100 нФ, 50 В, керамика", "1"),
-        ("R1", "Резистор 1,2 кОм, 0,25 Вт", "1"),
-        ("R2", "Резистор 330 Ом, 0,25 Вт", "1"),
-        ("LED1, LED2", "Светодиод 3 мм, зелёный", "2"),
-        ("-", "Плата ESP32 DevKit V1 (вставляется в J2)", "1"),
-    ]
+    rows = [("Поз.", "Наименование", "Кол.")] + [tuple(r) for r in BOM_ROWS]
     rh = 6.1
-    top = 264.0
+    top = 264.0 + SHEET2_Y
     bottom = top - (len(rows) - 1) * rh
     txt("ПЕРЕЧЕНЬ ЭЛЕМЕНТОВ", x0, top + 7.0, 2.8, bold=True)
 
@@ -1022,6 +1230,42 @@ def draw_bom():
 # ----------------------------------------------------------------------------
 # Сборка
 # ----------------------------------------------------------------------------
+def _fill_copper(ax, bbox):
+    """Заливает медь патчами matplotlib: полигон с дырками рисуется по правилу
+    чётности, чего не умеет стандартный backend для HATCH."""
+    from matplotlib.path import Path as MPath
+    from matplotlib.patches import PathPatch
+    from ezdxf.colors import aci2rgb
+    from shapely.geometry.polygon import orient
+
+    if COPPER is None:
+        return
+    for ox, oy, s_ in ((BX0, BY0, BSCALE), (ART_X, ART_Y, 1.0)):
+        for lay, geom in COPPER.items():
+            try:
+                aci = doc.layers.get(lay).color
+                r, g, b = (0, 0, 0) if aci == 7 else aci2rgb(aci)
+            except Exception:
+                r, g, b = 0, 0, 0
+            colour = (r / 255, g / 255, b / 255)
+            for poly in _polys(geom):
+                poly = orient(poly, sign=1.0)
+                verts, codes = [], []
+                for ring in [poly.exterior] + list(poly.interiors):
+                    pts = [(ox + x * s_, oy + y * s_) for x, y in ring.coords[:-1]]
+                    if len(pts) < 3:
+                        continue
+                    verts.extend(pts + [pts[0]])
+                    codes.append(MPath.MOVETO)
+                    codes.extend([MPath.LINETO] * (len(pts) - 1))
+                    codes.append(MPath.CLOSEPOLY)
+                if not verts:
+                    continue
+                ax.add_patch(PathPatch(MPath(verts, codes), facecolor=colour,
+                                       edgecolor="none", linewidth=0,
+                                       antialiased=False, zorder=0))
+
+
 def render_png(path, bbox=None, dpi=160):
     import matplotlib
     matplotlib.use("Agg")
@@ -1029,7 +1273,7 @@ def render_png(path, bbox=None, dpi=160):
     import matplotlib.pyplot as plt
     from ezdxf.addons.drawing import Frontend, RenderContext
     from ezdxf.addons.drawing.config import (
-        BackgroundPolicy, ColorPolicy, Configuration, LineweightPolicy,
+        BackgroundPolicy, ColorPolicy, Configuration, HatchPolicy, LineweightPolicy,
     )
     from ezdxf.addons.drawing.matplotlib import MatplotlibBackend
 
@@ -1046,6 +1290,7 @@ def render_png(path, bbox=None, dpi=160):
         color_policy=ColorPolicy.COLOR,
         lineweight_policy=LineweightPolicy.ABSOLUTE,
         lineweight_scaling=1.0,
+        hatch_policy=HatchPolicy.IGNORE,   # заливку рисуем сами, с дырками
     )
     backend = MatplotlibBackend(ax)
     Frontend(ctx, backend, config=cfg).draw_layout(msp, finalize=True)
@@ -1054,6 +1299,7 @@ def render_png(path, bbox=None, dpi=160):
     ax.set_position([0, 0, 1, 1])
     ax.set_xlim(bbox[0], bbox[2])
     ax.set_ylim(bbox[1], bbox[3])
+    _fill_copper(ax, bbox)
     fig.savefig(path, dpi=dpi, facecolor="white")
     plt.close(fig)
 
@@ -1074,6 +1320,15 @@ def main():
     draw_legend()
     draw_warning()
 
+    # лист 1 поднимаем наверх: он рисуется в начале координат
+    from ezdxf.math import Matrix44
+    shift = Matrix44.translate(0, SHEET1_Y, 0)
+    for entity in list(msp):
+        entity.transform(shift)
+
+    global COPPER
+    COPPER = build_copper()
+
     board_sheet_frame()
     draw_board_outline()
     draw_board_traces()
@@ -1083,11 +1338,13 @@ def main():
     draw_trace_table()
     draw_bom()
 
+    board_artwork_sheet()
+
     # границы чертежа и лимиты (чтобы "Показать всё" работало корректно)
     from ezdxf import appsettings
     appsettings.update_extents(doc)
     doc.header["$LIMMIN"] = (0.0, 0.0)
-    doc.header["$LIMMAX"] = (860.0, 297.0)
+    doc.header["$LIMMAX"] = (420.0, SHEET1_Y + 297.0)
     doc.header["$INSBASE"] = (0.0, 0.0, 0.0)
 
     out = os.path.join(os.path.dirname(os.path.abspath(__file__)), OUT_DXF)
@@ -1095,11 +1352,9 @@ def main():
 
     if "--png" in sys.argv:
         png = os.path.join(os.path.dirname(os.path.abspath(__file__)), OUT_PNG)
-        render_png(png, bbox=(0, 0, 860, 297), dpi=140)
-        render_png(os.path.join(os.path.dirname(os.path.abspath(__file__)), "_sheet1.png"),
-                   bbox=(0, 0, 420, 297), dpi=230)
-        render_png(os.path.join(os.path.dirname(os.path.abspath(__file__)), "_sheet2.png"),
-                   bbox=(440, 0, 860, 297), dpi=230)
+        render_png(png, bbox=(0, 0, 420, SHEET1_Y + 297.0), dpi=110)
+        render_png(os.path.join(os.path.dirname(os.path.abspath(__file__)), OUT_BOARD),
+                   bbox=(BX0 - 7, BY0 - 45, BX0 + 213, BY0 + 145), dpi=260)
         print("PNG:", png)
 
     print("DXF:", out)

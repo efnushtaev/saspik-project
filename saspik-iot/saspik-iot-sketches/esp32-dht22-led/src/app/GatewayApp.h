@@ -58,6 +58,7 @@ private:
     void publishOwnSensors();
     void publishOwnState();
     void publishDiag();
+    void updateStatusLed();
     void applyOwnCommand(const char* payload);
     void attachPeripherals();
     MqttConfig buildMqttConfig();
@@ -87,7 +88,10 @@ private:
     char m_clientId[32];
     char m_statusTopic[MQTT_TOPIC_MAX_LEN];
     bool m_startupLogSent;
-    bool m_ownStateSent;
+    bool m_wasConnected;      ///< для republish state на каждом переподключении
+    bool m_statusLedBlinkOn;  ///< текущая фаза мигания индикации
+    bool m_statusLedBlinking; ///< true, пока пин занят индикацией
+    uint32_t m_statusLedToggleMs;
 };
 
 #endif  // ARDUINO

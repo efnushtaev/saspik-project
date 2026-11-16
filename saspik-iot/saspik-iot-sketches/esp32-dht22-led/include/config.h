@@ -100,6 +100,10 @@ constexpr uint32_t WIFI_REBOOT_TIMEOUT_MS = 300000UL;  // 5 минут
 constexpr uint32_t WIFI_RECONNECT_INTERVAL_MS = 10000UL;
 // Период публикации диагностики во время длительного сбоя.
 constexpr uint32_t DIAG_PUBLISH_INTERVAL_MS = 60000UL;
+// Периодический republish retained-статуса online. «online» публикуется только
+// при connect, поэтому потерянный пакет или пересозданный без volume брокер
+// оставляют в UI вечный offline. 0 — выключить.
+constexpr uint32_t MQTT_ONLINE_REPUBLISH_MS = 300000UL;  // 5 минут
 
 // Лимиты протокола (защита буферов, не магические числа).
 constexpr uint16_t MQTT_PAYLOAD_MAX = 128;       ///< Максимальный размер входящего payload
@@ -152,6 +156,15 @@ constexpr ChannelConfig CHANNELS[] = {
 };
 constexpr size_t MAX_CHANNELS = 8;
 constexpr size_t CHANNEL_COUNT = sizeof(CHANNELS) / sizeof(CHANNELS[0]);
+
+// ======================== Индикация состояния связи ========================
+// Пока MQTT не поднят (или активен портал), светодиод мигает с периодом
+// STATUS_LED_BLINK_MS; после подключения пин возвращается каналу из CHANNELS[],
+// поэтому индикация и канал используют один пин. -1 — индикация выключена.
+
+constexpr int8_t STATUS_LED_PIN = static_cast<int8_t>(PIN_GPIO_1);
+constexpr bool STATUS_LED_ACTIVE_LOW = true;   ///< LOW = светодиод горит
+constexpr uint32_t STATUS_LED_BLINK_MS = 250UL;  ///< Полупериод мигания
 
 // Идентификаторы полей примерных датчиков (должны совпадать со словарём ниже).
 constexpr uint8_t FIELD_ID_TEMPERATURE = 1;

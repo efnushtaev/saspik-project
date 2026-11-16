@@ -36,8 +36,8 @@ GatewayApp::GatewayApp()
       m_logger(m_info, m_rebootCause),
       m_uartSink(Serial),
       m_wifi(&m_logger, WIFI_RECONNECT_INTERVAL_MS, WIFI_REBOOT_TIMEOUT_MS,
-             true),
-      m_mqtt(&m_logger),
+             true, &m_rebootCause),
+      m_mqtt(&m_logger, &m_rebootCause),
       m_mqttSink(m_mqtt, m_info.unitId(), m_info.objectId()),
       m_espNow(&m_logger),
       m_bridge(&m_mqtt, &m_espNow, &m_logger, m_info),
@@ -46,7 +46,10 @@ GatewayApp::GatewayApp()
       m_channels(),
       m_interfaces(),
       m_startupLogSent(false),
-      m_ownStateSent(false) {
+      m_wasConnected(false),
+      m_statusLedBlinkOn(false),
+      m_statusLedBlinking(false),
+      m_statusLedToggleMs(0) {
     m_clientId[0] = '\0';
     m_statusTopic[0] = '\0';
 }
@@ -92,6 +95,8 @@ bool GatewayApp::begin() {
 
 void GatewayApp::update() {
     m_portal.handlePortal();
+    // Индикация — до early-return: в портале MQTT не запускается вовсе.
+    updateStatusLed();
     if (m_portal.isPortalMode()) {
         return;  // в режиме портала остальной граф не инициализирован
     }
@@ -103,14 +108,49 @@ void GatewayApp::update() {
 
     // Стартовый конверт с причиной ребута — один раз после первого
     // успешного подключения (поведение publishStartupLog из esp32-local-mqtt).
-    if (!m_startupLogSent && m_mqtt.isConnected()) {
+    const bool connected = m_mqtt.isConnected();
+    if (!m_startupLogSent && connected) {
         m_logger.publishStartup();
         m_startupLogSent = true;
     }
-    if (!m_ownStateSent && m_mqtt.isConnected()) {
+    // Состояние автоматов — на каждом переподключении: брокер мог потерять
+    // retained (пересоздание без volume), и UI остался бы со старым state.
+    if (connected && !m_wasConnected) {
         publishOwnState();
-        m_ownStateSent = true;
     }
+    m_wasConnected = connected;
+}
+
+void GatewayApp::updateStatusLed() {
+    if (STATUS_LED_PIN < 0) {
+        return;
+    }
+    const uint8_t pin = static_cast<uint8_t>(STATUS_LED_PIN);
+    const bool linkUp = !m_portal.isPortalMode() && m_mqtt.isConnected();
+    if (linkUp) {
+        if (m_statusLedBlinking) {
+            // Связь есть — отдаём пин каналу без изменения его состояния.
+            m_statusLedBlinking = false;
+            if (m_channels.hasActuators()) {
+                m_channels.refreshActuators();
+            }
+        }
+        return;
+    }
+    if (!m_statusLedBlinking) {
+        m_statusLedBlinking = true;
+        m_statusLedBlinkOn = false;
+        m_statusLedToggleMs = millis();
+        pinMode(pin, OUTPUT);
+    }
+    const uint32_t now = millis();
+    if (now - m_statusLedToggleMs < STATUS_LED_BLINK_MS) {
+        return;
+    }
+    m_statusLedToggleMs = now;
+    m_statusLedBlinkOn = !m_statusLedBlinkOn;
+    const bool level = (m_statusLedBlinkOn != STATUS_LED_ACTIVE_LOW);
+    digitalWrite(pin, level ? HIGH : LOW);
 }
 
 void GatewayApp::onMessage(const char* topic, const char* payload) {
@@ -236,6 +276,7 @@ MqttConfig GatewayApp::buildMqttConfig() {
     cfg.reconnectIntervalMs = MQTT_RECONNECT_INTERVAL_MS;
     cfg.rebootTimeoutMs = MQTT_REBOOT_TIMEOUT_MS;
     cfg.enableRebootWatchdog = true;  // шлюз не спит — watchdog уместен
+    cfg.onlineRepublishMs = MQTT_ONLINE_REPUBLISH_MS;
     return cfg;
 }
 

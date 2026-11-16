@@ -15,6 +15,8 @@
 #include "log/ILogger.h"
 #include "wifi/IWifiManager.h"
 
+class IRebootCauseStore;
+
 /**
  * @brief Поддержание STA-соединения с защитой от зависаний.
  */
@@ -25,9 +27,12 @@ public:
      * @param reconnectIntervalMs   интервал попыток восстановления
      * @param rebootTimeoutMs       непрерывная потеря → авто-ребут
      * @param enableRebootWatchdog  false для Sensor (устройство спит, см. TODO)
+     * @param rebootCause           опционально: перед авто-ребутом пишется
+     *                              "wifi-lost" для startup-конверта
      */
     WifiManager(ILogger* logger, uint32_t reconnectIntervalMs,
-                uint32_t rebootTimeoutMs, bool enableRebootWatchdog);
+                uint32_t rebootTimeoutMs, bool enableRebootWatchdog,
+                IRebootCauseStore* rebootCause = nullptr);
 
     bool begin(const char* ssid, const char* pass) override;
     void update() override;
@@ -38,6 +43,7 @@ private:
     void tryRebootIfLost(uint32_t now);
 
     ILogger* m_logger;
+    IRebootCauseStore* m_rebootCause;
     uint32_t m_reconnectIntervalMs;
     uint32_t m_rebootTimeoutMs;
     bool m_enableRebootWatchdog;

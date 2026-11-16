@@ -247,7 +247,8 @@ pio run -e esp32-s3-devkitc-1   # framework = espidf; альтернатива �
 ## Скиллы
 
 - Проектные скиллы живут в `.dsh/skills/<name>/SKILL.md` — DSH подхватывает их автоматически; индекс и фразы-триггеры — [`SKILLS.md`](SKILLS.md).
-- Состав: `add-task` (TODO.md), `in-progress` (IN_PROGRESS.md), `project-status` (сводка по проектам), `session-log` (журнал сессий), `docs-template` + `docs-gen` (оформление и сборка `docs.html`), `firmware-gen` (новый скетч), `schematic-gen` (схемы и диаграммы), `md-render` (показ markdown).
+- Состав: `add-task` (TODO.md), `in-progress` (IN_PROGRESS.md), `project-status` (сводка по проектам), `session-log` (журнал сессий), `docs-template` + `docs-gen` (оформление и сборка `docs.html`), `firmware-gen` (новый скетч), `schematic-gen` (схемы и диаграммы), `pcb-docs-generate` (документация на плату), `md-render` (показ markdown).
+- Тарифный страж `billing-peak-guard` установлен глобально в `~/.dsh/skills/` (вне репозитория): в начале каждого запроса проверяет peak/off-peak и при двойном тарифе спрашивает разрешение.
 - Рабочая версия правил — в `.dsh/skills/`; копия в `saspik-private/opencode/skills/` не синхронизируется автоматически, правь рабочую.
 - `TODO.md`, `IN_PROGRESS.md` подпроектов — в публичном git; `session_log.md` живёт в `saspik-private` (вне публичного git), его правки не коммитятся.
 

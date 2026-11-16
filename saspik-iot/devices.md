@@ -8,14 +8,14 @@
 
 ### Устройства
 
-| `objectId` | Прошивка | Тип | Описание |
-| :--- | :--- | :--- | :--- |
-| `saspik-gwqm001` | [esp32-controller](saspik-iot-sketches/esp32-controller/README.md) | шлюз | Шлюз ESP-NOW → MQTT, сбор данных от узлов, реле |
-| `saspik.sa.wm.m003` | [esp32-local-mqtt](saspik-iot-sketches/esp32-local-mqtt/README.md) | сенсор | DHT22 + LED, WiFi+MQTT, устойчивость к сбоям (авто-ребут, лог причины ребута) |
-| `saspik-sawqm001` | [esp32-dht22-led](saspik-iot-sketches/esp32-dht22-led/README.md) | шлюз + сенсор + автомат | Шлюз `unitId2` на `GatewayApp`: DHT22 (`temp`/`humi`) + светодиод (`led`), ESP-NOW-мост |
-| `saspik.s.en.b001` | [saspik-iot-node-sensor-1](saspik-iot-sketches/saspik-iot-node-sensor-1/README.md) | сенсор | DHT22 + геркон, ESP-NOW, battery |
-| `saspik.s.en.b002` | [esp32-battery-check](saspik-iot-sketches/esp32-battery-check/README.md) | сенсор | DHT22, ESP-NOW, battery |
-| `saspik.s.en.b000` | [esp32-node-template](saspik-iot-sketches/esp32-node-template/README.md) | шаблон | Шаблон узла ESP-NOW (`nnn=000` — шаблон по классификатору) |
+| `objectId`          | Прошивка                                                                           | Тип                     | Описание                                                                                |
+| :------------------ | :--------------------------------------------------------------------------------- | :---------------------- | :-------------------------------------------------------------------------------------- |
+| `saspik-gwqm001`    | [esp32-controller](saspik-iot-sketches/esp32-controller/README.md)                 | шлюз                    | Шлюз ESP-NOW → MQTT, сбор данных от узлов, реле                                         |
+| `saspik.sa.wm.m003` | [esp32-local-mqtt](saspik-iot-sketches/esp32-local-mqtt/README.md)                 | сенсор                  | DHT22 + LED, WiFi+MQTT, устойчивость к сбоям (авто-ребут, лог причины ребута)           |
+| `saspik-sawqm001`   | [esp32-dht22-led](saspik-iot-sketches/esp32-dht22-led/README.md)                   | шлюз + сенсор + автомат | Шлюз `unitId2` на `GatewayApp`: DHT22 (`temp`/`humi`) + светодиод (`led`), ESP-NOW-мост |
+| `saspik.s.en.b001`  | [saspik-iot-node-sensor-1](saspik-iot-sketches/saspik-iot-node-sensor-1/README.md) | сенсор                  | DHT22 + геркон, ESP-NOW, battery                                                        |
+| `saspik.s.en.b002`  | [esp32-battery-check](saspik-iot-sketches/esp32-battery-check/README.md)           | сенсор                  | DHT22, ESP-NOW, battery                                                                 |
+| `saspik.s.en.b000`  | [esp32-node-template](saspik-iot-sketches/esp32-node-template/README.md)           | шаблон                  | Шаблон узла ESP-NOW (`nnn=000` — шаблон по классификатору)                              |
 
 ### Замечания
 

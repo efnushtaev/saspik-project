@@ -27,4 +27,8 @@ struct MqttConfig {
     uint32_t reconnectIntervalMs; ///< Пауза между попытками connect
     uint32_t rebootTimeoutMs;     ///< Недоступность дольше → авто-ребут
     bool enableRebootWatchdog;    ///< false для Sensor (спит)
+    // Периодический republish retained-статуса online. «online» публикуется
+    // только при connect, поэтому потерянный пакет или пересозданный без
+    // volume брокер оставляют в UI вечный offline. 0 — выключено.
+    uint32_t onlineRepublishMs;
 };

@@ -108,6 +108,15 @@ bool ChannelBank::applyCommand(const char* key, bool on) {
     return true;
 }
 
+void ChannelBank::refreshActuators() {
+    for (size_t i = 0; i < m_actuatorCount; ++i) {
+        const ChannelConfig& cfg = *m_actuators[i].cfg;
+        // Та же логика, что в applyCommand: activeLow меняет полярность.
+        const bool level = (m_actuators[i].on != cfg.activeLow);
+        digitalWrite(cfg.pin, level ? HIGH : LOW);
+    }
+}
+
 bool ChannelBank::applyFirst(bool on) {
     if (m_actuatorCount == 0) {
         return false;

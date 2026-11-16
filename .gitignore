@@ -32,3 +32,5 @@ saspik-private/
 # Разрешаем TODO.md в saspik-cluster
 !saspik-cluster/saspik-cluster-app/TODO.md
 _Журнал.md
+# локальное окружение для генератора документации на платы
+.venv-pcb/

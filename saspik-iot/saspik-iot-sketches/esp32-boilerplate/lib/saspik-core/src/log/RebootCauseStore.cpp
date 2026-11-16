@@ -22,4 +22,6 @@ void RebootCauseStore::setRebootCause(const char* cause) {
     DeviceLog.setRebootCause(cause);
 }
 
+void RebootCauseStore::clearRebootCause() { DeviceLog.clearRebootData(); }
+
 #endif  // ARDUINO

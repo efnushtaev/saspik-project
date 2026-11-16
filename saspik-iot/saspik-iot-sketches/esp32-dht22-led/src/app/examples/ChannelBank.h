@@ -45,6 +45,13 @@ public:
     /** @brief Применить команду к первому автомату (legacy {"state":...}). */
     bool applyFirst(bool on);
 
+    /**
+     * @brief Выставить пинам текущее состояние автоматов.
+     * Нужно после индикации светодиодом (мигание при отсутствии связи):
+     * пин возвращается каналу без изменения логического состояния.
+     */
+    void refreshActuators();
+
 private:
     struct SensorSlot {
         const ChannelConfig* cfg;

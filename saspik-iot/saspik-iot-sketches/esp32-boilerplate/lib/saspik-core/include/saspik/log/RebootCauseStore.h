@@ -20,4 +20,5 @@ public:
     bool hasRebootCause() const override;
     const char* rebootCause() const override;
     void setRebootCause(const char* cause) override;
+    void clearRebootCause() override;
 };

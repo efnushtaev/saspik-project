@@ -22,6 +22,7 @@
 #include "mqtt/IMqttClient.h"
 
 class ILogger;
+class IRebootCauseStore;
 
 /**
  * @brief MQTT-клиент на PubSubClient: LWT, диспетчеризация, авто-ребут.
@@ -29,9 +30,13 @@ class ILogger;
 class MqttManager : public IMqttClient {
 public:
     /**
-     * @param logger опциональный логгер (nullptr разрешён)
+     * @param logger      опциональный логгер (nullptr разрешён)
+     * @param rebootCause опциональное хранилище причины ребута: перед
+     *                    авто-ребутом по потере брокера пишется "mqtt-lost",
+     *                    чтобы следующий старт отправил startup с cause
      */
-    explicit MqttManager(ILogger* logger);
+    explicit MqttManager(ILogger* logger,
+                         IRebootCauseStore* rebootCause = nullptr);
     ~MqttManager() override;
 
     bool begin(const MqttConfig& cfg) override;
@@ -55,6 +60,7 @@ private:
                          size_t length);
     void tryConnect(uint32_t now);
     void tryRebootIfBrokerLost(uint32_t now);
+    void republishOnlineIfDue(uint32_t now);
     void resubscribeAll();
     Subscription* findSubscription(const char* topic);
     // Совпадение топика с шаблоном подписки: поддерживается один уровень '+'
@@ -64,11 +70,13 @@ private:
     static MqttManager* s_instance;  // только для C-колбэка PubSubClient
 
     ILogger* m_logger;
+    IRebootCauseStore* m_rebootCause;
     MqttConfig m_cfg;
     Impl* m_impl;
     bool m_configured;
     uint32_t m_lastConnectAttemptMs;
     uint32_t m_brokerLostSinceMs;
+    uint32_t m_lastOnlinePublishMs;
     uint8_t m_subscriptionCount;
     Subscription m_subscriptions[MQTT_SUBSCRIPTIONS_MAX];
 };

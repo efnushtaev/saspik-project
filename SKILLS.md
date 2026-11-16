@@ -7,6 +7,7 @@
 - DSH автоматически сканирует `<корень>/.dsh/skills/`; каталог скиллов обновляется без перезапуска.
 - Формат бандла: `.dsh/skills/<name>/SKILL.md` с frontmatter (`name`, `description`, `whenToUse`) и телом-инструкцией.
 - Агент загружает тело по требованию; человеку достаточно открыть файл.
+- Глобальные скиллы (например `billing-peak-guard` — проверка двойного тарифа DeepSeek) лежат в `~/.dsh/skills/` и в репозиторий не входят.
 - Скиллы лежат в репозитории и версионируются вместе с кодом. Приватные исходники (`saspik-private/opencode/skills/`) остаются отдельной копией — если правила изменятся, правьте `.dsh/skills/`, а не приватную копию.
 
 ## Карта скиллов
@@ -21,11 +22,13 @@
 | [docs-gen](.dsh/skills/docs-gen/SKILL.md) | пересобрать `docs.html` | «перегенерируй docs», «обнови документацию» |
 | [firmware-gen](.dsh/skills/firmware-gen/SKILL.md) | новый скетч IoT-устройства: boilerplate + драйверы saspik-core | «создай прошивку», «создай скетч», «добавь iot-устройство» |
 | [schematic-gen](.dsh/skills/schematic-gen/SKILL.md) | схема (DXF + PNG), Mermaid-диаграмма, KiCad | «нарисуй схему», «сделай диаграмму» |
+| [pcb-docs-generate](.dsh/skills/pcb-docs-generate/SKILL.md) | документация на небольшую плату/схему любого назначения (до ~50 элементов): схема + топология + монтаж 1:1, DXF и PNG, отчёт и проверки | «сделай плату», «нужен DXF платы», «разведи плату», «собери устройство на …» |
 | [md-render](.dsh/skills/md-render/SKILL.md) | показать markdown прямо в ответе | «покажи файл», «отрендерь md» |
 
 ## Бандлы с ресурсами
 
 - `docs-gen` — `scripts/generate-docs.js` (Node, требует `marked@4`; запуск без засорения репозитория описан в SKILL.md).
+- `pcb-docs-generate` — `scripts/render_png.py` (рендер с дырками в HATCH), `scripts/check_dxf.py` (КЗ, зазоры, площадки, наложения текста), `scripts/make_report.py` (отчёт), `scripts/regress.py` (сверка с эталоном), `reference/blocks.md` (типовые узлы). Скрипты работают по готовому DXF и `board.yaml`.
 
 ## Общие правила для всех скиллов
 

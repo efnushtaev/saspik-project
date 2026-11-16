@@ -8,6 +8,7 @@
 
 **[Промо-лендинг проекта](https://efnushtaev.github.io/saspik-project/)**
 
+---
 ### Иерархия системы
 #### Кластер
 
