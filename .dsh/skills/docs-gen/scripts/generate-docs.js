@@ -6,6 +6,17 @@ const path = require('path')
 // на saspik-private/opencode, и Node резолвит __dirname в реальную папку.
 const rootDir = path.resolve(process.cwd())
 
+// Страницы, которые не попадают в публичную сборку: пути от корня репозитория.
+// Исключённые README остаются в репозитории, но в docs.html не публикуются,
+// а ссылки на них в других документах выводятся простым текстом без ссылки.
+const EXCLUDED = new Set([
+  'saspik-iot/saspik-iot-sketches/README.md',
+  'saspik-iot/saspik-iot-sketches/esp32-controller/README.md',
+  'saspik-iot/saspik-iot-sketches/esp32-local-mqtt/README.md',
+  'saspik-iot/saspik-iot-sketches/esp32-dht22-led/README.md',
+  'saspik-iot/saspik-iot-sketches/saspik-iot-node-sensor-1/README.md',
+])
+
 const readmePaths = (fs.existsSync(path.join(rootDir, 'README.md')) ? ['README.md'] : []).concat(
   fs.readdirSync(rootDir, { withFileTypes: true })
   .filter(d => d.isDirectory() && d.name.startsWith('saspik-') && d.name !== 'saspik-private')
@@ -32,7 +43,7 @@ const readmePaths = (fs.existsSync(path.join(rootDir, 'README.md')) ? ['README.m
       }
       walk('')
     }
-    return results.filter(p => fs.existsSync(path.join(rootDir, p)))
+    return results.filter(p => fs.existsSync(path.join(rootDir, p)) && !EXCLUDED.has(p))
   }))
 
 const pathToAnchor = {}
@@ -49,32 +60,50 @@ function resolveLink(href, fromDir) {
   const normalized = rel.split(path.sep).join('/')
   if (pathToAnchor[normalized]) return '#' + pathToAnchor[normalized]
   if (pathToAnchor[normalized + '/README.md']) return '#' + pathToAnchor[normalized + '/README.md']
+  // Страница исключена из сборки — ссылку не рисуем, чтобы не было битых якорей.
+  if (EXCLUDED.has(normalized) || EXCLUDED.has(normalized + '/README.md')) return null
   return href
 }
 
 function rewriteLinks(md, fromDir) {
   return md.replace(/\[([^\]]*)\]\(([^)]+)\)/g, (m, text, href) => {
     if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return m
-    return '[' + text + '](' + resolveLink(href, fromDir) + ')'
+    const target = resolveLink(href, fromDir)
+    if (target === null) return text
+    return '[' + text + '](' + target + ')'
   })
 }
 
 const { marked } = require('marked')
 marked.setOptions({ breaks: true, gfm: true })
 
+// Подпись в левом меню = заголовок H1 страницы (без знака ⧫).
+// Имя проекта не подставляется: заголовок должен совпадать со страницей.
+function navLabel(p, content) {
+  const h1 = (content.match(/^#\s+(.+?)\s*$/m) || [])[1]
+  const fallback = p === 'README.md' ? 'Главная' : p.replace('/README.md', '').replace(/\.md$/, '')
+  if (!h1) return fallback
+  return h1.replace(/^⧫\s*/, '').trim()
+}
+
 const sections = readmePaths.map(p => {
   const fullPath = path.join(rootDir, p)
   const content = fs.readFileSync(fullPath, 'utf-8')
   const dir = path.dirname(fullPath)
   const anchor = pathToAnchor[p]
-  const displayName = p === 'README.md' ? 'Главная' : p.replace('/README.md', '').replace(/\.md$/, '')
-  return { anchor, html: marked.parse(rewriteLinks(content, dir)), displayName }
+  return {
+    anchor,
+    html: marked.parse(rewriteLinks(content, dir)),
+    displayName: navLabel(p, content),
+    depth: p.split('/').length
+  }
 })
 
 const tocItems = sections.map(s => {
-  const depth = s.displayName.split('/').length
-  const cls = depth === 1 ? '' : depth === 2 ? 'l2' : 'l3'
-  return '<a href="#' + s.anchor + '" class="' + cls + '">' + s.displayName + '</a>'
+  const cls = s.depth === 1 ? 'root' : s.depth === 2 ? 'l2' : 'l3'
+  // Названия разделов (README проектов) — капсом, как разделы в меню.
+  const label = cls === 'l2' ? s.displayName.toUpperCase() : s.displayName
+  return '<a href="#' + s.anchor + '" class="' + cls + '">' + label + '</a>'
 }).join('\n')
 
 const bodyHtml = sections.map(s =>
@@ -112,14 +141,17 @@ const html = '<!DOCTYPE html>\n<html lang="ru">\n<head>\n'
   + '    color: var(--accent);\n'
   + '    text-decoration: none;\n'
   + '    font-size: 13px;\n'
-  + '    padding: 3px 0;\n'
+  + '    padding: 3px 4px;\n'
   + '    white-space: nowrap;\n'
   + '    overflow: hidden;\n'
   + '    text-overflow: ellipsis;\n'
   + '  }\n'
   + '  nav a:hover { text-decoration: underline; }\n'
+  + '  nav .root { font-weight: 800; }\n'
   + '  nav .l2 { padding-left: 16px; font-size: 12px; }\n'
   + '  nav .l3 { padding-left: 32px; font-size: 11px; }\n'
+  + '  nav a.active { color: #ffffff; background: #0a69da7d; border-radius: 4px; }\n'
+
   + '  main {\n'
   + '    margin-left: 260px;\n'
   + '    flex: 1;\n'
@@ -170,7 +202,26 @@ const html = '<!DOCTYPE html>\n<html lang="ru">\n<head>\n'
   + tocItems
   + '\n</nav>\n<main>\n'
   + bodyHtml
-  + '\n</main>\n</body>\n</html>'
+  + '\n</main>\n<script>\n'
+  + '(function () {\n'
+  + '  var links = Array.prototype.slice.call(document.querySelectorAll(\'nav a[href^="#"]\'));\n'
+  + '  var targets = links.map(function (a) { return document.getElementById(a.getAttribute(\'href\').slice(1)); });\n'
+  + '  function update() {\n'
+  + '    var offset = 120, index = 0;\n'
+  + '    for (var i = 0; i < targets.length; i++) {\n'
+  + '      var el = targets[i];\n'
+  + '      if (el && el.getBoundingClientRect().top - offset <= 0) index = i;\n'
+  + '    }\n'
+  + '    var docHeight = document.documentElement.scrollHeight;\n'
+  + '    if (window.innerHeight + window.scrollY >= docHeight - 2) index = targets.length - 1;\n'
+  + '    for (var j = 0; j < links.length; j++) links[j].classList.toggle(\'active\', j === index);\n'
+  + '  }\n'
+  + '  window.addEventListener(\'scroll\', update, { passive: true });\n'
+  + '  window.addEventListener(\'resize\', update);\n'
+  + '  window.addEventListener(\'hashchange\', update);\n'
+  + '  update();\n'
+  + '})();\n'
+  + '</script>\n</body>\n</html>'
 
 fs.writeFileSync(path.join(rootDir, 'docs.html'), html, 'utf-8')
 console.log('OK: docs.html created')
