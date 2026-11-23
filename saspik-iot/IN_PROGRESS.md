@@ -4,15 +4,8 @@
 
 ## Ход работ
 
-- [На доработку] Состояние LED в MQTT: прошивка и retained-публикации
-  Статус: состояние LED работает на проде; доработки зафиксированы, не реализованы.
-  - Причина: на плате была сборка до `a9f4b43` — команда LED и `status` уже были, а `TOPIC_STATE`/`publishLedState()` ещё нет. После прошивки текущего `esp32-local-mqtt` плата публикует retained `{"state":"ON"|"OFF"}` при подключении и каждой смене; проверено end-to-end (MQTT → telegraf → Influx → UI).
-  - Баг retained: в `main.cpp` вызовы `mqttClient.publish(topic, jsonBuffer, jsonLen)` (сенсор и лог-конверты) из-за перегрузки `publish(const char*, const char*, boolean)` публикуют данные как retained. Исправить на явный вызов с `(const uint8_t*)` + `size_t` + `false`.
-  - Надёжность подписки: проверять результат `subscribe(TOPIC_SUBSCRIBE)` и повторять подписку; сейчас при отказе устройство молча остаётся без команд.
-  - Опционально: периодический republish `state` как страховка от потери retained при пересоздании mosquitto без volume.
-
 - [Нужно взять в работу] Прошивка esp32-relay-x8 (ESP32 Relay Board x8)
-  Статус: план согласован, реализация не начата.
+  Статус: план согласован, реализация не начата; ТЗ и промпт — [`plans/esp32-relay-x8.md`](../plans/esp32-relay-x8.md).
   - Новый скетч `saspik-iot-sketches/esp32-relay-x8` на базе esp32-boilerplate (saspik-core), без ESP-NOW: подключение WiFi+MQTT напрямую, `unitId3`, objectId `saspik-awqm001` (actuator+wq+mains), clientId `saspik-a`+objectId.
   - Плата: 8 реле на прямых GPIO — relay1..8 = GPIO32, 33, 25, 26, 27, 14, 12, 13; HIGH = вкл; на старте все LOW («none go HIGH at startup» — инициализация пинов первым шагом в setup); GPIO12 — strapping (MTDI), отметить в README.
   - Топики: команды `device/unitId3/saspik-awqm001/relay1..8` с payload `{"state":"ON"|"OFF"}`; retained state `…/state` = `{"relay1":"ON",…,"relay8":"OFF"}`; логи `…/log`, LWT `…/status`. Подписка одна — `commandTopic + "/+"`, handler принимает только relay1..8 и state.
@@ -21,6 +14,14 @@
   - Состав: `platformio.ini` (env `relay_x8_esp32`, `lib_extra_dirs = ../shared` + `../esp32-boilerplate/lib`, `lib_ldf_mode = deep+`, `-Iinclude`), `include/config.h` (суперсет boilerplate-конфига), `src/RelayBank`, `src/RelayCommandHandler`, `src/RelayX8App`, `src/main.cpp`, README по шаблону ⧫.
   - Верификация: `pio run -e relay_x8_esp32`; прошивка и ручной тест (mosquitto_pub на relay1..8, retained после ребута, логи в telegraf) — вручную пользователем.
   - Документация: запись в README скетчей, новые топики в `saspik-cluster/docs/mqtt-topics.md`, регенерация docs.html. Вне скоупа (follow-up): регистрация unitId3/объекта в Mongo для UI, production-ACL mosquitto, интеграция climate-control с unitId3.
+
+- [Нужно взять в работу] Гарантия исполнения команд: подтверждение и heartbeat
+  Статус: не начато — переформулировано из «Надёжности подписки» под бизнес-результат.
+  - **Зачем:** сейчас устройство может быть `online` и слать данные, но не исполнять команды: результат `subscribe(TOPIC_COMMAND)` в `connectMQTT()` игнорируется, и при неподтверждённой подписке реле не срабатывают до следующего переподключения. Для владельца это «теплица живая», а свет/полив не включаются — инцидент виден только по последствиям, не по системе.
+  - **Устройство:** подтверждение приёма команды — ack с меткой канала и результатом (`device/{unitId}/{objectId}/ack`), периодический heartbeat «подписка жива», логирование и повтор неудачного `subscribe()` при подключении.
+  - **Сервер/UI (кластер):** команда считается исполненной только после ack или смены `state`; иначе карточка объекта показывает «не подтверждено» вместо оптимистичного переключения.
+  - **Критерий готовности:** сценарий «команда отправлена, но не исполнена» воспроизводится на стенде и виден в UI и логах без выезда на объект.
+  - **Вне скоупа:** обход ACL (mosquitto отдаёт SUBACK 0 и при запрете — ловится только сквозной проверкой), production-деплой.
 
 - [Выполнено] Устойчивость шлюза к сбою связи: портал, статус, индикация
   Статус: код готов, сборки и host-тесты успешны; проверка на железе — вручную после перепрошивки.
@@ -88,3 +89,9 @@
   - `prevUptime` сохраняется в NVS (`DeviceLog.savePrevUptime()` перед `wifi-lost`/`mqtt-timeout` рестартами) и добавлен в startup-конверт; после отправки `DeviceLog.clearRebootData()` стирает cause и prevUptime — обычная перезагрузка больше не шлёт ложный `cause=mqtt-timeout`.
   - Кластер под эти правки не дорабатывается: telegraf принимает новые числовые поля автоматически, rule-engine на логи не завязан.
   - Проверка на железе после прошивки: (1) старт после авто-ребута — `startup` с `cause`/`prevUptime`, обычный рестарт — без ложного cause; (2) остановить брокер ~на минуту — `reconnect` с `downSec`/`errors`; (3) команда `{"foo":1}` — игнор без краша.
+
+- [Выполнено] Состояние LED в MQTT: прошивка и retained-публикации
+  Статус: выполнено — LED и retained-состояние работают на проде; retained-баг публикаций устранён в `a314468`.
+  - Причина: на плате была сборка до `a9f4b43` — команда LED и `status` уже были, а `TOPIC_STATE`/`publishLedState()` ещё нет. После прошивки текущего `esp32-local-mqtt` плата публикует retained `{"state":"ON"|"OFF"}` при подключении и каждой смене; проверено end-to-end (MQTT → telegraf → Influx → UI).
+  - Retained-баг закрыт: сенсор и лог-конверты публикуются явной перегрузкой `publish(topic, (const uint8_t*)buf, len, false)`, retained остался только у `state`/`status` (`main.cpp`).
+  - Открытые пункты вынесены в задачу «Надёжность подписки»: проверка результата `subscribe()` и опциональный периодический republish `state`.
