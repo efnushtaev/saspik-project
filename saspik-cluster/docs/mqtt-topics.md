@@ -1,6 +1,6 @@
 [↑ Saspik-cluster](saspik-cluster/README.md)
 
-# ⧫ docs/mqtt-topics
+# ⧫ MQTT-топики
 
 #### Централизованное описание топиков и форматов сообщений для обмена с MQTT-брокером кластера.
 

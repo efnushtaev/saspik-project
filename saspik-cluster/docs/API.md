@@ -1,6 +1,6 @@
 [↑ Saspik-cluster](saspik-cluster/README.md)
 
-# ⧫ docs/API
+# ⧫ HTTP API
 
 #### HTTP API для управления Юнитами, Объектами, правилами и командами устройствам
 

@@ -1,6 +1,6 @@
 [↑ Saspik-cluster](saspik-cluster/README.md)
 
-# ⧫ docs/UnitsService
+# ⧫ UnitsService
 
 #### Юниты хранятся в MongoDB (коллекция `units`) и наполняются сервисом seed при старте (`SeedService`).
 

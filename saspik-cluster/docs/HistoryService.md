@@ -1,6 +1,6 @@
 [↑ Saspik-cluster](saspik-cluster/README.md)
 
-# ⧫ docs/HistoryService
+# ⧫ HistoryService
 
 #### Статус: запланировано
 

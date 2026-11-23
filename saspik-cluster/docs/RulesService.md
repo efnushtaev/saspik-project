@@ -1,6 +1,6 @@
 [↑ Saspik-cluster](saspik-cluster/README.md)
 
-# ⧫ docs/RulesService
+# ⧫ RulesService
 
 #### Правила хранятся в MongoDB (коллекция `rules`, поле `unitId` связывает с юнитом) и наполняются сервисом seed при старте (`SeedService`). Отсутствующие в БД правила из seed-файла добавляются по `id` при каждом старте; существующие правила не перезаписываются.
 

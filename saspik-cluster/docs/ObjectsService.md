@@ -1,6 +1,6 @@
 [↑ Saspik-cluster](saspik-cluster/README.md)
 
-# ⧫ docs/ObjectsService
+# ⧫ ObjectsService
 
 #### Объекты хранятся в MongoDB (коллекция `objects`) и наполняются сервисом seed при старте (`SeedService`).
 
