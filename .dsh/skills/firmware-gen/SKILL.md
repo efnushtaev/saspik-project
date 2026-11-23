@@ -114,7 +114,7 @@ whenToUse: Запрос «создай прошивку», «создай ске
 
 ## 5. README скетча
 
-По скиллу `docs-template` (заголовок `⧫`, крошка `[↑ Saspik-iot-sketches](../README.md)`): описание, таблица параметров `config.h`, сборка/прошивка (`pio run -e <env>`, `pio run -t upload`), структура.
+По скиллу `docs-template` (заголовок `⧫`, крошка `[↑ Saspik-iot](../../README.md)`): описание, таблица параметров `config.h`, сборка/прошивка (`pio run -e <env>`, `pio run -t upload`), структура.
 
 ## 6. Регистрация
 

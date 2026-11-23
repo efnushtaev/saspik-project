@@ -13,22 +13,6 @@
 
 SOLID-основа для новых прошивок: библиотека `saspik-core` + три шаблона (Gateway, Sensor, Device), выбираются build-флагом `-DDEVICE_ROLE`. DI без глобалов, конфигурируемые каналы `CHANNELS[]`, captive portal, MQTT/ESP-NOW, light sleep, host-тесты (`pio test -e native`)
 
-#### [_esp32-controller_](./esp32-controller/README.md)
-
-Приложение для работы ESP32 в качестве шлюза (**gateway**) в сети ESP-NOW. Собирает данные от узлов в ESP-NOW, и отправляет в MQTT-брокер по WiFi
-
-#### [_esp32-local-mqtt_](./esp32-local-mqtt/README.md)
-
-Локальный MQTT-контроллер: конфигурируемые сенсоры и автоматы (`CHANNELS[]`), произвольные имена каналов, несколько реле на одном объекте. С повышенной устойчивостью: восстановление Wi-Fi, авто-ребут при сбоях и энергонезависимый лог с причиной перезапуска (`device-log`)
-
-#### [_esp32-dht22-led_](./esp32-dht22-led/README.md)
-
-Шлюз `unitId2` на `GatewayApp`: DHT22 как сенсор (`temp`/`humi`) и встроенный светодиод как автомат (`led`), плюс ESP-NOW-мост для узлов юнита. Своя команда — `device/unitId2/saspik-sawqm001/command`, команды узлам — через wildcard `device/unitId2/+/command`
-
-#### [_saspik-iot-node-sensor-1_](./saspik-iot-node-sensor-1/README.md)
-
-Прошивка для ESP32 с датчиками DHT-22 и поплавковым датчиком (геркон). Данные отправляются по ESP-NOW на приёмник
-
 ### Рецепты для скетчей
 
 ### Получение доступного WiFi канала

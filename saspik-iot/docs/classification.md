@@ -46,8 +46,5 @@ saspik-{роли}{протокол}{питание}{nnn}
 
 | Класс             | Устройство                                                        |
 | :---------------- | :---------------------------------------------------------------- |
-| `saspik-gwqm001`  | esp32-controller (шлюз ESP-NOW → MQTT + реле)                     |
-| `saspik-sawqm001` | esp32-local-mqtt (DHT22 + LED, WiFi+MQTT)                         |
-| `saspik-senb001`  | saspik-iot-node-sensor-1 (DHT22 + float sensor, ESP-NOW, battery) |
 | `saspik-senb002`  | esp32-battery-check (DHT22, ESP-NOW, battery)                     |
 | `saspik-senb000`  | esp32-node-template (шаблон)                                      |

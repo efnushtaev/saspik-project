@@ -1,4 +1,4 @@
-[↑ Saspik-iot-sketches](../../README.md)
+[↑ Saspik-iot](../../../README.md)
 
 # ⧫ device-log
 
@@ -57,7 +57,7 @@ void loop() {
 
 Глобальный экземпляр: `DeviceLog`.
 
-### Причины ребута в esp32-local-mqtt
+### Причины ребута
 
 Используются строки: `wifi-lost` (не поднялся Wi-Fi) и `mqtt-timeout` (долгая недоступность брокера). Причина отправляется на старте в MQTT-конверте (`event="startup"`, поле `cause`).
 

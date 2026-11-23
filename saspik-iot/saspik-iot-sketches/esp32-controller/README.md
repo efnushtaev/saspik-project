@@ -1,4 +1,4 @@
-[↑ Saspik-iot-sketches](../README.md)
+[↑ Saspik-iot](../../README.md)
 
 # ⧫ ESP32 Controller (ESP-NOW → MQTT Gateway)
 

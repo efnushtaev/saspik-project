@@ -9,7 +9,7 @@
 
 ### Программное обеспечение
 
-- [`Saspik-iot-sketches/README.md`](saspik-iot-sketches/README.md) — скетчи для ESP32 (шлюз, узлы, контроллер)
+- [`esp32-boilerplate`](saspik-iot-sketches/esp32-boilerplate/README.md) — основа для новых прошивок ESP32: `saspik-core`, шаблоны Gateway/Sensor/Device, host-тесты
 
 ### Классификация устройств
 
