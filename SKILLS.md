@@ -17,13 +17,13 @@
 | [add-task](.dsh/skills/add-task/SKILL.md) | завести задачу в корневом `TODO.md` | «добавь таску», «добавь в TODO», «добавь в проект X» |
 | [in-progress](.dsh/skills/in-progress/SKILL.md) | записать ход работ или сменить статус в `IN_PROGRESS.md` подпроекта | «запиши в IN_PROGRESS», «запиши ход работ» |
 | [project-status](.dsh/skills/project-status/SKILL.md) | обзор состояния всех подпроектов | «статус по проекту», «покажи todo» |
-| [session-log](.dsh/skills/session-log/SKILL.md) | дописать итог сессии в `opencode/session_log.md` | автоматически: конец сессии, компакция, веха |
 | [docs-template](.dsh/skills/docs-template/SKILL.md) | создать или оформить ⧫-документ (README, `docs/*.md`) | «оформи документ», «сделай README» |
 | [docs-gen](.dsh/skills/docs-gen/SKILL.md) | пересобрать `docs.html` | «перегенерируй docs», «обнови документацию» |
 | [firmware-gen](.dsh/skills/firmware-gen/SKILL.md) | новый скетч IoT-устройства: boilerplate + драйверы saspik-core | «создай прошивку», «создай скетч», «добавь iot-устройство» |
 | [schematic-gen](.dsh/skills/schematic-gen/SKILL.md) | схема (DXF + PNG), Mermaid-диаграмма, KiCad | «нарисуй схему», «сделай диаграмму» |
 | [pcb-docs-generate](.dsh/skills/pcb-docs-generate/SKILL.md) | документация на небольшую плату/схему любого назначения (до ~50 элементов): схема + топология + монтаж 1:1, DXF и PNG, отчёт и проверки | «сделай плату», «нужен DXF платы», «разведи плату», «собери устройство на …» |
 | [md-render](.dsh/skills/md-render/SKILL.md) | показать markdown прямо в ответе | «покажи файл», «отрендерь md» |
+| [session-hub-menu](.dsh/skills/session-hub-menu/SKILL.md) | кликабельное меню из трёх сценариев хаба: итоги чатов, новый чат, промпт в другой чат | «меню», «сценарии», «что можно нажать» |
 
 ## Бандлы с ресурсами
 
@@ -34,7 +34,7 @@
 
 - Скилл не отменяет [`AGENTS.md`](AGENTS.md): контракты, инварианты и «чего не делать» действуют всегда.
 - Перед правкой файла — прочитать его; перед коммитом — показать дифф и спросить, если не было явного указания коммитить.
-- Даты в `TODO.md`/`IN_PROGRESS.md` не пишутся; в `session_log.md` — пишутся, один блок на день.
+- Даты в `TODO.md`/`IN_PROGRESS.md` не пишутся; журнал сессий не ведётся.
 - Всё, что в `saspik-private/`, вне публичного git: изменения там не попадают в коммиты этого репозитория.
 
 ## Обновление

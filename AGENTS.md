@@ -68,7 +68,7 @@ plans/               рабочие планы (bridge-pattern и пр.)
 | `saspik-iot/saspik-iot-sketches/` | `esp32-boilerplate` (saspik-core + host-тесты), `esp32-local-mqtt`, `esp32-controller`, `esp32-battery-check`, `esp32-node-template`, `saspik-iot-node-sensor-1`, `shared/` |
 | `saspik-meshrover/software/` | PlatformIO + ESP-IDF, `lib/dwm3000`, `include/config.h` |
 | `saspik-greenhouse/docs/` | `grow_chamber.md`, `sensor-ph-ec.md`, `smeta.md` |
-| `saspik-private/` | Вне git: `opencode/` (session_log, skills), `articles/`, `manuals/`, `TODO.md` |
+| `saspik-private/` | Вне git: `opencode/` (скиллы, архив `session_log.md`), `articles/`, `manuals/`, `TODO.md` |
 
 ## Команды
 
@@ -220,7 +220,7 @@ pio run -e esp32-s3-devkitc-1   # framework = espidf; альтернатива �
 - Backend без автотестов; e2e-проверок с Mongo/Influx нет — регрессии ловятся вручную.
 - `ClimateControlService` отключён (вызов в `app.ts` закомментирован), но `CLIMATE_*` env используются правилами rule-engine — дублирование логики.
 - Rightech-интеграция (`RIGHTECH_API_TOKEN`, `MQTT_BROCKER_API_URL`) — мёртвый код.
-- Скиллы и правила агента — в `.dsh/skills/` и `SKILLS.md` (в git); в `saspik-private/opencode/` остаётся приватная копия скиллов и `session_log.md`. Если приватной папки нет — работать по `.dsh/skills/`.
+- Скиллы и правила агента — в `.dsh/skills/` и `SKILLS.md` (в git); в `saspik-private/opencode/` остаётся приватная копия скиллов (и архивный `session_log.md`, который больше не ведётся). Если приватной папки нет — работать по `.dsh/skills/`.
 - Прод-инфраструктура (брокер `185.72.145.19`) обслуживается вручную; способ деплоя и миграций вне репозитория.
 - `npm run lint` сервера может падать на `Object.hasOwn` из-за старой связки Node/ESLint — не связано с правками.
 
@@ -247,10 +247,14 @@ pio run -e esp32-s3-devkitc-1   # framework = espidf; альтернатива �
 ## Скиллы
 
 - Проектные скиллы живут в `.dsh/skills/<name>/SKILL.md` — DSH подхватывает их автоматически; индекс и фразы-триггеры — [`SKILLS.md`](SKILLS.md).
-- Состав: `add-task` (TODO.md), `in-progress` (IN_PROGRESS.md), `project-status` (сводка по проектам), `session-log` (журнал сессий), `docs-template` + `docs-gen` (оформление и сборка `docs.html`), `firmware-gen` (новый скетч), `schematic-gen` (схемы и диаграммы), `pcb-docs-generate` (документация на плату), `md-render` (показ markdown).
+- Состав: `add-task` (TODO.md), `in-progress` (IN_PROGRESS.md), `project-status` (сводка по проектам), `docs-template` + `docs-gen` (оформление и сборка `docs.html`), `firmware-gen` (новый скетч), `schematic-gen` (схемы и диаграммы), `pcb-docs-generate` (документация на плату), `md-render` (показ markdown).
 - Тарифный страж `billing-peak-guard` установлен глобально в `~/.dsh/skills/` (вне репозитория): в начале каждого запроса проверяет peak/off-peak и при двойном тарифе спрашивает разрешение.
 - Рабочая версия правил — в `.dsh/skills/`; копия в `saspik-private/opencode/skills/` не синхронизируется автоматически, правь рабочую.
-- `TODO.md`, `IN_PROGRESS.md` подпроектов — в публичном git; `session_log.md` живёт в `saspik-private` (вне публичного git), его правки не коммитятся.
+- `TODO.md`, `IN_PROGRESS.md` подпроектов — в публичном git. Журнал сессий (`session_log.md`) больше не ведётся: итоги фиксируются в `IN_PROGRESS.md`, бэклог — в `TODO.md`, а разовый обзор чатов даёт хаб сессий.
+
+## Плагин профиля «хаб сессий»
+
+Бандл `@local/session-hub` установлен в профиль `desktop` (исходники — `saspik-private/dsh-plugins/session-hub/`, ставится ссылкой через Plugins). Даёт инструменты `session_hub_list`, `session_hub_digest`, `session_hub_create`, `session_hub_prompt`: из любого чата этого профиля можно перечислить чаты того же `cwd`, снять с них краткие итоги, создать новый чат и отправить в него промпт. Границы: только одинаковый `cwd`, только обычные (не субагентские) чаты; `session_hub_prompt` подтверждает доставку, а ответ остаётся в целевом чате — забирать его нужно повторным `session_hub_digest`.
 
 ## Открытые вопросы
 
