@@ -106,6 +106,9 @@ def main():
     add(f"| Аудит DXF | {len(errs)} ошибок |")
     add(f"| Наложения текста | {len(overlaps)} |")
     for lay, geom in sorted(cu.items(), key=lambda kv: -kv[1].area):
+        # слой лазерного негатива — не медь, в таблицу площадей не идёт
+        if lay.startswith("ЛАЗЕР_"):
+            continue
         add(f"| Медь «{lay}», мм² (на все листы) | {geom.area:.1f} |")
     if boards:
         add(f"| Листов | {len(spec.get('sheets') or ['схема', 'топология', 'монтаж'])} (вертикально) |")
