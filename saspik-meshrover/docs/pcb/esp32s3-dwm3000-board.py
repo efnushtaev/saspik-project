@@ -9,7 +9,7 @@
     esp32s3-dwm3000-board-board.png    — плата крупно
 
 Лист 1 — схема электрическая принципиальная.
-Листы 2–3 — топология 2:1 и монтаж 1:1 — добавляются тем же генератором.
+Лист 2 — топология 2:1, лист 3 — медь 1:1, лист 4 — негатив для лазера 1:1.
 
 Запуск:  python3 esp32s3-dwm3000-board.py [--png]
 """
@@ -656,7 +656,7 @@ def draw_thermal_and_warning():
 
 
 def sheet1():
-    sheet_frame(0, 0, 420, 297, 1, 3, "1 : 1", "Схема электрическая принципиальная")
+    sheet_frame(0, 0, 420, 297, 1, 4, "1 : 1", "Схема электрическая принципиальная")
     draw_usb_input()
     draw_power()
     draw_buttons_uart_usb()
@@ -671,6 +671,27 @@ def sheet1():
 # ----------------------------------------------------------------------------
 # Рендер PNG
 # ----------------------------------------------------------------------------
+def _fill_laser_negative(ax):
+    """Заливка негатива на листе 4 — иначе тонкие полосы не видны на превью."""
+    from matplotlib.path import Path as MPath
+    from matplotlib.patches import PathPatch
+    from shapely.geometry.polygon import orient
+
+    for poly in _polys(laser_negative(kerf=0.3)):
+        poly = orient(poly, 1.0)
+        verts, codes = [], []
+        for ring in [poly.exterior] + list(poly.interiors):
+            pts = list(ring.coords)[:-1]
+            if len(pts) < 3:
+                continue
+            verts.extend([(LSR_X + x, LSR_Y + y) for x, y in pts] + [(LSR_X + x, LSR_Y + y) for x, y in pts[:1]])
+            codes.append(MPath.MOVETO)
+            codes.extend([MPath.LINETO] * (len(pts) - 1))
+            codes.append(MPath.CLOSEPOLY)
+        ax.add_patch(PathPatch(MPath(verts, codes), facecolor=(0.62, 0.62, 0.62),
+                               edgecolor="none", antialiased=False, zorder=1))
+
+
 def _fill_copper(ax):
     """Заливает медь патчами: HATCH с дырками matplotlib сам не рисует."""
     from matplotlib.path import Path as MPath
@@ -680,6 +701,7 @@ def _fill_copper(ax):
 
     if COPPER is None:
         return
+    _fill_laser_negative(ax)
     for ox, oy, s_ in ((BX0, BY0, BSCALE), (ART_X, ART_Y, 1.0)):
         for lay, geom in COPPER.items():
             try:
@@ -813,8 +835,8 @@ def append_report(path):
                   "| Кусков | Площади, мм² |", "| ---: | :--- |",
                   f"| {len(parts)} | {', '.join(f'{q.area:.0f}' for q in parts)} |", "",
                   "Оставшиеся без меди куски соединены проволочными перемычками: GND модуля "
-                  "(WP3), GND полигона (WP4), GND конденсаторов (WP5) — все они есть в "
-                  "перечне элементов и показаны пунктиром на листе 2.", ""]
+                  "(WP3) и GND конденсаторов (WP4) — обе есть в перечне элементов и показаны "
+                  "пунктиром на листе 2. Всего перемычек четыре: IRQ, RST, GND × 2.", ""]
     lines += ["", "## Что учтено из даташита", "",
               "- Кипер-аут антенны: полоса x 53…73, y 0…17 мм без меди и деталей; "
               "антенна модуля направлена за край платы.",
@@ -835,20 +857,24 @@ KEEPOUT = (53.0, 0.0, 73.0, 17.0)
 
 BSCALE = 2.0
 SHEET_GAP = 23.0
-SHEET3_Y = 0.0
-SHEET2_Y = 297.0 + SHEET_GAP
+SHEET4_Y = 0.0
+SHEET3_Y = SHEET4_Y + 297.0 + SHEET_GAP
+SHEET2_Y = SHEET3_Y + 297.0 + SHEET_GAP
 SHEET1_Y = SHEET2_Y + 297.0 + SHEET_GAP
 
 BX0, BY0 = 14.0, SHEET2_Y + 110.0
 ART_X, ART_Y = 58.0, SHEET3_Y + 104.0
+LSR_X, LSR_Y = 58.0, SHEET4_Y + 104.0
 
 PAD = "ПЛАТА_ПАДЫ"
 SILK = "ПЛАТА_ДЕТАЛИ"
 EDGE = "ПЛАТА_КОНТУР"
 KO = "КИПЕРАУТ"
 JMP = "ПЕРЕМЫЧКИ"
+LNEG = "ЛАЗЕР_НЕГАТИВ"
 
-for _n, _c, _lw, _lt in ((KO, 2, 13, "DASHED"), (JMP, 2, 25, "DASHED")):
+for _n, _c, _lw, _lt in ((KO, 2, 13, "DASHED"), (JMP, 2, 25, "DASHED"),
+                          (LNEG, 8, 13, "CONTINUOUS")):
     if _n not in doc.layers:
         doc.layers.add(name=_n, color=_c, lineweight=_lw, linetype=_lt)
 
@@ -898,8 +924,8 @@ J3_NET = {1: "GND", 2: "UART_TX", 3: "UART_RX", 14: "NC", 16: "LED2",
           21: "GND", 22: "GND"}
 for k in range(22):
     x = 18.25 + 2.54 * k
-    pad(J1_NET.get(k + 1, "NC"), x, 19.0, 1.6, drill=1.0)
-    pad(J3_NET.get(k + 1, "NC"), x, 41.86, 1.6, drill=1.0)
+    pad(J1_NET.get(k + 1, "NC"), x, 19.0, 1.5, drill=1.0)
+    pad(J3_NET.get(k + 1, "NC"), x, 41.86, 1.5, drill=1.0)
 
 # --- DWM3000 -----------------------------------------------------------------
 DWM_NET = {1: "NC", 2: "NC", 3: "UWB_RST", 4: "GND", 5: "3V3", 6: "3V3", 7: "3V3",
@@ -908,11 +934,11 @@ DWM_NET = {1: "NC", 2: "NC", 3: "UWB_RST", 4: "GND", 5: "3V3", 6: "3V3", 7: "3V3
            20: "SPI_CLK", 21: "GND", 22: "UWB_IRQ", 23: "GND", 24: "GND"}
 DWM_POS = {}
 for i, x in enumerate((52.31, 50.91, 49.51, 48.11, 46.71, 45.31, 43.91, 42.51)):
-    DWM_POS[i + 1] = (x, 3.0, 1.0, 1.6)
+    DWM_POS[i + 1] = (x, 3.0, 0.8, 1.2)
 for i, x in enumerate((42.51, 43.91, 45.31, 46.71, 48.11, 49.51, 50.91, 52.31)):
-    DWM_POS[i + 17] = (x, 14.0, 1.0, 1.6)
+    DWM_POS[i + 17] = (x, 14.0, 0.8, 1.2)
 for i, y in enumerate((3.6, 5.0, 6.4, 7.8, 9.2, 10.6, 12.0, 13.4)):
-    DWM_POS[i + 9] = (41.0, y, 1.6, 1.0)
+    DWM_POS[i + 9] = (41.0, y, 1.2, 0.8)
 DATASHEET_PADS = set()
 for pin, (x, y, w, h) in DWM_POS.items():
     DATASHEET_PADS.add(len(PADS))
@@ -963,18 +989,18 @@ tr("5V", (18, 36), (18, 33.95), w=0.4)
 tr("5V", (66, 36), (66, 33.95), w=0.4)
 
 tr("3V3", (25, 9.5), (34.76, 9.5), (34.76, 1.55), (46.71, 1.55), w=0.5)
-tr("3V3", (43.91, 1.55), (43.91, 2.2), w=0.4)
-tr("3V3", (45.31, 1.55), (45.31, 2.2), w=0.4)
-tr("3V3", (46.71, 1.55), (46.71, 2.2), w=0.4)
+tr("3V3", (43.91, 1.55), (43.91, 3.0), w=0.4)
+tr("3V3", (45.31, 1.55), (45.31, 3.0), w=0.4)
+tr("3V3", (46.71, 1.55), (46.71, 3.0), w=0.4)
 tr("3V3", (29, 9.5), (29, 4.95), w=0.4)
 tr("3V3", (32, 9.5), (32, 4.95), w=0.4)
 
-tr("SPI_CS", (42.51, 14.8), (42.51, 17.45), (56.35, 17.45), (56.35, 18.4))
-tr("SPI_MOSI", (43.91, 14.8), (43.91, 16.85), (58.89, 16.85), (58.89, 18.4))
-tr("SPI_MISO", (45.31, 14.8), (45.31, 16.25), (61.43, 16.25), (61.43, 18.4))
-tr("SPI_CLK", (46.71, 14.8), (46.71, 15.65), (63.97, 15.65), (63.97, 18.4))
+tr("SPI_CS", (42.51, 14.0), (42.51, 17.45), (56.35, 17.45), (56.35, 18.4))
+tr("SPI_MOSI", (43.91, 14.0), (43.91, 16.75), (58.89, 16.75), (58.89, 18.4))
+tr("SPI_MISO", (45.31, 14.0), (45.31, 16.05), (61.43, 16.05), (61.43, 18.4))
+tr("SPI_CLK", (46.71, 14.0), (46.71, 15.35), (63.97, 15.35), (63.97, 18.4))
 
-tr("UWB_RST", (49.51, 2.2), (49.51, 0.8), (27.14, 0.8), (27.14, 8.4), w=0.25)
+tr("UWB_RST", (49.51, 3.0), (49.51, 0.72), (27.14, 0.72), (27.14, 8.4), w=0.25)
 tr("UWB_RST", (27.14, 10.6), (27.14, 20.55), (66.51, 20.55), (66.51, 19.6), w=0.25)
 tr("UWB_IRQ", (34.76, 17.5), (35.6, 18.4), (36.03, 18.6))
 pad("UWB_IRQ", 34.76, 17.5, 0.9)
@@ -1021,6 +1047,44 @@ def chamfer(pts, d=0.45):
 
 
 TRACES = [(n, chamfer(p), w) for n, p, w in TRACES]
+
+
+def snap_trace_ends(reach=0.35, tol=0.08):
+    """Дорожки не должны касаться площадки по границе — заводим их внутрь.
+
+    Касание соединяет медь, но на растре и после травления даёт «разрыв»:
+    дорожка и площадка слипаются только по линии, без перекрытия.
+    """
+    from shapely.geometry import Point, box as sbox
+    from shapely.ops import unary_union
+    shapes = []
+    for net, x, y, w, h, drill in PADS:
+        g = (Point(x, y).buffer(w / 2.0, quad_segs=24) if drill > 0
+             else sbox(x - w / 2, y - h / 2, x + w / 2, y + h / 2))
+        shapes.append((net, x, y, g))
+
+    fixed = []
+    for net, pts, w in TRACES:
+        pts = list(pts)
+        for idx in (0, len(pts) - 1):
+            px, py = pts[idx]
+            best = None
+            for pnet, cx, cy, g in shapes:
+                d = g.distance(Point(px, py))
+                if d <= tol and (best is None or d < best[0]):
+                    best = (d, cx, cy)
+            if not best:
+                continue
+            _, cx, cy = best
+            dx, dy = cx - px, cy - py
+            ln_ = (dx * dx + dy * dy) ** 0.5
+            if ln_ > 1e-6:
+                pts[idx] = (px + reach * dx / ln_, py + reach * dy / ln_)
+        fixed.append((net, pts, w))
+    return fixed
+
+
+TRACES = snap_trace_ends()
 
 # ---------------------------------------------------------------------------
 # Зеркало по вертикали: плата читается «сверху-вниз» так же, как модули
@@ -1367,7 +1431,7 @@ def board_sheet_frame(sheet_y, sheet_no, line2, scale):
         ln(a, b, CFRAME, lw=50)
     rect(x0 + m, y0 + m, x0 + w - m, y0 + h - m, CFRAME)
     title_block(x0 + w - m - 185, y0 + m, "Плата узла meshrover", line2,
-                "ESP32-S3-DevKitC-1 + DWM3000", sheet_no, 3, "A3", scale)
+                "ESP32-S3-DevKitC-1 + DWM3000", sheet_no, 4, "A3", scale)
 
 
 def draw_bom(x0, top):
@@ -1403,9 +1467,9 @@ def draw_sheet2_tables(x0, top):
     yy -= 5.6
     for s_ in ("переходных отверстий нет;",
                "пересечение разных цепей запрещено;",
-               "единственная перемычка — UWB_IRQ:",
-               "провод от контакта 22 DWM3000",
-               "на площадку у розетки (виден на листе 2);",
+               "перемычки проводом: IRQ, RST и две земли —",
+               "участки полигона, разрезанные дорожками;",
+               "видны пунктиром на листе 2;",
                "земля — полигон с зазором 0,4 мм.",
                "Пайка USB-C не нужна: разъёма нет."):
         txt(s_, x0, yy, 1.5, CNOTE)
@@ -1444,6 +1508,90 @@ def sheet2():
             "8. Посадки зеркальны: элементы ставятся со стороны пайки (медь снизу);",
             "    для сборки медью вверх переключить MIRROR_Y в генераторе.")):
         txt(s_, 14, SHEET2_Y + 58 - i * 4.2, 1.6, CNOTE)
+
+
+LASER_RECIPE = (
+    ("Пятно лазера (kerf)", "0,3 мм"),
+    ("Компенсация", "зона ужата на kerf/2 — прожиг равен зазору"),
+    ("Минимальный зазор", "0,4 мм (после ужатия остаётся 0,1)"),
+    ("Мощность / скорость", "40 % / 1000 мм/мин"),
+    ("Проходов", "3; нагар стирать после 2-го"),
+    ("Line interval", "0,07…0,08 мм"),
+    ("Время на плату", "≈ 19 мин (5,1 см², 3 прохода)"),
+    ("Площадь прожига", "5,1 см²"),
+)
+
+
+def draw_laser_sheet(ox, oy, s):
+    """Лист 4: негатив — участки, где медь должна быть снята лазером."""
+    from ezdxf.lldxf import const as _const
+    neg = laser_negative(kerf=0.3)
+
+    # контур платы
+    r = 3.0
+    msp.add_lwpolyline([(ox + r * s, oy), (ox + (BW - r) * s, oy),
+                        (ox + BW * s, oy + r * s), (ox + BW * s, oy + (BH - r) * s),
+                        (ox + (BW - r) * s, oy + BH * s), (ox + r * s, oy + BH * s),
+                        (ox, oy + (BH - r) * s), (ox, oy + r * s)], close=True,
+                       dxfattribs={"layer": EDGE, "lineweight": 50})
+
+    # медь — тонкий контур: что останется после травления
+    emit_copper(ox, oy, s, hatch=False, lw=9)
+
+    # негатив — заливка (как медь на листе 3), плюс контуры
+    for poly in _polys(neg):
+        ext = [(ox + x * s, oy + y * s) for x, y in poly.exterior.coords[:-1]]
+        holes = [[(ox + x * s, oy + y * s) for x, y in r.coords[:-1]]
+                 for r in poly.interiors]
+        msp.add_lwpolyline(ext, close=True, dxfattribs={"layer": LNEG, "lineweight": 18})
+        for ring in holes:
+            msp.add_lwpolyline(ring, close=True,
+                               dxfattribs={"layer": LNEG, "lineweight": 13})
+        h = msp.add_hatch(dxfattribs={"layer": LNEG})
+        h.set_solid_fill(color=8, style=0)
+        h.paths.add_polyline_path(ext, is_closed=True,
+                                  flags=_const.BOUNDARY_PATH_EXTERNAL)
+        for ring in holes:
+            h.paths.add_polyline_path(ring, is_closed=True,
+                                      flags=_const.BOUNDARY_PATH_DEFAULT)
+
+    # тест-купон
+    cx, cy = ox + 104.0 * s, oy + 4.0 * s
+    msp.add_lwpolyline([(cx, cy), (cx + 40 * s, cy), (cx + 40 * s, cy + 30 * s),
+                        (cx, cy + 30 * s)], close=True,
+                       dxfattribs={"layer": EDGE, "lineweight": 18})
+    for i, gap in enumerate((0.3, 0.4, 0.5, 0.6)):
+        yy = cy + (15.4 - i * 4.0) * s
+        w_ = gap - LASER_KERF
+        if w_ > 0.05:
+            msp.add_lwpolyline([(cx + 3 * s, yy), (cx + 17 * s, yy),
+                                (cx + 17 * s, yy + w_ * s), (cx + 3 * s, yy + w_ * s)],
+                               close=True, dxfattribs={"layer": LNEG, "lineweight": 15})
+        else:
+            msp.add_line((cx + 3 * s, yy), (cx + 17 * s, yy),
+                         dxfattribs={"layer": LNEG, "lineweight": 15})
+        txt(f"щель {gap:.1f}", cx + 19 * s, yy + 0.6 * s, 1.4 * s, CNOTE)
+    txt("ТЕСТ-КУПОН", cx, cy + 27.2 * s, 1.8 * s, bold=True)
+    txt("жечь первым, подобрать мощность", cx, cy + 24.6 * s, 1.3 * s, CNOTE)
+
+    # рамка листа и заголовок
+    board_sheet_frame(SHEET4_Y, 4, "Негатив для лазера: маска снимается", "1 : 1")
+    txt("НЕГАТИВ ДЛЯ ЛАЗЕРА", ox, oy + BH * s + 24, 3.0, bold=True)
+    txt("Серое — участки, где медь снимается лазером. Тонкий контур — медь, "
+        "которая остаётся.", ox, oy + BH * s + 18, 1.7, CNOTE)
+
+    # таблица режима — под платой, чтобы не наезжать на чертёж
+    tx, ty = 14.0, oy - 8.0
+    txt("РЕЖИМ ЛАЗЕРА", tx, ty, 2.2, bold=True)
+    ln((tx, ty - 2.2), (tx + 150, ty - 2.2), CFRAME, lw=25)
+    for i, (k, v) in enumerate(LASER_RECIPE):
+        yy = ty - 7.0 - i * 5.0
+        txt(k, tx, yy, 1.6, CNOTE)
+        txt(v, tx + 58, yy, 1.6)
+
+
+def sheet4():
+    draw_laser_sheet(LSR_X, LSR_Y, 1.0)
 
 
 def sheet3():
@@ -1517,8 +1665,17 @@ def laser_doc():
     return d
 
 
-def laser_negative(shrink=0.15, dilate=0.0):
-    """Участки без меди: плата минус вся медь, минус сверловка, минус запас по краю."""
+LASER_KERF = 0.0      # ширина пятна лазера, мм (задаётся --kerf=)
+
+
+def laser_negative(shrink=0.15, dilate=0.0, kerf=None):
+    """Участки без меди: плата минус медь, минус сверловка.
+
+    kerf — ширина пятна: вектор задаёт ОСЬ луча, а выжигается kerf вокруг неё.
+    Поэтому зону ужимаем на kerf/2, чтобы край прожига совпал с краем меди,
+    а не съел дорожку. Зазоры меньше kerf после ужима исчезают — их физически
+    не сделать этим пятном, о них пишем в отчёте.
+    """
     from shapely.geometry import Point
     from shapely.ops import unary_union
     board = _rounded_board().buffer(-shrink, join_style=1)
@@ -1528,11 +1685,16 @@ def laser_negative(shrink=0.15, dilate=0.0):
         if drill > 0:
             neg = neg.difference(Point(x, y).buffer(drill / 2.0 + 0.25, quad_segs=24))
     if dilate > 0:
-        # расширяем зону выжигания в сторону меди: маска снимается с запасом,
-        # иначе у края дорожки остаётся плёнка и медь не стравливается
         neg = neg.buffer(dilate, join_style=1)
+    k = LASER_KERF if kerf is None else kerf
+    if k > 0:
+        before = len(_polys(neg))
+        neg = neg.buffer(-k / 2.0, join_style=1)
+        after = len([p for p in _polys(neg) if p.area > 0.02])
+        print(f"  компенсация пятна {k:.2f} мм: контуров {before} → {after} "
+              f"(исчезли щели уже {k:.2f} мм)")
     # заливка на краю может дать тонкие лоскуты — убрать
-    return unary_union([p for p in _polys(neg) if p.area > 0.05])
+    return unary_union([p for p in _polys(neg) if p.area > 0.02])
 
 
 def laser_hatch(geom, step=0.15):
@@ -1590,10 +1752,15 @@ def laser_test_coupon(doc, ox, oy):
 
     for i, g in enumerate((0.3, 0.4, 0.5, 0.6)):
         y = oy + 15.4 - i * 4.0
-        # щель — то, что выжигаем
-        msp.add_lwpolyline([(ox + 3, y), (ox + 3 + 14, y), (ox + 3 + 14, y + g),
-                            (ox + 3, y + g)], close=True,
-                           dxfattribs={"layer": "NEGATIVE", "lineweight": 15})
+        # щель рисуем уже с компенсацией пятна: прожиг = геометрия + kerf = нужный зазор
+        w = g - LASER_KERF
+        if w > 0.05:
+            msp.add_lwpolyline([(ox + 3, y), (ox + 3 + 14, y), (ox + 3 + 14, y + w),
+                                (ox + 3, y + w)], close=True,
+                               dxfattribs={"layer": "NEGATIVE", "lineweight": 15})
+        else:
+            msp.add_line((ox + 3, y + g / 2), (ox + 3 + 14, y + g / 2),
+                         dxfattribs={"layer": "KERF", "lineweight": 15})
         text(f"щель {g:.1f} мм", ox + 19.5, y - 0.2, 1.5)
         # медные полярности по краям щели (для ориентира, не жечь)
         for yy in (y - 1.6, y + g + 0.3):
@@ -1605,6 +1772,7 @@ def laser_test_coupon(doc, ox, oy):
 
 
 def export_laser(path, step=0.15, with_hatch=True):
+    """step — шаг штриховки слоя HATCH; для заливки в CAM это же значение line interval."""
     d = laser_doc()
     msp = d.modelspace()
 
@@ -1748,6 +1916,7 @@ def main():
 
     sheet2()
     sheet3()
+    sheet4()
 
     from ezdxf import appsettings
     appsettings.update_extents(doc)
@@ -1766,7 +1935,14 @@ def main():
 
     if "--laser" in sys.argv:
         lap = os.path.join(BASE, LASER_OUT)
-        export_laser(lap, step=0.15)
+        step = 0.15
+        for a in sys.argv:
+            if a.startswith("--hatch-step="):
+                step = float(a.split("=", 1)[1])
+            if a.startswith("--kerf="):
+                global LASER_KERF
+                LASER_KERF = float(a.split("=", 1)[1])
+        export_laser(lap, step=step)
         render_laser_png(os.path.join(BASE, "esp32s3-dwm3000-laser-preview.png"))
         export_laser_raster(os.path.join(BASE, "esp32s3-dwm3000-laser-mask.png"))
 

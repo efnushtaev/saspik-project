@@ -42,7 +42,10 @@ def main():
 
     doc = ezdxf.readfile(a.dxf)
     msp = doc.modelspace()
-    y0 = (3 - a.sheet) * (SHEET_H + SHEET_GAP)
+    # число листов вычисляем по габариту чертежа, а не зашиваем: листы идут снизу вверх
+    top = doc.header.get("$EXTMAX", (0, 0, 0))[1]
+    n_sheets = max(1, round((top - SHEET_H) / (SHEET_H + SHEET_GAP)) + 1)
+    y0 = (n_sheets - a.sheet) * (SHEET_H + SHEET_GAP)
     segs = segments(msp, NET_LAYERS, y0, y0 + SHEET_H)
     if not segs:
         print(f"лист {a.sheet}: проводников не найдено")
